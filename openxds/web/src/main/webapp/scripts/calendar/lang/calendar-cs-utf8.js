@@ -1,3 +1,20 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 /* 
 	calendar-cs-win.js
 	language: Czech
@@ -35,12 +52,12 @@ Calendar._TT["ABOUT"] =
 "\n\n" +
 "Výběr datumu:\n" +
 "- Use the \xab, \xbb buttons to select year\n" +
-"- Použijte tlačítka " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " k výběru měsíce\n" +
-"- Podržte tlačítko myši na jakémkoliv z těch tlačítek pro rychlejší výběr.";
+"- Použijte tla�?ítka " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " k výběru měsíce\n" +
+"- Podržte tla�?ítko myši na jakémkoliv z těch tla�?ítek pro rychlejší výběr.";
 
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
-"Výběr času:\n" +
-"- Klikněte na jakoukoliv z částí výběru času pro zvýšení.\n" +
+"Výběr �?asu:\n" +
+"- Klikněte na jakoukoliv z �?ástí výběru �?asu pro zvýšení.\n" +
 "- nebo Shift-click pro snížení\n" +
 "- nebo klikněte a táhněte pro rychlejší výběr.";
 

@@ -1,3 +1,20 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 /* 
 	calendar-cs-win.js
 	language: Czech
@@ -22,7 +39,7 @@ Calendar._TT["GO_TODAY"] = "DneönÌ datum";
 Calendar._TT["NEXT_MONTH"] = "DalöÌ mÏsÌc (p¯idrû pro menu)";
 Calendar._TT["NEXT_YEAR"] = "DalöÌ rok (p¯idrû pro menu)";
 Calendar._TT["SEL_DATE"] = "Vyber datum";
-Calendar._TT["DRAG_TO_MOVE"] = "Chyù a t·hni, pro p¯esun";
+Calendar._TT["DRAG_TO_MOVE"] = "Chy? a t·hni, pro p¯esun";
 Calendar._TT["PART_TODAY"] = " (dnes)";
 Calendar._TT["MON_FIRST"] = "Ukaû jako prvnÌ PondÏlÌ";
 //Calendar._TT["SUN_FIRST"] = "Ukaû jako prvnÌ NedÏli";

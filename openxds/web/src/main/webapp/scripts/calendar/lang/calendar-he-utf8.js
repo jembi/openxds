@@ -1,3 +1,20 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 // ** I18N
 
 // Calendar EN language
@@ -11,14 +28,14 @@
 
 // full day names
 Calendar._DN = new Array
-("ראשון",
+("ר�?שון",
  "שני",
  "שלישי",
  "רביעי",
  "חמישי",
  "שישי",
  "שבת",
- "ראשון");
+ "ר�?שון");
 
 // Please note that the following array of short day names (and the same goes
 // for short month names, _SMN) isn't absolutely necessary.  We give it here
@@ -34,77 +51,77 @@ Calendar._DN = new Array
 
 // short day names
 Calendar._SDN = new Array
-("א",
+("�?",
  "ב",
  "ג",
  "ד",
  "ה",
  "ו",
  "ש",
- "א");
+ "�?");
 
 // full month names
 Calendar._MN = new Array
-("ינואר",
- "פברואר",
+("ינו�?ר",
+ "פברו�?ר",
  "מרץ",
- "אפריל",
- "מאי",
+ "�?פריל",
+ "מ�?י",
  "יוני",
  "יולי",
- "אוגוסט",
+ "�?וגוסט",
  "ספטמבר",
- "אוקטובר",
+ "�?וקטובר",
  "נובמבר",
  "דצמבר");
 
 // short month names
 Calendar._SMN = new Array
-("ינא",
+("ינ�?",
  "פבר",
  "מרץ",
- "אפר",
- "מאי",
+ "�?פר",
+ "מ�?י",
  "יונ",
  "יול",
- "אוג",
+ "�?וג",
  "ספט",
- "אוק",
+ "�?וק",
  "נוב",
  "דצמ");
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "אודות השנתון";
+Calendar._TT["INFO"] = "�?ודות השנתון";
 
 Calendar._TT["ABOUT"] =
-"בחרן תאריך/שעה DHTML\n" +
+"בחרן ת�?ריך/שעה DHTML\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)
-"הגירסא האחרונה זמינה ב: http://www.dynarch.com/projects/calendar/\n" +
-"מופץ תחת זיכיון ה GNU LGPL.  עיין ב http://gnu.org/licenses/lgpl.html לפרטים נוספים." +
+"הגירס�? ה�?חרונה זמינה ב: http://www.dynarch.com/projects/calendar/\n" +
+"מופץ תחת זיכיון ה GNU LGPL.  עיין ב http://gnu.org/licenses/lgpl.html לפרטי�? נוספי�?." +
 "\n\n" +
-בחירת תאריך:\n" +
-"- השתמש בכפתורים \xab, \xbb לבחירת שנה\n" +
-"- השתמש בכפתורים " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " לבחירת חודש\n" +
-"- החזק העכבר לחוץ מעל הכפתורים המוזכרים לעיל לבחירה מהירה יותר.";
+בחירת ת�?ריך:\n" +
+"- השתמש בכפתורי�? \xab, \xbb לבחירת שנה\n" +
+"- השתמש בכפתורי�? " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " לבחירת חודש\n" +
+"- החזק העכבר לחוץ מעל הכפתורי�? המוזכרי�? לעיל לבחירה מהירה יותר.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "בחירת זמן:\n" +
-"- לחץ על כל אחד מחלקי הזמן כדי להוסיף\n" +
-"- או shift בשילוב עם לחיצה כדי להחסיר\n" +
-"- או לחץ וגרור לפעולה מהירה יותר.";
+"- לחץ על כל �?חד מחלקי הזמן כדי להוסיף\n" +
+"- �?ו shift בשילוב ע�? לחיצה כדי להחסיר\n" +
+"- �?ו לחץ וגרור לפעולה מהירה יותר.";
 
 Calendar._TT["PREV_YEAR"] = "שנה קודמת - החזק לקבלת תפריט";
-Calendar._TT["PREV_MONTH"] = "חודש קודם - החזק לקבלת תפריט";
-Calendar._TT["GO_TODAY"] = "עבור להיום";
-Calendar._TT["NEXT_MONTH"] = "חודש הבא - החזק לתפריט";
-Calendar._TT["NEXT_YEAR"] = "שנה הבאה - החזק לתפריט";
-Calendar._TT["SEL_DATE"] = "בחר תאריך";
+Calendar._TT["PREV_MONTH"] = "חודש קוד�? - החזק לקבלת תפריט";
+Calendar._TT["GO_TODAY"] = "עבור להיו�?";
+Calendar._TT["NEXT_MONTH"] = "חודש הב�? - החזק לתפריט";
+Calendar._TT["NEXT_YEAR"] = "שנה הב�?ה - החזק לתפריט";
+Calendar._TT["SEL_DATE"] = "בחר ת�?ריך";
 Calendar._TT["DRAG_TO_MOVE"] = "גרור להזזה";
-Calendar._TT["PART_TODAY"] = " )היום(";
+Calendar._TT["PART_TODAY"] = " )היו�?(";
 
 // the following is to inform that "%s" is to be the first day of week
 // %s will be replaced with the day name.
-Calendar._TT["DAY_FIRST"] = "הצג %s קודם";
+Calendar._TT["DAY_FIRST"] = "הצג %s קוד�?";
 
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
@@ -112,7 +129,7 @@ Calendar._TT["DAY_FIRST"] = "הצג %s קודם";
 Calendar._TT["WEEKEND"] = "6";
 
 Calendar._TT["CLOSE"] = "סגור";
-Calendar._TT["TODAY"] = "היום";
+Calendar._TT["TODAY"] = "היו�?";
 Calendar._TT["TIME_PART"] = "(שיפט-)לחץ וגרור כדי לשנות ערך";
 
 // date formats
