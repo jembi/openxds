@@ -95,6 +95,21 @@
                     <useFullNames>false</useFullNames>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>${project.parent.basedir}/src/main/resources/header.txt</header>
+                    <excludes>
+                        <exclude>**/header.txt</exclude>
+                        <exclude>**/*.log</exclude>
+                        <exclude>**/.xsdconfig</exclude>
+                        <exclude>**/*.original</exclude>
+                        <exclude>**/.myhibernatedata</exclude>
+                    </excludes>
+                    
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -114,6 +129,17 @@
             <id>appfuse</id>
             <url>http://static.appfuse.org/repository</url>
         </pluginRepository>
+	<pluginRepository>
+	    <id>mc-release</id>
+	    <name>Local Maven repository of releases</name>
+	    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+	    <snapshots>
+	        <enabled>false</enabled>
+	    </snapshots>
+	    <releases>
+	        <enabled>true</enabled>
+	    </releases>
+	</pluginRepository>
     </pluginRepositories>
 
     <!-- Dependencies calculated by AppFuse when running full-source plugin -->

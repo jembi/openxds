@@ -1,18 +1,35 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 ﻿// ** I18N
 Calendar._DN = new Array
-("Κυριακή",
- "Δευτέρα",
- "Τρίτη",
- "Τετάρτη",
+("Κυ�?ιακή",
+ "Δευτέ�?α",
+ "Τ�?ίτη",
+ "Τετά�?τη",
  "Πέμπτη",
- "Παρασκευή",
+ "Πα�?ασκευή",
  "Σάββατο",
- "Κυριακή");
+ "Κυ�?ιακή");
 
 Calendar._SDN = new Array
 ("Κυ",
  "Δε",
- "Tρ",
+ "T�?",
  "Τε",
  "Πε",
  "Πα",
@@ -20,65 +37,65 @@ Calendar._SDN = new Array
  "Κυ");
 
 Calendar._MN = new Array
-("Ιανουάριος",
- "Φεβρουάριος",
- "Μάρτιος",
- "Απρίλιος",
+("Ιανουά�?ιος",
+ "Φεβ�?ουά�?ιος",
+ "Μά�?τιος",
+ "Απ�?ίλιος",
  "Μάϊος",
- "Ιούνιος",
- "Ιούλιος",
- "Αύγουστος",
- "Σεπτέμβριος",
- "Οκτώβριος",
- "Νοέμβριος",
- "Δεκέμβριος");
+ "Ιο�?νιος",
+ "Ιο�?λιος",
+ "Α�?γουστος",
+ "Σεπτέμβ�?ιος",
+ "Οκτώβ�?ιος",
+ "�?οέμβ�?ιος",
+ "Δεκέμβ�?ιος");
 
 Calendar._SMN = new Array
 ("Ιαν",
  "Φεβ",
- "Μαρ",
- "Απρ",
+ "Μα�?",
+ "Απ�?",
  "Μαι",
  "Ιουν",
  "Ιουλ",
  "Αυγ",
  "Σεπ",
  "Οκτ",
- "Νοε",
+ "�?οε",
  "Δεκ");
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "Για το ημερολόγιο";
+Calendar._TT["INFO"] = "Για το ημε�?ολόγιο";
 
 Calendar._TT["ABOUT"] =
-"Επιλογέας ημερομηνίας/ώρας σε DHTML\n" +
+"Επιλογέας ημε�?ομηνίας/ώ�?ας σε DHTML\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)
 "Για τελευταία έκδοση: http://www.dynarch.com/projects/calendar/\n" +
 "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
 "\n\n" +
-"Επιλογή ημερομηνίας:\n" +
-"- Χρησιμοποιείστε τα κουμπιά \xab, \xbb για επιλογή έτους\n" +
-"- Χρησιμοποιείστε τα κουμπιά " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " για επιλογή μήνα\n" +
-"- Κρατήστε κουμπί ποντικού πατημένο στα παραπάνω κουμπιά για πιο γρήγορη επιλογή.";
+"Επιλογή ημε�?ομηνίας:\n" +
+"- Χ�?ησιμοποιείστε τα κουμπιά \xab, \xbb για επιλογή έτους\n" +
+"- Χ�?ησιμοποιείστε τα κουμπιά " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " για επιλογή μήνα\n" +
+"- Κ�?ατήστε κουμπί ποντικο�? πατημένο στα πα�?απάνω κουμπιά για πιο γ�?ήγο�?η επιλογή.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
-"Επιλογή ώρας:\n" +
-"- Κάντε κλικ σε ένα από τα μέρη της ώρας για αύξηση\n" +
+"Επιλογή ώ�?ας:\n" +
+"- Κάντε κλικ σε ένα από τα μέ�?η της ώ�?ας για α�?ξηση\n" +
 "- ή Shift-κλικ για μείωση\n" +
-"- ή κλικ και μετακίνηση για πιο γρήγορη επιλογή.";
-Calendar._TT["TOGGLE"] = "Μπάρα πρώτης ημέρας της εβδομάδας";
-Calendar._TT["PREV_YEAR"] = "Προηγ. έτος (κρατήστε για το μενού)";
-Calendar._TT["PREV_MONTH"] = "Προηγ. μήνας (κρατήστε για το μενού)";
-Calendar._TT["GO_TODAY"] = "Σήμερα";
-Calendar._TT["NEXT_MONTH"] = "Επόμενος μήνας (κρατήστε για το μενού)";
-Calendar._TT["NEXT_YEAR"] = "Επόμενο έτος (κρατήστε για το μενού)";
-Calendar._TT["SEL_DATE"] = "Επιλέξτε ημερομηνία";
-Calendar._TT["DRAG_TO_MOVE"] = "Σύρτε για να μετακινήσετε";
-Calendar._TT["PART_TODAY"] = " (σήμερα)";
-Calendar._TT["MON_FIRST"] = "Εμφάνιση Δευτέρας πρώτα";
-Calendar._TT["SUN_FIRST"] = "Εμφάνιση Κυριακής πρώτα";
+"- ή κλικ και μετακίνηση για πιο γ�?ήγο�?η επιλογή.";
+Calendar._TT["TOGGLE"] = "Μπά�?α π�?ώτης ημέ�?ας της εβδομάδας";
+Calendar._TT["PREV_YEAR"] = "Π�?οηγ. έτος (κ�?ατήστε για το μενο�?)";
+Calendar._TT["PREV_MONTH"] = "Π�?οηγ. μήνας (κ�?ατήστε για το μενο�?)";
+Calendar._TT["GO_TODAY"] = "Σήμε�?α";
+Calendar._TT["NEXT_MONTH"] = "Επόμενος μήνας (κ�?ατήστε για το μενο�?)";
+Calendar._TT["NEXT_YEAR"] = "Επόμενο έτος (κ�?ατήστε για το μενο�?)";
+Calendar._TT["SEL_DATE"] = "Επιλέξτε ημε�?ομηνία";
+Calendar._TT["DRAG_TO_MOVE"] = "Σ�?�?τε για να μετακινήσετε";
+Calendar._TT["PART_TODAY"] = " (σήμε�?α)";
+Calendar._TT["MON_FIRST"] = "Εμφάνιση Δευτέ�?ας π�?ώτα";
+Calendar._TT["SUN_FIRST"] = "Εμφάνιση Κυ�?ιακής π�?ώτα";
 Calendar._TT["CLOSE"] = "Κλείσιμο";
-Calendar._TT["TODAY"] = "Σήμερα";
+Calendar._TT["TODAY"] = "Σήμε�?α";
 Calendar._TT["TIME_PART"] = "(Shift-)κλικ ή μετακίνηση για αλλαγή";
 
 // date formats

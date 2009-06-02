@@ -1,3 +1,20 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 // ** I18N
 
 // Calendar SK language
@@ -68,25 +85,25 @@ Calendar._TT["ABOUT"] =
 "PoslednĂş verziu nĂˇjdete na: http://www.dynarch.com/projects/calendar/\n" +
 "DistribuovanĂ© pod GNU LGPL.  ViÄŹ http://gnu.org/licenses/lgpl.html pre detaily." +
 "\n\n" +
-"VĂ˝ber dĂˇtumu:\n" +
-"- PouĹľite tlaÄŤidlĂˇ \xab, \xbb pre vĂ˝ber roku\n" +
-"- PouĹľite tlaÄŤidlĂˇ " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " pre vĂ˝ber mesiaca\n" +
-"- Ak ktorĂ©koÄľvek z tĂ˝chto tlaÄŤidiel podrĹľĂ­te dlhĹˇie, zobrazĂ­ sa rĂ˝chly vĂ˝ber.";
+"VĂ�?ber dĂˇtumu:\n" +
+"- PouĹľite tlaÄŤidlĂˇ \xab, \xbb pre vĂ�?ber roku\n" +
+"- PouĹľite tlaÄŤidlĂˇ " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " pre vĂ�?ber mesiaca\n" +
+"- Ak ktorĂ©koÄľvek z tĂ�?chto tlaÄŤidiel podrĹľĂ­te dlhĹˇie, zobrazĂ­ sa rĂ�?chly vĂ�?ber.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
-"VĂ˝ber ÄŤasu:\n" +
-"- Kliknutie na niektorĂş poloĹľku ÄŤasu ju zvĂ˝Ĺˇi\n" +
+"VĂ�?ber ÄŤasu:\n" +
+"- Kliknutie na niektorĂş poloĹľku ÄŤasu ju zvĂ�?Ĺˇi\n" +
 "- Shift-klik ju znĂ­Ĺľi\n" +
 "- Ak podrĹľĂ­te tlaÄŤĂ­tko stlaÄŤenĂ©, posĂşvanĂ­m menĂ­te hodnotu.";
 
-Calendar._TT["PREV_YEAR"] = "PredoĹˇlĂ˝ rok (podrĹľte pre menu)";
-Calendar._TT["PREV_MONTH"] = "PredoĹˇlĂ˝ mesiac (podrĹľte pre menu)";
+Calendar._TT["PREV_YEAR"] = "PredoĹˇlĂ�? rok (podrĹľte pre menu)";
+Calendar._TT["PREV_MONTH"] = "PredoĹˇlĂ�? mesiac (podrĹľte pre menu)";
 Calendar._TT["GO_TODAY"] = "PrejsĹĄ na dneĹˇok";
 Calendar._TT["NEXT_MONTH"] = "Nasl. mesiac (podrĹľte pre menu)";
 Calendar._TT["NEXT_YEAR"] = "Nasl. rok (podrĹľte pre menu)";
 Calendar._TT["SEL_DATE"] = "ZvoÄľte dĂˇtum";
 Calendar._TT["DRAG_TO_MOVE"] = "PodrĹľanĂ­m tlaÄŤĂ­tka zmenĂ­te polohu";
 Calendar._TT["PART_TODAY"] = " (dnes)";
-Calendar._TT["MON_FIRST"] = "ZobraziĹĄ pondelok ako prvĂ˝";
+Calendar._TT["MON_FIRST"] = "ZobraziĹĄ pondelok ako prvĂ�?";
 Calendar._TT["SUN_FIRST"] = "ZobraziĹĄ nedeÄľu ako prvĂş";
 Calendar._TT["CLOSE"] = "ZavrieĹĄ";
 Calendar._TT["TODAY"] = "Dnes";
@@ -96,4 +113,4 @@ Calendar._TT["TIME_PART"] = "(Shift-)klik/ĹĄahanie zmenĂ­ hodnotu";
 Calendar._TT["DEF_DATE_FORMAT"] = "$d. %m. %Y";
 Calendar._TT["TT_DATE_FORMAT"] = "%a, %e. %b";
 
-Calendar._TT["WK"] = "tĂ˝Ĺľ";
+Calendar._TT["WK"] = "tĂ�?Ĺľ";

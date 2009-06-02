@@ -1,9 +1,26 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 // ** I18N
 Calendar._DN = new Array
 ("“ú",
  "Œ",
  "‰Î",
- "…",
+ "?…",
  "–Ø",
  "‹à",
  "“y",
@@ -24,22 +41,22 @@ Calendar._MN = new Array
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["TOGGLE"] = "T‚ÌÅ‰‚Ì—j“ú‚ğØ‚è‘Ö‚¦";
+Calendar._TT["TOGGLE"] = "?T‚Ì?Å?‰‚Ì—j“ú‚ğ?Ø‚è‘Ö‚¦";
 Calendar._TT["PREV_YEAR"] = "‘O”N";
 Calendar._TT["PREV_MONTH"] = "‘OŒ";
-Calendar._TT["GO_TODAY"] = "¡“ú";
+Calendar._TT["GO_TODAY"] = "?¡“ú";
 Calendar._TT["NEXT_MONTH"] = "—‚Œ";
 Calendar._TT["NEXT_YEAR"] = "—‚”N";
 Calendar._TT["SEL_DATE"] = "“ú•t‘I‘ğ";
 Calendar._TT["DRAG_TO_MOVE"] = "ƒEƒBƒ“ƒhƒE‚ÌˆÚ“®";
-Calendar._TT["PART_TODAY"] = " (¡“ú)";
-Calendar._TT["MON_FIRST"] = "Œ—j“ú‚ğæ“ª‚É";
-Calendar._TT["SUN_FIRST"] = "“ú—j“ú‚ğæ“ª‚É";
+Calendar._TT["PART_TODAY"] = " (?¡“ú)";
+Calendar._TT["MON_FIRST"] = "Œ—j“ú‚ğ?æ“ª‚É";
+Calendar._TT["SUN_FIRST"] = "“ú—j“ú‚ğ?æ“ª‚É";
 Calendar._TT["CLOSE"] = "•Â‚¶‚é";
-Calendar._TT["TODAY"] = "¡“ú";
+Calendar._TT["TODAY"] = "?¡“ú";
 
 // date formats
 Calendar._TT["DEF_DATE_FORMAT"] = "y-mm-dd";
 Calendar._TT["TT_DATE_FORMAT"] = "%mŒ %d“ú (%a)";
 
-Calendar._TT["WK"] = "T";
+Calendar._TT["WK"] = "?T";

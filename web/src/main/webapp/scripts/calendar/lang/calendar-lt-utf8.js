@@ -1,3 +1,20 @@
+/*
+ *
+ *  Copyright (C) 2009 SYSNET International <support@sysnetint.com>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ */
 // ** I18N
 
 // Calendar LT language
@@ -14,7 +31,7 @@ Calendar._DN = new Array
 ("Sekmadienis",
  "Pirmadienis",
  "Antradienis",
- "Trečiadienis",
+ "Tre�?iadienis",
  "Ketvirtadienis",
  "Pentadienis",
  "Šeštadienis",
@@ -89,8 +106,8 @@ Calendar._TT["ABOUT"] =
 "- Nuspauskite ir laikykite pelės klavišą greitesniam pasirinkimui.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Laiko pasirinkimas:\n" +
-"- Spustelkite ant valandų arba minučių - skaičius padidės vienetu.\n" +
-"- Jei spausite kartu su Shift, skaičius sumažės.\n" +
+"- Spustelkite ant valandų arba minu�?ių - skai�?ius padidės vienetu.\n" +
+"- Jei spausite kartu su Shift, skai�?ius sumažės.\n" +
 "- Greitam pasirinkimui spustelkite ir pajudinkite pelę.";
 
 Calendar._TT["PREV_YEAR"] = "Ankstesni metai (laikykite, jei norite meniu)";
