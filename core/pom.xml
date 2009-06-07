@@ -11,9 +11,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     
-    <artifactId>openxds-core</artifactId>
+    <artifactId>openxds-template</artifactId>
     <packaging>jar</packaging>
-    <name>AppFuse Modular Application - Core</name>
+    <name>AppFuse Modular Application - template</name>
     
     <build>
         <plugins>
