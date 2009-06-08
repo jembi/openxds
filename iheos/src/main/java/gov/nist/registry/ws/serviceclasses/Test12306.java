@@ -1,0 +1,56 @@
+package gov.nist.registry.ws.serviceclasses;
+
+import gov.nist.registry.common2.exception.ExceptionUtil;
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.registry.Metadata;
+import gov.nist.registry.common2.registry.MetadataParser;
+import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.RegistryErrorList;
+import gov.nist.registry.common2.registry.Response;
+import gov.nist.registry.ws.StoredQueryFactory;
+import gov.nist.registry.xdslog.Message;
+
+import org.apache.axiom.om.OMElement;
+
+public class Test12306 extends RG {
+
+	public OMElement AdhocQueryRequest(OMElement ahqr) {
+		return AdhocQueryRequest(ahqr, "XCA", "Test12306");
+	}
+
+	public boolean runRequestValidation(OMElement request, RegistryErrorList rel, Message log_message) {
+		try {
+			StoredQueryFactory fact = new StoredQueryFactory(request);
+			if ( fact.isLeafClassReturnType()) {
+				rel.add_error(MetadataSupport.XDSRegistryMetadataError, "This test requires returnType=\"ObjectRef\"", "RG.java", log_message);
+				return false;
+			}
+			return true;
+		}
+		catch (Exception e) { 
+			rel.add_error(MetadataSupport.XDSRegistryMetadataError, ExceptionUtil.exception_details(e), "RG.java", log_message);
+			return false; 
+		}
+	}
+
+	public boolean runContentValidationService(Metadata request,
+			Response response) {
+		try {
+			Metadata m = MetadataParser.parseNonSubmission(response.getResponse());
+			if (    m.getExtrinsicObjects().size() != 0 ||
+					m.getSubmissionSets().size() != 0 ||
+					m.getFolders().size() != 0 ||
+					m.getObjectRefs().size() != 2 ||
+					m.getAssociations().size() != 0) {
+				throw new MetadataException("Expected 2 ObjectRefs, found " + m.getMetadataDescription());
+			}
+		}
+		catch (Exception e) {
+			response.registryErrorList.add_error(MetadataSupport.XDSRegistryMetadataError, ExceptionUtil.exception_details(e), "RG.java", log_message);
+			return false;
+		}
+		return true;
+	}
+
+
+}
