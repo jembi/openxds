@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <parent>
+    <artifactId>openxds</artifactId>
+    <groupId>org.openhealthexchange.openxds</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openhealthexchange.openxds</groupId>
+  <artifactId>common-ws</artifactId>
+  <name>common-ws</name>
+  <version>1.0-SNAPSHOT</version>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<artifactId>apache-axis2</artifactId>
+  		<version>${project.version}</version>
+  		<type>pom</type>
+  	</dependency>
+  </dependencies>
+</project>
