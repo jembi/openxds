@@ -126,6 +126,10 @@
             <id>appfuse</id>
             <url>http://static.appfuse.org/repository</url>
         </repository>
+        <repository>
+            <id>openxds</id>
+            <url>https://openxds.projects.openhealthtools.org/svn/repo</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
