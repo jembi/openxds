@@ -128,7 +128,7 @@
         </repository>
         <repository>
             <id>openxds</id>
-            <url>https://openxds.projects.openhealthtools.org/svn/repo</url>
+            <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
         </repository>
     </repositories>
 
