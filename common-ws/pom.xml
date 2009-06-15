@@ -17,5 +17,10 @@
   		<version>${project.version}</version>
   		<type>pom</type>
   	</dependency>
+   	<dependency>
+  		<groupId>com.misys.braid</groupId>
+  		<artifactId>braid-base</artifactId>
+  		<version>${braid.version}</version>
+  	</dependency>     	
   </dependencies>
 </project>

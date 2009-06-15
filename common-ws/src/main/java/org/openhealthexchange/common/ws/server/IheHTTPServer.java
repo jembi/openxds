@@ -24,6 +24,8 @@ import org.apache.axis2.transport.http.server.SessionManager;
 import org.apache.axis2.util.OptionsParser;
 import org.apache.log4j.Logger;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 
 public class IheHTTPServer implements TransportListener {
 	private static final Logger LOG = Logger.getLogger(SimpleHttpServer.class);
@@ -33,9 +35,9 @@ public class IheHTTPServer implements TransportListener {
      */
     SimpleHttpServer embedded = null;
     private String localAddress;
-    int port = -1;
+    IConnectionDescription connection; 
 
-    public static int DEFAULT_PORT = 8080;
+	public static int DEFAULT_PORT = 8080;
 
     private String hostAddress = null;
 
@@ -49,17 +51,17 @@ public class IheHTTPServer implements TransportListener {
     /**
      * Create a IheHTTPServer using default IheHttpFactory settings
      */
-    public IheHTTPServer(ConfigurationContext configurationContext, int port) throws AxisFault {
-        this(new IheHttpFactory(configurationContext, port));
+    public IheHTTPServer(ConfigurationContext configurationContext, IConnectionDescription connection) throws AxisFault {
+        this(new IheHttpFactory(configurationContext, connection));
+        this.connection = connection;
     }
 
     /**
      * Create a configured IheHTTPServer
      */
-    public IheHTTPServer(IheHttpFactory httpFactory) throws AxisFault {
+    private IheHTTPServer(IheHttpFactory httpFactory) throws AxisFault {
         this.httpFactory = httpFactory;
         this.configurationContext = httpFactory.getConfigurationContext();
-        this.port = httpFactory.getPort();
         TransportInDescription httpDescription =
                 new TransportInDescription(Constants.TRANSPORT_HTTP);
         httpDescription.setReceiver(this);
@@ -79,18 +81,12 @@ public class IheHTTPServer implements TransportListener {
         try {
             this.configurationContext = axisConf;
 
-            Parameter param = transprtIn.getParameter(PARAM_PORT);
-            if (param != null) {
-                this.port = Integer.parseInt((String) param.getValue());
-            }
-
             if (httpFactory == null) {
-                httpFactory = new IheHttpFactory(configurationContext, port);
+                httpFactory = new IheHttpFactory(configurationContext, connection);
             }
 
-            param = transprtIn.getParameter(HOST_ADDRESS);
-            if (param != null) {
-                hostAddress = ((String) param.getValue()).trim();
+            if (connection.getHostname() != null) {
+                hostAddress = connection.getHostname();
             } else {
                 hostAddress = httpFactory.getHostAddress();
             }
@@ -134,11 +130,16 @@ public class IheHTTPServer implements TransportListener {
         System.out.println("[IheHTTPServer] Starting");
         System.out.println("[IheHTTPServer] Using the Axis2 Repository "
                            + new File(repository).getAbsolutePath());
-        System.out.println("[IheHTTPServer] Listening on port " + port);
+        //TODO: get port
+        //System.out.println("[IheHTTPServer] Listening on port " + port);
         try {
             ConfigurationContext configctx = ConfigurationContextFactory
                     .createConfigurationContextFromFileSystem(repository, null);
-            IheHTTPServer receiver = new IheHTTPServer(configctx, port);
+
+            //TODO: get ConnectionDescription
+            //IheHTTPServer receiver = new IheHTTPServer(configctx, new ConnectionDescription());
+            IheHTTPServer receiver = new IheHTTPServer(configctx, null);
+            
             Runtime.getRuntime().addShutdownHook(new ShutdownThread(receiver));
             receiver.start();
             ListenerManager listenerManager = configctx .getListenerManager();
@@ -186,8 +187,9 @@ public class IheHTTPServer implements TransportListener {
      * Start this server as a NON-daemon.
      */
     public void start() throws AxisFault {
+        System.out.println("[IheHTTPServer] Start called");
         try {
-            embedded = new SimpleHttpServer(httpFactory, port);
+            embedded = new SimpleHttpServer(httpFactory, connection);
             embedded.init();
             embedded.start();
         } catch (IOException e) {
@@ -319,7 +321,7 @@ public class IheHTTPServer implements TransportListener {
         return embedded.isRunning();
     }
 
-    static class ShutdownThread extends Thread {
+    public static class ShutdownThread extends Thread {
         private IheHTTPServer server = null;
 
         public ShutdownThread(IheHTTPServer server) {
@@ -343,5 +345,10 @@ public class IheHTTPServer implements TransportListener {
     public void destroy() {
         this.configurationContext = null;
     }
+
+
+    public IConnectionDescription getConnection() {
+		return connection;
+	}
 
 }

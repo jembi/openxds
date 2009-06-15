@@ -10,6 +10,8 @@ import org.apache.axis2.transport.http.server.WorkerFactory;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
@@ -21,7 +23,7 @@ public class SimpleHttpServer {
     private static final int SHUTDOWN_GRACE_PERIOD = 3000; // ms
 
     private IheHttpFactory httpFactory;
-    private final int port;
+    private final IConnectionDescription connection;
     private final HttpParams params;
     private final WorkerFactory workerFactory;
 
@@ -31,24 +33,24 @@ public class SimpleHttpServer {
     private ExecutorService requestExecutor = null;
 
     public SimpleHttpServer(ConfigurationContext configurationContext, WorkerFactory workerFactory,
-                            int port) throws IOException {
-        this(new IheHttpFactory(configurationContext, port, workerFactory), port);
+                            IConnectionDescription connection) throws IOException {    	
+        this(new IheHttpFactory(configurationContext, connection, workerFactory), connection);
     }
 
-    public SimpleHttpServer(IheHttpFactory httpFactory, int port) throws IOException {
+    public SimpleHttpServer(IheHttpFactory httpFactory, IConnectionDescription connection) throws IOException {
         this.httpFactory = httpFactory;
-        this.port = port;
+        this.connection = connection;
         this.workerFactory = httpFactory.newRequestWorkerFactory();
         this.params = httpFactory.newRequestConnectionParams();
-        this.params.setIntParameter(AxisParams.LISTENER_PORT, port);
+        this.params.setIntParameter(AxisParams.LISTENER_PORT, connection.getPort());
     }
 
     public void init() throws IOException {
-        requestExecutor = httpFactory.newRequestExecutor(port);
+        requestExecutor = httpFactory.newRequestExecutor(connection.getPort());
         connmanager =
                 httpFactory.newRequestConnectionManager(requestExecutor, workerFactory, params);
-        listenerExecutor = httpFactory.newListenerExecutor(port);
-        listener = httpFactory.newRequestConnectionListener(port, connmanager, params);
+        listenerExecutor = httpFactory.newListenerExecutor(connection.getPort());
+        listener = httpFactory.newRequestConnectionListener(connection, connmanager, params);
     }
 
     public void destroy() throws IOException, InterruptedException {
@@ -87,7 +89,7 @@ public class SimpleHttpServer {
     }
 
     public int getPort() {
-        return this.port;
+        return this.connection.getPort();
     }
 
 
