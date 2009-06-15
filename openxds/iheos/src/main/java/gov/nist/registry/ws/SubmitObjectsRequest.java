@@ -36,30 +36,33 @@ import javax.xml.transform.TransformerConfigurationException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryLifeCycleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
+
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class SubmitObjectsRequest extends XdsCommon {
 	boolean submit_raw = false;
 	ContentValidationService validater;
 	short xds_version;
 	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
-	static Properties properties = null;
+	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
 	
-	static {
-		properties = Properties.loader();
-		BasicConfigurator.configure();
-	}
 
 	public SubmitObjectsRequest(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
 		this.xds_version = xds_version;
 		try {
+			IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+			connection = httpServer.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XdsRegistry connection configuration.");			
+			}
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 			loadSourceIds();
 		} catch (XdsInternalException e) {
@@ -69,7 +72,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	
 	void loadSourceIds() throws XdsInternalException {
 		if (sourceIds != null) return;
-		String sids = properties.getString("sourceIds");
+		String sids = connection.getProperty("sourceIds");
 		if (sids == null || sids.equals(""))
 			throw new XdsInternalException("Registry: sourceIds not configured");
 		String[] parts = sids.split(",");
