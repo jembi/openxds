@@ -34,6 +34,10 @@ import org.apache.http.protocol.ResponseContent;
 import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
 
+import com.misyshealthcare.connect.net.ConnectionFactory;
+import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.IServerConnection;
+
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
@@ -95,7 +99,7 @@ public class IheHttpFactory {
 
     private ConfigurationContext configurationContext;
     private TransportInDescription httpConfiguration;
-    private int port;
+    private IConnectionDescription connection;
     private String hostAddress;
     private String originServer;
     private int requestSocketTimeout;
@@ -113,7 +117,7 @@ public class IheHttpFactory {
     public IheHttpFactory(ConfigurationContext configurationContext) throws AxisFault {
         this.configurationContext = configurationContext;
         httpConfiguration = configurationContext.getAxisConfiguration().getTransportIn(Constants.TRANSPORT_HTTP);
-        port = getIntParam(PARAMETER_PORT, 6060);
+//        port = getIntParam(PARAMETER_PORT, 6060);
         hostAddress = getStringParam(PARAMETER_HOST_ADDRESS, null);
         originServer = getStringParam(PARAMETER_ORIGIN_SERVER, "Simple-Server/1.1");
         requestSocketTimeout = getIntParam(PARAMETER_REQUEST_SOCKET_TIMEOUT, 20000);
@@ -128,17 +132,17 @@ public class IheHttpFactory {
     /**
      * Create and configure a new HttpFactory
      */
-    public IheHttpFactory(ConfigurationContext configurationContext, int port) throws AxisFault {
+    public IheHttpFactory(ConfigurationContext configurationContext, IConnectionDescription connection) throws AxisFault {
         this(configurationContext);
-        this.port = port;
+        this.connection = connection;
     }
 
     /**
      * Create and configure a new HttpFactory
      */
-    public IheHttpFactory(ConfigurationContext configurationContext, int port,
+    public IheHttpFactory(ConfigurationContext configurationContext, IConnectionDescription connection,
                        WorkerFactory requestWorkerFactory) throws AxisFault {
-        this(configurationContext, port);
+        this(configurationContext, connection);
         this.requestWorkerFactory = requestWorkerFactory;
     }
 
@@ -219,7 +223,7 @@ public class IheHttpFactory {
                                       new LinkedBlockingQueue(),
                                       new DefaultThreadFactory(
                                               new ThreadGroup("Listener thread group"),
-                                              "HttpListener-" + this.port));
+                                              "HttpListener-" + this.connection.getPort()));
     }
 
     /**
@@ -230,13 +234,27 @@ public class IheHttpFactory {
             final HttpConnectionManager manager, 
             final HttpParams params) throws IOException {
         return new IheConnectionListener(
-       		 //TODO: get the port from actor configuration
-                new ServerSocket(9876), 
+                new ServerSocket(port), 
                 manager, 
                 new DefaultConnectionListenerFailureHandler(), 
                 params);
     }
 
+    /**
+     * Create the listener for request connections
+     */
+    public IOProcessor newRequestConnectionListener(
+            IConnectionDescription connection,
+            final HttpConnectionManager manager, 
+            final HttpParams params) throws IOException {
+		IServerConnection serverConn = ConnectionFactory.getServerConnection(connection);
+		ServerSocket serversocket = serverConn.getServerSocket();
+        return new IheConnectionListener(
+        		serversocket,
+                manager, 
+                new DefaultConnectionListenerFailureHandler(), 
+                params);
+    }    
     /**
      * Create and set the parameters applied to incoming request connections
      */
@@ -331,18 +349,18 @@ public class IheHttpFactory {
     }
 
     /**
-     * Getter for port
-     * return the port on which to listen for http connections (default = 6060)
+     * Getter for ConnectionDescription
+     * return the ConnectionDescription on which to listen for http connections 
      */
-    public int getPort() {
-        return port;
+    public IConnectionDescription getConnectionDescription() {
+        return connection;
     }
 
     /**
-     * Setter for port
+     * Setter for ConnectionDescription
      */
-    public void setPort(int port) {
-        this.port = port;
+    public void setConnectionDescription(IConnectionDescription connection) {
+        this.connection = connection;
     }
 
     /**
