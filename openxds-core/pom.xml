@@ -70,6 +70,16 @@
 	  		<version>${project.version}</version>
 	  	</dependency>    
       	<dependency>
+	  		<groupId>org.openhealthexchange.openxds</groupId>
+	  		<artifactId>common-ws</artifactId>
+	  		<version>${project.version}</version>
+	  	</dependency>    
+      	<dependency>
+	  		<groupId>org.openhealthexchange.openxds</groupId>
+	  		<artifactId>iheos</artifactId>
+	  		<version>${project.version}</version>
+	  	</dependency>    
+      	<dependency>
 	  		<groupId>org.openhealthexchange.openpixpdq</groupId>
 	  		<artifactId>openpixpdq</artifactId>
 	  		<version>${openpixpdq.version}</version>

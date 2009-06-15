@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Note: This file is the starting point of All the Actor configuration;
+	all other config files should be linked from here. -->
+
+<!--Each configuration file has a root Configuration tag-->
+<Configuration>
+
+	<!--Defines the configuration of Audit Repository Server for Audit Client-->
+	<ConnectionFile file="AuditRepositoryConnections.xml" />
+	<!--Defines the configuration of XDS Registry-->
+	<ConnectionFile file="XdsRegistryConnections.xml" />
+	<!--Defines the configuration of XDS Repository-->
+	<ConnectionFile file="XdsRepositoryConnections.xml" />
+
+	<!--The XDS Registry actor configuration-->
+	<Actor name="xdsreg" type="XdsRegistry">
+		<Description>XDS Registry</Description>
+		<XdsRegistry connection="xds-registry" />
+		<PixRegistry connection="pix-registry" />
+	</Actor>
+	<!-- Actor name="xdsreg_secure" type="XdsRegistry">
+		<Description>Secure XDS Registry</Description>
+		<XdsRegistry connection="secure-xds-registry" />
+		<PixRegistry connection="secure-pix-registry" />
+	</Actor-->
+
+	<!--The XDS Repository actor configuration-->
+	<Actor name="xdsrep" type="XdsRepository">
+		<Description>XDS Repository</Description>
+		<XdsRepository connection="xds-repository" />
+		<XdsRegistryClient connection="xds-registry-client" />
+	</Actor>
+	<!-- Actor name="xdsrep_secure" type="XdsRepository">
+		<Description>Secure XDS Repository</Description>
+		<XdsRepository connection="secure-xds-repository" />
+		<XdsRegistryClient connection="secure-xds-registry-client" />
+	</Actor-->
+
+
+	<!-- Audit Repository Actor -->
+	<!-- 
+		<Actor name="auditmesa" type="SecureNode">
+		<Description>MESA AUDIT TRAILS</Description>
+		<AuditTrail consumer="mesa_arr_bsd" />
+		<AuditTrail consumer="log4j_audittrail" />
+		</Actor>
+		<Actor name="auditnist" type="SecureNode">
+		<Description>NIST AUDIT TRAILS</Description>
+		<AuditTrail consumer="nist-arr-bsd" />
+		</Actor>
+		<Actor name="auditibm" type="SecureNode">
+		<Description>IBM AUDIT TRAILS</Description>
+		<AuditTrail consumer="ibm-arr-bsd" />
+		</Actor>
+		<Actor name="localaudit" type="SecureNode">
+		<Description>LOCAL AUDIT</Description>
+		<AuditTrail consumer="log4j_audittrail" />
+		</Actor>
+	-->
+
+</Configuration>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The PIX Manager Actor Connections -->
+
+<Configuration>
+	<StandardConnection name="xds-repository">
+		<!--The host name of the XDS Repository Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8020</Port>
+	</StandardConnection>
+
+	<SecureConnection name="secure-xds-repository">
+		<!--The host name of the XDS Repository Server-->
+		<HostName>localhost</HostName>
+		<!--The port for TLS transaction-->
+		<Port>8021</Port>
+
+		<!-- Trust and Keystore -->
+		<!-- Used by Connectathon 2009 -->
+		<KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="xds-registry-client">
+		<!--The host name of the XDS Repository Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8010</Port>		
+	</StandardConnection>
+
+</Configuration>

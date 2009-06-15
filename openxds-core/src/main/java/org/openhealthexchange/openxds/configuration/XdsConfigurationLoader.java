@@ -40,7 +40,9 @@ import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationExcep
 import org.openhealthexchange.openpixpdq.ihe.log.IMesaLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
+import org.openhealthexchange.openxds.XdsBroker;
 import org.openhealthexchange.openxds.registry.XdsRegistry;
+import org.openhealthexchange.openxds.repository.XdsRepository;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -51,7 +53,6 @@ import org.xml.sax.SAXException;
 
 import com.misyshealthcare.connect.base.AuditBroker;
 import com.misyshealthcare.connect.base.IBrokerController;
-import com.misyshealthcare.connect.base.PatientID;
 import com.misyshealthcare.connect.base.codemapping.ICodeMappingManager;
 import com.misyshealthcare.connect.net.ConnectionFactory;
 import com.misyshealthcare.connect.net.IConnectionDescription;
@@ -62,7 +63,7 @@ import com.misyshealthcare.connect.util.LibraryConfig.IPatientIdConverter;
 
 /**
  * This class loads an IHE Actor configuration file and initializes all of the
- * appropriate actors within the DocumentBroker, PatientBroker and AuditBroker.
+ * appropriate actors within the DocumentBroker, XdsBroker and AuditBroker.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
@@ -439,18 +440,26 @@ public class XdsConfigurationLoader {
 			}
 			
 			IConnectionDescription xdsRegistryConnection = null;
-			Collection<IConnectionDescription> pixConsumers = null;
-			if(actor.actorType.equalsIgnoreCase("PixManager")) {
-				xdsRegistryConnection = ((PixManagerActorDescription)actor).getXdsRegistryConnection();
-				pixConsumers = ((PixManagerActorDescription)actor).getPixConsumerConnections();
+			IConnectionDescription pixRegistryConnection = null;
+			if(actor.actorType.equalsIgnoreCase("XdsRegistry")) {
+				xdsRegistryConnection = ((XdsRegistryActorDescription)actor).getXdsRegistryConnection();
+				pixRegistryConnection = ((XdsRegistryActorDescription)actor).getPixRegistryConnection();
+				if (!createXdsRegistryActor(actor.id, xdsRegistryConnection, pixRegistryConnection, 
+						actorAudit, log, null))
+					okay = false;
 			}
-			if (!createIheActor(actor.actorType, actor.id, sourceConnection, actor.consumerConnection, 
-					actorAudit, xdsRegistryConnection, pixConsumers, log, null))
-				okay = false;
+			//TODO: Add xds repository
+			IConnectionDescription xdsRepositoryServerConnection = null;
+			IConnectionDescription xdsRegistryClientConnection = null;
+			if(actor.actorType.equalsIgnoreCase("XdsRepository")) {
+				xdsRepositoryServerConnection = ((XdsRepositoryActorDescription)actor).getXdsRepositoryServerConnection();
+				xdsRegistryClientConnection = ((XdsRepositoryActorDescription)actor).getXdsRegistryClientConnection();
+				if (!createXdsRegistryActor(actor.id, xdsRegistryConnection, pixRegistryConnection, 
+						actorAudit, log, null))
+					okay = false;
+			}
+			
 		}
-		// Finally, tell PatientID cross-referencing to default to MisysUniqueID if no xref sources
-		//  This behavior is needed in the connectathon
-		PatientID.setDefaultToLocalId(true);
 		// Done
 		return okay;
 	}
@@ -464,10 +473,10 @@ public class XdsConfigurationLoader {
 		// Apply it to the AuditBroker
 		AuditBroker abroker = AuditBroker.getInstance();
 		abroker.unregisterAuditSources(controller);
-		//TODO: Apply it to the DocumentBroker
-//		PatientBroker pbroker = PatientBroker.getInstance();
-//        pbroker.unregisterPixManagers(controller);
-//        pbroker.unregisterPdSuppliers(controller);
+		// Apply it to the XdsBroker
+		XdsBroker xdsBroker = XdsBroker.getInstance();
+		xdsBroker.unregisterXdsRegistries(controller);
+		xdsBroker.unregisterXdsRepositories(controller);
         // Okay, nothing is installed
 		actorsInstalled.clear();
 	}
@@ -579,10 +588,14 @@ public class XdsConfigurationLoader {
 		IConnectionDescription sourceConnection = null;
 		IConnectionDescription consumerConnection = null;
 		ArrayList<IConnectionDescription> logConnections = new ArrayList<IConnectionDescription>();
-		//For PIX Manager, define a list of PIX Consumers that subscribe to PIX Update Notification.
-		ArrayList<IConnectionDescription> pixConsumerConnections = new ArrayList<IConnectionDescription>();		
-		//For PIX Manager, define a XDSRegistry connection so that PIX Feed message can be forwarded to XDSRegistry
-		IConnectionDescription xdsRegistryConnection = null;
+		//Define a PIXRegistry server side connection, so that ITI-8 PIX Feed messages can be forwarded to the XDS Registry 
+		IConnectionDescription pixRegistryServerConnection = null;		
+		//Define a XDSRegistry server side connection so that ITI-42 and ITI-18  messages can be forwarded to the XDS Registry
+		IConnectionDescription xdsRegistryServerConnection = null;
+		//Define a XDSRepository server side connection so that ITI-41 and ITI-43  messages can be forwarded to the XDS Repository server
+		IConnectionDescription xdsRepositoryServerConnection = null;
+		//Define a XDSRegistry client side connection so that ITI-42 messages can be forwarded to the XDS Registry server
+		IConnectionDescription xdsRegistryClientConnection = null;
 		
 		// Look at each child node in turn
 		NodeList elements = definition.getChildNodes();
@@ -635,27 +648,45 @@ public class XdsConfigurationLoader {
 					logConnections.add(logConnection);
 					
 				} else if (kind.equalsIgnoreCase("XDSREGISTRY")) {
-					// For PIX Manager, define a XDSRegistry connection so that PIX Feed message can be forwarded to XDSRegistry
+					// For XDS Registry, define a XDSRegistry connection for transactions ITI-42 Register Document Set and ITI-18 stored query
 					String xdsRegistryName = getAttributeValue(element, "connection");
 					if (xdsRegistryName == null) {
-						logConfigurationWarning("XdsRegistry element with no 'connection' attribute", configFile);
+						throwIheConfigurationException("XdsRegistry element with no 'connection' attribute", configFile);
 					}
-					xdsRegistryConnection = ConnectionFactory.getConnectionDescription(xdsRegistryName);
-					if (xdsRegistryConnection == null) {
+					xdsRegistryServerConnection = ConnectionFactory.getConnectionDescription(xdsRegistryName);
+					if (xdsRegistryServerConnection == null) {
 						throwIheConfigurationException("XdsRegistry connection '" + xdsRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
-				} else if (kind.equalsIgnoreCase("PIXCONSUMER")) {
-					// For PIX Manager, define a PIX Consumer Connection for PIX Update Notification
-					String pixConsumerName = getAttributeValue(element, "connection");
-					if (pixConsumerName == null) {
-						logConfigurationWarning("PixConsumer element with no 'connection' attribute", configFile);
+				} else if (kind.equalsIgnoreCase("PIXREGISTRY")) {
+					// For PIX Registry, define a PIX Registry Connection for Transaction ITI-8
+					String pixRegistryName = getAttributeValue(element, "connection");
+					if (pixRegistryName == null) {
+						throwIheConfigurationException("PixRegistry element with no 'connection' attribute", configFile);
 					}
-					IConnectionDescription pixConsumerConnection = ConnectionFactory.getConnectionDescription(pixConsumerName);
-					if (pixConsumerConnection == null) {
-						throwIheConfigurationException("PixConsumer connection '" + pixConsumerName + "' in actor '" + actorName + "' is not defined", configFile);
+				    pixRegistryServerConnection = ConnectionFactory.getConnectionDescription(pixRegistryName);
+					if (pixRegistryServerConnection == null) {
+						throwIheConfigurationException("PixRegistry connection '" + pixRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
+					}					
+				}  else if (kind.equalsIgnoreCase("XDSREPOSITORY")) {
+					// For XDS Repository, define a XDSRepository connection for transactions ITI-41, ITI-42 and ITI-43.
+					String xdsRepositoryName = getAttributeValue(element, "connection");
+					if (xdsRepositoryName == null) {
+						throwIheConfigurationException("XdsRepository element with no 'connection' attribute", configFile);
 					}
-					pixConsumerConnections.add(pixConsumerConnection);
-					
+					xdsRepositoryServerConnection = ConnectionFactory.getConnectionDescription(xdsRepositoryName);
+					if (xdsRepositoryServerConnection == null) {
+						throwIheConfigurationException("XdsRepository connection '" + xdsRepositoryName + "' in actor '" + actorName + "' is not defined", configFile);
+					}
+				} else if (kind.equalsIgnoreCase("XDSREGISTRYCLIENT")) {
+					// For XDS Repository, define a XDSRegistry client side connection for transaction ITI-42.
+					String xdsRegistryClientName = getAttributeValue(element, "connection");
+					if (xdsRegistryClientName == null) {
+						throwIheConfigurationException("XdsRegistryClient element with no 'connection' attribute", configFile);
+					}
+					xdsRegistryClientConnection = ConnectionFactory.getConnectionDescription(xdsRegistryClientName);
+					if (xdsRegistryClientConnection == null) {
+						throwIheConfigurationException("XdsRepository connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+					}
 				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
 					// A description of this actor for GUI presentation
 					description = getAttributeValue(element, "value");
@@ -682,13 +713,21 @@ public class XdsConfigurationLoader {
 				log.warn("Actor '" + actorName + "' specifies a connection instead of an auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		}
 		// Make sure we got out a valid definition
-		if ((!actorType.equalsIgnoreCase("SecureNode")) && (sourceConnection == null) && (consumerConnection == null))
-			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		if (actorType.equalsIgnoreCase("XdsRegistry") && pixRegistryServerConnection==null)
+			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		if (actorType.equalsIgnoreCase("XdsRegistry") && xdsRegistryServerConnection==null)
+			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		//TODO: validate XDS Repository
 		if (actorType.equalsIgnoreCase("SecureNode") && logConnections.isEmpty())
 			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			// Actually create the actor
 		if (autoInstall) {
-			return createIheActor(actorType, actorName, sourceConnection, consumerConnection, logConnections, xdsRegistryConnection, pixConsumerConnections, null, configFile);
+			if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
+				return createXdsRegistryActor(actorName,xdsRegistryServerConnection, pixRegistryServerConnection, logConnections, null, configFile);
+			} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
+				return createXdsRepositoryActor(actorName,xdsRepositoryServerConnection, xdsRegistryClientConnection, logConnections, null, configFile);
+			} else 
+				return true;
 		} else {			
 			ActorDescription actor = initActor(actorType);
 			actor.id = actorName;
@@ -706,10 +745,11 @@ public class XdsConfigurationLoader {
 			} else {
 				actor.description = actorName;
 			}
-			if (actor instanceof PixManagerActorDescription) {
-				((PixManagerActorDescription)actor).pixConsumerConnections = pixConsumerConnections;
-				((PixManagerActorDescription)actor).xdsRegistryConnection = xdsRegistryConnection;
-			}
+//TODO: 
+//			if (actor instanceof PixManagerActorDescription) {
+//				((PixManagerActorDescription)actor).pixConsumerConnections = pixConsumerConnections;
+//				((PixManagerActorDescription)actor).xdsRegistryConnection = xdsRegistryConnection;
+//			}
 			actorDefinitions.add(actor);			
 			return true;
 		}
@@ -726,10 +766,10 @@ public class XdsConfigurationLoader {
 	private String getHumanActorTypeString(String type, File configFile) throws IheConfigurationException {
 		if (type.equalsIgnoreCase("SecureNode")) {
 			return "Audit Record Repository";
-		} else if (type.equals("PixManager")) {
-            return "OpenPIXPDQ PIX Manager";
-        } else if (type.equals("PdSupplier")) {
-            return "OpenPIXPDQ PD Supplier";
+		} else if (type.equals("XdsRegistry")) {
+            return "OpenXDS XDS Registry";
+        } else if (type.equals("XdsRepository")) {
+            return "OpenXDS XDS Repository";
         }
 		else {
 			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
@@ -773,52 +813,129 @@ public class XdsConfigurationLoader {
 		return sb.toString();
 	}
 	
+//	/**
+//	 * Creates an IHE actor and install it into the XdsBroker or DocumentBroker.
+//	 * 
+//	 * @param type the type of actor to create
+//	 * @param name the name of the actor to create (used in audit messages)
+//	 * @param sourceConnection the connection it should use to get information
+//	 * @param consumerConnection the connection it should use to send information
+//	 * @param auditConnections the audit trail connections this actor should log to
+//	 * @param xdsRegistryConnection The description of the connection of the XDS
+//     * 			Registry in the affinity domain
+//	 * @param pixConsumerConnections the connections of PIX consumers subscribing to PIX update notification
+//	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
+//	 * @return <code>true</code> if the actor is created successfully
+//	 * @throws IheConfigurationException When there is a problem with the configuration
+//	 */
+//	private boolean createIheActor(String type, String name, IConnectionDescription sourceConnection, 
+//			IConnectionDescription consumerConnection, Collection<IConnectionDescription> auditConnections,
+//			IConnectionDescription xdsRegistryConnection, Collection<IConnectionDescription> pixConsumerConnections,
+//			IMesaLogger logger, File configFile) throws IheConfigurationException {
+//		boolean okay = false;
+//		//TODO: revisit Audit
+////		IheAuditTrail auditTrail = null;
+////		// Build a new audit trail if there are any connections to audit repositories.
+////		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+////		// Create the actor
+////		if (type.equalsIgnoreCase("SecureNode")) {
+////			// TODO: add error message if there is no audit trail.
+////			if (auditTrail != null) {
+////				AuditBroker broker = AuditBroker.getInstance();
+////				broker.registerAuditSource(auditTrail);
+////				okay = true;
+////			}
+////		} else 
+//		if (type.equalsIgnoreCase("XdsRegistry")) {
+//            IConnectionDescription connection = sourceConnection;
+//            if (connection == null) connection = consumerConnection;
+//            XdsRegistry xdsRegistry = new XdsRegistry(connection, auditTrail, xdsRegistryConnection, pixConsumerConnections);
+//            String pixManagerAdapterClass = Configuration.getPropertyValue(connection, "pixManagerAdapter", true);
+//            IPixManagerAdapter pixAdapter = null;
+//            try {
+//                Class c = Class.forName(pixManagerAdapterClass);
+//                pixAdapter = (IPixManagerAdapter)getObjectInstance( c );
+//            } catch (Exception e) {
+//                String message = "Could not load PixManagerAdapter in actor type '"+ type +"' in config file " + configFile;
+//                log.error(message, e);
+//                throw new IheConfigurationException(message);
+//            }
+//            if (pixMan != null) {
+//                pixMan.registerPixManagerAdapter( pixAdapter );
+//                pixMan.setStoreLogger(getMessageStore(connection, type, configFile));
+//                pixMan.setMesaLogger(logger);
+//                XdsBroker broker = XdsBroker.getInstance();
+//                broker.registerPixManager(pixMan);
+//                okay = true;
+//            }
+//        }  else if (type.equalsIgnoreCase("XdsRepository")) {
+//        	//TODO:
+//        }
+//		else {
+//			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
+//		}
+//		// Record this installation, if it succeeded
+//		if (okay) actorsInstalled.add(name);
+//		return okay;
+//	}
 	/**
-	 * Creates an IHE actor and install it into the PatientBroker or DocumentBroker.
+	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
 	 * 
-	 * @param type the type of actor to create
 	 * @param name the name of the actor to create (used in audit messages)
-	 * @param sourceConnection the connection it should use to get information
-	 * @param consumerConnection the connection it should use to send information
-	 * @param auditConnections the audit trail connections this actor should log to
 	 * @param xdsRegistryConnection The description of the connection of the XDS
      * 			Registry in the affinity domain
-	 * @param pixConsumerConnections the connections of PIX consumers subscribing to PIX update notification
+	 * @param pixRegistryConnection The description of the connection of the PIX
+	 * 			Registry in the affinity domain
+	 * @param auditConnections the audit trail connections this actor should log to
 	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
 	 * @return <code>true</code> if the actor is created successfully
 	 * @throws IheConfigurationException When there is a problem with the configuration
 	 */
-	private boolean createIheActor(String type, String name, IConnectionDescription sourceConnection, 
-			IConnectionDescription consumerConnection, Collection<IConnectionDescription> auditConnections,
-			IConnectionDescription xdsRegistryConnection, Collection<IConnectionDescription> pixConsumerConnections,
+	private boolean createXdsRegistryActor(String name, IConnectionDescription xdsRegistryConnection, 
+			IConnectionDescription pixRegistryConnection, Collection<IConnectionDescription> auditConnections,			
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
-		//TODO: revisit Audit
-//		IheAuditTrail auditTrail = null;
-//		// Build a new audit trail if there are any connections to audit repositories.
-//		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-//		// Create the actor
-//		if (type.equalsIgnoreCase("SecureNode")) {
-//			// TODO: add error message if there is no audit trail.
-//			if (auditTrail != null) {
-//				AuditBroker broker = AuditBroker.getInstance();
-//				broker.registerAuditSource(auditTrail);
-//				okay = true;
-//			}
-//		} else 
-		if (type.equalsIgnoreCase("XdsRegistry")) {
-			//TODO:
-        }  else if (type.equalsIgnoreCase("XdsRepository")) {
-        	//TODO:
+
+		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection);
+        if (xdsRegistry != null) {
+            XdsBroker broker = XdsBroker.getInstance();
+            broker.registerXdsRegistry(xdsRegistry);
+            okay = true;
         }
-		else {
-			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
-		}
 		// Record this installation, if it succeeded
 		if (okay) actorsInstalled.add(name);
 		return okay;
 	}
 
+	/**
+	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
+	 * 
+	 * @param name the name of the actor to create (used in audit messages)
+	 * @param xdsRegistryConnection The description of the connection of the XDS
+     * 			Registry in the affinity domain
+	 * @param pixRegistryConnection The description of the connection of the PIX
+	 * 			Registry in the affinity domain
+	 * @param auditConnections the audit trail connections this actor should log to
+	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
+	 * @return <code>true</code> if the actor is created successfully
+	 * @throws IheConfigurationException When there is a problem with the configuration
+	 */
+	private boolean createXdsRepositoryActor(String name, IConnectionDescription xdsRepositoryServerConnection, 
+			IConnectionDescription xdsRegistryClientConnection, Collection<IConnectionDescription> auditConnections,			
+			IMesaLogger logger, File configFile) throws IheConfigurationException {
+		boolean okay = false;
+
+		XdsRepository xdsRepository = new XdsRepository(xdsRepositoryServerConnection, xdsRegistryClientConnection);
+        if (xdsRepositoryServerConnection != null) {
+            XdsBroker broker = XdsBroker.getInstance();
+            broker.registerXdsRepository(xdsRepository);
+            okay = true;
+        }
+		// Record this installation, if it succeeded
+		if (okay) actorsInstalled.add(name);
+		return okay;
+	}
+	
     /**
      * Gets an instance of a Class. This method try to instantiate by newInstance first. If it
      * does not exist, it will try to invoke getInstance();
@@ -983,39 +1100,70 @@ public class XdsConfigurationLoader {
 	
 	/**
 	 * An implementation of the IheActorDescription class to be used by 
-	 * PIX Manager Actor
+	 * XDS Registry Actor
 	 * 
 	 * @author Wenzhi Li
-	 * @version 1.0 - Dec 08, 2008
 	 */
-	public class PixManagerActorDescription extends ActorDescription {
+	public class XdsRegistryActorDescription extends ActorDescription {
 		/** Defines the XDS Registry Connection */
 		private IConnectionDescription xdsRegistryConnection = null;
 		
-		/** Defines a collection of all PIX Consumers that subscribe to PIX Update Notification messages. */
-		private Collection<IConnectionDescription> pixConsumerConnections = null;
+		/** Defines the XDS Registry PIX Connection */
+		private IConnectionDescription pixRegistryConnection = null;
 
 		/**
 		 * Gets the connection for the XDS Registry. The connect provides the details such as host name 
-		 * and port etc which are needed for this PIX Manager to talk to the XDS Registry.
+		 * and port etc which are needed for this XDS Registry to talk to the XDS Repositories and XDS Consumers.
 		 * 
 		 * @return the connection of XDS Registry
 		 */
 		public IConnectionDescription getXdsRegistryConnection() {
 			return xdsRegistryConnection;
 		}
+		
 		/**
-		 * Gets a collection of connections for those PIX Consumers that subscribe to PIX Update 
-		 * Notification messages. The connection provides the details such as host name and port
-		 * etc which are needed for this PIX Manager to talk to the PIX Consumer.  
+		 * Gets the connection for the PIX Registry. The connect provides the details such as host name 
+		 * and port etc which are needed for this PIX Registry to talk to the PIX Source
 		 * 
-		 * @return a collection of PIX consumer connections. 
+		 * @return the connection of PIX Registry
 		 */
-		public Collection<IConnectionDescription> getPixConsumerConnections() {
-			return pixConsumerConnections;
+		public IConnectionDescription getPixRegistryConnection() {
+			return pixRegistryConnection;
 		}
 	}
 
+	/**
+	 * An implementation of the IheActorDescription class to be used by 
+	 * XDS Repository Actor
+	 * 
+	 * @author Wenzhi Li
+	 */
+	public class XdsRepositoryActorDescription extends ActorDescription {
+		/** Defines the server side of XDS Repository Connection */
+		private IConnectionDescription xdsRepositoryServerConnection = null;
+		
+		/** Defines the client side of XDS Registry Connection */
+		private IConnectionDescription xdsRegistryClientConnection = null;
+
+		/**
+		 * Gets the connection for the XDS Repository server. 
+		 * 
+		 * @return the connection of XDS Repository for 
+		 */
+		public IConnectionDescription getXdsRepositoryServerConnection() {
+			return xdsRepositoryServerConnection;
+		}
+		
+		/**
+		 * Gets the connection for the XDS Registry client.  
+		 * 
+		 * @return the connection for XDS Registry client such as XDS Repository
+		 */
+		public IConnectionDescription getXdsRegistryClientConnection() {
+			return xdsRegistryClientConnection;
+		}
+	}
+	
 	/**
 	 * Initiates this actor.
 	 * 
@@ -1023,8 +1171,10 @@ public class XdsConfigurationLoader {
 	 * @return an instance of ActorDescription
 	 */
     private ActorDescription initActor(String actorType) {
-    	if (actorType.equalsIgnoreCase("PixManager")) 
-    		return new PixManagerActorDescription();
+    	if (actorType.equalsIgnoreCase("XdsRegistry")) 
+    		return new XdsRegistryActorDescription();
+    	if (actorType.equalsIgnoreCase("XdsRepository")) 
+    		return new XdsRepositoryActorDescription();
     	else 
     	    return new ActorDescription();  
     }
@@ -1032,8 +1182,6 @@ public class XdsConfigurationLoader {
 	/**
 	 * An implementation of a broker controller that will unregister and IHE actor.
 	 * 
-	 * @author Jim Firby
-	 * @version 1.0 - Jan 11, 2006
 	 */
 	public class IheBrokerController implements IBrokerController {
 
@@ -1045,7 +1193,7 @@ public class XdsConfigurationLoader {
 //TODO:			
 //			if (actor instanceof IheAuditTrail) return true;
             if (actor instanceof XdsRegistry) return true;
-//            if (actor instanceof XdsRepository) return true;
+            if (actor instanceof XdsRepository) return true;
 
             return false;
 		}
