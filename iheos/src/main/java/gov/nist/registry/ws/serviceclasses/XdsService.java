@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.xml.namespace.QName;
@@ -28,7 +29,6 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPHeader;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.TransportHeaders;
@@ -77,21 +77,23 @@ public class XdsService {
 
 		this.service_name = service_name;
 
-		String incoming_ip_address = getMessageContext().getFrom().getAddress();
-		for (int i=1; i<100; i++) {
-			String entry = this.properties.getString("BlockIp" + i);
-			if (entry == null || entry.equals(""))
-				break;
-			if (entry.equals(incoming_ip_address))
-				return start_up_error(request, null, actor, "Continuous jamming from IP " + incoming_ip_address + " - access blocked");
-		}
-
-
-		logger.info("Start " + service_name + " : " + getMessageContext().getFrom().getAddress()  + " : " + getMessageContext().getTo().toString());
+//		String incoming_ip_address = getMessageContext().getFrom().getAddress();
+//		for (int i=1; i<100; i++) {
+//			String entry = this.properties.getString("BlockIp" + i);
+//			if (entry == null || entry.equals(""))
+//				break;
+//			if (entry.equals(incoming_ip_address))
+//				return start_up_error(request, null, actor, "Continuous jamming from IP " + incoming_ip_address + " - access blocked");
+//		}
+//
+//
+//		logger.info("Start " + service_name + " : " + getMessageContext().getFrom().getAddress()  + " : " + getMessageContext().getTo().toString());
 		try {
 			startTestLog();
 			if (log != null && log_message == null) {
-				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
+//TODO:
+//				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
+				log_message = log.createMessage("localhost");
 			}
 			log_message.addOtherParam(Fields.service, service_name);
 			is_secure = getMessageContext().getTo().toString().indexOf("https://") != -1;
@@ -105,8 +107,9 @@ public class XdsService {
 				return start_up_error(request, null, actor, "Request body is null");
 			}
 
-			TransportHeaders transportHeaders = (TransportHeaders) getMessageContext().getProperty("TRANSPORT_HEADERS") ;
-
+			//TODO: change TransportHeader to HashMap
+			//TransportHeaders transportHeaders = (TransportHeaders) getMessageContext().getProperty("TRANSPORT_HEADERS") ;
+            HashMap transportHeaders = (HashMap)getMessageContext().getProperty("TRANSPORT_HEADERS");
 			for (Object o_key : transportHeaders.keySet()) {
 				String key = (String) o_key;
 				String value = (String) transportHeaders.get(key);
@@ -132,7 +135,7 @@ public class XdsService {
 					addSoap( "Soap Envelope", getMessageContext().getEnvelope().toStringWithConsume() );
 				}  catch (OMException e) {} catch (XMLStreamException e) {}
 			}
-			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
+//			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
 			log_message.addHTTPParam(Fields.endpoint , getMessageContext().getTo().toString() ) ; 
 
 			return null;  // no error

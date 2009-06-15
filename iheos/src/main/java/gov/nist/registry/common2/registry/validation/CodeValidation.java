@@ -41,12 +41,14 @@ public class CodeValidation {
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
 
-		loadCodes();
+		//Todo: enable loadCodes
+//		loadCodes();
 	}
 
 	// this is used for easy access to mime lookup
 	public CodeValidation() throws XdsInternalException {
-		loadCodes();
+//Todo: enable loadCodes
+		//		loadCodes();
 	}
 
 
@@ -153,12 +155,12 @@ public class CodeValidation {
 
 	public void run() throws MetadataException, XdsInternalException {
 		ArrayList<String> all_object_ids = m.getObjectIds(m.getAllObjects());
-
 		for (String obj_id : all_object_ids) {
 			ArrayList<OMElement> classifications = m.getClassifications(obj_id);
 
 			for (OMElement cl_ele : classifications) {
 
+				
 				Classification cl = new Classification(cl_ele);
 				validate(cl);
 			}
