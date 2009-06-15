@@ -18,7 +18,14 @@
  */
 package org.openhealthexchange.openxds.registry;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.description.TransportInDescription;
+import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthexchange.openxds.XdsActor;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistry;
@@ -38,47 +45,91 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
 public class XdsRegistry extends XdsActor implements IXdsRegistry {
     /** Logger for problems during SOAP exchanges */
     private static Logger log = Logger.getLogger(XdsRegistry.class);
-    /** The connection description to this XDS Registry PIX server */
+    /** The connection description to this XDS Registry PIX pixServer */
 	private IConnectionDescription pixFeedConnection = null;
+	private IConnectionDescription registryConnection = null;
 
     /** The XDS Registry PIX Server */
-    private HL7Server server = null;
+    private HL7Server pixServer = null;
+    /** The XDS Registry Server */    
+    IheHTTPServer registryServer = null;
     /** The XDS Registry Patient Manager*/
     private IXdsRegistryPatientManager patientManager = null;
 
+    /**
+     * Creates a new XdsRegistry actor.
+     *
+     * @param pixFeedConnection the connection description of this PIX server
+     * @param registryConnection the connection description of this Registry server
+     * 				to accept Register Document Set and Stored Query transactions 
+     */
+     public XdsRegistry(IConnectionDescription pixFeedConnection, 
+    		 IConnectionDescription registryConnection ) {
+         this.pixFeedConnection = pixFeedConnection;
+         this.registryConnection = registryConnection;
+    }
+
+    
     @Override
 	public void start() {
         //call the super one to initiate standard start process
         super.start();
-        //now begin the local start, initiate pix manager server
+
+        //First initiate the Registry server
+        try {
+	        //TODO: move this to a global location, and get the repository path
+	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
+	        ConfigurationContext configctx = ConfigurationContextFactory
+	        .createConfigurationContextFromFileSystem(repository, null);
+	        registryServer = new IheHTTPServer(configctx, registryConnection); 		
+	
+	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(registryServer));
+	        registryServer.start();
+	        ListenerManager listenerManager = configctx .getListenerManager();
+	        TransportInDescription trsIn = new TransportInDescription(Constants.TRANSPORT_HTTP);
+	        trsIn.setReceiver(registryServer); 
+	        if (listenerManager == null) {
+	            listenerManager = new ListenerManager();
+	            listenerManager.init(configctx);
+	        }
+	        listenerManager.addListener(trsIn, true);
+        }catch(AxisFault e) {
+        	log.error("Failed to initiate the Registry server", e);
+        }
+        log.info("XDS Registry Server started: " + registryConnection.getDescription() );
+        
+        //now initiate PIX Server
         LowerLayerProtocol llp = LowerLayerProtocol.makeLLP(); // The transport protocol
-        server = new HL7Server(pixFeedConnection, llp, new PipeParser());
+        pixServer = new HL7Server(pixFeedConnection, llp, new PipeParser());
         Application pixFeed  = new PixFeedHandler(this);
         
         //Admission of in-patient into a facility
-        server.registerApplication("ADT", "A01", pixFeed);  
+        pixServer.registerApplication("ADT", "A01", pixFeed);  
         //Registration of an out-patient for a visit of the facility
-        server.registerApplication("ADT", "A04", pixFeed);  
+        pixServer.registerApplication("ADT", "A04", pixFeed);  
         //Pre-admission of an in-patient
-        server.registerApplication("ADT", "A05", pixFeed);   
+        pixServer.registerApplication("ADT", "A05", pixFeed);   
         //Update patient information
-        server.registerApplication("ADT", "A08", pixFeed);  
+        pixServer.registerApplication("ADT", "A08", pixFeed);  
         //Merge patients
-        server.registerApplication("ADT", "A40", pixFeed);  
-        //now start the Pix Manager server
-        log.info("Starting XDS Registry: " + this.getName() );
-        server.start();
+        pixServer.registerApplication("ADT", "A40", pixFeed);  
+        //now start the Pix Manager pixServer
+        pixServer.start();
+        log.info("XDS PIX Registry Server started: " + pixFeedConnection.getDescription() );
     }
 
     @Override
     public void stop() {
-        //now end the local stop, stop the pix manager server
-        server.stop();
+        //stop the PIX Server first
+        pixServer.stop();
+        log.info("PIX Registry Server stopped: " + pixFeedConnection.getDescription() );
 
-        //call the super one to initiate standard stop process
-        super.stop();
+        //stop the Registry Server
+        registryServer.stop();
+        log.info("XDS Registry Server stopped: " + registryConnection.getDescription() );
         
-        log.info("XDS Registry stopped: " + this.getName() );
+        //call the super one to initiate standard stop process 
+        super.stop();
 
     }
 

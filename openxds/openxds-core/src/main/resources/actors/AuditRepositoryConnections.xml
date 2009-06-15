@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The Audit Record Repository Actor Connections -->
+<!-- For IHE Actor Test -->
+
+<Configuration>
+	<StandardConnection name="nist-arr-bsd">
+		<HostName>nist1.ihe.net</HostName>
+		<Port>8087</Port>
+		<Property name="TYPE" value="BSD SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="allscripts4" />
+			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="SITE" value="ALLSCRIPTS" />
+			<Entry name="SOURCE" value="ALLSCRIPTS" />
+			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
+			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<StandardConnection name="ibm-arr-bsd">
+		<HostName>nist1.ihe.net</HostName>
+		<Port>15500</Port>
+		<Property name="TYPE" value="BSD SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="allscripts4" />
+			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="SITE" value="ALLSCRIPTS" />
+			<Entry name="SOURCE" value="ALLSCRIPTS" />
+			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
+			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<StandardConnection name="log4j_audittrail">
+		<Property name="TYPE" value="LOG4J LOGGER" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="allscripts4" />
+			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="SITE" value="ALLSCRIPTS" />
+			<Entry name="SOURCE" value="ALLSCRIPTS" />
+			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
+			<Entry name="FACILITY" value="ALLSCRIPTS" />
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<StandardConnection name="mesa_arr_bsd">
+		<HostName>localhost</HostName>
+		<Port>4000</Port>
+		<Property name="TYPE" value="BSD SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="allscripts4" />
+			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="SITE" value="ALLSCRIPTS" />
+			<Entry name="SOURCE" value="ALLSCRIPTS" />
+			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
+			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<SecureConnection name="ALLSCRIPTS-SECURE">
+		<HostName>localhost</HostName>
+		<Port>4300</Port>
+		<Property name="NAME" value="mesa-test" />
+		<Property name="URLPATH" value="./index" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="allscripts4" />
+			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="SITE" value="ALLSCRIPTS" />
+			<Entry name="SOURCE" value="ALLSCRIPTS" />
+			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
+			<Entry name="FACILITY" value="ALLSCRIPTS" />
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/mesa_keystore1_2009.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/mesa_truststore_2009.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+
+</Configuration>
