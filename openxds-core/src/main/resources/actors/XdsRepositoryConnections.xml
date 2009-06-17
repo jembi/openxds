@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- The PIX Manager Actor Connections -->
-
+<!-- The XDS Repository Actor Connections -->
 <Configuration>
 	<StandardConnection name="xds-repository">
 		<!--The host name of the XDS Repository Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
 		<Port>8020</Port>
+       
+     	<Identifier name="AssigningAuthority">
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
+		</Identifier>
+       
+        <Includefile name="XdsCodes.xml" />		
 	</StandardConnection>
 
 	<SecureConnection name="secure-xds-repository">
@@ -15,6 +22,14 @@
 		<HostName>localhost</HostName>
 		<!--The port for TLS transaction-->
 		<Port>8021</Port>
+
+     	<Identifier name="AssigningAuthority">
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
+		</Identifier>
+
+        <Includefile name="XdsCodes.xml" />		
 
 		<!-- Trust and Keystore -->
 		<!-- Used by Connectathon 2009 -->
@@ -25,7 +40,7 @@
 	</SecureConnection>
 
 	<StandardConnection name="xds-registry-client">
-		<!--The host name of the XDS Repository Server-->
+		<!--The host name of the XDS Registry Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
 		<Port>8010</Port>		
