@@ -19,6 +19,7 @@
 package org.openhealthexchange.openxds.repository;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
@@ -78,7 +79,7 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(repositoryServer));
 	        repositoryServer.start();
 	        ListenerManager listenerManager = configctx .getListenerManager();
-	        TransportInDescription trsIn = new TransportInDescription("http-rep");
+	        TransportInDescription trsIn = new TransportInDescription(Constants.TRANSPORT_HTTP);
 	        trsIn.setReceiver(repositoryServer); 
 	        if (listenerManager == null) {
 	            listenerManager = new ListenerManager();
