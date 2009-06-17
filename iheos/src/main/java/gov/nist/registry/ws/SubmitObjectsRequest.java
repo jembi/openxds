@@ -193,7 +193,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				log_message.addOtherParam("FOLuids", fol_uids.toString());
 				log_message.addOtherParam("Structure", m.structure());
 
-				Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message);
+				Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, connection);
 				val.run();
 				
 				RegistryObjectValidator rov = new RegistryObjectValidator(response, log_message);

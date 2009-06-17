@@ -2,25 +2,21 @@ package gov.nist.registry.common2.registry.validation;
 
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-
-import gov.nist.registry.common2.io.Io;
 import gov.nist.registry.common2.registry.Classification;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
-import gov.nist.registry.common2.testsupport.TestConfig;
-import gov.nist.registry.common2.xml.Util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
+import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
+
+import com.misyshealthcare.connect.net.CodeSet;
+import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.Identifier;
 
 
 //this gets invoked from both Validator.java and directly from Repository.  Should optimize the implementation so that codes.xml
@@ -30,80 +26,35 @@ public class CodeValidation {
 	RegistryErrorList rel;
 	boolean is_submit;
 	boolean xds_b;
-	OMElement codes;
-	ArrayList<String> assigning_authorities;
+	IConnectionDescription connection;
+
+	ArrayList<Identifier> assigning_authorities;
 	HashMap<String, String> mime_map;  // mime => ext
 	HashMap<String, String> ext_map;   // ext => mime
 
-	public CodeValidation(Metadata m, boolean is_submit, boolean xds_b, RegistryErrorList rel) throws XdsInternalException {
+	public CodeValidation(Metadata m, boolean is_submit, boolean xds_b, 
+			RegistryErrorList rel, IConnectionDescription connection) 
+	throws XdsInternalException {
 		this.m = m;
 		this.rel = rel;
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
+		this.connection = connection;
 
-		//Todo: enable loadCodes
-//		loadCodes();
+		loadCodes();
 	}
 
 	// this is used for easy access to mime lookup
-	public CodeValidation() throws XdsInternalException {
-//Todo: enable loadCodes
-		//		loadCodes();
+	public CodeValidation(IConnectionDescription connection) throws XdsInternalException {
+		this.connection = connection;
+		loadCodes();
 	}
 
 
 	void loadCodes() throws XdsInternalException {
-		String fileCodesLocation = System.getenv("XDSCodesFile");
-		String localCodesLocation = "http://localhost:9080/xdsref/codes/codes.xml";
-		String globalCodesLocation = "http://ihexds.nist.gov:9080/xdsref/codes/codes.xml";
-		String codes_string = null;
-		String from = null;
-
-		if (fileCodesLocation != null) {
-			try {
-				codes_string = Io.getStringFromInputStream(new FileInputStream(new File(fileCodesLocation)));
-				from = fileCodesLocation;
-			}
-			catch (Exception e) {
-				throw new XdsInternalException("Env Var XDSCodesFile exists but codes.xml file cannot be loaded.", e);
-			}
-		}
-		else {
-
-			try {
-				//TODO:
-				//codes_string = HttpClient.httpGet(localCodesLocation);
-				from = localCodesLocation;
-			}
-			catch (Exception e1) {
-				try {
-					//TODO:
-					//codes_string = HttpClient.httpGet(globalCodesLocation);
-					from = globalCodesLocation;
-				}
-				catch (Exception e) {
-					throw new XdsInternalException("CodeValidation: Unable to retrieve code configuration file " + globalCodesLocation);
-				}
-			}
-		}
-		if (codes_string == null) 
-			throw new XdsInternalException("CodeValidation.init(): GET codes.xml returned NULL from " + from);
-		if (codes_string.equals("")) 
-			throw new XdsInternalException("CodeValidation.init(): GET codes.xml returned enpty from " + from);
-
-		if (TestConfig.verbose)
-			System.out.println("Codes loaded from " + from);
-		
-		codes = Util.parse_xml(codes_string);
-		if (codes == null)
-			throw new XdsInternalException("CodeValidation: cannot parse code configuration file from " + from);
-
-		assigning_authorities = new ArrayList<String>();
-		for (OMElement aa_ele : MetadataSupport.childrenWithLocalName(codes, "AssigningAuthority")) 
-		{
-			this.assigning_authorities.add(aa_ele.getAttributeValue(MetadataSupport.id_qname));
-		}
-
+		assigning_authorities = new ArrayList<Identifier>();
+		Identifier aa = connection.getIdentifier("AssigningAuthority");
+		this.assigning_authorities.add(aa);
 		build_mime_map();
 	}
 
@@ -124,32 +75,22 @@ public class CodeValidation {
 	}
 
 	private void build_mime_map() throws XdsInternalException {
-		QName name_att_qname = new QName("name");
-		QName code_att_qname = new QName("code");
-		QName ext_att_qname = new QName("ext");
-		OMElement mime_type_section = null;
-		for(Iterator it=codes.getChildrenWithName(new QName("CodeType")); it.hasNext();  ) {
-			OMElement ct = (OMElement) it.next();
-			if (ct.getAttributeValue(name_att_qname).equals("mimeType")) {
-				mime_type_section = ct;
-				break;
-			}
-		}
-		if (mime_type_section == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find mime type table");
+		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
+		if (mimeTypeCodeSet == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find mime type table");
 
 		mime_map = new HashMap<String, String>();
 		ext_map = new HashMap<String, String>();
 
-		for(Iterator it=mime_type_section.getChildElements(); it.hasNext();  ) {
-			OMElement code_ele = (OMElement) it.next();
-			String mime_type = code_ele.getAttributeValue(code_att_qname);
-			String ext = code_ele.getAttributeValue(ext_att_qname);
-			mime_map.put(mime_type, ext);
-			ext_map.put(ext, mime_type);
+		Set<String> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
+		for (String mimeType : mimeTypes) {
+			String ext = mimeTypeCodeSet.getExt(mimeType);
+			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + mimeType );
+			mime_map.put(mimeType, ext);
+			ext_map.put(ext, mimeType);
 		}
 	}
 
-	public ArrayList<String> getAssigningAuthorities() {
+	public ArrayList<Identifier> getAssigningAuthorities() {
 		return assigning_authorities;
 	}
 
@@ -211,22 +152,14 @@ public class CodeValidation {
 			err("codingScheme (Slot codingScheme) missing", cl);
 			return;
 		}
-		for (OMElement code_type : MetadataSupport.childrenWithLocalName(codes, "CodeType")) {
-			String class_scheme = code_type.getAttributeValue(MetadataSupport.classscheme_qname);
-
-			// some codes don't have classScheme in their definition
-			if (class_scheme != null && !class_scheme.equals(classification_scheme))
-				continue;
-
-			for (OMElement code_ele : MetadataSupport.childrenWithLocalName(code_type, "Code")) {
-				String code_name = code_ele.getAttributeValue(MetadataSupport.code_qname);
-				String code_scheme = code_ele.getAttributeValue(MetadataSupport.codingscheme_qname);
-				if ( 	code_name.equals(code) && 
-						(code_scheme == null || code_scheme.equals(coding_scheme) )
-				) {
-					val("Coding of " + code_scheme, null);
-					return;
-				}
+		for ( String codeType : connection.getAllCodeTypeNames()){
+			CodeSet codeSet = connection.getCodeSet(codeType);
+			String code_scheme = codeSet.getCodingScheme(code);
+			if (codeSet.containsCode(code) &&
+			     (code_scheme == null || code_scheme.equals(coding_scheme) )
+			) {
+				val("Coding of " + code_scheme, null);
+				return;
 			}
 		}
 		val("Coding of " + coding_scheme, " (" + code + ") Not Found");
