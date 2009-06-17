@@ -17,6 +17,9 @@ import java.util.Iterator;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.Identifier;
+
 public class Validator {
 	RegistryErrorList rel;
 	Metadata m;
@@ -27,10 +30,12 @@ public class Validator {
 	CodeValidation cv;
 	PatientId pid;
 	UniqueId uid;
-	ArrayList<String> assigning_authorities;
+	ArrayList<Identifier> assigning_authorities;
 	Message log_message;
 
-	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, Message log_message) throws LoggerException, XdsException {
+	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, 
+			boolean is_xdsb, Message log_message, IConnectionDescription connection)
+	throws LoggerException, XdsException {
 		this.rel = rel;
 		this.m = m;
 		this.is_submit = is_submit;
@@ -40,7 +45,7 @@ public class Validator {
 		s = new Structure(m, is_submit, rel, log_message);
 		a = new Attribute(m, is_submit, is_xdsb, rel);
 		try {
-			cv = new CodeValidation(m, is_submit, is_xdsb, rel);
+			cv = new CodeValidation(m, is_submit, is_xdsb, rel, connection);
 		}
 		catch (XdsInternalException e) {
 			rel.add_error(MetadataSupport.XDSRegistryError, e.getMessage(), RegistryUtility.exception_details(e), null);
@@ -52,7 +57,7 @@ public class Validator {
 		uid = new UniqueId(m, rel, is_xdsb);
 	}
 	
-	public ArrayList<String> getAssigningAuthority() {
+	public ArrayList<Identifier> getAssigningAuthority() {
 		return this.assigning_authorities;
 	}
 

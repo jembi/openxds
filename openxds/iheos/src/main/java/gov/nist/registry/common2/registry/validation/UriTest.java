@@ -54,7 +54,7 @@ public class UriTest extends TestCase {
 		Validator val;
 		try {
 			m.reParse();
-			val = new Validator(m, rel, true, false, null);
+			val = new Validator(m, rel, true, false, null, null/**IConnectionDescription*/);
 			val.run();
 		} catch (LoggerException e) {
 			fail("Exception: " + ExceptionUtil.exception_details(e));

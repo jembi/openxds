@@ -14,6 +14,8 @@ import java.io.PrintStream;
 
 import org.apache.axiom.om.OMElement;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 
 public class RegistryUtility {
 
@@ -29,10 +31,10 @@ public class RegistryUtility {
 			throw new SchemaValidationException("Input did not validate against schema:" + schema_messages);
 	}
 
-	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit) throws XdsException {
+	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit, IConnectionDescription connection) throws XdsException {
 		RegistryErrorList rel = new RegistryErrorList((m.isVersion2() ? RegistryErrorList.version_2 : RegistryErrorList.version_3));
 		try {
-			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (Message)null);
+			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (Message)null, connection);
 			v.run();
 			return rel;
 		} catch (LoggerException e) {

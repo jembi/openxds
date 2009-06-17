@@ -26,17 +26,23 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ws.server.IheHTTPServer;
+
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class RetrieveDocumentSet extends XdsCommon {
 	ContentValidationService validater;
 	String registry_endpoint = null;
 	MessageContext messageContext;
 	boolean optimize = true;
+	IConnectionDescription connection = null;
 	private final static Logger logger = Logger.getLogger(RetrieveDocumentSet.class);
 
 	public RetrieveDocumentSet(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
 		this.messageContext = messageContext;
+		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+		connection = httpServer.getConnection();
 		try {
 			init(new RetrieveMultipleResponse(), xds_version, messageContext);
 		}
@@ -158,7 +164,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 			return null;
 		}
 
-		RepositoryAccess repa = new RepositoryAccess(doc_id, new File(Repository.getBaseDirectory()));
+		RepositoryAccess repa = new RepositoryAccess(doc_id, new File(Repository.getBaseDirectory()), connection);
 		File file = repa.find(); 
 
 		if (file == null)
@@ -185,7 +191,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 		document_response.addChild(docid_ele);
 		
 		OMElement mimetype_ele = MetadataSupport.om_factory.createOMElement("mimeType", MetadataSupport.xdsB);
-		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText((new DocumentTypes()).mimeType(repa.getExt())));
+		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText((new DocumentTypes(connection)).mimeType(repa.getExt())));
 		document_response.addChild(mimetype_ele);
 
 		OMElement document_ele = MetadataSupport.om_factory.createOMElement("Document", MetadataSupport.xdsB);

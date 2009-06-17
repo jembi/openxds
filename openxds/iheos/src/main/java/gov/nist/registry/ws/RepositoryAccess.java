@@ -5,6 +5,8 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import java.io.File;
 import java.util.Collection;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 public class RepositoryAccess  {
 
 	String doc_id;
@@ -12,9 +14,9 @@ public class RepositoryAccess  {
 	File dir;
 	String ext;
 
-	public RepositoryAccess(String doc_id, File dir) throws XdsInternalException {
+	public RepositoryAccess(String doc_id, File dir, IConnectionDescription connection) throws XdsInternalException {
 		this.doc_id = doc_id;
-		file_types = (new DocumentTypes()).getFileTypes();
+		file_types = (new DocumentTypes(connection)).getFileTypes();
 		this.dir = dir;
 		this.ext = null;
 	}

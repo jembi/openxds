@@ -38,14 +38,18 @@ import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ws.server.IheHTTPServer;
 
 import sun.misc.BASE64Decoder;
+
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	ContentValidationService validater;
 	String registry_endpoint = null;
 	MessageContext messageContext;
 	boolean accept_xop = true;
+    IConnectionDescription connection = null;
 	private final static Logger logger = Logger.getLogger(ProvideAndRegisterDocumentSet.class);
 
 	static {
@@ -56,6 +60,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		this.log_message = log_message;
 		this.messageContext = messageContext;
 		this.xds_version = xds_version;
+		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+		connection = httpServer.getConnection();
+
 		try {
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 		} catch (XdsInternalException e) {
@@ -445,11 +452,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	}
 
 	String document_path(String uid, String mime_type)  throws MetadataException, XdsException {
-		return Repository.getBaseDirectory() + uid + "." + (new DocumentTypes()).fileExtension(mime_type);
+		return Repository.getBaseDirectory() + uid + "." + (new DocumentTypes(connection)).fileExtension(mime_type);
 	}
 
-	String document_uri(String uid, String mime_type) throws MetadataException, XdsConfigurationException, XdsException {
-		return Repository.getBaseUri() + uid + "." + (new DocumentTypes()).fileExtension(mime_type);
+	String document_uri(String uid, String mime_type)throws MetadataException, XdsConfigurationException, XdsException {
+		return Repository.getBaseUri() + uid + "." + (new DocumentTypes(connection)).fileExtension(mime_type);
 	}
 
 

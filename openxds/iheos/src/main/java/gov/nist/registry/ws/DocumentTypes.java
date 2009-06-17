@@ -4,15 +4,17 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.validation.CodeValidation;
 
 import java.util.Collection;
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class DocumentTypes {
 	CodeValidation cv;
+	IConnectionDescription connection;
 
 	// the values in the class must also exist in tomcat1/conf/war.xml
 	// documentation exists in xdsref/codes/codes.xml
 	
-	public DocumentTypes() throws XdsInternalException {
-		cv = new CodeValidation();
+	public DocumentTypes(IConnectionDescription connection) throws XdsInternalException {
+		cv = new CodeValidation(connection);
 	}
 
 	public String mimeType(String file_ext)  {

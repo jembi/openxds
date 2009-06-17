@@ -4,10 +4,14 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.DocumentTypes;
 import junit.framework.TestCase;
 
-public class DocumentTypesTest extends TestCase {
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
+public class DocumentTypesTest extends TestCase {
+    //TODO: Init connection
+	private IConnectionDescription connection;
+	
 	public void test_file_extension() throws XdsInternalException {
-		DocumentTypes dt = new DocumentTypes();
+		DocumentTypes dt = new DocumentTypes(connection);
 		try {
 			String file_ext = dt.fileExtension("text/plain");
 			assert(file_ext.equals("txt"));
@@ -18,7 +22,7 @@ public class DocumentTypesTest extends TestCase {
 	}
 	
 	public void test_mime_type()  throws XdsInternalException {
-		DocumentTypes dt = new DocumentTypes();
+		DocumentTypes dt = new DocumentTypes(connection);
 		try {
 			String mime_type = dt.mimeType("txt");
 			assert(mime_type.equals("text/plain"));
