@@ -23,7 +23,5 @@
 
 <hibernate-configuration>
     <session-factory>
-        <mapping class="org.openhealthexchange.openxds.model.User"/>
-        <mapping class="org.openhealthexchange.openxds.model.Role"/>
     </session-factory>
 </hibernate-configuration>
