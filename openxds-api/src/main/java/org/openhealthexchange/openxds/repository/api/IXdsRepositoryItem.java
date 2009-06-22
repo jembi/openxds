@@ -75,4 +75,10 @@ public interface IXdsRepositoryItem {
      */
     public DataHandler getDataHandler();
             
+    /**
+     * Sets the document content in the format of <code>DataHandler</code>.
+     * 
+     * @param dataHandler the <code>DataHandler</code>.
+     */
+    public void setDataHandler(DataHandler dataHandler);
 }
