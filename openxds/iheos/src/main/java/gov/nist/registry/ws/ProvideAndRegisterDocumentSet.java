@@ -28,10 +28,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import javax.activation.DataHandler;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
@@ -39,6 +40,11 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
+import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
+import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthexchange.openxds.repository.api.RepositoryException;
+import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
 
 import sun.misc.BASE64Decoder;
 
@@ -230,14 +236,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				}
 
 				if (optimized) {
-					InputStream is = null;
-					try {
-						is = datahandler.getInputStream();
-					}
-					catch (IOException e) {
-						throw new XdsIOException("Error accessing document content from message");
-					}
-					this.store_document_swa_xop(m, id, is, datahandler.getContentType(), false /* validate_mime_type */);
+					this.store_document_swa_xop(m, id, datahandler, datahandler.getContentType(), false /* validate_mime_type */);
 				} else {
 					String base64 = binaryNode.getText();
 					BASE64Decoder d  = new BASE64Decoder();
@@ -262,15 +261,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				DataHandler dh = messageContext.getAttachment(id);
 				if (dh == null) 
 					throw new XDSMissingDocumentException("Cannot find attachment for id " + id);
-				InputStream is = null;
-				try {
-					is = dh.getInputStream();
-				}
-				catch (IOException e) {
-					throw new XdsIOException("Error accessing document content from message");
-				}
 
-				store_document_swa_xop(m, id, is, dh.getContentType(), true /* validate_mime_type */);
+				store_document_swa_xop(m, id, dh, dh.getContentType(), true /* validate_mime_type */);
 			}
 		}
 
@@ -362,7 +354,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		this.registry_endpoint = endpoint;
 	}
 
-	private void store_document_swa_xop(Metadata m, String id, InputStream is, String content_type, boolean validate_content_type) 
+	private void store_document_swa_xop(Metadata m, String id, DataHandler dataHandler, String content_type, boolean validate_content_type) 
 	throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException {
 		OMElement extrinsic_object = m.getObjectById(id);
 		
@@ -385,27 +377,43 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
 
-		String doc_path = document_path(uid, mime_type);
-		ByteBuffer buffer = new ByteBuffer();
-		int length = 4000;
-		byte[] buf = new byte[length];
-		FileOutputStream fos = null;
-		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
-		int size = 0;
-		try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error when starting to read document content");   }
-		buffer.append(buf, 0, size);
-		while (size > 0) {
-			try { fos.write(buf, 0, size); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
-			try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error reading document content");  }
-			buffer.append(buf,0, size);
+		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
+		item.setDocumentUniqueId(uid);
+		item.setDataHandler(dataHandler); 
+		try {
+			rm.insert(item, new RepositoryRequestContext());
+		}catch(RepositoryException e) {
+			throw new XdsException("Error saving document to the repository", e);
 		}
-		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
-		try { is.close();  } catch (IOException e) {   throw new XdsIOException("Error closing repository item input stream");   }
+//TODO: remove the old code			
+//		String doc_path = document_path(uid, mime_type);
+//		ByteBuffer buffer = new ByteBuffer();
+//		int length = 4000;
+//		byte[] buf = new byte[length];
+//		FileOutputStream fos = null;
+//		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
+//		int size = 0;
+//		try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error when starting to read document content");   }
+//		buffer.append(buf, 0, size);
+//		while (size > 0) {
+//			try { fos.write(buf, 0, size); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
+//			try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error reading document content");  }
+//			buffer.append(buf,0, size);
+//		}
+//		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
+//		try { is.close();  } catch (IOException e) {   throw new XdsIOException("Error closing repository item input stream");   }
 
 		// set size, hash, URI into metadata
-		m.setSlot(extrinsic_object, "size", Integer.toString(buffer.size()));
 		try {
-			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
+			m.setSlot(extrinsic_object, "size", Integer.toString(item.getSize()));
+		}catch(RepositoryException e) {
+			throw new XdsInternalException("Error calculating size on repository file"); 
+		}
+		try {
+//TODO: remove the old code			
+//			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
+			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
 		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
 		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
 		m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
@@ -428,18 +436,33 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if (mime_type == null || mime_type.equals(""))
 			throw new MetadataException("ExtrinsicObject " + id + " does not have a mimeType");
 
-		String doc_path = document_path(uid, mime_type);
-		FileOutputStream fos = null;
-		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
-		try { fos.write(bytes); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
-		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
+        StreamSource source = new StreamSource( new StringReader(bytes.toString()));
+        DataHandler dataHandler = new DataHandler(source, mime_type);
+
+		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
+		item.setDocumentUniqueId(uid);
+		item.setDataHandler(dataHandler); 
+		try {
+			rm.insert(item, new RepositoryRequestContext());
+		}catch(RepositoryException e) {
+			throw new XdsException("Error saving document to the repository", e);
+		}
+//TODO: remove the old code
+//		String doc_path = document_path(uid, mime_type);
+//		FileOutputStream fos = null;
+//		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
+//		try { fos.write(bytes); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
+//		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
 
 		ByteBuffer bb = new ByteBuffer();
 		bb.append(bytes, 0, bytes.length);
 		// set size, hash, URI into metadata
 		m.setSlot(extrinsic_object, "size", Integer.toString(bytes.length));
 		try {
-			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
+//TODO: remove the old code			
+//			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
+			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
 		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
 		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
 		m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
@@ -448,7 +471,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	void setRepositoryUniqueId(Metadata m) throws MetadataException {
 		for (OMElement eo : m.getExtrinsicObjects()) {
 			m.setSlot(eo, "repositoryUniqueId", Repository.getRepositoryUniqueId());
-		}
+	}
 	}
 
 	String document_path(String uid, String mime_type)  throws MetadataException, XdsException {
