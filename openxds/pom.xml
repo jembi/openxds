@@ -187,6 +187,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
             <optional>true</optional>
@@ -366,6 +371,21 @@
                 <jdbc.password>appfuse</jdbc.password>
             </properties>
         </profile>
+        <profile>
+            <id>mysql</id>
+            <properties>
+		        <dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
+		        <dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
+		        <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+		        <jdbc.groupId>mysql</jdbc.groupId>
+		        <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+		        <jdbc.version>5.0.5</jdbc.version>
+		        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+		        <jdbc.url><![CDATA[jdbc:mysql://localhost/openxds?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
+		        <jdbc.username>root</jdbc.username>
+		        <jdbc.password/>
+            </properties>
+        </profile>
 
         <!-- ================= Container Profiles ================= -->
         <profile>
@@ -411,14 +431,14 @@
         <!-- Database settings -->
         <dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
         <dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
-        <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-        <jdbc.groupId>mysql</jdbc.groupId>
-        <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-        <jdbc.version>5.0.5</jdbc.version>
-        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-        <jdbc.url><![CDATA[jdbc:mysql://localhost/openxds?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
-        <jdbc.username>root</jdbc.username>
-        <jdbc.password/>
+        <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+        <jdbc.groupId>postgresql</jdbc.groupId>
+        <jdbc.artifactId>postgresql</jdbc.artifactId>
+        <jdbc.version>8.3-603.jdbc4</jdbc.version>
+        <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+        <jdbc.url><![CDATA[jdbc:postgresql://localhost/openxds]]></jdbc.url>
+        <jdbc.username>postgres</jdbc.username>
+        <jdbc.password>postgres</jdbc.password>
     
         <!-- Properties calculated by AppFuse when running full-source plugin -->
         <aspectj.version>1.6.0</aspectj.version>
