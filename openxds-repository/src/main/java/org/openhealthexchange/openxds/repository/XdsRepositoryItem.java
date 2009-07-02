@@ -18,8 +18,11 @@
  */
 package org.openhealthexchange.openxds.repository;
 
-import javax.activation.DataHandler;
 
+
+import java.io.InputStream;
+import javax.activation.DataHandler;
+import org.apache.log4j.Logger;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
 
@@ -32,19 +35,34 @@ import org.openhealthexchange.openxds.repository.api.RepositoryException;
  */
 public class XdsRepositoryItem implements IXdsRepositoryItem {
 
+	private static final Logger LOG = Logger.getLogger(FileSystemRepositoryManager.class);
+
+    private String id;
+    private DataHandler handler; 
+    public XdsRepositoryItem(){
+    	
+    }
+	    
+    /**
+    * Constructor.
+    */
+    
+    public XdsRepositoryItem(String id, DataHandler handler) {
+	        this.id = id;
+	        this.handler = handler;
+	    }
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#getDataHandler()
 	 */
 	public DataHandler getDataHandler() {
-		// TODO Auto-generated method stub
-		return null;
+		return handler;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#setDataHandler(DataHandler)
 	 */
 	public void setDataHandler(DataHandler dataHandler) {
-		// TODO Auto-generated method stub
+		this.handler = dataHandler;
 		
 	}
 
@@ -52,40 +70,49 @@ public class XdsRepositoryItem implements IXdsRepositoryItem {
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#getDocumentUniqueId()
 	 */
 	public String getDocumentUniqueId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#getHash()
 	 */
 	public long getHash() throws RepositoryException {
-		// TODO Auto-generated method stub
-		return 0;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((handler == null) ? 0 : handler.hashCode());
+		return result;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#getRepositoryUniqueID()
 	 */
 	public String getRepositoryUniqueID() throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		return null;//Repository.getRepositoryUniqueId();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#getSize()
 	 */
 	public int getSize() throws RepositoryException {
-		// TODO Auto-generated method stub
-		return 0;
+        int size = 0;
+		try {
+			InputStream is = handler.getInputStream();
+	        while (is.read() != -1) {
+	            size++;
+	        }
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}		
+		return size;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem#setDocumentUniqueId(java.lang.String)
 	 */
 	public void setDocumentUniqueId(String uniqueId) {
-		// TODO Auto-generated method stub
-
+		this.id =uniqueId;
 	}
 
 }
