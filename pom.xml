@@ -222,6 +222,7 @@
     <modules>
         <module>apache-axis2</module>
 	    <module>common-ws</module>
+	    <module>common-utils</module>
         <module>iheos</module>
         <module>openxds-api</module>
         <module>openxds-core</module>
@@ -471,5 +472,8 @@
         <openpixpdq.version>1.0</openpixpdq.version>
         <braid.version>1.2</braid.version>
         <hapi.version>0.5.1</hapi.version>
+        <omar.version>3.1</omar.version>
+  		<oasis.version>1.0</oasis.version> 
+  		<axis2.version>1.4.1</axis2.version>
     </properties>
 </project>
