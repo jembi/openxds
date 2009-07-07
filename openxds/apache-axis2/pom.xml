@@ -45,37 +45,37 @@
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-adb</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-adb-codegen</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 	
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-codegen</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-java2wsdl</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-kernel</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-saaj</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 	
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-saaj-api</artifactId>
-	    <version>1.4.1</version>
+	    <version>${axis2.version}</version>
 	</dependency> 	
 	<dependency>
 	    <groupId>backport-util-concurrent</groupId>
