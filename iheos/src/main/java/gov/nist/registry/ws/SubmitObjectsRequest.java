@@ -32,15 +32,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.utils.OMUtil;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
+import org.openhealthexchange.openxds.configuration.ModuleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryLifeCycleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
+import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleContext;
+import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
@@ -310,8 +315,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 								}
 								
 								// submit back to backend registry
-								//TODO: change to V3
-								String to_backend = fm.getV2SubmitObjectsRequest().toString();
+								String to_backend = fm.getV3SubmitObjectsRequest().toString();
 
 								log_message.addOtherParam("From Registry Adaptor", to_backend);
 
@@ -326,8 +330,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				}
 
 				// submit to backend registry
-				//TODO: change to V3
-				String to_backend = m.getV2SubmitObjectsRequest().toString();
+				String to_backend = m.getV3SubmitObjectsRequest().toString();
 
 				log_message.addOtherParam("From Registry Adaptor", to_backend);
 
@@ -345,6 +348,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 					log_message.addOtherParam("Approve", approve.toString());
 
+					//TODO: submit_to_backend_registry currently handles only submit, not approve and deprecate
 					submit_to_backend_registry(approve.toString());
 				}
 
@@ -378,6 +382,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e), log_message);
 				return;
 			}
+//TODO: remove old exceptions			
 //			catch (ParserConfigurationException e) {
 //			response.add_error("XDSRegistryError", e.getMessage(), exception_details(e), log_message);
 //			return;
@@ -409,8 +414,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 			XdsException, XdsInternalException {
 		if (Properties.loader().getBoolean("validate_patient_id")) {
 			try {
-				//TODO: get the registry patient manager
-				IXdsRegistryPatientManager patientMan = null;
+				IXdsRegistryPatientManager patientMan = (IXdsRegistryPatientManager)ModuleManager.getInstance().getBean("registryPatientManager");
+
 				//TODO:get the patient id
 				PatientIdentifier pid = null; 
 				//PatientIdentifier pid = new PatientIdentifier(patient_id);
@@ -441,43 +446,31 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 	private boolean submit_to_backend_registry(String sor_string) throws XdsInternalException {
 		boolean status = true;
-		//TODO: Get the Registry Life Cycle Manager
-		IXdsRegistryLifeCycleManager lcm = null;
-//		lcm.submitObjects(request, context);
-		
-//		HttpClientInfo info;
-//		info = new HttpClientInfo();
-//		info.setRestHost("localhost");
-//		info.setRestPort(Integer.valueOf(properties.getString("backend_registry_port")));
-//		info.setRestService("/ebxmlrr/registry/rest");
-//
-//		HttpClientBean httpBean;
-//		httpBean = new HttpClientBean();
-//		httpBean.setHttpClientInfo(info);
-//		httpBean.setUsernamePassword("regop:regop");
-//		httpBean.setMetadata(sor_string);
 
-		boolean registry_response_code = false;  // Success/Failure from ebxmlrr
-//		try {
-//			registry_response_code = httpBean.isRegistryResponse();
-//		} catch (HttpClientException e) {
-//			throw new XdsInternalException(e.getMessage());
-//		} catch (HttpCodeException e) {
-//			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e), log_message);
-//			status = false;
-//		} catch (Exception e) {
-//			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e), log_message);
-//			status = false;
-//		}
-//		if ( ! registry_response_code) {
-//			// add_error sets status to Failure
-//			try {
-//				throw new Exception(httpBean.getRegistryErrorMessage());
-//			} catch (Exception e) {
-//				response.add_error("XDSRegistryError", httpBean.getRegistryErrorMessage(), RegistryUtility.exception_details(e),log_message);
-//				status = false;
-//			}
-//		}  
+		IXdsRegistryLifeCycleManager lcm = (IXdsRegistryLifeCycleManager)ModuleManager.getInstance().getBean("registryLifeCycleManager");
+		OMElement result = null;
+		try {
+			OMElement request = OMUtil.xmlStringToOM(sor_string);
+			result = lcm.submitObjects(request, new RegistryLifeCycleContext());
+		}catch(XMLStreamException e) {
+			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e),log_message);
+			status = false;
+		}catch(RegistryLifeCycleException e) {
+			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e),log_message);
+			status = false;			
+		}
+		
+		if (!status) {
+			return status;
+		}
+		
+		String statusCode = result.getAttributeValue(MetadataSupport.status_qname);
+		if (!statusCode.equals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success")) {
+			OMElement errorList = MetadataSupport.firstChildWithLocalName(result, "RegistryErrorList") ;
+			response.addRegistryErrorList(errorList, log_message);
+			status = false;
+		}
+
 		return status;
 	}
 

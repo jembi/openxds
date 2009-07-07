@@ -23,4 +23,11 @@
 
     <bean id="repositoryItem" scope="prototype" class="org.openhealthexchange.openxds.repository.XdsRepositoryItem"/>
 
+    <bean id="registryQueryManager" class="org.openhealthexchange.openxds.registry.adapter.omar31.XdsRegistryQueryManager"/>
+
+    <bean id="registryLifeCycleManager" class="org.openhealthexchange.openxds.registry.adapter.omar31.XdsRegistryLifeCycleManager"/>
+
+    <!-- TODO: replace the mockup class -->
+    <bean id="registryPatientManager" class="org.openhealthexchange.openxds.registry.patient.MockupXdsRegistryPatientManager"/>
+
 </beans>    
