@@ -364,8 +364,6 @@
 			codingScheme="Connect-a-thon healthcareFacilityTypeCodes" />
 		<Code code="Outpatient" display="Outpatient"
 			codingScheme="Connect-a-thon healthcareFacilityTypeCodes" />
-		<Code code="Outpatient" display="Outpatient"
-			codingScheme="Connect-a-thon healthcareFacilityTypeCodes 2" />
 	</CodeType>
 	<CodeType name="practiceSettingCode" classScheme="urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead">
 		<Code code="Anesthesia" display="Anesthesia"
