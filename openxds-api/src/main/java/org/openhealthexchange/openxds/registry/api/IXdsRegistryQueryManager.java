@@ -50,6 +50,7 @@ public interface IXdsRegistryQueryManager {
      * @return a list of registry objects in the format of {@link OMElement}.
      * @throws RegistryQueryException if the query is failed
      */
-    public OMElement storedQuery(RegistryQueryContext context)  throws RegistryQueryException;
+    public OMElement storedQuery(RegistryStoredQueryContext context)  throws RegistryQueryException;
 
+    public OMElement sqlQuery(RegistrySQLQueryContext context)  throws RegistryQueryException;
 }

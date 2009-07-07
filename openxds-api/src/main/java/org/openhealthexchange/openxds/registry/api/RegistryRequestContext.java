@@ -20,7 +20,7 @@ package org.openhealthexchange.openxds.registry.api;
 
 
 /**
- * This classes defines a registry context that are required for
+ * This class defines a registry context that are required for
  * the registry life cycle and query operations of the registry
  * manager service.
  * 
