@@ -32,9 +32,24 @@
   		<artifactId>common-ws</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<artifactId>common-utils</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
 	<dependency>
   		<groupId>org.openhealthexchange.openxds</groupId>
   		<artifactId>openxds-repository</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+	<dependency>
+  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<artifactId>openxds-registry-adapter-omar</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+	<dependency>
+  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<artifactId>openxds-registry-patient</artifactId>
   		<version>${project.version}</version>
   	</dependency>
    	<dependency>

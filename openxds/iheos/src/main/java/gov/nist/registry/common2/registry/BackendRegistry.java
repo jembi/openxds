@@ -18,9 +18,11 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthexchange.openxds.configuration.ModuleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
-import org.openhealthexchange.openxds.registry.api.RegistryQueryContext;
 import org.openhealthexchange.openxds.registry.api.RegistryQueryException;
+import org.openhealthexchange.openxds.registry.api.RegistrySQLQueryContext;
+import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
 
 public class BackendRegistry {
 	ErrorLogger response;
@@ -58,8 +60,7 @@ public class BackendRegistry {
 		if (result == null)  // error occured
 			return ors;
 
-		OMElement ahqr = MetadataSupport.firstChildWithLocalName(result, "AdhocQueryResponse");
-		OMElement sql_query_result = MetadataSupport.firstChildWithLocalName(ahqr, "SQLQueryResult");
+		OMElement sql_query_result = MetadataSupport.firstChildWithLocalName(result, "RegistryObjectList");
 
 		if (sql_query_result != null) {
 			for (OMElement or : MetadataSupport.childrenWithLocalName(sql_query_result, "ObjectRef")) {
@@ -110,24 +111,50 @@ public class BackendRegistry {
 
 	public OMElement basic_query(String sql, boolean leaf_class)
 	throws XMLParserException, LoggerException, XdsInternalException {
-		String query_string = sql_query_header +
-		"<ResponseOption returnType=\"" +
-		((leaf_class) ? "LeafClass" : "ObjectRef") +
-		"\" returnComposedObjects=\"true\"/>\n" +
-		"<SQLQuery>\n" +
-//		sql +
-		"</SQLQuery>\n" +
-		"</AdhocQueryRequest>\n";
+		if (log_message != null)
+			log_message.addOtherParam("ebxmlrr request (" + reason + ")", sql);
 
+		IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
 
-		OMElement query_element = Parse.parse_xml_string(query_string);
+		RegistrySQLQueryContext context = new RegistrySQLQueryContext(sql, leaf_class);
+		OMElement response_xml = null;
+		try {
+			response_xml = qm.sqlQuery(context);
+		}catch(RegistryQueryException e) {
+			throw new XdsInternalException("Failed to query the Registry. \nQuery was:\n"+ sql, e);
+		}
+		if (log_message != null)
+			log_message.addOtherParam("ebxmlrr response", response.toString());
 
-		OMElement sql_query = MetadataSupport.firstChildWithLocalName(query_element, "SQLQuery") ;
+		if (! response_xml.getLocalName().equals("AdhocQueryResponse")) {
+			try {
+				throw new XdsInternalException("Return from ebxmlrr is '" + response_xml.getLocalName() + "' but should be 'AdhocQueryResponse'");
+			} catch (Exception e) {
+				response.add_error("XDSRegistryError", "Return from ebxmlrr is '" + response_xml.getLocalName() + "' but should be 'AdhocQueryResponse'", RegistryUtility.exception_details(e), log_message);
+			}
+			return null;
+		}
 
-		sql_query.setText(sql);
-
-		OMElement result = query(query_element);
-		return result;
+		if (! response_xml.getAttributeValue(new QName("status")).equals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success")) {
+			String msg = "Status from ebxmlrr is '" + response_xml.getAttributeValue(new QName("status")) + 
+			"' but should be 'Success'. Error message(s) are:\n";	
+			String msg_copy = msg;
+			RegistryResponseParser rr = new RegistryResponseParser(response_xml);
+			ArrayList<String> errs = rr.get_error_code_contexts();
+			for (int i=0; i<errs.size(); i++) {
+				String err = (String) errs.get(i);
+				if (err.indexOf("QueryManagerImpl") > -1) {
+					// ebxmlrr could not parse query
+					msg = msg_copy + "Query engine error: " + ExceptionUtil.firstNLines(rr.get_regrep_error_msg(),4);  // + rr.get_regrep_error_msg();
+					msg = ExceptionUtil.firstNLines(msg, 4);
+					break;
+				}
+				//msg += (String) err + "\n";
+			}
+			msg += "\nQuery was:\n" + sql;
+			throw new XdsInternalException(msg);
+		}
+		return response_xml;
 	}
 
 	private void add_v3_attributes(OMElement ele) {
@@ -154,7 +181,7 @@ public class BackendRegistry {
 		//TODO: convert ahqr OMElement to context, extract id and query parameters
 		String id = "123";  //
 		Map params = new HashMap();		
-		RegistryQueryContext context = new RegistryQueryContext(id, params);
+		RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, params, true /*LeafClass*/);
 		OMElement response = null;
 		try {
 			response = qm.storedQuery(context);
