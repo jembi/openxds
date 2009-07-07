@@ -20,42 +20,46 @@ package org.openhealthexchange.openxds.registry.api;
 
 import java.util.Map;
 
-
 /**
- * This class defines a registry query context that are required for
- * query operations.
- * 
+ * This classes defines a registry context for a Registry Sotred query.  
+ *   
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class RegistryQueryContext {
+public class RegistryStoredQueryContext extends RegistryQueryContext {
 
-	/**Whether the ReponseOption is LeafClass; otherwise it is ObjectRef.*/
-	private boolean isLeafClass;
-
+	private String queryId;
+	private Map<String, Object> queryParameters;
+	
 	/**
 	 * Constructor
 	 * 
-	 * @param isLeafClass whether this query returns a LeafClass for
-	 * 		  the query result. 
+	 * @param queryId
+	 * @param queryParameters
 	 */
-	public RegistryQueryContext(boolean isLeafClass) {
-		super();
-		this.isLeafClass = isLeafClass;
+	public RegistryStoredQueryContext(String queryId, Map queryParameters, boolean isLeafClass) {
+		super(isLeafClass);
+		this.queryId = queryId;
+		this.queryParameters = queryParameters;
 	}
 
 	/**
-	 * @return the isLeafClass
+	 * Gets queryId.
+	 *
+	 * @return the queryId
 	 */
-	public boolean isLeafClass() {
-		return isLeafClass;
+	public String getQueryId() {
+		return queryId;
 	}
 
 	/**
-	 * @param isLeafClass the isLeafClass to set
+	 * Gets queryParameters.
+	 *
+	 * @return the queryParameters
 	 */
-	public void setLeafClass(boolean isLeafClass) {
-		this.isLeafClass = isLeafClass;
+	public Map<String, Object> getQueryParameters() {
+		return queryParameters;
 	}
-
+	
+	
 	
 }

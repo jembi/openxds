@@ -18,44 +18,36 @@
  */
 package org.openhealthexchange.openxds.registry.api;
 
-import java.util.Map;
-
 
 /**
- * This class defines a registry query context that are required for
- * query operations.
- * 
+ * This class defines a registry context for a SQL query.  
+ *   
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class RegistryQueryContext {
+public class RegistrySQLQueryContext extends RegistryQueryContext {
+	
+	/**The SQL query string */
+	private String sql;
 
-	/**Whether the ReponseOption is LeafClass; otherwise it is ObjectRef.*/
-	private boolean isLeafClass;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param isLeafClass whether this query returns a LeafClass for
-	 * 		  the query result. 
-	 */
-	public RegistryQueryContext(boolean isLeafClass) {
-		super();
-		this.isLeafClass = isLeafClass;
+	public RegistrySQLQueryContext(String sql, boolean leafClass) {
+		super(leafClass);
+		this.sql = sql;
 	}
 
 	/**
-	 * @return the isLeafClass
+	 * @return the sql
 	 */
-	public boolean isLeafClass() {
-		return isLeafClass;
+	public String getSql() {
+		return sql;
 	}
 
 	/**
-	 * @param isLeafClass the isLeafClass to set
+	 * @param sql the sql to set
 	 */
-	public void setLeafClass(boolean isLeafClass) {
-		this.isLeafClass = isLeafClass;
+	public void setSql(String sql) {
+		this.sql = sql;
 	}
-
+	
+	
 	
 }
