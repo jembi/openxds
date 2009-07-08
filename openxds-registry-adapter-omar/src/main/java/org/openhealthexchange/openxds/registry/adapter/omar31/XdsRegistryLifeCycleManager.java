@@ -18,7 +18,17 @@
  */
 package org.openhealthexchange.openxds.registry.adapter.omar31;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import org.apache.axiom.om.OMElement;
+import org.freebxml.omar.common.CommonRequestContext;
+import org.freebxml.omar.common.spi.LifeCycleManager;
+import org.freebxml.omar.common.spi.LifeCycleManagerFactory;
+import org.freebxml.omar.common.spi.RequestContext;
+import org.freebxml.omar.server.security.authentication.AuthenticationServiceImpl;
+import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
+import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryLifeCycleManager;
 import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
@@ -29,13 +39,42 @@ import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
  * objects.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  *
  */
 public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager {
 	
+	protected static LifeCycleManager lcm = LifeCycleManagerFactory.getInstance().getLifeCycleManager();
+	protected static ConversionHelper helper = ConversionHelper.getInstance();
+	
 	public OMElement submitObjects(OMElement request, RegistryLifeCycleContext context)  throws RegistryLifeCycleException {
-		//TODO: implement
-		return null;
+		RequestContext omarContext;
+		RegistryResponse omarResponse = null;
+		OMElement response;
+		
+		final String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryLifeCycleManager:submitObjects:context";
+		try {
+			InputStream is = new ByteArrayInputStream(request.toString().getBytes("UTF-8"));
+			Object registryRequest = helper.getUnmarsheller().unmarshal(is);
+			//Creating context with request.
+			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
+			//Adding RegistryOperator role for the user.
+			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			
+			// Sending request to OMAR methods.
+			omarResponse = lcm.submitObjects(omarContext);
+			//Create RegistryResponse as OMElement
+			response = helper.omFactory().createOMElement("RegistryResponse", helper.nsRs);
+			response.declareNamespace(helper.nsRs);
+			response.declareNamespace(helper.nsXsi);
+			response.addAttribute("status", omarResponse.getStatus(), null);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new RegistryLifeCycleException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	public void mergePatients(String survivingPatient, String mergePatient, 
@@ -45,8 +84,32 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 
 	
 	public OMElement approveObjects(OMElement request, RegistryLifeCycleContext context) throws RegistryLifeCycleException {
-		//TODO: implement
-		return null;
+		RequestContext omarContext;
+		RegistryResponse omarResponse = null;
+		InputStream is;
+		OMElement response;
+		final String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryLifeCycleManager:approveObjects:context";
+		try {
+			is = new ByteArrayInputStream(request.toString().getBytes("UTF-8"));
+			Object registryRequest = helper.getUnmarsheller().unmarshal(is);
+			//Creating context with request.
+			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
+			//Adding RegistryOperator role for the user.
+			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			// Sending request to OMAR methods.
+			omarResponse = lcm.approveObjects(omarContext);
+			// 
+			response = helper.omFactory().createOMElement("RegistryResponse", helper.nsRs);
+			response.declareNamespace(helper.nsRs);
+			response.declareNamespace(helper.nsXsi);
+			response.addAttribute("status", omarResponse.getStatus(), null);
+		
+		}  catch (Exception e) {
+			e.printStackTrace();
+			throw new RegistryLifeCycleException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	public OMElement deprecateObjects(OMElement request, RegistryLifeCycleContext context) throws RegistryLifeCycleException {

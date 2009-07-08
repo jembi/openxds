@@ -19,6 +19,8 @@
 package org.openhealthexchange.openxds.registry.adapter.omar31;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.registry.RegistryException;
 import javax.xml.stream.XMLStreamException;
@@ -26,10 +28,16 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.axiom.om.OMElement;
 import org.apache.log4j.Logger;
 import org.freebxml.omar.common.BindingUtility;
+import org.freebxml.omar.common.CommonRequestContext;
 import org.freebxml.omar.common.IterativeQueryParams;
+import org.freebxml.omar.common.spi.QueryManager;
+import org.freebxml.omar.common.spi.QueryManagerFactory;
+import org.freebxml.omar.common.spi.RequestContext;
 import org.freebxml.omar.server.common.ServerRequestContext;
 import org.freebxml.omar.server.query.sql.SQLQueryProcessor;
 import org.freebxml.omar.server.security.authentication.AuthenticationServiceImpl;
+import org.oasis.ebxml.registry.bindings.query.AdhocQueryRequest;
+import org.oasis.ebxml.registry.bindings.query.AdhocQueryResponse;
 import org.oasis.ebxml.registry.bindings.rim.RegistryObjectListType;
 import org.openhealthexchange.common.utils.OMUtil;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
@@ -42,13 +50,48 @@ import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
  * query XDS Registry objects.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  */
 public class XdsRegistryQueryManager implements IXdsRegistryQueryManager {
 	private static final Logger log = Logger.getLogger(XdsRegistryQueryManager.class);
-
+	protected static QueryManager qm = QueryManagerFactory.getInstance().getQueryManager();
+	
     public OMElement storedQuery(RegistryStoredQueryContext context)  throws RegistryQueryException {
-    	//TODO:
-    	return null;
+    	String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryQueryManager:storedQuery:context";
+    	OMElement response = null;
+		RequestContext omarContext;
+		try {
+			omarContext = new CommonRequestContext(contextId, null);
+			AdhocQueryRequest req = BindingUtility.getInstance().createAdhocQueryRequest("SELECT * FROM DummyTable");
+			boolean returnLeafClass = context.isLeafClass();
+			req.getResponseOption().setReturnComposedObjects(true);
+	        if (returnLeafClass) {
+	           	req.getResponseOption().setReturnType(org.oasis.ebxml.registry.bindings.query.ReturnType.LEAF_CLASS);            	
+	         }else{
+	           	req.getResponseOption().setReturnType(org.oasis.ebxml.registry.bindings.query.ReturnType.OBJECT_REF);
+	         }
+			Map<String, Object> slotsMap = new HashMap<String, Object>();
+			slotsMap.put(BindingUtility.CANONICAL_SLOT_QUERY_ID, context.getQueryId());
+			if ((context.getQueryParameters() != null) && (context.getQueryParameters().size() > 0)) {
+				slotsMap.putAll(context.getQueryParameters());
+			}
+			BindingUtility.getInstance().addSlotsToRequest(req, slotsMap);
+			// Adding RegistryOperator role for the user.
+			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryGuest);
+			Map<String, Object> idToRepositoryItemMap = new HashMap<String, Object>();
+			omarContext.setRepositoryItemsMap(idToRepositoryItemMap);
+			omarContext.pushRegistryRequest(req);
+			
+			// Sending request to OMAR methods.
+			AdhocQueryResponse queryresponse = (AdhocQueryResponse) qm.submitAdhocQuery(omarContext);
+			
+			//Marshal the response and converting response e to OMElement 
+			String res = BindingUtility.getInstance().marshalObject(queryresponse);
+			response = OMUtil.xmlStringToOM(res);
+		} catch (Exception e) {
+			throw new RegistryQueryException(e.getMessage());
+		}
+		return response;
     }
     
     public OMElement sqlQuery(RegistrySQLQueryContext context)  throws RegistryQueryException {
