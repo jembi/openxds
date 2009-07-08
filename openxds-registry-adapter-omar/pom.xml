@@ -39,6 +39,11 @@
   		<artifactId>oasis-regrep</artifactId>
   		<version>${oasis.version}</version>
   	</dependency>
+  	<dependency>
+		<groupId>com.misys.braid</groupId>
+		<artifactId>braid-base</artifactId>
+		<version>${braid.version}</version>
+	</dependency>	
 	<dependency>
 	    <groupId>javax.xml.bind</groupId>
 	    <artifactId>jaxb-api</artifactId>
@@ -131,7 +136,7 @@
 	    <artifactId>xsdlib</artifactId>
 	    <version>20060615</version>
 	    <scope>runtime</scope>
-	</dependency> 	
+	</dependency> 
  </dependencies>
 
 
