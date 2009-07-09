@@ -57,7 +57,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
 	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
-	
+	private static String hasMember = "urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember";
 
 	public SubmitObjectsRequest(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
@@ -282,8 +282,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 					// for each folder, add an association placing replacment in that folder
 					// This brings up interesting question, should the Assoc between SS and Assoc be generated also?  YES!
 					for (String fid : folderIds) {
-						OMElement assoc = m.add_association(m.mkAssociation("HasMember", fid, replacementDocumentId));
-						OMElement assoc2 = m.add_association(m.mkAssociation("HasMember", m.getSubmissionSetId(), assoc.getAttributeValue(MetadataSupport.id_qname)));
+						OMElement assoc = m.add_association(m.mkAssociation(hasMember, fid, replacementDocumentId));
+						OMElement assoc2 = m.add_association(m.mkAssociation(hasMember, m.getSubmissionSetId(), assoc.getAttributeValue(MetadataSupport.id_qname)));
 					}
 				}
 				
@@ -293,7 +293,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				// if this submission adds a document to a folder then update that folder's lastUpdateTime Slot
 				ArrayList<String> registryPackagesToUpdate = new ArrayList<String>();
 				for (OMElement assoc : m.getAssociations()) {
-					if (m.getSimpleAssocType(assoc).equals("HasMember")) {
+					if (m.getSimpleAssocType(assoc).equals(hasMember)) {
 						String sourceId = m.getAssocSource(assoc);
 						if ( !m.getSubmissionSetId().equals(sourceId) &&
 								!m.getFolderIds().contains(sourceId)) {
@@ -451,7 +451,14 @@ public class SubmitObjectsRequest extends XdsCommon {
 		OMElement result = null;
 		try {
 			OMElement request = OMUtil.xmlStringToOM(sor_string);
-			result = lcm.submitObjects(request, new RegistryLifeCycleContext());
+			if(request.getLocalName().equalsIgnoreCase("SubmitObjectsRequest")){
+				result = lcm.submitObjects(request, new RegistryLifeCycleContext());
+			}else if(request.getLocalName().equalsIgnoreCase("ApproveObjectsRequest")){
+				result = lcm.approveObjects(request, new RegistryLifeCycleContext());	
+			}else if(request.getLocalName().equalsIgnoreCase("DeprecateObjectsRequest")){
+				//TODO: Implementation is required
+				//lcm.deprecateObjects(request, new RegistryLifeCycleContext());
+			}
 		}catch(XMLStreamException e) {
 			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e),log_message);
 			status = false;
