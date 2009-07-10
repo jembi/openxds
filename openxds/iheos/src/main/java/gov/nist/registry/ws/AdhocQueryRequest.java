@@ -20,6 +20,7 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.ws.sq.ParamParser;
 import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
@@ -27,7 +28,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -35,6 +38,9 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
+import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
 
 public class AdhocQueryRequest extends XdsCommon {
 	MessageContext messageContext;
@@ -226,22 +232,45 @@ public class AdhocQueryRequest extends XdsCommon {
 		return requires;
 	}
 
+	@SuppressWarnings("unchecked")
 	ArrayList<OMElement> stored_query(OMElement ahqr) 
 	throws XdsException, LoggerException, XDSRegistryOutOfResourcesException, XdsValidationException {
 		
-		
 //		new StoredQueryRequestSoapValidator(xds_version, messageContext).runWithException();
-
+		ArrayList<OMElement> omlist = new ArrayList<OMElement>();
+		Map params = new HashMap();
 		try {
-			StoredQueryFactory fact = new StoredQueryFactory(ahqr);
-			fact.setServiceName(service_name);
-			fact.setLogMessage(log_message);
-			fact.setIsSecure(is_secure);
-			fact.setResponse(response);
-			return fact.run();
+			ParamParser parser = new ParamParser();
+			params = parser.parse(ahqr);
+			OMElement responseoption = MetadataSupport.firstChildWithLocalName(ahqr, "ResponseOption") ;
+			String rettype = responseoption.getAttributeValue(MetadataSupport.return_type_qname);
+			boolean ret=false;
+			if(rettype.equalsIgnoreCase("LeafClass") ){
+				ret = true;
+			}
+			//TODO: convert ahqr OMElement to context, extract id and query parameters
+			OMElement adhoc_query = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
+			String id = adhoc_query.getAttributeValue(MetadataSupport.id_qname);
+			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id.trim(), params,ret);
+			OMElement response = null;
+			try {
+				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
+				response = qm.storedQuery(context);
+				Iterator<OMElement> temp= response.getChildElements();
+				while(temp.hasNext()){
+					OMElement temp1 = temp.next();
+					for(Iterator<OMElement>i=temp1.getChildElements(); i.hasNext();){
+						omlist.add(i.next());
+					}
+				}
+			}catch(Exception e) {
+				throw new XdsInternalException("Failed to query the Registry", e);
+			}
+			
+			return omlist;
 		}
 		catch (Exception e) {
-			response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
+			response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "XdsRegistryQueryManager.java", log_message);
 			return null;
 
 		}
