@@ -35,11 +35,13 @@ import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
  * This class provides a file system based repository manager implementation.
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
- *
+ * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
+ * 
  */
 public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	private static final Logger LOG = Logger
 			.getLogger(FileSystemRepositoryManager.class);
+	//TODO:Move to property file
 	String repositoryRoot = "C://openXDS//repository";
     
 	/* (non-Javadoc)
@@ -49,11 +51,14 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 			throws RepositoryException {
 		try {
 			String id = item.getDocumentUniqueId();
-
+            String ext = getDocumentContenType(item.getDataHandler().getContentType());
+            
+            if(id == null || ext == null)
+            	throw new RepositoryException("Invalid document");
 			// Strip off the "urn:uuid:"
 			id = Utility.getInstance().stripId(id);
 
-			String itemPath = getRepositoryItemPath(id);
+			String itemPath = getRepositoryItemPath(id,ext);
 
 			LOG.debug("itemPath = " + itemPath);
 
@@ -106,8 +111,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 			throws RepositoryException {
 		IXdsRepositoryItem repositoryItem = null;
 		// Strip off the "urn:uuid:"
-		documentUniqueId = Utility.getInstance().stripId(documentUniqueId);
-
+		documentUniqueId = Utility.getInstance().stripId(documentUniqueId);		
 		try {
 			String path = getRepositoryItemPath(documentUniqueId);
 			File riFile = new File(path);
@@ -204,15 +208,66 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 
 	/**
 	 * Gets the path for a RepositoryItem given its id.
+	 * @param id - Document Id
+	 * @param ext - Extension of document	 
 	 */
-	private String getRepositoryItemPath(String id) throws RepositoryException {
+	private String getRepositoryItemPath(String id,String ext){
 		//Strip urn:uuid since that is not part of file name
 		id = Utility.getInstance().stripId(id);
 		File file = new File(repositoryRoot);
 		if (!file.exists())
 			file.mkdirs();
-		String repositoryItemPath = repositoryRoot + "/" + id + ".xml";
+		String repositoryItemPath = repositoryRoot + "/" + id + ext;
+		return repositoryItemPath;
+	}
+	
+	
+	/**
+	 * Gets the path for a RepositoryItem given its id.
+	 * @param id Document ID
+	 * @throws RepositoryException.
+	 */
+	private String getRepositoryItemPath(String id) throws RepositoryException {
+		String ext = null;
+		//Strip urn:uuid since that is not part of file name
+		id = Utility.getInstance().stripId(id);
+		File file = new File(repositoryRoot);
+		if (!file.exists())
+			file.mkdirs();
+		String[] files =  file.list();
+		for (int i = 0; i < files.length; i++) {
+			if(files[i].startsWith(id)){			
+			ext =files[i].substring(files[i].length()-4);
+			}
+		}
+		if(ext == null){
+			throw new RepositoryException("DocumentId is not found in the repository");
+		}
+		String repositoryItemPath = repositoryRoot + "/" + id + ext;
 		return repositoryItemPath;
 	}
 
+	/**
+	 * Gets the Extension from a contentType.
+	 */
+	private String getDocumentContenType(String type){
+		String contentType=null;
+		if(type.equalsIgnoreCase("text/plain")){
+			contentType = ".txt";
+		}else if(type.equalsIgnoreCase("text/richtext") || type.equalsIgnoreCase("application/rtf")){
+			contentType = ".rtf";
+		}else if(type.equalsIgnoreCase("text/html")){
+			contentType = ".htm";
+		}else if(type.equalsIgnoreCase("application/msword")){
+			contentType = ".doc";
+		}else if(type.equalsIgnoreCase("application/pdf")){
+			contentType = ".pdf";
+		}else if(type.equalsIgnoreCase("text/xml") || type.equalsIgnoreCase("application/octet-stream")){
+			contentType = ".xml";
+		}else{
+			//TODO: support more mime type
+		}	
+		return contentType;
+	}
+	
 }
