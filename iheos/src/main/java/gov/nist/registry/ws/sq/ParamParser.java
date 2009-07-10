@@ -98,28 +98,6 @@ public class ParamParser {
 			if (!value_element.getLocalName().equals("Value"))
 				continue;
 			String value_string = value_element.getText();
-			try {
-				Integer value_int = Integer.decode(value_string);
-				//add_parm(parms, name, value_int);
-				
-				if (newHome == null) parms.put(name, value_int);
-				else newHome.add(value_int);
-				
-				continue;
-			} catch (NumberFormatException e) {
-			}
-			
-			// date strings are technically numeric but too large to be parsed as integers
-			try {
-				BigInteger value_int = new BigInteger(value_string);
-				//add_parm(parms, name, value_int);
-				
-				if (newHome == null) parms.put(name, value_int);
-				else newHome.add(value_int);
-				
-				continue;
-			} catch (NumberFormatException e) {
-			}
 			
 			if (value_string.charAt(0) == '\'' &&
 					value_string.charAt(value_string.length()-1) == '\'') {
@@ -166,9 +144,11 @@ public class ParamParser {
 				}
 				//add_parm(parms, name, a);
 				continue;
-			}
-			throw new MetadataValidationException("Could not decode the value " +
-					value_string + ". It does not parse as an integer, a '' delimited string or a () delimited list.");
+			}else
+			//throw new MetadataValidationException("Could not decode the value " +
+				//value_string + ". It does not parse as an integer, a '' delimited string or a () delimited list.");
+			if (newHome == null) parms.put(name, value_string);
+			else newHome.add(value_string);		
 		}
 		return name;
 	}
