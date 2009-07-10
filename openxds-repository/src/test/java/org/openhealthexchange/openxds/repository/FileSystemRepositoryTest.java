@@ -77,12 +77,13 @@ public class FileSystemRepositoryTest extends TestCase {
 	 * Test FileSystemRepositoryManager: getRepoItem method
 	 */
     public void testgetRepoItem(){
+    	IXdsRepositoryItem invalidRepositoryId =null;
     	try {    		
     		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId);
     		assertEquals(repositoryItem.getDocumentUniqueId(),documentId);
-    		IXdsRepositoryItem repositoryItem1 = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515");
-		} catch (Exception e) {
-			e.printStackTrace();
+    		invalidRepositoryId = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515");
+    	} catch (Exception e) {
+			assertNull(invalidRepositoryId);
 		}
     	System.out.println("completed");
     	
@@ -102,7 +103,7 @@ public class FileSystemRepositoryTest extends TestCase {
     
     private static File createTempFile(boolean deleteOnExit, String content) throws IOException {
         // Create temp file.
-        File temp = File.createTempFile("omar", ".txt");
+        File temp = File.createTempFile("omar", ".html");
         // Delete temp file when program exits.
         if (deleteOnExit) {
             temp.deleteOnExit();
