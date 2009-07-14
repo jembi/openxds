@@ -26,6 +26,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
@@ -42,10 +43,18 @@ public class RetrieveDocumentSet extends XdsCommon {
 		this.log_message = log_message;
 		this.messageContext = messageContext;
 		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
-		connection = httpServer.getConnection();
 		try {
-			init(new RetrieveMultipleResponse(), xds_version, messageContext);
-		}
+			IheActor actor = httpServer.getIheActor();
+			if (actor == null) {
+				throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
+			}
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
+			}
+	
+				init(new RetrieveMultipleResponse(), xds_version, messageContext);
+			}
 		catch (XdsInternalException e) {
 			logger.fatal(logger_exception_details(e));
 			response.add_error("XDSRepositoryError",  e.getMessage(), ExceptionUtil.exception_details(e), log_message);

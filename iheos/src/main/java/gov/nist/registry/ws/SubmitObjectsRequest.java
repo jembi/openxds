@@ -38,6 +38,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.utils.OMUtil;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
@@ -55,7 +56,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	ContentValidationService validater;
 	short xds_version;
 	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
-	private IConnectionDescription connection = null;
+ 	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
 	private static String hasMember = "urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember";
 
@@ -64,7 +65,11 @@ public class SubmitObjectsRequest extends XdsCommon {
 		this.xds_version = xds_version;
 		try {
 			IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
-			connection = httpServer.getConnection();
+			IheActor actor = httpServer.getIheActor();
+			if (actor == null) {
+				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
+			}
+			connection = actor.getConnection();
 			if (connection == null) {
 				throw new XdsInternalException("Cannot find XdsRegistry connection configuration.");			
 			}

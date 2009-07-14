@@ -12,7 +12,6 @@ import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsIOException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.io.ByteBuffer;
-import gov.nist.registry.common2.io.Sha1Bean;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryResponse;
@@ -24,9 +23,6 @@ import gov.nist.registry.ws.config.Repository;
 import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -39,8 +35,10 @@ import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.openxds.repository.api.IXdsRepository;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
@@ -56,6 +54,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	MessageContext messageContext;
 	boolean accept_xop = true;
     IConnectionDescription connection = null;
+    IConnectionDescription registryClientConnection = null;
 	private final static Logger logger = Logger.getLogger(ProvideAndRegisterDocumentSet.class);
 
 	static {
@@ -67,9 +66,21 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		this.messageContext = messageContext;
 		this.xds_version = xds_version;
 		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
-		connection = httpServer.getConnection();
 
 		try {
+			IheActor actor = httpServer.getIheActor();
+			if (actor == null) {
+				throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
+			}
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
+			}
+			registryClientConnection = ((IXdsRepository)actor).getRegistryClientConnection();
+			if (registryClientConnection == null) {
+				throw new XdsInternalException("Cannot find XdsRepository XdsRegistryClient connection configuration.");			
+			}
+				
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 		} catch (XdsInternalException e) {
 			logger.fatal("Internal Error creating RegistryResponse: " + e.getMessage());
@@ -325,7 +336,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	}
 
 	String registry_endpoint() {
-		return (registry_endpoint == null) ? Repository.getRegisterTransactionEndpoint(this.xds_version) : registry_endpoint;
+		return (registry_endpoint == null) ? Repository.getRegisterTransactionEndpoint(registryClientConnection) : registry_endpoint;
 	}
 
 	void log_headers(Soap soap) throws LoggerException, XdsInternalException {
@@ -415,6 +426,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 //			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
 			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
 		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
+        //TODO: either remove URI attribute, or make the uri work. URI is an attribute required by XDS.a
 		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
 		m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
 
