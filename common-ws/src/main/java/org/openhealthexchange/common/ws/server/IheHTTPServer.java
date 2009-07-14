@@ -14,7 +14,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.SessionContext;
-import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.axis2.transport.TransportListener;
@@ -23,6 +22,7 @@ import org.apache.axis2.transport.http.server.HttpUtils;
 import org.apache.axis2.transport.http.server.SessionManager;
 import org.apache.axis2.util.OptionsParser;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
@@ -34,8 +34,8 @@ public class IheHTTPServer implements TransportListener {
      * Embedded commons http core based server
      */
     SimpleHttpServer embedded = null;
-    private String localAddress;
-    IConnectionDescription connection; 
+    private String localAddress = null;
+    IheActor actor = null; 
 
 	public static int DEFAULT_PORT = 8080;
 
@@ -51,9 +51,9 @@ public class IheHTTPServer implements TransportListener {
     /**
      * Create a IheHTTPServer using default IheHttpFactory settings
      */
-    public IheHTTPServer(ConfigurationContext configurationContext, IConnectionDescription connection) throws AxisFault {
-        this(new IheHttpFactory(configurationContext, connection));
-        this.connection = connection;
+    public IheHTTPServer(ConfigurationContext configurationContext, IheActor actor) throws AxisFault {
+        this(new IheHttpFactory(configurationContext, actor.getConnection()));
+        this.actor = actor;
     }
 
     /**
@@ -82,11 +82,11 @@ public class IheHTTPServer implements TransportListener {
             this.configurationContext = axisConf;
 
             if (httpFactory == null) {
-                httpFactory = new IheHttpFactory(configurationContext, connection);
+                httpFactory = new IheHttpFactory(configurationContext, actor.getConnection());
             }
 
-            if (connection.getHostname() != null) {
-                hostAddress = connection.getHostname();
+            if (actor.getConnection().getHostname() != null) {
+                hostAddress = actor.getConnection().getHostname();
             } else {
                 hostAddress = httpFactory.getHostAddress();
             }
@@ -189,7 +189,7 @@ public class IheHTTPServer implements TransportListener {
     public void start() throws AxisFault {
         System.out.println("[IheHTTPServer] Start called");
         try {
-            embedded = new SimpleHttpServer(httpFactory, connection);
+            embedded = new SimpleHttpServer(httpFactory, actor.getConnection());
             embedded.init();
             embedded.start();
         } catch (IOException e) {
@@ -347,8 +347,8 @@ public class IheHTTPServer implements TransportListener {
     }
 
 
-    public IConnectionDescription getConnection() {
-		return connection;
+    public IheActor getIheActor() {
+		return this.actor;
 	}
 
 }
