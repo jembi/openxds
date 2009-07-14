@@ -25,8 +25,8 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
-import org.openhealthexchange.openxds.XdsActor;
 import org.openhealthexchange.openxds.repository.api.IXdsRepository;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
@@ -37,11 +37,11 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsRepository extends XdsActor implements IXdsRepository {
+public class XdsRepository extends IheActor implements IXdsRepository {
     /** Logger for problems during SOAP exchanges */
     private static Logger log = Logger.getLogger(XdsRepository.class);
 
-	private IConnectionDescription repositoryServerConnection = null;
+    /**The client side of XDS Registry connection*/
 	private IConnectionDescription registryClientConnection = null;
 
     /** The XDS Repository Server */    
@@ -58,7 +58,7 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
      * 		to accept Provide and Register Document Set and Retrieve Document Set transactions 
      */
      public XdsRepository(IConnectionDescription repositoryServerConnection, IConnectionDescription registryClientConnection) {
-         this.repositoryServerConnection = repositoryServerConnection;
+         this.connection = repositoryServerConnection;
          this.registryClientConnection = registryClientConnection;
     }
 
@@ -74,7 +74,7 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
 	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(repository, null);
-	        repositoryServer = new IheHTTPServer(configctx, repositoryServerConnection); 		
+	        repositoryServer = new IheHTTPServer(configctx, this); 		
 	
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(repositoryServer));
 	        repositoryServer.start();
@@ -89,7 +89,7 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
         }catch(AxisFault e) {
         	log.error("Failed to initiate the Repository server", e);
         }
-        log.info("XDS Repository Server started: " + repositoryServerConnection.getDescription() );
+        log.info("XDS Repository Server started: " + connection.getDescription() );
         
     }
     
@@ -98,7 +98,7 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
     public void stop() {
         //stop the Repository Server
         repositoryServer.stop();
-        log.info("XDS Repository Server stopped: " + repositoryServerConnection.getDescription() );
+        log.info("XDS Repository Server stopped: " + connection.getDescription() );
 
         //call the super one to initiate standard stop process
         super.stop();
@@ -124,5 +124,13 @@ public class XdsRepository extends XdsActor implements IXdsRepository {
     	return this.repositoryManager;
     }    
     
+	/**
+	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.
+	 * 
+	 * @return the client side Registry connection
+	 */
+	public IConnectionDescription getRegistryClientConnection() {
+		return registryClientConnection;
+	}
 
 }

@@ -75,7 +75,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @param actor the {@link XdsRegistry} actor
 	 */
 	PixFeedHandler(XdsRegistry actor) {
-		super(actor.getPixFeedConnection());
+		super(actor.getPixRegistryConnection());
 		this.actor = actor;
 		this.patientManager = actor.getPatientManager();
 		assert this.connection != null;
