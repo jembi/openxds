@@ -35,18 +35,17 @@ import org.openhealthexchange.openxds.repository.api.RepositoryException;
  */
 public class XdsRepositoryItem implements IXdsRepositoryItem {
 
-	private static final Logger LOG = Logger.getLogger(FileSystemRepositoryManager.class);
+	private static final Logger LOG = Logger.getLogger(XdsRepositoryItem.class);
 
     private String id;
-    private DataHandler handler; 
-    public XdsRepositoryItem(){
-    	
+    private DataHandler handler;
+    
+    public XdsRepositoryItem(){   	
     }
 	    
     /**
     * Constructor.
     */
-    
     public XdsRepositoryItem(String id, DataHandler handler) {
 	        this.id = id;
 	        this.handler = handler;
