@@ -18,6 +18,9 @@
  */
 package org.openhealthexchange.openxds.repository.api;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
+
 /**
  * This interface defines the operations of an XDS Repository actor.
  * 
@@ -46,4 +49,10 @@ public interface IXdsRepository {
 	 */
 	public String getName();
 
+	/**
+	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.
+	 * 
+	 * @return the client side Registry connection
+	 */
+	public IConnectionDescription getRegistryClientConnection();	
 }

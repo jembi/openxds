@@ -26,6 +26,14 @@ import java.util.List;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public interface IXdsRepositoryManager {
+	
+	/**
+	 * Get the repository unique Id that represents this Repository.
+	 * 
+	 * @return a unique string Id
+	 */
+	public String getRepositoryUniqueId();  
+	
     /**
      * Inserts an {@link IXdsRepositoryItem}.
      *
