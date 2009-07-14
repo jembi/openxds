@@ -24,6 +24,11 @@
   		<artifactId>openpixpdq</artifactId>
   		<version>${openpixpdq.version}</version>
   	</dependency>
+   	<dependency>
+  		<groupId>com.misys.braid</groupId>
+  		<artifactId>braid-base</artifactId>
+  		<version>${braid.version}</version>
+  	</dependency>    
   </dependencies>
 
 
