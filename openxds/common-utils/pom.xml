@@ -15,6 +15,21 @@
 	    <groupId>org.apache.ws.commons.axiom</groupId>
 	    <artifactId>axiom-dom</artifactId>
 	    <version>1.2.8</version>
-	</dependency> 	 
+	</dependency>
+   	<dependency>
+  		<groupId>org.openhealthexchange.openpixpdq</groupId>
+  		<artifactId>openpixpdq</artifactId>
+  		<version>${openpixpdq.version}</version>
+  	</dependency>    
+   	<dependency>
+  		<groupId>com.misys.braid</groupId>
+  		<artifactId>braid-base</artifactId>
+  		<version>${braid.version}</version>
+  	</dependency>    
+     	<dependency>
+  		<groupId>ca.uhn.hapi</groupId>
+  		<artifactId>hapi</artifactId>
+  		<version>${hapi.version}</version>
+  	</dependency>    
   </dependencies>
 </project>
