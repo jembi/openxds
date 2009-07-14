@@ -80,7 +80,7 @@
 	    <version>1.0</version>
 	</dependency>
 	<dependency>
-	    <groupId>org.codehaus.fabric3.fabric3-db-exist</groupId>
+	    <groupId>com.sun.xacml</groupId>
 	    <artifactId>sunxacml</artifactId>
 	    <version>1.0</version>
 	</dependency>	
