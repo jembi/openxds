@@ -25,9 +25,9 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
-import org.openhealthexchange.openxds.XdsActor;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistry;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
 
@@ -42,12 +42,11 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsRegistry extends XdsActor implements IXdsRegistry {
-    /** Logger for problems during SOAP exchanges */
+public class XdsRegistry extends IheActor implements IXdsRegistry {
+    /** Logger for problems */
     private static Logger log = Logger.getLogger(XdsRegistry.class);
-    /** The connection description to this XDS Registry PIX pixServer */
-	private IConnectionDescription pixFeedConnection = null;
-	private IConnectionDescription registryConnection = null;
+    /** The connection description of this PIX Registry server */
+	private IConnectionDescription pixRegistryConnection = null;
 
     /** The XDS Registry PIX Server */
     private HL7Server pixServer = null;
@@ -65,8 +64,8 @@ public class XdsRegistry extends XdsActor implements IXdsRegistry {
      */
      public XdsRegistry(IConnectionDescription pixFeedConnection, 
     		 IConnectionDescription registryConnection ) {
-         this.pixFeedConnection = pixFeedConnection;
-         this.registryConnection = registryConnection;
+         this.pixRegistryConnection = pixFeedConnection;
+         this.connection = registryConnection;
     }
 
     
@@ -81,7 +80,7 @@ public class XdsRegistry extends XdsActor implements IXdsRegistry {
 	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(repository, null);
-	        registryServer = new IheHTTPServer(configctx, registryConnection); 		
+	        registryServer = new IheHTTPServer(configctx, this); 		
 	
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(registryServer));
 	        registryServer.start();
@@ -96,11 +95,11 @@ public class XdsRegistry extends XdsActor implements IXdsRegistry {
         }catch(AxisFault e) {
         	log.error("Failed to initiate the Registry server", e);
         }
-        log.info("XDS Registry Server started: " + registryConnection.getDescription() );
+        log.info("XDS Registry Server started: " + connection.getDescription() );
         
         //now initiate PIX Server
         LowerLayerProtocol llp = LowerLayerProtocol.makeLLP(); // The transport protocol
-        pixServer = new HL7Server(pixFeedConnection, llp, new PipeParser());
+        pixServer = new HL7Server(pixRegistryConnection, llp, new PipeParser());
         Application pixFeed  = new PixFeedHandler(this);
         
         //Admission of in-patient into a facility
@@ -115,18 +114,18 @@ public class XdsRegistry extends XdsActor implements IXdsRegistry {
         pixServer.registerApplication("ADT", "A40", pixFeed);  
         //now start the Pix Manager pixServer
         pixServer.start();
-        log.info("XDS PIX Registry Server started: " + pixFeedConnection.getDescription() );
+        log.info("XDS PIX Registry Server started: " + pixRegistryConnection.getDescription() );
     }
 
     @Override
     public void stop() {
         //stop the PIX Server first
         pixServer.stop();
-        log.info("PIX Registry Server stopped: " + pixFeedConnection.getDescription() );
+        log.info("PIX Registry Server stopped: " + pixRegistryConnection.getDescription() );
 
         //stop the Registry Server
         registryServer.stop();
-        log.info("XDS Registry Server stopped: " + registryConnection.getDescription() );
+        log.info("XDS Registry Server stopped: " + connection.getDescription() );
         
         //call the super one to initiate standard stop process 
         super.stop();
@@ -155,12 +154,12 @@ public class XdsRegistry extends XdsActor implements IXdsRegistry {
     
 	/**
 	 * Gets the connection for the PIX Feed. The connection provides the details (such as 
-	 * port etc) which are needed for this XDS Registry to talk to the PIX Source or Manager.
+	 * port etc) which are needed for this PIX Registry to talk to the PIX Source or Manager.
 	 * 
 	 * @return the connection of PIX Source/Manager
 	 */
-	public IConnectionDescription getPixFeedConnection() {
-		return pixFeedConnection;
+	public IConnectionDescription getPixRegistryConnection() {
+		return pixRegistryConnection;
 	}
 
 }

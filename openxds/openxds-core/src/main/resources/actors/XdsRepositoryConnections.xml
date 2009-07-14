@@ -43,7 +43,9 @@
 		<!--The host name of the XDS Registry Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
-		<Port>8010</Port>		
+		<Port>8010</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 	</StandardConnection>
 
 </Configuration>
