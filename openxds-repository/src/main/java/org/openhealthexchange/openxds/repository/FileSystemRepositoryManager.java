@@ -41,9 +41,40 @@ import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
 public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	private static final Logger LOG = Logger
 			.getLogger(FileSystemRepositoryManager.class);
-	//TODO:Move to property file
-	String repositoryRoot = "C://openXDS//repository";
+	
+	/**The repository root folder*/
+	private String repositoryRoot = null;
     
+	/**The repository unique Id that represents this Repository.*/
+	private String repositoryUniqueId = null;
+	
+	/**
+	 * Gets the repository unique Id that represents this repository.
+	 * 
+	 * @return the repository unique Id
+	 */
+	public String getRepositoryUniqueId() {
+		return this.repositoryUniqueId;
+	}
+
+	/**
+	 * Sets the repository unique id that represents this repository.
+	 * 
+	 * @param repositoryUniqueId the repository unique Id to be set.
+	 */
+	public void setRepositoryUniqueId(String repositoryUniqueId) {
+		this.repositoryUniqueId = repositoryUniqueId;
+	}
+
+	/**
+	 * Sets the root folder of this repository.
+	 * 
+	 * @param repositoryRoot the root folder
+	 */
+	public void setRepositoryRoot(String repositoryRoot) {
+		this.repositoryRoot = repositoryRoot;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager#insert()
 	 */
