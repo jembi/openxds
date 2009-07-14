@@ -17,6 +17,11 @@
   		<version>${project.version}</version>
   		<type>pom</type>
   	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<artifactId>common-utils</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
    	<dependency>
   		<groupId>com.misys.braid</groupId>
   		<artifactId>braid-base</artifactId>
