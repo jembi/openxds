@@ -23,13 +23,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+
 import org.apache.log4j.Logger;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
 import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
+
+import com.misyshealthcare.connect.net.CodeSet;
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  * This class provides a file system based repository manager implementation.
@@ -80,10 +85,15 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	 */
 	public void insert(IXdsRepositoryItem item, RepositoryRequestContext context)
 			throws RepositoryException {
+		IConnectionDescription connection = context.getConnection();
+		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
+		if (mimeTypeCodeSet == null) throw new RepositoryException("Configuration Error: Cannot find mime type table");
+		
 		try {
 			String id = item.getDocumentUniqueId();
-            String ext = getDocumentContenType(item.getDataHandler().getContentType());
-            
+    		String mimeTypeCode = item.getDataHandler().getContentType();
+            String ext = mimeTypeCodeSet.getExt(mimeTypeCode);
+
             if(id == null || ext == null)
             	throw new RepositoryException("Invalid document");
 			// Strip off the "urn:uuid:"
@@ -248,7 +258,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 		File file = new File(repositoryRoot);
 		if (!file.exists())
 			file.mkdirs();
-		String repositoryItemPath = repositoryRoot + "/" + id + ext;
+		String repositoryItemPath = repositoryRoot + "/" + id + "." +ext;
 		return repositoryItemPath;
 	}
 	
@@ -276,29 +286,6 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 		}
 		String repositoryItemPath = repositoryRoot + "/" + id + ext;
 		return repositoryItemPath;
-	}
-
-	/**
-	 * Gets the Extension from a contentType.
-	 */
-	private String getDocumentContenType(String type){
-		String contentType=null;
-		if(type.equalsIgnoreCase("text/plain")){
-			contentType = ".txt";
-		}else if(type.equalsIgnoreCase("text/richtext") || type.equalsIgnoreCase("application/rtf")){
-			contentType = ".rtf";
-		}else if(type.equalsIgnoreCase("text/html")){
-			contentType = ".htm";
-		}else if(type.equalsIgnoreCase("application/msword")){
-			contentType = ".doc";
-		}else if(type.equalsIgnoreCase("application/pdf")){
-			contentType = ".pdf";
-		}else if(type.equalsIgnoreCase("text/xml") || type.equalsIgnoreCase("application/octet-stream")){
-			contentType = ".xml";
-		}else{
-			//TODO: support more mime type
-		}	
-		return contentType;
 	}
 	
 }

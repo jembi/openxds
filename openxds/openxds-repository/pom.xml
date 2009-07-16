@@ -69,6 +69,11 @@
 	  		<artifactId>openxds-api</artifactId>
 	  		<version>${project.version}</version>
 	  	</dependency>    
+      	<dependency>
+	  		<groupId>com.misys.braid</groupId>
+	  		<artifactId>braid-base</artifactId>
+	  		<version>${braid.version}</version>
+	  	</dependency>    
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
