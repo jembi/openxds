@@ -18,6 +18,8 @@
  */
 package org.openhealthexchange.openxds.repository.api;
 
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 /**
  * This classes defines a repository context that are required for
  * the repository operations of the repository manager service.
@@ -25,5 +27,22 @@ package org.openhealthexchange.openxds.repository.api;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public class RepositoryRequestContext {
+	
+	private IConnectionDescription connection;
+
+	/**
+	 * @return the connection
+	 */
+	public IConnectionDescription getConnection() {
+		return connection;
+	}
+
+	/**
+	 * @param connection the connection to set
+	 */
+	public void setConnection(IConnectionDescription connection) {
+		this.connection = connection;
+	}
+	
 	
 }
