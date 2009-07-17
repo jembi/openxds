@@ -121,14 +121,13 @@ public class XdsRegistryQueryManager implements IXdsRegistryQueryManager {
         catch (javax.xml.bind.JAXBException e) {
         	throw new RegistryQueryException("Failed to create ResponseOption", e);
         }
-
+        
+    	String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryQueryManager:sqlQuery:context";
         ServerRequestContext src = null;
         RegistryObjectListType rolt = null;
         IterativeQueryParams paramHolder = new IterativeQueryParams(0, -1);
         try {
-        	src = new ServerRequestContext("XdsRegistryQueryManager.sqlQuery", null);
-        	//TODO: use correct user
-//            rolt = qp.executeQuery(src, AuthenticationServiceImpl.getInstance().farrukh, sql, responseOption, paramHolder);
+        	src = new ServerRequestContext(contextId, null);
             rolt = qp.executeQuery(src, AuthenticationServiceImpl.getInstance().registryGuest, sql, responseOption, paramHolder);
                        
         } catch (RegistryException e) {
