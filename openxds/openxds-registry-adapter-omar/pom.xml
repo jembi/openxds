@@ -138,6 +138,51 @@
 	    <scope>runtime</scope>
 	</dependency> 
  </dependencies>
-
-
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.codehaus.mojo</groupId>
+  			<artifactId>hibernate3-maven-plugin</artifactId>
+  			<version>2.0-alpha-2</version>
+  			<configuration>
+  				<components>
+  					<component>
+  						<name>hbm2ddl</name>
+  						<implementation>
+  							annotationconfiguration
+  						</implementation>
+  					</component>
+  				</components>
+  				<componentProperties>
+  					<drop>true</drop>
+  					<jdk6>true</jdk6>
+  					<configurationfile>
+  						src/main/resources/repository.jdbc.cfg.xml
+  					</configurationfile>
+  					<skip>${maven.test.skip}</skip>
+  				</componentProperties>
+  			</configuration>
+  			<executions>
+  				<execution>
+  					<phase>process-create-database</phase>
+  					<goals>
+  						<goal>hbm2ddl</goal>
+  					</goals>
+  				</execution>
+  			</executions>
+  			<dependencies>
+  				<dependency>
+  					<groupId>postgresql</groupId>
+  					<artifactId>postgresql</artifactId>
+  					<version>8.3-603.jdbc3</version>
+  				</dependency>
+  				<dependency>
+  					<groupId>org.freebxml.omar</groupId>
+  					<artifactId>omar</artifactId>
+  					<version>${omar.version}</version>
+  				</dependency>
+  			</dependencies>
+  		</plugin>
+  	</plugins>
+  </build>
 </project>
