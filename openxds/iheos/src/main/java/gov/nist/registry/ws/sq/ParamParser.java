@@ -99,8 +99,8 @@ public class ParamParser {
 				continue;
 			String value_string = value_element.getText();
 			
-			if (value_string.charAt(0) == '\'' &&
-					value_string.charAt(value_string.length()-1) == '\'') {
+			if (value_string.charAt(0) == '\'' || value_string.charAt(0) =='‘' &&
+					value_string.charAt(value_string.length()-1) == '\'' || value_string.charAt(value_string.length()-1) == '’') {
 				String val = value_string.substring(1, value_string.length()-1);
 				//add_parm(parms, name, val);
 				
@@ -119,8 +119,8 @@ public class ParamParser {
 					if (value_string1 == null || value_string1.length() == 0)
 						throw new MetadataValidationException("Error decoding Slot " + name + " - empty value");
 					// each value could be 'string' or int
-					if (value_string1.charAt(0) == '\'' &&
-							value_string1.charAt(value_string1.length()-1) == '\'') {
+					if (value_string1.charAt(0) == '\'' || value_string1.charAt(0) =='‘'  &&
+							value_string1.charAt(value_string1.length()-1) == '\'' || value_string1.charAt(value_string1.length()-1) == '’') {
 						String v = value_string1.substring(1, value_string1.length()-1);
 						if (v.indexOf("'") != -1)
 							throw new MetadataValidationException("Could not decode the value " + 
@@ -132,14 +132,9 @@ public class ParamParser {
 						}
 						newHome.add(v);
 					} else {
-						try {
-							Integer value_int = Integer.decode(value_string1);
-							newHome.add(value_int);
-						} catch (NumberFormatException e) {
 							throw new MetadataValidationException("Could not decode the value " + 
 									value_string1 + " of Slot " + name + " as part of Stored Query parameter value " +
 									value_string);
-						}
 					}
 				}
 				//add_parm(parms, name, a);

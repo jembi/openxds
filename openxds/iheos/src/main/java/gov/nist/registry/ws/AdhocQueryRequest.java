@@ -236,22 +236,22 @@ public class AdhocQueryRequest extends XdsCommon {
 	ArrayList<OMElement> stored_query(OMElement ahqr) 
 	throws XdsException, LoggerException, XDSRegistryOutOfResourcesException, XdsValidationException {
 		
-//		new StoredQueryRequestSoapValidator(xds_version, messageContext).runWithException();
 		ArrayList<OMElement> omlist = new ArrayList<OMElement>();
-		Map params = new HashMap();
+		StoredQueryFactory fact = null;
 		try {
-			ParamParser parser = new ParamParser();
-			params = parser.parse(ahqr);
-			OMElement responseoption = MetadataSupport.firstChildWithLocalName(ahqr, "ResponseOption") ;
-			String rettype = responseoption.getAttributeValue(MetadataSupport.return_type_qname);
-			boolean ret=false;
-			if(rettype.equalsIgnoreCase("LeafClass") ){
-				ret = true;
+			fact= new StoredQueryFactory(ahqr);
+			fact.setServiceName(service_name);
+			fact.setLogMessage(log_message);
+			fact.setIsSecure(is_secure);
+			fact.setResponse(response);
+			//return fact.run();
 			}
-			//TODO: convert ahqr OMElement to context, extract id and query parameters
-			OMElement adhoc_query = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
-			String id = adhoc_query.getAttributeValue(MetadataSupport.id_qname);
-			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id.trim(), params,ret);
+			catch (Exception e) {
+				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
+				return null;
+			}
+			//Create RegistryStoredQueryContext
+			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
 			OMElement response = null;
 			try {
 				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
@@ -266,15 +266,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			}catch(Exception e) {
 				throw new XdsInternalException("Failed to query the Registry", e);
 			}
-			
-			return omlist;
-		}
-		catch (Exception e) {
-			response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "XdsRegistryQueryManager.java", log_message);
-			return null;
-
-		}
-
+		return omlist;
 	}
 
 

@@ -88,7 +88,7 @@ public class StoredQueryFactory {
 		if (response == null)
 			response = new AdhocQueryResponse(Response.version_3);
 
-		query_id = adhoc_query.getAttributeValue(MetadataSupport.id_qname);
+		query_id = adhoc_query.getAttributeValue(MetadataSupport.id_qname).trim();
 
 		if (query_id.equals(MetadataSupport.SQ_FindDocuments)) {
 			// FindDocuments
