@@ -23,7 +23,7 @@
 
         <property name="connection.datasource">java:comp/env/jdbc/omar-registry</property>
         <property name="show_sql">false</property>
-        <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="dialect">net.sf.hibernate.dialect.PostgreSQLDialect</property>
 
         <!-- Mapping files -->
         <mapping resource="repository.hbm.xml"/>
