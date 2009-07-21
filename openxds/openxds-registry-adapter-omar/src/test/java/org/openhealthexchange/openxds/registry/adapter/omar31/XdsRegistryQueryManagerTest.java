@@ -48,7 +48,7 @@ import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
 			String id = "urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d";
 			Map queryParameters = new HashMap();
 			queryParameters.put("$XDSDocumentEntryPatientId", "SELF-5^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO");
-			queryParameters.put("$XDSDocumentEntryStatus", "urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted");
+			queryParameters.put("$XDSDocumentEntryStatus", "urn:oasis:names:tc:ebxml-regrep:StatusType:Approved");
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement request = getAdhocQueryRequest();
 			OMElement queryResponse = queryManager.storedQuery(context);
