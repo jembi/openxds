@@ -1439,3 +1439,80 @@ INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectTy
 INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:SpecificationLink',NULL,'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:SpecificationLink','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:ClassificationNode','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'SpecificationLink','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject','/urn:oasis:names:tc:ebxml-regrep:classificationScheme:ObjectType/RegistryObject/SpecificationLink');
 INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:Subscription',NULL,'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:Subscription','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:ClassificationNode','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'Subscription','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject','/urn:oasis:names:tc:ebxml-regrep:classificationScheme:ObjectType/RegistryObject/Subscription');
 
+--Insert StoredQuery 
+
+--Find Documents
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d',NULL,'urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT DISTINCT doc.*
+FROM ExtrinsicObject doc, ExternalIdentifier patId
+, Classification clCode  
+, Classification psc  
+, Classification hftc  
+, Classification ecl  
+, Slot clCodeScheme  
+, Slot psCodeScheme  
+, Slot crTimef  
+, Slot crTimet  
+, Slot serStartTimef  
+, Slot serStartTimet  
+, Slot serStopTimef  
+, Slot serStopTimet  
+, Slot hftcScheme  
+, Slot eclScheme  
+, Classification conf  
+, Classfication fmtCode  
+WHERE
+doc.objecttype = ''urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1''
+ AND (doc.id = patId.registryobject AND
+patId.identificationScheme=''urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427'' AND
+patId.value = $XDSDocumentEntryPatientId )
+AND (clCode.classifiedobject = doc.id AND 
+ clCode.classificationScheme = ''urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a'' AND 
+clCode.nodeRepresentation IN ($XDSDocumentEntryClassCode) )
+AND (clCodeScheme.parent = clCode.id AND  
+ clCodeScheme.name = ''codingScheme'' AND 
+clCodeScheme.value IN ($XDSDocumentEntryClassCodeScheme))  
+AND (psc.classifiedObject = doc.id AND  
+psc.classificationScheme=''urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead'' AND  
+psc.nodeRepresentation IN ($XDSDocumentEntryPracticeSettingCode))
+AND (psCodeScheme.parent = psc.id AND  
+ psCodeScheme.name = ''codingScheme'' AND  
+psCodeScheme.value IN ($XDSDocumentEntryPracticeSettingCodeScheme))  
+AND (crTimef.parent = doc.id AND  
+crTimef.name = ''creationTime'' AND  
+ $XDSDocumentEntryCreationTimeFrom <= crTimef.value )  
+AND (crTimet.parent = doc.id AND 
+crTimet.name = ''creationTime'' AND 
+crTimet.value < $XDSDocumentEntryCreationTimeTo) 
+AND (serStartTimef.parent = doc.id AND  
+serStartTimef.name = ''serviceStartTime'' AND  
+ $XDSDocumentEntryServiceStartTimeFrom <= serStartTimef.value )  
+AND (serStartTimet.parent = doc.id AND  
+serStartTimet.name = ''serviceStartTime'' AND  
+serStartTimet.value < $XDSDocumentEntryServiceStartTimeTo)  
+AND (serStopTimef.parent = doc.id AND  
+serStopTimef.name = ''serviceStopTime'' AND  
+$XDSDocumentEntryServiceStopTimeFrom <= serStopTimef.value )  
+AND (serStopTimet.parent = doc.id AND  
+serStopTimet.name = ''serviceStopTime'' AND  
+serStopTimet.value < $XDSDocumentEntryServiceStopTimeTo) 
+AND (hftc.classifiedObject = doc.id AND  
+hftc.classificationScheme = ''urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1'' AND  
+hftc.nodeRepresentation IN ($XDSDocumentEntryhealthcareFacilityTypeCode ))
+AND (hftcScheme.parent = hftc.id AND  
+hftcScheme.name = ''codingScheme'' AND  
+hftcScheme.value IN ($XDSDocumentEntryHealthcareFacilityTypeCodeScheme))  
+AND (ecl.classifiedObject = doc.id AND  
+ecl.classificationScheme = ''urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4'' AND
+ecl.nodeRepresentation IN ($XDSDocumentEntryEventCodeList))
+AND (eclScheme.parent = ecl.id AND 
+ eclScheme.name = ''codingScheme'' AND
+ eclScheme.value IN ($XDSDocumentEntryEventCodeListScheme))
+AND (conf.classifiedObject = doc.id AND 
+ conf.classificationScheme = ''urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f'' AND 
+ conf.nodeRepresentation IN ($XDSDocumentEntryConfidentialityCode ))
+AND (fmtCode.classifiedObject = doc.id AND 
+     fmtCode.classificationScheme = ''urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d'' AND
+     fmtCode.nodeRepresentation IN ($XDSDocumentEntryFormatCode))
+AND doc.status = ($XDSDocumentEntryStatus)');
