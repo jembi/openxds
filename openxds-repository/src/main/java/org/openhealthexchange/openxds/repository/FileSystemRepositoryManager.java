@@ -70,7 +70,16 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	public void setRepositoryUniqueId(String repositoryUniqueId) {
 		this.repositoryUniqueId = repositoryUniqueId;
 	}
-
+	
+	/**
+	 * Gets the root folder of this repository.
+	 * 
+	 * @return repositoryRoot folder
+	 */
+	
+	public String getRepositoryRoot() {
+		return repositoryRoot;
+	}
 	/**
 	 * Sets the root folder of this repository.
 	 * 
@@ -287,5 +296,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 		String repositoryItemPath = repositoryRoot + "/" + id + ext;
 		return repositoryItemPath;
 	}
+
+	
 	
 }
