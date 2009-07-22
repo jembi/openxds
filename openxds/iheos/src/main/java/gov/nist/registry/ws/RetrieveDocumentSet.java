@@ -28,6 +28,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
+import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
@@ -80,8 +82,9 @@ public class RetrieveDocumentSet extends XdsCommon {
 		ArrayList<OMElement> retrieve_documents = null;
 
 		try {
-
-			mustBeMTOM();
+			mustBeSimpleSoap();
+			
+			//mustBeMTOM();
 
 			retrieve_documents = retrieve_documents(rds);
 
@@ -164,7 +167,10 @@ public class RetrieveDocumentSet extends XdsCommon {
 	}
 
 	OMElement retrieve_document(String rep_id, String doc_id, String  home) throws XdsException {
-		if ( !rep_id.equals(Repository.getRepositoryUniqueId())) {
+		
+		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+	
+		if ( !rep_id.equals(rm.getRepositoryUniqueId())) {
 			response.add_error(MetadataSupport.XDSRepositoryWrongRepositoryUniqueId, "Repository Unique ID in request " + 
 					rep_id + 
 					" does not match this repository's id " + 
@@ -173,7 +179,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 			return null;
 		}
 
-		RepositoryAccess repa = new RepositoryAccess(doc_id, new File(Repository.getBaseDirectory()), connection);
+		RepositoryAccess repa = new RepositoryAccess(doc_id, new File(rm.getRepositoryRoot()), connection);
 		File file = repa.find(); 
 
 		if (file == null)

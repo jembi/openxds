@@ -34,6 +34,15 @@ public interface IXdsRepositoryManager {
 	 */
 	public String getRepositoryUniqueId();  
 	
+	
+	/**
+	 * Gets the root folder of this repository.
+	 * 
+	 * @return a repositoryRoot folder
+	 */
+	
+	public String getRepositoryRoot();
+		
     /**
      * Inserts an {@link IXdsRepositoryItem}.
      *
