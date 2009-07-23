@@ -18,12 +18,11 @@
  */
 package org.openhealthexchange.openxds;
 
-import org.openhealthexchange.openpixpdq.ihe.configuration.ConfigurationLoader;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
 import org.openhealthexchange.openxds.configuration.XdsConfigurationLoader;
 
 /**
- * This class manages the stand alone XDS server startup and shutdown.
+ * This class manages the stand alone XDS server startup.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
@@ -31,17 +30,15 @@ import org.openhealthexchange.openxds.configuration.XdsConfigurationLoader;
 public class XdsServer {
 
 	/**
-	 * The main method to start up or shut down XDS Registry or Repository server.
+	 * The main method to start up XDS Registry or Repository server.
 	 * 
 	 * @param args For server startup, it is expected to have 2 arguments.
 	 *        The first is "startup"; the second one is the full file 
 	 *        path to IheActors.xml.  
 	 *        <p>
-	 *        For server shutdown, provide just one argument "shutdown".  
 	 */
 	public static void main(String[] args) {
-		if (args.length < 1 || args.length > 2 ||
-		    (args.length == 1 && !args[0].equalsIgnoreCase("shutdown")) ||
+		if (args.length != 2 ||		    
 		    (args.length == 2 && !args[0].equalsIgnoreCase("startup")) ) {
 			printUsage();
 			return ;
@@ -57,23 +54,17 @@ public class XdsServer {
 	            e.printStackTrace();
 	        }
 		} 
-		else if (args.length == 1 && args[0].equalsIgnoreCase("shutdown")) {
-			//Shut down all the active servers
-			XdsConfigurationLoader.getInstance().resetAllBrokers();
-		}
 
 	}
 	
 	/**
-	 * Prints the usage of how to start up or shutdown this XDS server.
+	 * Prints the usage of how to start up this XDS server.
 	 */
 	private static void printUsage() {
 		System.out.println("*********************************************************");
 		System.out.println("WRONG USAGE: The XDS server expects 2 arguments.");
 		System.out.println("To start up the server: ");
 	    System.out.println("   java XdsServer startup <full path of IheActors.xml>");
-		System.out.println("To shut down the XDS server: ");
-	    System.out.println("   java XdsServer shutdown");
 		System.out.println("*********************************************************");		
 	}
 }
