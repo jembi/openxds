@@ -219,5 +219,11 @@
             <artifactId>velocity</artifactId>
             <version>${velocity.version}</version>
         </dependency>
+      	<dependency>
+	  		<groupId>org.openhealthexchange.openxds</groupId>
+	  		<artifactId>common-utils</artifactId>
+	  		<version>${project.version}</version>
+	  		<scope>test</scope>
+	  	</dependency>            
     </dependencies>
 </project>
