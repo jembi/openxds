@@ -16,7 +16,7 @@
  *  Contributors:
  *     Misys plc - Implementation
  */
-package org.openhealthexchange.openxds.configuration;
+package org.openhealthexchange.common.configuration;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ConfigurableApplicationContext;
