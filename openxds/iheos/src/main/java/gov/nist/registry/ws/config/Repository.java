@@ -5,7 +5,7 @@ import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;

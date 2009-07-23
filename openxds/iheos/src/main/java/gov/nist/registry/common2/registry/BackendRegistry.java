@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
 import org.openhealthexchange.openxds.registry.api.RegistryQueryException;
 import org.openhealthexchange.openxds.registry.api.RegistrySQLQueryContext;

@@ -38,7 +38,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
-import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
 import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
 
