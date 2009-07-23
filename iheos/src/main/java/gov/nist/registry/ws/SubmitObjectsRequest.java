@@ -58,7 +58,6 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
  	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
-	private static String hasMember = "urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember";
 
 	public SubmitObjectsRequest(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
@@ -287,18 +286,15 @@ public class SubmitObjectsRequest extends XdsCommon {
 					// for each folder, add an association placing replacment in that folder
 					// This brings up interesting question, should the Assoc between SS and Assoc be generated also?  YES!
 					for (String fid : folderIds) {
-						OMElement assoc = m.add_association(m.mkAssociation(hasMember, fid, replacementDocumentId));
-						OMElement assoc2 = m.add_association(m.mkAssociation(hasMember, m.getSubmissionSetId(), assoc.getAttributeValue(MetadataSupport.id_qname)));
+						OMElement assoc = m.add_association(m.mkAssociation("HasMember", fid, replacementDocumentId));
+						OMElement assoc2 = m.add_association(m.mkAssociation("HasMember", m.getSubmissionSetId(), assoc.getAttributeValue(MetadataSupport.id_qname)));
 					}
 				}
-				
-				
-				
 				
 				// if this submission adds a document to a folder then update that folder's lastUpdateTime Slot
 				ArrayList<String> registryPackagesToUpdate = new ArrayList<String>();
 				for (OMElement assoc : m.getAssociations()) {
-					if (m.getSimpleAssocType(assoc).equals(hasMember)) {
+					if (m.getSimpleAssocType(assoc).equals("HasMember")) {
 						String sourceId = m.getAssocSource(assoc);
 						if ( !m.getSubmissionSetId().equals(sourceId) &&
 								!m.getFolderIds().contains(sourceId)) {
