@@ -28,7 +28,7 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
-import org.openhealthexchange.openxds.configuration.ModuleManager;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
