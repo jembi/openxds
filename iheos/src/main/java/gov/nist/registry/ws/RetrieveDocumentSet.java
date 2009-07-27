@@ -29,8 +29,11 @@ import org.apache.log4j.Logger;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.common.configuration.ModuleManager;
+import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthexchange.openxds.repository.api.RepositoryException;
 
+import com.misyshealthcare.connect.net.CodeSet;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class RetrieveDocumentSet extends XdsCommon {
@@ -82,9 +85,8 @@ public class RetrieveDocumentSet extends XdsCommon {
 		ArrayList<OMElement> retrieve_documents = null;
 
 		try {
-			mustBeSimpleSoap();
 			
-			//mustBeMTOM();
+			mustBeMTOM();
 
 			retrieve_documents = retrieve_documents(rds);
 
@@ -168,8 +170,13 @@ public class RetrieveDocumentSet extends XdsCommon {
 
 	OMElement retrieve_document(String rep_id, String doc_id, String  home) throws XdsException {
 		
+		IXdsRepositoryItem repositoryItem;
 		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
-	
+	    try{
+	    	repositoryItem = rm.getRepositoryItem(doc_id);
+	    }catch (RepositoryException e) {
+	    	throw new XdsException("there is no repository item found for this document is" + doc_id);
+		}
 		if ( !rep_id.equals(rm.getRepositoryUniqueId())) {
 			response.add_error(MetadataSupport.XDSRepositoryWrongRepositoryUniqueId, "Repository Unique ID in request " + 
 					rep_id + 
@@ -178,15 +185,11 @@ public class RetrieveDocumentSet extends XdsCommon {
 					RegistryUtility.exception_details(null), log_message);
 			return null;
 		}
-
-		RepositoryAccess repa = new RepositoryAccess(doc_id, new File(rm.getRepositoryRoot()), connection);
-		File file = repa.find(); 
-
-		if (file == null)
-			throw new XdsException("Document with uniqueId " + doc_id + " not found in Repository");
-
-		javax.activation.DataHandler dataHandler = new javax.activation.DataHandler(new FileDataSource(file));
-		OMText t = MetadataSupport.om_factory.createOMText(dataHandler, optimize);
+		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");	
+		if (repositoryItem.getDataHandler() == null)
+			throw new XdsException("Document is not found in Repository");
+		
+		OMText t = MetadataSupport.om_factory.createOMText(repositoryItem.getDataHandler(), optimize);
 		System.out.println("OPTIMIZE IS " + optimize);
 		t.setOptimize(optimize);
 		OMElement document_response = MetadataSupport.om_factory.createOMElement("DocumentResponse", MetadataSupport.xdsB);
@@ -196,7 +199,6 @@ public class RetrieveDocumentSet extends XdsCommon {
 			home_ele.addChild(MetadataSupport.om_factory.createOMText(home));
 			document_response.addChild(home_ele);
 		}
-
 		OMElement repid_ele = MetadataSupport.om_factory.createOMElement("RepositoryUniqueId", MetadataSupport.xdsB);
 		repid_ele.addChild(MetadataSupport.om_factory.createOMText(rep_id));
 		document_response.addChild(repid_ele);
@@ -206,7 +208,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 		document_response.addChild(docid_ele);
 		
 		OMElement mimetype_ele = MetadataSupport.om_factory.createOMElement("mimeType", MetadataSupport.xdsB);
-		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText((new DocumentTypes(connection)).mimeType(repa.getExt())));
+		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText((new DocumentTypes(connection)).mimeType(mimeTypeCodeSet.getExt(repositoryItem.getDataHandler().getContentType()))));
 		document_response.addChild(mimetype_ele);
 
 		OMElement document_ele = MetadataSupport.om_factory.createOMElement("Document", MetadataSupport.xdsB);
