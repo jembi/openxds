@@ -21,6 +21,7 @@ package org.openhealthexchange.openxds.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.ConnectException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -174,6 +175,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 
 			DataHandler contentDataHandler = new DataHandler(
 					new FileDataSource(riFile));
+			
 			repositoryItem = new XdsRepositoryItem(documentUniqueId,
 					contentDataHandler);
 

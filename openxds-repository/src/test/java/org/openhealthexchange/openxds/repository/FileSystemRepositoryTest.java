@@ -22,11 +22,32 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+
+import org.openhealthexchange.common.configuration.ModuleManager;
+import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
+import org.openhealthexchange.openpixpdq.ihe.audit.IheAuditTrail;
+import org.openhealthexchange.openpixpdq.ihe.configuration.ConfigurationLoader;
+import org.openhealthexchange.openpixpdq.ihe.impl_v2.MockPixAdapter;
+import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
+import org.openhealthexchange.openpixpdq.ihe.impl_v2.TestLogContext;
+import org.openhealthexchange.openpixpdq.ihe.impl_v2.TestPixQuery;
+import org.openhealthexchange.openpixpdq.ihe.impl_v2.TestPixQuery.OidMock;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
+import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
+
+import com.misyshealthcare.connect.net.ConnectionFactory;
+import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.StandardConnectionDescription;
+import com.misyshealthcare.connect.net.StandardConnectionDescriptionTest;
+import com.misyshealthcare.connect.util.OID;
+
 import junit.framework.TestCase;
 
 /**
@@ -40,15 +61,20 @@ public class FileSystemRepositoryTest extends TestCase {
    private static File content1K;
    private static File content1M;
    private static File content2M;
-   private FileSystemRepositoryManager repositoryManager;
+   private IXdsRepositoryManager repositoryManager;
+ //  private FileSystemRepositoryManager repositoryManager;
    private RepositoryRequestContext requestContext;
    private static final String id = Utility.getInstance().createId();
    String documentId = Utility.getInstance().stripId(id);
+   private IConnectionDescription connection = null;
+   private IPixManagerAdapter pixAdapter = null;   
+	private PixManager actor = null;
    
    protected void setUp() throws Exception {
-	   repositoryManager =new FileSystemRepositoryManager();
+	   repositoryManager =(IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
 		 if (content1K == null) {			   
 	            // initialize test content
+			    requestContext = new RepositoryRequestContext(); 
 	            char content1KArray[] = new char[1024]; //1Kb
 	            char content1MArray[] = new char[1024*1024]; //1Mb
 	            char content2MArray[] = new char[1024*1024*2]; //2Mb
@@ -58,7 +84,10 @@ public class FileSystemRepositoryTest extends TestCase {
 	            content1K = createTempFile(true, new String(content1KArray));
 	            content1M = createTempFile(true, new String(content1MArray));
 	            content2M = createTempFile(true, new String(content2MArray));
-	        }    
+	            ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
+	    		connection = ConnectionFactory.getConnectionDescription("xds-repository");
+	    		requestContext.setConnection(connection);
+	    	  }    
 	}
 
    /**
@@ -103,7 +132,7 @@ public class FileSystemRepositoryTest extends TestCase {
     
     private static File createTempFile(boolean deleteOnExit, String content) throws IOException {
         // Create temp file.
-        File temp = File.createTempFile("omar", ".html");
+        File temp = File.createTempFile("omar", ".txt");
         // Delete temp file when program exits.
         if (deleteOnExit) {
             temp.deleteOnExit();
@@ -124,5 +153,9 @@ public class FileSystemRepositoryTest extends TestCase {
         
     }
     
-	
+    public class OidMock implements OID.OidSource {
+        public synchronized String generateId() {
+            return Long.toString( System.currentTimeMillis() );
+        }
+    }
 }

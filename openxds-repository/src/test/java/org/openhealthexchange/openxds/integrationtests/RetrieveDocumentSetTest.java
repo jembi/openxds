@@ -31,6 +31,9 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.WSDL2Constants;
 import org.junit.After;
 import org.junit.Before;
@@ -67,7 +70,7 @@ public class RetrieveDocumentSetTest {
 		String message = "<xdsb:RetrieveDocumentSetRequest xmlns:xdsb=\"urn:ihe:iti:xds-b:2007\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd\">" +
 				"  <xdsb:DocumentRequest>" +
 				"    <xdsb:RepositoryUniqueId>1.3.6.1.4.1.21367.2009.1.2.701</xdsb:RepositoryUniqueId>" +
-				"    <xdsb:DocumentUniqueId>2.16.840.1.113883.3.65.2.1248349777382.1</xdsb:DocumentUniqueId>" +
+				"    <xdsb:DocumentUniqueId>2.16.840.1.113883.3.65.2.1246359239406.1</xdsb:DocumentUniqueId>" +
 				"  </xdsb:DocumentRequest>" +
 				"</xdsb:RetrieveDocumentSetRequest>";
 		
@@ -79,16 +82,16 @@ public class RetrieveDocumentSetTest {
 		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 		//use SOAP12, 
 		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-//		options.setMessageId("id");
-//		options.setReplyTo(replyTo); 
 		try{
-			ServiceClient sender = new ServiceClient();
+			
+			  String repository = "d:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
+		        ConfigurationContext configctx = ConfigurationContextFactory
+		        .createConfigurationContextFromFileSystem(repository, null);
+			ServiceClient sender = new ServiceClient(configctx,null);
 			sender.setOptions(options);
 			sender.engageModule("addressing");			
-			
 			OMElement response = sender.sendReceive( OMUtil.xmlStringToOM(message) );
 			assertNotNull(response); 
-			
 			String result = response.toString();
 			System.out.println("Result:\n" +result);
 		} catch(AxisFault e) {
@@ -97,6 +100,8 @@ public class RetrieveDocumentSetTest {
 		} catch(XMLStreamException e) {
 			e.printStackTrace();
 			fail("testRetrieveDocumentSetb Failed");
+		}catch (Exception e) {
+			System.out.println("error"+e);
 		}
 	}
 
