@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The XDS Repository Actor Connections -->
+<Configuration>
+	<StandardConnection name="xds-repository">
+		<!--The host name of the XDS Repository Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8020</Port>
+       
+     	<Identifier name="AssigningAuthority">
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
+		</Identifier>
+       
+        <Includefile name="XdsCodesTest.xml" />		
+	</StandardConnection>
+</Configuration>
