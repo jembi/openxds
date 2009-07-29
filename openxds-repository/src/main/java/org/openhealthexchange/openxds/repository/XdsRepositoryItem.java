@@ -39,6 +39,7 @@ public class XdsRepositoryItem implements IXdsRepositoryItem {
 
     private String id;
     private DataHandler handler;
+    private String mimeType;
     
     public XdsRepositoryItem(){   	
     }
@@ -113,5 +114,21 @@ public class XdsRepositoryItem implements IXdsRepositoryItem {
 	public void setDocumentUniqueId(String uniqueId) {
 		this.id =uniqueId;
 	}
+
+	/**
+	 * @return the mimeType
+	 */
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	/**
+	 * @param mimeType the mimeType to set
+	 */
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+	
+	
 
 }

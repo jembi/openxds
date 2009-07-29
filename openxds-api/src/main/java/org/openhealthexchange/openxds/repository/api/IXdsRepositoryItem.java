@@ -59,6 +59,14 @@ public interface IXdsRepositoryItem {
     public long getHash() throws RepositoryException;
 
     /**
+     * Gets the mimeType of this repository item.
+     * 
+     * @return the mimeType of the repository item.
+     * @throw RepositoryException if there is any problem to get the mimeType
+     */
+    public String getMimeType();
+
+    /**
      * Gets the unique id of the repository that this repository 
      * item is in.
      * 
