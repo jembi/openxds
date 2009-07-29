@@ -16,22 +16,20 @@ import gov.nist.registry.ws.serviceclasses.XdsService;
 import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import javax.activation.FileDataSource;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
-import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
+import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
 
 import com.misyshealthcare.connect.net.CodeSet;
 import com.misyshealthcare.connect.net.IConnectionDescription;
@@ -173,7 +171,9 @@ public class RetrieveDocumentSet extends XdsCommon {
 		IXdsRepositoryItem repositoryItem;
 		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
 	    try{
-	    	repositoryItem = rm.getRepositoryItem(doc_id);
+	    	RepositoryRequestContext context = new RepositoryRequestContext();
+	    	context.setConnection(connection);
+	    	repositoryItem = rm.getRepositoryItem(doc_id, context);
 	    }catch (RepositoryException e) {
 	    	throw new XdsException("there is no repository item found for this document is" + doc_id);
 		}
@@ -208,7 +208,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 		document_response.addChild(docid_ele);
 		
 		OMElement mimetype_ele = MetadataSupport.om_factory.createOMElement("mimeType", MetadataSupport.xdsB);
-		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText((new DocumentTypes(connection)).mimeType(mimeTypeCodeSet.getExt(repositoryItem.getDataHandler().getContentType()))));
+		mimetype_ele.addChild(MetadataSupport.om_factory.createOMText(repositoryItem.getMimeType()));
 		document_response.addChild(mimetype_ele);
 
 		OMElement document_ele = MetadataSupport.om_factory.createOMElement("Document", MetadataSupport.xdsB);

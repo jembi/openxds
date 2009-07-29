@@ -108,9 +108,9 @@ public class FileSystemRepositoryTest extends TestCase {
     public void testgetRepoItem(){
     	IXdsRepositoryItem invalidRepositoryId =null;
     	try {    		
-    		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId);
+    		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, new RepositoryRequestContext());
     		assertEquals(repositoryItem.getDocumentUniqueId(),documentId);
-    		invalidRepositoryId = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515");
+    		invalidRepositoryId = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515", new RepositoryRequestContext());
     	} catch (Exception e) {
 			assertNull(invalidRepositoryId);
 		}
@@ -123,7 +123,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	 */
     public void testDeleteDocumentId(){
     	try {		
-    		repositoryManager.delete(documentId);    		
+    		repositoryManager.delete(documentId, new RepositoryRequestContext());    		
     	} catch (Exception e) {
 		   e.printStackTrace();
 		}

@@ -62,39 +62,45 @@ public interface IXdsRepositoryManager {
      * Returns the {@link IXdsRepositoryItem} associated with the given document unique id.
      *
      * @param documentUniqueId the document unique id whose {@link IXdsRepositoryItem} item is desired
+     * @param context the {@link RepositoryRequestContext} associated with this request.
+     * 
      * @return the {@link IXdsRepositoryItem} instance that matches specified document uniqueId
      * 
      * @throws RegistryException if there are any processing errors getting repository item
      */
-    public IXdsRepositoryItem getRepositoryItem(String documentUniqueId) throws RepositoryException;
+    public IXdsRepositoryItem getRepositoryItem(String documentUniqueId, RepositoryRequestContext context) throws RepositoryException;
 
     /**
      * Returns the List of {@link IXdsRepositoryItem} associated with the given document unique ids.
      * The IHE XDS transaction ITI-43 allows for multiple document retrieval.
      * 
      * @param documentUniqueIds the document unique id whose {@link IXdsRepositoryItem} item are desired
+     * @param context the {@link RepositoryRequestContext} associated with this request.
+     * 
      * @return the List of {@link IXdsRepositoryItem} instances that match specified ids
      * 
      * @throws RegistryException if there are any processing errors getting repository items
      */
-    public List<IXdsRepositoryItem> getRepositoryItems(List<String> documentUniqueIds) throws RepositoryException;
+    public List<IXdsRepositoryItem> getRepositoryItems(List<String> documentUniqueIds, RepositoryRequestContext context) throws RepositoryException;
 
     /**
      * Deletes the repository item associated with the given document unique id.
      *
      * @param documentUniqueId the document unique id whose repository item is to be deleted
+     * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
      * @throws RepositoryException if the item does not exist or fails to delete
      */
-    public void delete(String documentUniqueId) throws RepositoryException;
+    public void delete(String documentUniqueId, RepositoryRequestContext context) throws RepositoryException;
     
     /**
      * Deletes multiple repository items.
      * 
      * @param ids a List of document unique ids whose repository items are to be deleted
+     * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
      * @throws RepositoryException if any of the item do not exist or fails to delete
      */
-    public void delete(List<String> ids) throws RepositoryException;
+    public void delete(List<String> ids, RepositoryRequestContext context) throws RepositoryException;
 
 }
