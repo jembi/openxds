@@ -63,7 +63,7 @@ public class FileSystemRepositoryTest extends TestCase {
    private static File content2M;
    private IXdsRepositoryManager repositoryManager;
  //  private FileSystemRepositoryManager repositoryManager;
-   private RepositoryRequestContext requestContext;
+   private RepositoryRequestContext requestContext = new RepositoryRequestContext();
    private static final String id = Utility.getInstance().createId();
    String documentId = Utility.getInstance().stripId(id);
    private IConnectionDescription connection = null;
@@ -71,10 +71,13 @@ public class FileSystemRepositoryTest extends TestCase {
 	private PixManager actor = null;
    
    protected void setUp() throws Exception {
-	   repositoryManager =(IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
-		 if (content1K == null) {			   
+	   repositoryManager =(IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");	   
+	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
+	   connection = ConnectionFactory.getConnectionDescription("xds-repository");
+	   requestContext.setConnection(connection);
+       	 if (content1K == null) {			   
 	            // initialize test content
-			    requestContext = new RepositoryRequestContext(); 
+			    
 	            char content1KArray[] = new char[1024]; //1Kb
 	            char content1MArray[] = new char[1024*1024]; //1Mb
 	            char content2MArray[] = new char[1024*1024*2]; //2Mb
@@ -84,9 +87,6 @@ public class FileSystemRepositoryTest extends TestCase {
 	            content1K = createTempFile(true, new String(content1KArray));
 	            content1M = createTempFile(true, new String(content1MArray));
 	            content2M = createTempFile(true, new String(content2MArray));
-	            ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
-	    		connection = ConnectionFactory.getConnectionDescription("xds-repository");
-	    		requestContext.setConnection(connection);
 	    	  }    
 	}
 
@@ -108,7 +108,7 @@ public class FileSystemRepositoryTest extends TestCase {
     public void testgetRepoItem(){
     	IXdsRepositoryItem invalidRepositoryId =null;
     	try {    		
-    		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, new RepositoryRequestContext());
+    		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
     		assertEquals(repositoryItem.getDocumentUniqueId(),documentId);
     		invalidRepositoryId = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515", new RepositoryRequestContext());
     	} catch (Exception e) {
@@ -123,7 +123,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	 */
     public void testDeleteDocumentId(){
     	try {		
-    		repositoryManager.delete(documentId, new RepositoryRequestContext());    		
+    		repositoryManager.delete(documentId, requestContext);    		
     	} catch (Exception e) {
 		   e.printStackTrace();
 		}
@@ -136,8 +136,7 @@ public class FileSystemRepositoryTest extends TestCase {
         // Delete temp file when program exits.
         if (deleteOnExit) {
             temp.deleteOnExit();
-        }
-        
+        }        
         // Write to temp file
         BufferedWriter out = new BufferedWriter(new FileWriter(temp));
         out.write(content);
