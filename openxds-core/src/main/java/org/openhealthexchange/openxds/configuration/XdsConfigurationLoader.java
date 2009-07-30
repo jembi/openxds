@@ -454,7 +454,7 @@ public class XdsConfigurationLoader {
 			if(actor.actorType.equalsIgnoreCase("XdsRepository")) {
 				xdsRepositoryServerConnection = ((XdsRepositoryActorDescription)actor).getXdsRepositoryServerConnection();
 				xdsRegistryClientConnection = ((XdsRepositoryActorDescription)actor).getXdsRegistryClientConnection();
-				if (!createXdsRegistryActor(actor.id, xdsRegistryConnection, pixRegistryConnection, 
+				if (!createXdsRepositoryActor(actor.id, xdsRepositoryServerConnection, xdsRegistryClientConnection, 
 						actorAudit, log, null))
 					okay = false;
 			}
@@ -750,6 +750,15 @@ public class XdsConfigurationLoader {
 //				((PixManagerActorDescription)actor).pixConsumerConnections = pixConsumerConnections;
 //				((PixManagerActorDescription)actor).xdsRegistryConnection = xdsRegistryConnection;
 //			}
+			
+			if (actor instanceof XdsRegistryActorDescription) {
+				((XdsRegistryActorDescription)actor).xdsRegistryConnection = xdsRegistryServerConnection;
+				((XdsRegistryActorDescription)actor).pixRegistryConnection = pixRegistryServerConnection;				
+			}else if (actor instanceof XdsRepositoryActorDescription) {
+				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = xdsRepositoryServerConnection;
+				((XdsRepositoryActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
+			}
+			
 			actorDefinitions.add(actor);			
 			return true;
 		}
