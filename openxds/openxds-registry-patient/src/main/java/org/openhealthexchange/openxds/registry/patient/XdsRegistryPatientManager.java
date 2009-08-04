@@ -18,37 +18,94 @@
  */
 package org.openhealthexchange.openxds.registry.patient;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientContext;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
+import org.openhealthexchange.openxds.util.ConversionHelper;
+import org.openhie.openempi.context.Context;
+import org.openhie.openempi.model.Person;
+import org.openhie.openempi.model.PersonIdentifier;
+import org.openhie.openempi.service.PersonManagerService;
+import org.openhie.openempi.service.PersonQueryService;
 
 /**
  * The class is the core of XDS Registry Patient Manager and 
  * provides the patient life cycle operations such as createPatient,
  * updatePatient, mergePatients and unmergePatients.
  *  
- * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:support@sysnet.com">Odysseas Pentakalos</a>
  *
  */
-public class XdsRegistryPatientManager implements IXdsRegistryPatientManager {
-    
+public class XdsRegistryPatientManager implements IXdsRegistryPatientManager
+{
+	private static Logger log = Logger.getLogger(XdsRegistryPatientManager.class);
+	
 	public boolean isValidPatient(PatientIdentifier pid, RegistryPatientContext context) throws RegistryPatientException {
-		//TODO:
-		return true;
+		PersonQueryService personQueryService = Context.getPersonQueryService();
+		PersonIdentifier identifier = ConversionHelper.getPersonIdentifier(pid);
+		try {
+			Person person = personQueryService.findPersonById(identifier);
+			if (person == null) {
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			log.error("Failed while trying to determine if the patient with the given identifier is known." + e, e);
+			throw new RegistryPatientException(e.getMessage());
+		}
 	}
 
 	public void createPatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
-		//TODO:
+		PersonManagerService personManagerService = Context.getPersonManagerService();
+		Person person = ConversionHelper.getPerson(patient);
+		try {
+			personManagerService.addPerson(person);
+		} catch (Exception e) {
+			log.error("Failed while trying to save a new patient record in the patient registry." + e, e);
+			throw new RegistryPatientException(e.getMessage());
+		}
 	}
 
 	public void updatePatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
-		//TODO:
+		PersonManagerService personManagerService = Context.getPersonManagerService();
+		Person person = ConversionHelper.getPerson(patient);
+		try {
+			personManagerService.updatePerson(person);
+		} catch (Exception e) {
+			log.error("Failed while trying to update a patient record in the patient registry." + e, e);
+			throw new RegistryPatientException(e.getMessage());
+		}
 	}
 
 	public void mergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
-		//TODO:
+		PersonManagerService personManagerService = Context.getPersonManagerService();
+		PersonIdentifier survivingPersonId = findExistingPersonIdForPatient(personManagerService, survivingPatient);
+		PersonIdentifier retiredPersonId = findExistingPersonIdForPatient(personManagerService, mergePatient);
+		if (survivingPersonId == null || retiredPersonId == null) {
+			log.error("Unable to locate one of the two patient records that need to be merged.");
+			throw new RegistryPatientException("Unable to identify the two patient records that need to be merged.");
+		}
+		try {
+			personManagerService.mergePersons(retiredPersonId, survivingPersonId);
+		} catch (Exception e) {
+			log.error("Failed while trying to merge two patient records in the patient registry." + e, e);
+			throw new RegistryPatientException(e.getMessage());
+		}
+	}
+
+	private PersonIdentifier findExistingPersonIdForPatient(PersonManagerService personManagerService, Patient patient) {
+		List<PatientIdentifier> ids = patient.getPatientIds();
+		List<PersonIdentifier> pids = new java.util.ArrayList<PersonIdentifier>(ids.size());
+		Person person = personManagerService.getPerson(pids);
+		if (person == null) {
+			return null;
+		}
+		return person.getPersonIdentifiers().iterator().next();
 	}
 
 	public void unmergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
