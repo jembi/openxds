@@ -51,18 +51,31 @@ public class ModuleManager {
 	}
 
 	private void initializeSpring() {
+		try {
 		this.applicationContext = new ClassPathXmlApplicationContext(getConfigLocations());
+		
+		initializeOpenEMPI();
 		
 		//add a shutdown hook for the above context... 
 		this.applicationContext.registerShutdownHook();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
+	private void initializeOpenEMPI() {
+		this.applicationContext.getBean("context");
+		org.openhie.openempi.context.Context.startup();
+		org.openhie.openempi.context.Context.authenticate("admin", "admin");
+	}
+
 	private String[] getConfigLocations() {
         return new String[] {
 //                "classpath:/applicationContext-resources.xml",
 //                "classpath:/applicationContext-dao.xml",
                 "classpath*:/applicationContext.xml", // for modular projects
-                "classpath:**/applicationContext*.xml" // for web projects
+                "classpath*:/applicationContext-service.xml",
+                "classpath*:/applicationContext-dao.xml"// for web projects
             };
     }
 
