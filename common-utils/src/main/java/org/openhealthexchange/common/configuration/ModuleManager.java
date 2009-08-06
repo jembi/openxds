@@ -54,8 +54,6 @@ public class ModuleManager {
 		try {
 		this.applicationContext = new ClassPathXmlApplicationContext(getConfigLocations());
 		
-//		initializeOpenEMPI();
-		
 		//add a shutdown hook for the above context... 
 		this.applicationContext.registerShutdownHook();
 		} catch (Exception e) {
@@ -63,12 +61,6 @@ public class ModuleManager {
 		}
 	}
 	
-//	private void initializeOpenEMPI() {
-//		this.applicationContext.getBean("context");
-//		org.openhie.openempi.context.Context.startup();
-//		org.openhie.openempi.context.Context.authenticate("admin", "admin");
-//	}
-
 	private String[] getConfigLocations() {
         return new String[] {
 //                "classpath:/applicationContext-resources.xml",
