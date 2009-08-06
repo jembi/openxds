@@ -25,6 +25,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
@@ -74,7 +75,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         //call the super one to initiate standard start process
         super.start();
 
-        //First initiate the Registry server
+        //1. First initiate the Registry server
         try {
 	        //TODO: move this to a global location, and get the repository path
 	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
@@ -97,7 +98,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         }
         log.info("XDS Registry Server started: " + connection.getDescription() );
         
-        //now initiate PIX Server
+        //2. now initiate PIX Server
         LowerLayerProtocol llp = LowerLayerProtocol.makeLLP(); // The transport protocol
         pixServer = new HL7Server(pixRegistryConnection, llp, new PipeParser());
         Application pixFeed  = new PixFeedHandler(this);
@@ -115,8 +116,18 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         //now start the Pix Manager pixServer
         pixServer.start();
         log.info("XDS PIX Registry Server started: " + pixRegistryConnection.getDescription() );
+        
+        //3. initialize OpenEMPI
+		initializeOpenEMPI();
+
     }
 
+	private void initializeOpenEMPI() {
+		ModuleManager.getInstance().getBean("context");
+		org.openhie.openempi.context.Context.startup();
+		org.openhie.openempi.context.Context.authenticate("admin", "admin");
+	}
+   
     @Override
     public void stop() {
         //stop the PIX Server first
