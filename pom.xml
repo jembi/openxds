@@ -453,6 +453,8 @@
         <dwr.version>2.0.1</dwr.version>
         <ehcache.version>1.4.1</ehcache.version>
         <hibernate.annotations.version>3.3.0.ga</hibernate.annotations.version>
+        <hibernate.validator.version>3.0.0.ga</hibernate.validator.version>
+        <hibernate.search.version>3.0.0.GA</hibernate.search.version>        
         <hibernate.version>3.2.6.ga</hibernate.version>
         <javamail.version>1.4</javamail.version>
         <jpa.version>1.0</jpa.version>
