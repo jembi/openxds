@@ -458,7 +458,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {
-			rm.insert(item, new RepositoryRequestContext());
+			RepositoryRequestContext context = new RepositoryRequestContext();
+			context.setConnection(connection);
+			rm.insert(item, context);
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository", e);
 		}
