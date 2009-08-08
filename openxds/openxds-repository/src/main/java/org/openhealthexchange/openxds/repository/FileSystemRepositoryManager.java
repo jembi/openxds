@@ -116,7 +116,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 			File itemFile = new File(itemPath);
 
 			if (itemFile.exists()) {
-				String errmsg = "RepositoryItem does not exist: id" + id;
+				String errmsg = "RepositoryItem already exist, id=" + id;
 				LOG.error(errmsg);
 				throw new RepositoryException(errmsg);
 			}

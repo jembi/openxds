@@ -175,7 +175,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 	    	context.setConnection(connection);
 	    	repositoryItem = rm.getRepositoryItem(doc_id, context);
 	    }catch (RepositoryException e) {
-	    	throw new XdsException("there is no repository item found for this document is" + doc_id);
+	    	throw new XdsException("Cannot find repository item for document id, " + doc_id);
 		}
 		if ( !rep_id.equals(rm.getRepositoryUniqueId())) {
 			response.add_error(MetadataSupport.XDSRepositoryWrongRepositoryUniqueId, "Repository Unique ID in request " + 
