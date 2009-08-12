@@ -118,13 +118,13 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         log.info("XDS PIX Registry Server started: " + pixRegistryConnection.getDescription() );
         
         //3. initialize OpenEMPI
-		initializeOpenEMPI();
+//		initializeOpenEMPI();
 
     }
 
 	private void initializeOpenEMPI() {
 		ModuleManager.getInstance().getBean("context");
-		org.openhie.openempi.context.Context.startup();
+//		org.openhie.openempi.context.Context.startup();
 		org.openhie.openempi.context.Context.authenticate("admin", "admin");
 	}
    
