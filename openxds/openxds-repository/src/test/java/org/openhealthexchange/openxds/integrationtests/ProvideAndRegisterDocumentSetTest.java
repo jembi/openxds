@@ -56,6 +56,7 @@ import org.openhealthexchange.common.utils.OMUtil;
  * RetrieveDocumentSet-b.
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:rasakannu.palaniyandi@misys.com">raja</a>
  */
 public class ProvideAndRegisterDocumentSetTest {
 	private static final String repositoryUrl = "http://localhost:8020/axis2/services/xdsrepositoryb";
@@ -96,10 +97,7 @@ public class ProvideAndRegisterDocumentSetTest {
 		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 		try{
 			
-//			  String repository = "c:\\tools\\axis2-1.4.1\\repository";        
-//		        ConfigurationContext configctx = ConfigurationContextFactory
-//		        .createConfigurationContextFromFileSystem(repository, "C:\\tools\\axis2-1.4.1\\conf\\axis2.xml");
-			  String repository = "c:\\tools\\axis2-1.4.1\\repository\\modules\\addressing-1.41.mar";        
+			  String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(repository, null);
 			ServiceClient sender = new ServiceClient(configctx,null);
@@ -145,6 +143,151 @@ public class ProvideAndRegisterDocumentSetTest {
 			System.out.println("error"+e);
 		}
 	}
+	@Test
+	public void testSubmitMultipleDocument() throws Exception {
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/submit_multiple_documents.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
+		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/MedicalSummary.xml"));
+		//replace document and submission set uniqueId variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		
+		Options options = new Options();
+		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
+	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
+	    options.setTo( new EndpointReference(repositoryUrl) );
+		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		//use SOAP12, 
+		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+		try{
+			
+			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
+	        ConfigurationContext configctx = ConfigurationContextFactory
+	        .createConfigurationContextFromFileSystem(repository, null);
+			ServiceClient sender = new ServiceClient(configctx,null);
+			sender.setOptions(options);
+			sender.engageModule("addressing");	
+			
+			OMElement request = OMUtil.xmlStringToOM(message);			
+			
+			//Add a referral summary document
+			OMFactory fac = OMAbstractFactory.getOMFactory();
+			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
+			OMElement docElem = fac.createOMElement("Document", ns);
+			docElem.addAttribute("id", "doc1", null);
+			
+			//Add a Discharge summary documents
+			OMElement docElem1 = fac.createOMElement("Document", ns);
+			docElem1.addAttribute("id", "doc2", null);
+			
+
+            // A string, turn it into an StreamSource
+		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
+			DataHandler handler = new DataHandler(ds);			 
+            OMText binaryData = fac.createOMText(handler, true);
+            
+            DataSource ds1 = new ByteArrayDataSource(document2, "text/xml"); 
+			DataHandler handler1 = new DataHandler(ds1);			 
+            OMText binaryData1 = fac.createOMText(handler1, true);
+            
+            docElem.addChild(binaryData);
+            docElem1.addChild(binaryData1);
+            
+            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
+            OMElement submitObjectsRequest = null;
+            for (;iter.hasNext();) {
+            	submitObjectsRequest = (OMElement)iter.next();
+            	if (submitObjectsRequest != null)
+            		break;
+            }
+            submitObjectsRequest.insertSiblingAfter(docElem);
+            submitObjectsRequest.insertSiblingAfter(docElem1);
+            
+			System.out.println("Request:\n" +request);
+			OMElement response = sender.sendReceive( request );
+			assertNotNull(response); 
+			String result = response.toString();
+			System.out.println("Result:\n" +result);
+		} catch(AxisFault e) {
+			e.printStackTrace();
+			fail("tstSubmitDocument Failed");
+		} catch(XMLStreamException e) {
+			e.printStackTrace();
+			fail("tstSubmitDocument Failed");
+		}catch (Exception e) {
+			System.out.println("error"+e);
+		}
+	}
+	
+	
+	@Test
+	public void testAddDocument2Folder() throws Exception {
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/add_document2_folder.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
+		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$folder_uniqueid", "2.16.840.1.113883.3.65.3." + System.currentTimeMillis());
+		
+		Options options = new Options();
+		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
+	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
+	    options.setTo( new EndpointReference(repositoryUrl) );
+		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		//use SOAP12, 
+		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+		try{
+			
+			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
+	        ConfigurationContext configctx = ConfigurationContextFactory
+	        .createConfigurationContextFromFileSystem(repository, null);
+			ServiceClient sender = new ServiceClient(configctx,null);
+			sender.setOptions(options);
+			sender.engageModule("addressing");	
+			
+			OMElement request = OMUtil.xmlStringToOM(message);			
+			
+			//Add a referral summary document
+			OMFactory fac = OMAbstractFactory.getOMFactory();
+			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
+			OMElement docElem = fac.createOMElement("Document", ns);
+			docElem.addAttribute("id", "doc1", null);
+			
+		
+            // A string, turn it into an StreamSource
+		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
+			DataHandler handler = new DataHandler(ds);			 
+            OMText binaryData = fac.createOMText(handler, true);
+            
+            docElem.addChild(binaryData);
+            
+            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
+            OMElement submitObjectsRequest = null;
+            for (;iter.hasNext();) {
+            	submitObjectsRequest = (OMElement)iter.next();
+            	if (submitObjectsRequest != null)
+            		break;
+            }
+            submitObjectsRequest.insertSiblingAfter(docElem);
+            System.out.println("Request:\n" +request);
+			OMElement response = sender.sendReceive( request );
+			assertNotNull(response); 
+			String result = response.toString();
+			System.out.println("Result:\n" +result);
+		} catch(AxisFault e) {
+			e.printStackTrace();
+			fail("tstSubmitDocument Failed");
+		} catch(XMLStreamException e) {
+			e.printStackTrace();
+			fail("tstSubmitDocument Failed");
+		}catch (Exception e) {
+			System.out.println("error"+e);
+		}
+	}
+	
 	
 	static public String getStringFromInputStream(InputStream in) throws java.io.IOException {
 		int count;
