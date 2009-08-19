@@ -324,7 +324,7 @@
                 </rim:Slot>
             </rim:Association>
             <rim:Association id="doc2sub" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="SubmissionSet" targetObject="doc2">
-                <rim:Slot name="SubmissionSetStatus1">
+                <rim:Slot name="SubmissionSetStatus">
                     <rim:ValueList>
                         <rim:Value>Original</rim:Value>
                     </rim:ValueList>

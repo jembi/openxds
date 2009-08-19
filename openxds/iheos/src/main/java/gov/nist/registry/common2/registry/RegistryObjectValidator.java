@@ -207,7 +207,7 @@ public class RegistryObjectValidator extends StoredQuery {
 		init();
 		a("SELECT * FROM ExtrinsicObject eo"); n();
 		a("WHERE"); n();
-		a("  eo.status = 'Approved' AND"); n();
+		a("  eo.status = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Approved' AND"); n();
 		a("  eo.id IN "); a(uuids);  n();
 
 		ArrayList results1 = this.query_for_object_refs();
@@ -215,7 +215,7 @@ public class RegistryObjectValidator extends StoredQuery {
 		init();
 		a("SELECT * FROM RegistryPackage eo"); n();
 		a("WHERE"); n();
-		a("  eo.status = 'Approved' AND"); n();
+		a("  eo.status = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Approved' AND"); n();
 		a("  eo.id IN "); a(uuids);  n();
 
 		ArrayList results = this.query_for_object_refs();

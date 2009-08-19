@@ -193,8 +193,8 @@
                     </rim:ValueList>
                 </rim:Slot>
             </rim:Association>
-         <rim:Association associationType="APND" sourceObject="Document01" targetObject="$rplc_doc_uuid$"/> 
-        <ObjectRef id="$rplc_doc_uuid$"/>
+         <rim:Association id="app-doc" associationType="urn:ihe:iti:2007:AssociationType:APND" sourceObject="doc1"  targetObject="$appendum_doc_uuid">        
+         </rim:Association>        
         </rim:RegistryObjectList>
     </lcm:SubmitObjectsRequest>
  </axis2ns1:ProvideAndRegisterDocumentSetRequest>
