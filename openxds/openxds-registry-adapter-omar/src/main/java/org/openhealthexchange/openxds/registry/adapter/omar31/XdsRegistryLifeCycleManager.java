@@ -113,8 +113,32 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 	}
 
 	public OMElement deprecateObjects(OMElement request, RegistryLifeCycleContext context) throws RegistryLifeCycleException {
-		//TODO: implement
-		return null;		
+		RequestContext omarContext;
+		RegistryResponse omarResponse = null;
+		InputStream is;
+		OMElement response;
+		final String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryLifeCycleManager:deprecateObjects:context";
+		try {
+			is = new ByteArrayInputStream(request.toString().getBytes("UTF-8"));
+			Object registryRequest = helper.getUnmarsheller().unmarshal(is);
+			//Creating context with request.
+			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
+			//Adding RegistryOperator role for the user.
+			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			// Sending request to OMAR methods.
+			omarResponse = lcm.deprecateObjects(omarContext);
+			
+			response = helper.omFactory().createOMElement("RegistryResponse", helper.nsRs);
+			response.declareNamespace(helper.nsRs);
+			response.declareNamespace(helper.nsXsi);
+			response.addAttribute("status", omarResponse.getStatus(), null);
+		
+		}  catch (Exception e) {
+			e.printStackTrace();
+			throw new RegistryLifeCycleException(e.getMessage());
+		}
+
+		return response;
 	}
 
 }
