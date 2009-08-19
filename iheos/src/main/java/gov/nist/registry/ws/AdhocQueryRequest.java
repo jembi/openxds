@@ -250,10 +250,18 @@ public class AdhocQueryRequest extends XdsCommon {
 				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
 				return null;
 			}
+			try {
+			if(fact.query_id.equals(MetadataSupport.SQ_GetDocumentsAndAssociations)||
+					fact.query_id.equals(MetadataSupport.SQ_GetSubmissionSetAndContents)||
+					fact.query_id.equals(MetadataSupport.SQ_GetFolderAndContents)||
+					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
+					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)){
+				return fact.run();
+			}else {					
 			//Create RegistryStoredQueryContext
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
 			OMElement response = null;
-			try {
+			
 				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
 				response = qm.storedQuery(context);
 				Iterator<OMElement> temp= response.getChildElements();
@@ -263,12 +271,12 @@ public class AdhocQueryRequest extends XdsCommon {
 						omlist.add(i.next());
 					}
 				}
+			 }
 			}catch(Exception e) {
 				throw new XdsInternalException("Failed to query the Registry", e);
 			}
 		return omlist;
-	}
-
+	 }
 
 	private OMElement sql_query(OMElement ahqr) 
 	throws XdsInternalException, SchemaValidationException, LoggerException, SqlRepairException, MetadataException, MetadataValidationException {

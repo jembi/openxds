@@ -1516,3 +1516,124 @@ AND (fmtCode.classifiedObject = doc.id AND
      fmtCode.classificationScheme = ''urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d'' AND
      fmtCode.nodeRepresentation IN ($XDSDocumentEntryFormatCode))
 AND doc.status = ($XDSDocumentEntryStatus)');
+
+--FindSubmisstionSets
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:f26abbcb-ac74-4422-8a30-edb644bbc1a9',NULL,'urn:uuid:f26abbcb-ac74-4422-8a30-edb644bbc1a9','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT ss.* FROM RegistryPackage ss, ExternalIdentifier patId 
+, Slot subTimeFrom 
+, Slot subTimeTo 
+, Slot ap 
+, ExternalIdentifier sid 
+, Classification ctc 
+WHERE ( ss.id = patId.registryobject AND 
+	  patId.identificationScheme= ''urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446'' AND 
+	  patId.value = ($XDSSubmissionSetPatientId))
+AND ( sid.registryobject = ss.id AND 
+	sid.identificationScheme = ''urn:uuid:554ac39e-e3fe-47fe-b233-965d2a147832'' AND 
+	sid.value IN ($XDSSubmissionSetSourceId))
+AND ( subTimeFrom.parent = ss.id AND
+	subTimeFrom.name = ''submissionTime'' AND
+	subTimeFrom.value >= ($XDSSubmissionSetSubmissionTimeFrom))
+AND (subTimeTo.parent = ss.id AND
+	subTimeTo.name = ''submissionTime'' AND
+	subTimeTo.value < ($XDSSubmissionSetSubmissionTimeTo))
+AND ( ap.parent = ss.id AND 
+	ap.name = ''authorPerson'' AND 
+	ap.value LIKE $XDSSubmissionSetAuthorPerson)
+AND ( ctc.classifiedObject = ss.id AND 
+	ctc.classificationScheme = ''urn:uuid:aa543740-bdda-424e-8c96-df4873be8500'' AND
+	ctc.nodeRepresentation IN ($XDSSubmissionSetContentTypeCode))
+AND ss.status = ($XDSFolderStatus)');	
+
+--GetDocuments
+
+INSERT INTO ADHOCQUERY VALUES('urn:uuid:5c4f972b-d56b-40ac-a5fc-c8ca9b40b9d4',NULL,'urn:uuid:5c4f972b-d56b-40ac-a5fc-c8ca9b40b9d4','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT eo.* from ExtrinsicObject eo, ExternalIdentifier ei
+WHERE
+(ei.registryObject = eo.id AND
+ei.identificationScheme = ''urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab'' AND
+ei.value IN ($XDSDocumentEntryUniqueId))
+AND
+ (eo.id IN ($XDSDocumentEntryEntryUUID))');
+
+--GetAssociations
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:a7ae438b-4bc2-4642-93e9-be891f7bb155',NULL,'urn:uuid:a7ae438b-4bc2-4642-93e9-be891f7bb155','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT DISTINCT ass.* FROM Association ass 
+WHERE ass.sourceObject IN ($uuid)OR
+      ass.targetObject IN ($uuid)');
+
+--GetSubmissionSets
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:51224314-5390-4169-9b91-b1980040715a',NULL,'urn:uuid:51224314-5390-4169-9b91-b1980040715a','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT ss.* FROM RegistryPackage ss,
+Classification c,
+Association a
+WHERE 
+c.classifiedObject = ss.id AND 
+c.classificationNode = ''urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd'' AND 
+a.sourceObject = ss.id AND 
+a.associationType = ''urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember'' AND 
+a.targetObject IN ($uuid)');
+
+--FindFolders
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:958f3006-baad-4929-a4de-ff1114824431',NULL,'urn:uuid:958f3006-baad-4929-a4de-ff1114824431',
+'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT fol.* FROM RegistryPackage fol, ExternalIdentifier patId
+, Slot lupdateTimef 
+, Slot lupdateTimet 
+, Classification cl 
+, Slot clScheme 
+WHERE ( patId.registryobject = fol.id AND 
+	patId.identificationScheme = ''urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a'' AND 
+	patId.value = ($XDSFolderPatientId))
+AND ( lupdateTimef.parent = fol.id AND 
+	lupdateTimef.name = ''lastUpdateTime'' AND 
+	lupdateTimef.value >= ($XDSFolderLastUpdateTimeFrom))
+AND ( lupdateTimet.parent = fol.id AND
+	lupdateTimet.name = ''lastUpdateTime'' AND
+	lupdateTimef.value < ($XDSFolderLastUpdateTimeTo))
+AND (cl.classifiedObject = fol.id AND
+	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
+	cl.nodeRepresentation IN ($XDSFolderCodeList))
+AND (clScheme.parent = cl.id AND 
+	clScheme.name = ''codingScheme'' AND	
+	clScheme.value = ($XDSFolderCodeListScheme))
+AND fol.status = ($XDSFolderStatus)');
+
+--GetFolder
+
+INSERT INTO ADHOCQUERY VALUES('urn:uuid:5737b14c-8a1a-4539-b659-e03a34a5e1e4',NULL,'urn:uuid:5737b14c-8a1a-4539-b659-e03a34a5e1e4',
+'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT fol.* from RegistryPackage fol, 
+ExternalIdentifier uniq 
+WHERE 
+(uniq.registryObject = fol.id AND 
+uniq.identificationScheme = ''urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a'' AND
+uniq.value IN ($XDSFolderUniqueId))
+AND 
+(fol.id IN ($XDSFolderEntryUUID))');
+
+--GetFoldersForDocuments
+
+INSERT INTO ADHOCQUERY VALUES ('urn:uuid:10cae35a-c7f9-4cf5-b61e-fc3278ffb578',NULL,'urn:uuid:10cae35a-c7f9-4cf5-b61e-fc3278ffb578',
+'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
+'SELECT fol.* FROM RegistryPackage fol,
+Association a, 
+ExtrinsicObject doc, 
+Classification c
+WHERE 
+doc.id IN (SELECT doc.id FROM ExtrinsicObject doc, ExternalIdentifier uniqId 
+	WHERE
+	(uniqId.registryobject = doc.id AND 
+	uniqId.identificationScheme = ''urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab'' AND
+	uniqId.value = $XDSDocumentEntryUniqueId)
+	AND (doc.id = $XDSDocumentEntryEntryUUID) )
+AND 
+a.targetObject = doc.id AND 
+a.associationType = ''urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember'' AND
+a.sourceObject = fol.id AND 
+c.classifiedObject = fol.id AND 
+c.classificationNode = ''urn:uuid:d9d542f3-6cc4-48b6-8870-ea235fbc94c2''');
