@@ -370,7 +370,7 @@ public abstract class StoredQuery extends BasicQuery {
 	protected OMElement get_associations(ArrayList<String> uuids, ArrayList<String> assoc_types) throws XdsException,
 	LoggerException {
 
-		ArrayList<String> a_types = new ArrayList<String>();
+		/*ArrayList<String> a_types = new ArrayList<String>();
 		if (assoc_types != null) {
 			for (String type : assoc_types) {
 				String[] parts = type.split(":");
@@ -379,7 +379,7 @@ public abstract class StoredQuery extends BasicQuery {
 				else
 					a_types.add(type);
 			}
-		}
+		}*/
 		init();
 		if (this.return_leaf_class)
 			a("SELECT * FROM Association a");
@@ -390,7 +390,7 @@ public abstract class StoredQuery extends BasicQuery {
 		a("	  (a.sourceObject IN "); a(uuids); a(" OR");  n(); 
 		a("	  a.targetObject IN "); a(uuids); a(" )"); n(); 
 		if (assoc_types != null) {
-			a("   AND a.associationType IN "); a(a_types); n();
+			a("   AND a.associationType IN "); a(assoc_types); n();
 		}
 
 		return query(this.return_leaf_class);
@@ -540,7 +540,7 @@ public abstract class StoredQuery extends BasicQuery {
 
 		a("WHERE");   n();                                                                                     
 		a("   a.sourceObject = '" + ss_uuid + "' AND");  n();                                                  
-		a("   a.associationType = 'HasMember' AND");       n();                                                     
+		a("   a.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND");       n();                                                     
 		a("   a.targetObject = doc.id ");   n();
 
 		if (conf_codes != null && conf_codes.size() > 0) {
@@ -576,7 +576,7 @@ public abstract class StoredQuery extends BasicQuery {
 
 		a("SELECT * FROM Association ass"); n();
 		a("WHERE"); n();
-		a("   ass.associationType = 'HasMember' AND"); n();
+		a("   ass.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("   ass.sourceObject = '" + package_uuid + "' AND"); n();
 		a("   ass.targetObject IN (" );
 		for (int i=0; i<content_uuids.size(); i++) {
@@ -595,7 +595,7 @@ public abstract class StoredQuery extends BasicQuery {
 
 		a("SELECT * FROM Association ass"); n();
 		a("WHERE"); n();
-		a("   ass.associationType = 'HasMember' AND"); n();
+		a("   ass.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("   ass.sourceObject IN (");
 		for (int i=0; i<package_uuids.size(); i++) {
 			if (i > 0) a(",");
@@ -622,7 +622,7 @@ public abstract class StoredQuery extends BasicQuery {
 
 		a("SELECT * FROM Association ass"); n();
 		a("WHERE"); n();
-		a("   ass.associationType = 'HasMember' AND"); n();
+		a("   ass.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("   ass.sourceObject IN (");
 		for (int i=0; i<package_uuids.size(); i++) {
 			if (i > 0) a(",");
@@ -644,7 +644,7 @@ public abstract class StoredQuery extends BasicQuery {
 		a(", Association a"); n();
 		a("WHERE"); n();
 
-		a("   a.associationType = 'HasMember' AND"); n();
+		a("   a.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("   a.targetObject = '" + uuid + "' AND"); n();
 		a("   a.sourceObject = fol.id AND"); n();
 		a("   uniq.registryObject = fol.id AND");  n();
@@ -652,5 +652,91 @@ public abstract class StoredQuery extends BasicQuery {
 
 		return query();
 	}
+	
+	protected OMElement getDocByPatientId(String patientId, ArrayList<String> docStatus, ArrayList<String> confCodes, ArrayList<String> formatCodes) throws XdsException, LoggerException{
+		init();
+		if (this.return_leaf_class) {
+		     a("SELECT *  "); n();
+		} else {
+		     a("SELECT eo.id  "); n();
+		}
+		a("FROM ExtrinsicObject eo, ExternalIdentifier patId"); n();
+		if (confCodes != null)                           a(", Classification cCodes"); n();              // $XDSDocumentEntryConfidentialityCode        
+		if (formatCodes != null)                         a(", Classification fmtCode"); n();             // $XDSDocumentEntryFormatCode
+		a("WHERE"); n();
+		a("eo.status IN "); a(docStatus); n();
+		a("AND ( patId.registryObject = eo.id AND "); n();
+		a("  eo.objectType = 'urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1' AND "); n();
+		a("  patId.identificationScheme = 'urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427' AND "); n();
+		a("  patId.value = '"); a(patientId); a("' ) "); n();
+	    this.add_code("cCodes", "", "urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f", confCodes, null);
+		this.add_code("fmtCode", "", "urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d", formatCodes, null);
+										
+		return query();
+	}
+	
+	protected OMElement getFolOrSetByPatientId(String patientId, ArrayList<String> setStatus, ArrayList<String> folStatus)throws XdsException, LoggerException{
+		init();
+		if (this.return_leaf_class) {
+		     a("SELECT *  "); n();
+		} else {
+		     a("SELECT rp.id  "); n();
+		}
+		a("FROM RegistryPackage rp, ExternalIdentifier patId"); n();
+		a(", Classification cl"); n();
+		a("WHERE"); n();
+		a("(rp.status IN "); a(setStatus); n();
+		a(" AND cl.classifiedObject = rp.id AND "); n(); 
+		a(" cl.classificationNode = 'urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd' AND "); n();
+		a(" patId.registryObject = rp.id AND "); n();
+		a(" patId.identificationScheme = 'urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446' AND"); n(); 
+		a(" patId.value = '"); a(patientId); a("')"); n();
+		a(" OR (rp.status IN "); a(folStatus); n();
+		a(" AND cl.classifiedObject = rp.id AND"); n(); 
+		a(" cl.classificationNode = 'urn:uuid:d9d542f3-6cc4-48b6-8870-ea235fbc94c2' AND"); n();
+		a(" patId.registryObject = rp.id AND"); n();
+		a(" patId.identificationScheme = 'urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a' AND"); n(); 
+		a(" patId.value ='"); a(patientId); a("')");
+		
+		return query();
+	}
+	
+	protected OMElement getAssociationByPatientId(String patientId, ArrayList<String> docStatus, ArrayList<String> setStatus, ArrayList<String> folStatus)throws XdsException, LoggerException{
+			
+		init();
+		if (this.return_leaf_class) {
+		     a("SELECT *  "); n();
+		} else {
+		     a("SELECT ass.id  "); n();
+		}
+		a("FROM Association ass, ExtrinsicObject eo, RegistryPackage ss, RegistryPackage fol"); n();
+		a("WHERE"); n();
+		a("("); n();
+		a(" (ass.sourceObject = ss.id AND ass.targetObject = fol.id) OR"); n();
+		a(" (ass.sourceObject = ss.id AND ass.targetObject = eo.id) OR"); n();
+		a(" (ass.sourceObject = fol.id AND ass.targetObject = eo.id)"); n(); 	 
+	    a(") AND"); n();
+	    a(" eo.id IN (SELECT eo.id FROM ExtrinsicObject eo, ExternalIdentifier patId"); n();
+	    	a("	WHERE"); n();
+	    	a("eo.status IN "); a(docStatus); n();
+	     	a("AND patId.registryObject = eo.id AND"); n(); 
+	        a(" 	patId.identificationScheme = 'urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427' AND"); n();
+	        a("		patId.value ='"); a(patientId); a("')");n();
+	    a("AND ss.id IN (SELECT ss.id FROM RegistryPackage ss, ExternalIdentifier patId"); n();
+	    	a(" WHERE "); n();
+	   		a(" ss.status IN "); a(setStatus); a("AND"); n();	   				
+	   		a("	patId.registryObject = ss.id AND"); n(); 
+	   		a("	patId.identificationScheme = 'urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446' AND"); n(); 
+	   		a(" patId.value = '"); a(patientId); a("')"); n();   
+	   	 a("AND fol.id IN (SELECT fol.id FROM RegistryPackage fol, ExternalIdentifier patId"); n();
+	   		a(" WHERE "); n();
+	   		a(" fol.status IN"); a(folStatus); a("AND"); n();
+	   		a("	patId.registryObject = fol.id AND"); n(); 
+	   	    a("	patId.identificationScheme = 'urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a' AND"); n();
+	   	    a(" patId.value = '"); a(patientId); a("')");
+	   	    
+		return query();
+	}
+	
 }
 

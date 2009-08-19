@@ -110,7 +110,7 @@ public class GetSubmissionSetAndContents extends StoredQuery {
 
 		a("SELECT * FROM RegistryPackage fol, Association a"); n();
 		a("WHERE"); n();
-		a("   a.associationType = 'HasMember' AND"); n();
+		a("   a.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("   a.sourceObject = '" + ss_uuid + "' AND"); n();
 		a("   a.targetObject = fol.id "); n();
 

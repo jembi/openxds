@@ -11,6 +11,7 @@ import gov.nist.registry.common2.registry.StoredQuery;
 import gov.nist.registry.ws.sq.FindDocuments;
 import gov.nist.registry.ws.sq.FindFolders;
 import gov.nist.registry.ws.sq.FindSubmissionSets;
+import gov.nist.registry.ws.sq.GetAll;
 import gov.nist.registry.ws.sq.GetAssociations;
 import gov.nist.registry.ws.sq.GetDocuments;
 import gov.nist.registry.ws.sq.GetDocumentsAndAssociations;
@@ -112,7 +113,8 @@ public class StoredQueryFactory {
 			// GetAll
 			if (log_message != null)
 				log_message.setTestMessage(service_name + " " + "GetAll");
-			response.add_error("XDSRegistryError", "UnImplemented Stored Query query id = " + query_id, "AdhocQueryRequest.java", log_message);
+			x = new GetAll(params, return_objects, response, log_message, is_secure);
+			//response.add_error("XDSRegistryError", "UnImplemented Stored Query query id = " + query_id, "AdhocQueryRequest.java", log_message);
 		}
 		else if (query_id.equals(MetadataSupport.SQ_GetDocuments)) {
 			// GetDocuments
