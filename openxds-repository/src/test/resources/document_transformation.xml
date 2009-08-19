@@ -1,7 +1,7 @@
 <axis2ns1:ProvideAndRegisterDocumentSetRequest xmlns:axis2ns1="urn:ihe:iti:xds-b:2007" xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0" xmlns:lcm="urn:oasis:names:tc:ebxml-regrep:xsd:lcm:3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xsi:schemaLocation="urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd">
     <lcm:SubmitObjectsRequest>
         <rim:RegistryObjectList>
-            <rim:ExtrinsicObject id="doc1" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" mimeType="text/xml">
+            <rim:ExtrinsicObject id="doc1" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" mimeType="image/gif">
                 <rim:Slot name="creationTime">
                     <rim:ValueList>
                         <rim:Value>20090805172839</rim:Value>
@@ -193,8 +193,7 @@
                     </rim:ValueList>
                 </rim:Slot>
             </rim:Association>
-         <rim:Association associationType="XFRM" sourceObject="Document01" targetObject="$rplc_doc_uuid$"/> 
-        <ObjectRef id="$rplc_doc_uuid$"/>
+         <rim:Association id="trans-doc" associationType="urn:ihe:iti:2007:AssociationType:XFRM" sourceObject="doc1" targetObject="$tran_doc_uuid"/> 
         </rim:RegistryObjectList>
     </lcm:SubmitObjectsRequest>
  </axis2ns1:ProvideAndRegisterDocumentSetRequest>
