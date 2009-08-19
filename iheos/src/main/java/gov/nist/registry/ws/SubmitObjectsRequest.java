@@ -457,8 +457,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			}else if(request.getLocalName().equalsIgnoreCase("ApproveObjectsRequest")){
 				result = lcm.approveObjects(request, new RegistryLifeCycleContext());	
 			}else if(request.getLocalName().equalsIgnoreCase("DeprecateObjectsRequest")){
-				//TODO: Implementation is required
-				//lcm.deprecateObjects(request, new RegistryLifeCycleContext());
+				result = lcm.deprecateObjects(request, new RegistryLifeCycleContext());
 			}
 		}catch(XMLStreamException e) {
 			response.add_error("XDSRegistryError", e.getMessage(), RegistryUtility.exception_details(e),log_message);

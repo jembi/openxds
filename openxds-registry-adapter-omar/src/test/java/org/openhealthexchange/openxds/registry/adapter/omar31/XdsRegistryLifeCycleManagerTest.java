@@ -124,6 +124,31 @@ public class XdsRegistryLifeCycleManagerTest extends TestCase{
 		}
 	 
 	 /**
+	  * Test ApproveObjectsRequest
+	  */
+	 public void testDeprecateObjects() {
+			//OMElement request = Util.parse_xml(new File("D:\\XDS\\schema\\RegisterDocumentSet-bRequest.xml"));
+			RegistryResponse res = null;
+			RegistryLifeCycleContext context = new RegistryLifeCycleContext();
+			OMElement response;			
+			try {
+				OMElement request = getDeprecateObjectsRequest();
+				response = registryManager.deprecateObjects(request, context);
+				InputStream is = new ByteArrayInputStream(response.toString().getBytes("UTF-8"));
+				Object temp =helper.getUnmarsheller().unmarshal(is);
+				if (temp instanceof RegistryResponse) {
+					 res = (RegistryResponse) temp;
+				}
+				System.out.println("final result " + bu.marshalObject(res));
+				
+			} 
+			catch (Exception e) {
+				log.debug(e.getMessage());
+			}
+			
+		}
+	 
+	 /**
 		 * Create a new SubmitObjectsRequest as an Axiom OMElement
 		 * 
 		 * @param submissionSet
@@ -262,13 +287,28 @@ public class XdsRegistryLifeCycleManagerTest extends TestCase{
 		xml.addExternalIdentifier("XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2005.3.9999.33", XDS_SUBMISSION_SET_UNIQUE_ID, id, "ei085", true);
 		xml.addExternalIdentifier("XDSSubmissionSet.sourceId", "3670984664", XDS_SUBMISSION_SET_SOURCE_ID, id, "ei04", true);
 		xml.addExternalIdentifier("XDSSubmissionSet.patientId", "SELF-5^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO", XDS_SUBMISSION_SET_PATIENT_ID, id, "ei03", true);
-		
 		// Done
 		return xml.getRootElement();
 	}
 		
 	public OMElement getApproveObjectsRequest() {
 		OMElement req = helper.omFactory.createOMElement("ApproveObjectsRequest", helper.nsLcm);
+		req.declareNamespace(helper.ns);
+		req.declareNamespace(helper.nsXsi);
+		req.declareNamespace(helper.nsLcm);
+		req.declareNamespace(helper.nsRim);		
+		req.declareNamespace(helper.nsRs);
+		String docId = "urn:uuid:0520abda-8944-4463-b715-844a6785f2ab";
+		String setId = "urn:uuid:08e6330f-1a7d-4099-be06-96cf8e6edae2";
+		List<String> uuids = new ArrayList<String>();
+		uuids.add(docId);
+		uuids.add(setId);
+		req.addChild(makeObjectRefList(uuids));
+		return req;
+	}
+	
+	public OMElement getDeprecateObjectsRequest() {
+		OMElement req = helper.omFactory.createOMElement("DeprecateObjectsRequest", helper.nsLcm);
 		req.declareNamespace(helper.ns);
 		req.declareNamespace(helper.nsXsi);
 		req.declareNamespace(helper.nsLcm);
