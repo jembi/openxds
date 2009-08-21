@@ -186,6 +186,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+        	<groupId>org.springframework</groupId>
+        	<artifactId>spring</artifactId>
+        	<version>${spring.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
@@ -195,7 +200,7 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
             <optional>true</optional>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core-tiger</artifactId>
@@ -437,8 +442,8 @@
         <jdbc.version>8.3-603.jdbc4</jdbc.version>
         <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
         <jdbc.url><![CDATA[jdbc:postgresql://localhost/openxds]]></jdbc.url>
-        <jdbc.username>postgres</jdbc.username>
-        <jdbc.password>postgres</jdbc.password>
+        <jdbc.username>openxds</jdbc.username>
+        <jdbc.password>openxds</jdbc.password>
     
         <!-- Properties calculated by AppFuse when running full-source plugin -->
         <aspectj.version>1.6.0</aspectj.version>
