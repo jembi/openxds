@@ -34,6 +34,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.openpixpdq.ihe.configuration.Configuration;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
@@ -83,6 +84,9 @@ public class XdsConfigurationLoader {
 	
 	/* Current root logger appender */
 	Appender currentAppender = null;
+	
+	/* The IHE Audit Trail for this actor. */
+	private IheAuditTrail auditTrail = null;
 	
 	/* The actor definitions loaded by the config file */
 	private Vector<ActorDescription> actorDefinitions = null;
@@ -439,6 +443,13 @@ public class XdsConfigurationLoader {
 				if (sourceConnection == null) sourceConnection = source;
 			}
 			
+			ArrayList<IConnectionDescription> xdsAuditConnection = null;
+			if(actor.actorType.equalsIgnoreCase("SecureNode")) {
+				// Build a new audit trail if there are any connections to audit repositories.
+				xdsAuditConnection = ((XdsAuditActorDescription)actor).getXdsAuditConnection();
+				if (!createXdsAuditActor(actor.id, xdsAuditConnection, log, null))
+					okay = false;
+			}
 			IConnectionDescription xdsRegistryConnection = null;
 			IConnectionDescription pixRegistryConnection = null;
 			if(actor.actorType.equalsIgnoreCase("XdsRegistry")) {
@@ -736,10 +747,10 @@ public class XdsConfigurationLoader {
 			actor.sourceConnection = sourceConnection;
 			actor.consumerConnection = consumerConnection;
 			actor.logConnections = logConnections;
-			if (consumerConnection != null) {
-				actor.description = getHumanConnectionDescription(description, consumerConnection);
-			} else if (sourceConnection != null) {
-				actor.description = getHumanConnectionDescription(description, sourceConnection);
+			if (xdsRegistryServerConnection != null) {
+				actor.description = getHumanConnectionDescription(description, xdsRegistryServerConnection);
+			} else if (xdsRepositoryServerConnection != null) {
+				actor.description = getHumanConnectionDescription(description, xdsRepositoryServerConnection);
 			} else if (actorType.equalsIgnoreCase("SecureNode") && !logConnections.isEmpty()) {
 				actor.description = getHumanConnectionDescription(description, logConnections.get(0));
 			} else {
@@ -757,6 +768,8 @@ public class XdsConfigurationLoader {
 			}else if (actor instanceof XdsRepositoryActorDescription) {
 				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = xdsRepositoryServerConnection;
 				((XdsRepositoryActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
+			}else if (actor instanceof XdsAuditActorDescription){
+				((XdsAuditActorDescription)actor).xdsAuditConnection = logConnections;
 			}
 			
 			actorDefinitions.add(actor);			
@@ -887,6 +900,31 @@ public class XdsConfigurationLoader {
 //		if (okay) actorsInstalled.add(name);
 //		return okay;
 //	}
+	
+	/**
+	 * Creates an IHE XDS AuditTrail actor and install it into the AuditBroker.
+	 * 
+	 * @param name the name of the actor to create (used in audit messages)
+	 * @param xdsAuditConnection The description of the connection of the XDS
+     * 			AuditTail in the affinity domain
+	 * @param auditConnections the audit trail connections this actor should log to
+	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
+	 * @return <code>true</code> if the actor is created successfully
+	 * @throws IheConfigurationException When there is a problem with the configuration
+	 */
+	private boolean createXdsAuditActor(String name, Collection<IConnectionDescription> auditConnections, IMesaLogger logger, File configFile) throws IheConfigurationException {
+		boolean okay = false;
+		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+		if (auditTrail != null) {
+			AuditBroker broker = AuditBroker.getInstance();
+			broker.registerAuditSource(auditTrail);
+			okay = true;
+		}
+		// Record this installation, if it succeeded
+		if (okay) actorsInstalled.add(name);
+		return okay;
+	}
+	
 	/**
 	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
 	 * 
@@ -905,7 +943,7 @@ public class XdsConfigurationLoader {
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
 
-		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection);
+		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection, auditTrail);
         if (xdsRegistry != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXdsRegistry(xdsRegistry);
@@ -934,7 +972,7 @@ public class XdsConfigurationLoader {
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
 
-		XdsRepository xdsRepository = new XdsRepository(xdsRepositoryServerConnection, xdsRegistryClientConnection);
+		XdsRepository xdsRepository = new XdsRepository(xdsRepositoryServerConnection, xdsRegistryClientConnection, auditTrail);
         if (xdsRepositoryServerConnection != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXdsRepository(xdsRepository);
@@ -1113,6 +1151,30 @@ public class XdsConfigurationLoader {
 	 * 
 	 * @author Wenzhi Li
 	 */
+	public class XdsAuditActorDescription extends ActorDescription {
+		/** Defines the XDS Registry Connection */
+		private ArrayList<IConnectionDescription> xdsAuditConnection = null;
+		
+
+		/**
+		 * Gets the connection for the XDS Audit Trail. The connect provides the details such as host name 
+		 * and port etc which are needed for this XDS Audit Trail to talk to the XDS Repositories and XDS Registries.
+		 * 
+		 * @return the connection of XDS AuditTrail 
+		 */
+		public ArrayList<IConnectionDescription> getXdsAuditConnection() {
+			return xdsAuditConnection;
+		}
+		
+	}
+
+	
+	/**
+	 * An implementation of the IheActorDescription class to be used by 
+	 * XDS Registry Actor
+	 * 
+	 * @author Wenzhi Li
+	 */
 	public class XdsRegistryActorDescription extends ActorDescription {
 		/** Defines the XDS Registry Connection */
 		private IConnectionDescription xdsRegistryConnection = null;
@@ -1180,6 +1242,8 @@ public class XdsConfigurationLoader {
 	 * @return an instance of ActorDescription
 	 */
     private ActorDescription initActor(String actorType) {
+    	if (actorType.equalsIgnoreCase("SecureNode")) 
+    		return new XdsAuditActorDescription();
     	if (actorType.equalsIgnoreCase("XdsRegistry")) 
     		return new XdsRegistryActorDescription();
     	if (actorType.equalsIgnoreCase("XdsRepository")) 
@@ -1199,8 +1263,7 @@ public class XdsConfigurationLoader {
 		 */
 		public boolean shouldUnregister(Object actor) {
 			// Unregister any IHE Actor
-//TODO:			
-//			if (actor instanceof IheAuditTrail) return true;
+			if (actor instanceof IheAuditTrail) return true;
             if (actor instanceof XdsRegistry) return true;
             if (actor instanceof XdsRepository) return true;
 

@@ -35,6 +35,8 @@ import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.audit.IheAuditTrail;
+import org.openhealthexchange.common.audit.ParticipantObject;
 import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
@@ -46,6 +48,9 @@ import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
 
 import sun.misc.BASE64Decoder;
 
+import com.misyshealthcare.connect.base.audit.ActiveParticipant;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
@@ -55,6 +60,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	boolean accept_xop = true;
     IConnectionDescription connection = null;
     IConnectionDescription registryClientConnection = null;
+	/* The IHE Audit Trail for this actor. */
+	private IheAuditTrail auditLog = null;
+	private boolean repository = true;
 	private final static Logger logger = Logger.getLogger(ProvideAndRegisterDocumentSet.class);
 
 	static {
@@ -80,7 +88,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			if (registryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XdsRepository XdsRegistryClient connection configuration.");			
 			}
-				
+			auditLog = actor.getAuditTrail();	
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 		} catch (XdsInternalException e) {
 			logger.fatal("Internal Error creating RegistryResponse: " + e.getMessage());
@@ -304,6 +312,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			catch (XdsException e) {
 				response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			}
+			repository = false;
+			//TODO: Change the code to RegisterDocumentSet-b
+			auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
 			result = soap.getResult();
 			log_headers(soap);
 
@@ -399,6 +410,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository", e);
 		}
+		//TODO: Change the code to ProvideAndRegisterDocumentSet-b
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
 //TODO: remove the old code			
 //		String doc_path = document_path(uid, mime_type);
 //		ByteBuffer buffer = new ByteBuffer();
@@ -464,6 +477,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository", e);
 		}
+		//TODO: Change the code to ProvideAndRegisterDocumentSet-b
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
 //TODO: remove the old code
 //		String doc_path = document_path(uid, mime_type);
 //		FileOutputStream fos = null;
@@ -497,6 +512,32 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	String document_uri(String uid, String mime_type)throws MetadataException, XdsConfigurationException, XdsException {
 		return Repository.getBaseUri() + uid + "." + (new DocumentTypes(connection)).fileExtension(mime_type);
 	}
-
+	
+	/**
+	 * Audit Logging of ProvodeAndRegisterDocumentSet message.
+	 * 
+	 * @param hl7Header the header message from the source application
+	 * @param patient the patient to create, update or merged
+	 * @param eventActionCode the {@link EventActionCode}
+	 * @throws MetadataException 
+	 */
+	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode) throws MetadataException {
+		if (auditLog == null)
+			return;
+		
+		   ActiveParticipant source = null;
+	        if(connection != null)
+	        	source = new ActiveParticipant(connection);
+	        else 
+	        	source = new ActiveParticipant("","","127.0.0.1");
+		
+		ParticipantObject set = new ParticipantObject( meatdata.getSubmissionSet().getLocalName(),  meatdata.getSubmissionSetUniqueId());
+		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
+		if(repository){
+			auditLog.logRegisterDocument(source, patientObj, set, typeCode);
+		}else{
+			auditLog.logRopositoryDocument(source, patientObj, set, typeCode);	
+		}
+	}
 
 }

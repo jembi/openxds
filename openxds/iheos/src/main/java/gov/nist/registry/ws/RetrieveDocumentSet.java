@@ -7,6 +7,7 @@ import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
@@ -17,12 +18,17 @@ import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.util.Base64Converter;
+import org.openhealthexchange.common.audit.IheAuditTrail;
+import org.openhealthexchange.common.audit.ParticipantObject;
 import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
@@ -31,8 +37,11 @@ import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
 import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
 
+import com.misyshealthcare.connect.base.audit.ActiveParticipant;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
 import com.misyshealthcare.connect.net.CodeSet;
 import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.util.Pair;
 
 public class RetrieveDocumentSet extends XdsCommon {
 	ContentValidationService validater;
@@ -40,6 +49,8 @@ public class RetrieveDocumentSet extends XdsCommon {
 	MessageContext messageContext;
 	boolean optimize = true;
 	IConnectionDescription connection = null;
+	/* The IHE Audit Trail for this actor. */
+	private IheAuditTrail auditLog = null;
 	private final static Logger logger = Logger.getLogger(RetrieveDocumentSet.class);
 
 	public RetrieveDocumentSet(Message log_message, short xds_version, MessageContext messageContext) {
@@ -55,9 +66,10 @@ public class RetrieveDocumentSet extends XdsCommon {
 			if (connection == null) {
 				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
 			}
-	
+			auditLog = actor.getAuditTrail();
 				init(new RetrieveMultipleResponse(), xds_version, messageContext);
 			}
+		
 		catch (XdsInternalException e) {
 			logger.fatal(logger_exception_details(e));
 			response.add_error("XDSRepositoryError",  e.getMessage(), ExceptionUtil.exception_details(e), log_message);
@@ -129,9 +141,10 @@ public class RetrieveDocumentSet extends XdsCommon {
 
 	ArrayList<OMElement> retrieve_documents(OMElement rds) throws MetadataException, XdsException {
 		ArrayList<OMElement> document_responses = new ArrayList<OMElement>();
-
+		ArrayList<Pair> doclist = new ArrayList<Pair>();
 		for (OMElement doc_request : MetadataSupport.childrenWithLocalName(rds, "DocumentRequest")) {
-
+			//HashMap<String, String> docMap = new HashMap<String, String>();
+			Pair doc = new Pair();			
 			String rep_id = null;
 			String doc_id = null;
 			String home = null;
@@ -156,13 +169,15 @@ public class RetrieveDocumentSet extends XdsCommon {
 			OMElement home_ele = MetadataSupport.firstChildWithLocalName(doc_request, "HomeCommunityId");
 			if (home_ele != null)
 				home = home_ele.getText();
-
+			doc._first = doc_id;
+			doc._second = rep_id;
+			doclist.add(doc);
 			OMElement document_response = retrieve_document(rep_id, doc_id, home);
 
 			if (document_response != null) 
 				document_responses.add(document_response);
 		}
-
+		auditLog(doclist, AuditCodeMappings.AuditTypeCodes.RetrieveDocumentSet);
 		return document_responses;
 	}
 
@@ -218,5 +233,35 @@ public class RetrieveDocumentSet extends XdsCommon {
 
 		return document_response;
 	}
+	
+	 /**
+	    * Audit Logging of PDQ Query Message.
+	    * 
+	    * @param patients the patients returned
+	    * @param hl7Header the message header from the request
+	    * @param queryTag the query tag from the MSA segment of the PDQ request
+	    * @param qpd the QPD segment of the PDQ request
+	 * @throws MetadataException 
+	    */
+	   private void auditLog(ArrayList<Pair> doclist, AuditCodeMappings.AuditTypeCodes eventTypeCode) throws MetadataException {
+	       if (auditLog == null)
+	       	 return;
+	       ActiveParticipant source = null;
+	        if(connection != null)
+	        	source = new ActiveParticipant(connection);
+	        else 
+	        	source = new ActiveParticipant("","","127.0.0.1");
+			//Document Info
+	        Collection<ParticipantObject> docs = new ArrayList<ParticipantObject>();
+			for(Pair doc : doclist){		
+				ParticipantObject docObj = new ParticipantObject();
+				docObj.setId(doc._first.toString());
+				docObj.setDetail(doc._second.toString());
+				docs.add(docObj);
+			}
+			//Finally Log it.
+			auditLog.logRepositoryQuery(source, docs, eventTypeCode);
+	   }
+
 
 }

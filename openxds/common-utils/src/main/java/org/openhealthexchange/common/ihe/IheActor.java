@@ -21,7 +21,7 @@ package org.openhealthexchange.common.ihe;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Util;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
-
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 
@@ -35,8 +35,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
 public class IheActor {
 	  
 	/** The IHE Audit Trail for this actor. */
-//TODO:
-//	private IheAuditTrail auditTrail = null;
+	private IheAuditTrail auditTrail = null;
 	
 	/**The logger used to persist(store) raw inbound and outbound messages.*/
 	private IMessageStoreLogger storeLogger = null;
@@ -60,21 +59,19 @@ public class IheActor {
 	}
 
 //TODO: add a constructor which takes audittrail as a parameter	
-//	/**
-//	 * Creates a new HL7 Actor
-//	 * 
-//	 */
-//	public IheActor(IConnectionDescription connection, IheAuditTrail auditTrail) {
-//		//TODO:
-//		//this.auditTrail = auditTrail;
-//		this.connection = connection;
-//	}
+	/**
+	 * Creates a new HL7 Actor
+	 * 
+	 */
+	public IheActor(IConnectionDescription connection, IheAuditTrail auditTrail) {
+		this.auditTrail = auditTrail;
+		this.connection = connection;
+	}
 	
 	/**
 	 *  Starts this actor. It must be called once for each actor when the program starts. 
 	 */  
 	public void start() {
-		//TODO:
 		//if (auditTrail != null) auditTrail.start();  
 	}
 
@@ -82,7 +79,6 @@ public class IheActor {
 	 * Stops this actor. It must be called once for each actor just before the program quits. 
 	 */ 
 	public void stop() {
-		//TODO:
 		//if (auditTrail != null) auditTrail.stop();  	  
 	}
   
@@ -166,6 +162,15 @@ public class IheActor {
 	 */
 	public IConnectionDescription getConnection() {
 		return connection;
+	}
+	
+	/**
+	 * Gets the Audit Trail of this actor.
+	 * 
+	 * @return the auditTrail
+	 */
+	public IheAuditTrail getAuditTrail() {
+		return auditTrail;
 	}
 
 }

@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistry;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
@@ -63,8 +64,9 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
      * @param registryConnection the connection description of this Registry server
      * 				to accept Register Document Set and Stored Query transactions 
      */
-     public XdsRegistry(IConnectionDescription pixFeedConnection, 
-    		 IConnectionDescription registryConnection ) {
+     public XdsRegistry(IConnectionDescription pixFeedConnection,
+    		 IConnectionDescription registryConnection, IheAuditTrail auditTrail) {
+    	 super(registryConnection, auditTrail);
          this.pixRegistryConnection = pixFeedConnection;
          this.connection = registryConnection;
     }
