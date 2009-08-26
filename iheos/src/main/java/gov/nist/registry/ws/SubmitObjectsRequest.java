@@ -38,6 +38,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.audit.IheAuditTrail;
+import org.openhealthexchange.common.audit.ParticipantObject;
 import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.utils.OMUtil;
@@ -49,6 +51,9 @@ import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
 
+import com.misyshealthcare.connect.base.audit.ActiveParticipant;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class SubmitObjectsRequest extends XdsCommon {
@@ -58,6 +63,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
  	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
+	/* The IHE Audit Trail for this actor. */
+	private IheAuditTrail auditLog = null;
 
 	public SubmitObjectsRequest(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
@@ -72,6 +79,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			if (connection == null) {
 				throw new XdsInternalException("Cannot find XdsRegistry connection configuration.");			
 			}
+			auditLog = actor.getAuditTrail();
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 			loadSourceIds();
 		} catch (XdsInternalException e) {
@@ -324,7 +332,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 								if (!status) {
 									return;
 								}
-								
+								//TODO: Change the code to RegisterDocumentSet-b
+								auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 							}
 						}
 					}
@@ -339,7 +348,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 				if (!status) {
 					return;
 				}
-
+				//TODO: Change the code to RegisterDocumentSet-b
+				auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 				// Approve
 				ArrayList approvable_object_ids = ra.approvable_object_ids(m);
 
@@ -374,7 +384,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 					submit_to_backend_registry(deprecate.toString());
 				}
-
+				 
 				log_response();
 
 
@@ -484,6 +494,29 @@ public class SubmitObjectsRequest extends XdsCommon {
 	public void setSubmitRaw(boolean val) {
 		submit_raw = val;
 	}
-
+	
+	/**
+	 * Audit Logging of Register Document Set message.
+	 * 
+	 * @param hl7Header the header message from the source application
+	 * @param patient the patient to create, update or merged
+	 * @param eventActionCode the {@link EventActionCode}
+	 * @throws MetadataException 
+	 */
+	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode) throws MetadataException {
+		if (auditLog == null)
+			return;
+		
+		   ActiveParticipant source = null;
+	        if(connection != null)
+	        	source = new ActiveParticipant(connection);
+	        else 
+	        	source = new ActiveParticipant("","","127.0.0.1");
+		
+		ParticipantObject set = new ParticipantObject( meatdata.getSubmissionSet().getLocalName(),  meatdata.getSubmissionSetUniqueId());
+		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
+		
+		auditLog.logRegisterDocument(source, patientObj, set, typeCode);		
+	}
 
 }

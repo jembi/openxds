@@ -6,6 +6,7 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
+import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
@@ -38,14 +39,28 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.util.Base64Converter;
+import org.openhealthexchange.common.audit.IheAuditTrail;
+import org.openhealthexchange.common.audit.ParticipantObject;
 import org.openhealthexchange.common.configuration.ModuleManager;
+import org.openhealthexchange.common.ihe.IheActor;
+import org.openhealthexchange.common.ws.server.IheHTTPServer;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
 import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
+import org.openhealthexchange.openxds.repository.api.IXdsRepository;
+
+import com.misyshealthcare.connect.base.audit.ActiveParticipant;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
+import com.misyshealthcare.connect.net.IConnectionDescription;
+
 
 public class AdhocQueryRequest extends XdsCommon {
 	MessageContext messageContext;
 	String service_name = "";
 	boolean is_secure;
+	IConnectionDescription connection = null;
+	/* The IHE Audit Trail for this actor. */
+	private IheAuditTrail auditLog = null;
 	private final static Logger logger = Logger.getLogger(AdhocQueryRequest.class);
 
 
@@ -54,6 +69,22 @@ public class AdhocQueryRequest extends XdsCommon {
 		this.messageContext = messageContext;
 		this.is_secure = is_secure;
 		this.xds_version = xds_version;
+		
+		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+
+		try {
+			IheActor actor = httpServer.getIheActor();
+			if (actor == null) {
+				throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
+			}
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
+			}
+			auditLog = actor.getAuditTrail();
+		} catch (XdsInternalException e) {
+			logger.fatal("Internal Error " + e.getMessage());
+		}
 	}
 	
 	public void setServiceName(String service_name) {
@@ -256,7 +287,13 @@ public class AdhocQueryRequest extends XdsCommon {
 					fact.query_id.equals(MetadataSupport.SQ_GetFolderAndContents)||
 					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
 					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)){
-				return fact.run();
+				ArrayList<OMElement> res = fact.run();
+				Metadata m = null; 
+				if (res != null) {
+					m = new Metadata(res.get(0), false /* parse */, true /* find_wrapper */);
+				}
+				auditLog(m, ahqr, true, fact.query_id);
+				return res;
 			}else {					
 			//Create RegistryStoredQueryContext
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
@@ -264,6 +301,10 @@ public class AdhocQueryRequest extends XdsCommon {
 			
 				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
 				response = qm.storedQuery(context);
+				Metadata m = null; 
+				if (response != null) {
+					m = new Metadata(response, false /* parse */, true /* find_wrapper */);				}
+				auditLog(m, ahqr, true, fact.query_id);
 				Iterator<OMElement> temp= response.getChildElements();
 				while(temp.hasNext()){
 					OMElement temp1 = temp.next();
@@ -275,20 +316,24 @@ public class AdhocQueryRequest extends XdsCommon {
 			}catch(Exception e) {
 				throw new XdsInternalException("Failed to query the Registry", e);
 			}
+			
 		return omlist;
 	 }
 
 	private OMElement sql_query(OMElement ahqr) 
-	throws XdsInternalException, SchemaValidationException, LoggerException, SqlRepairException, MetadataException, MetadataValidationException {
+	throws XdsInternalException, SchemaValidationException, LoggerException, SqlRepairException, MetadataException, MetadataValidationException, XMLParserException {
 		// validate against schema - throws exception on error
 
 		RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_Q);
 
 		System.out.println("sql_query");
 		// check and repair SQL
-
+		boolean isleafClass = false; 
 		SqlRepair sr = new SqlRepair();
 		String return_type = sr.returnType(ahqr);
+		if (return_type.equals("LeafClass"))
+			isleafClass = true;
+		
 		try {
 			sr.repair(ahqr);
 		} catch (SqlRepairException e) {
@@ -307,9 +352,10 @@ public class AdhocQueryRequest extends XdsCommon {
 		//return backend_query(ahqr);
 
 		BackendRegistry br = new BackendRegistry(response, log_message);
-		OMElement results = br.query(ahqr);
+		OMElement results = br.query(ahqr.toString(), isleafClass);
 
 		Metadata metadata = MetadataParser.parseNonSubmission(results);
+		auditLog(metadata, ahqr, false, null);
 		if (is_secure) {
 			BasicQuery bq = new BasicQuery();
 			bq.secure_URI(metadata);
@@ -321,5 +367,37 @@ public class AdhocQueryRequest extends XdsCommon {
 		return results;
 	}
 
+	 /**
+	    * Audit Logging of PDQ Query Message.
+	    * 
+	    * @param patients the patients returned
+	    * @param hl7Header the message header from the request
+	    * @param queryTag the query tag from the MSA segment of the PDQ request
+	    * @param qpd the QPD segment of the PDQ request
+	 * @throws MetadataException 
+	    */
+	   private void auditLog(Metadata m, OMElement aqr, boolean isStoredQuery, String id) throws MetadataException {
+	       if (auditLog == null)
+	       	 return;
+	   
+	       ActiveParticipant source = null;
+	        if(connection != null)
+	        	source = new ActiveParticipant(connection);
+	        else 
+	        	source = new ActiveParticipant("","","127.0.0.1");
+			
+			//Patient Info
+			ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", m.getSubmissionSetPatientId());
+			
+			//Query Info
+			ParticipantObject queryObj = new ParticipantObject();
+			Base64Converter coder = new Base64Converter();
+			queryObj.setQuery(coder.encode(aqr.toString()));
+			if(isStoredQuery)
+				queryObj.setId(id);
+		
+			//Finally Log it.
+			auditLog.logRegistryQuery(source, patientObj, queryObj, isStoredQuery);
+	   }
 
 }

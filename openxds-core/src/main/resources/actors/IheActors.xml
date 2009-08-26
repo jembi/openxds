@@ -36,7 +36,7 @@
 		<XdsRegistryClient connection="secure-xds-registry-client" />
 	</Actor-->
 
-
+	
 	<!-- Audit Repository Actor -->
 	<!-- 
 		<Actor name="auditmesa" type="SecureNode">
@@ -51,11 +51,11 @@
 		<Actor name="auditibm" type="SecureNode">
 		<Description>IBM AUDIT TRAILS</Description>
 		<AuditTrail consumer="ibm-arr-bsd" />
-		</Actor>
+		</Actor>-->
 		<Actor name="localaudit" type="SecureNode">
 		<Description>LOCAL AUDIT</Description>
 		<AuditTrail consumer="log4j_audittrail" />
 		</Actor>
-	-->
+	
 
 </Configuration>

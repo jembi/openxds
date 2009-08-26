@@ -27,6 +27,7 @@ import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.openxds.repository.api.IXdsRepository;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
@@ -57,7 +58,8 @@ public class XdsRepository extends IheActor implements IXdsRepository {
      * @param repositoryConnection the connection description of this Repository server
      * 		to accept Provide and Register Document Set and Retrieve Document Set transactions 
      */
-     public XdsRepository(IConnectionDescription repositoryServerConnection, IConnectionDescription registryClientConnection) {
+     public XdsRepository(IConnectionDescription repositoryServerConnection, IConnectionDescription registryClientConnection, IheAuditTrail auditTrail) {
+    	 super(repositoryServerConnection, auditTrail);
          this.connection = repositoryServerConnection;
          this.registryClientConnection = registryClientConnection;
     }
