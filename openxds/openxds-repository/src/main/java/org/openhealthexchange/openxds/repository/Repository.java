@@ -18,19 +18,24 @@
  */
 
 package org.openhealthexchange.openxds.repository;
+
+import java.io.Serializable;
+
 /**
  *
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
+@SuppressWarnings("serial") 	// Suppress the static serial version - Spring recommended
 
-public class XdsRepositoryBean {
+public class Repository implements Serializable{
     
     private byte binaryContent[];
     private String documentUniqueId;
+    private String mimeType;
     
     /** Creates a new instance of RepositoryItemBean */
-    public XdsRepositoryBean() {
+    public Repository() {
     }
     
     /**
@@ -63,5 +68,13 @@ public class XdsRepositoryBean {
      */
     public void setDocumentUniqueId(String documentUniqueId) {
         this.documentUniqueId = documentUniqueId;
-    }        
+    }
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}        
 }
