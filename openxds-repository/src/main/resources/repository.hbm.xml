@@ -3,11 +3,10 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="org.openhealthexchange.openxds.repository.XdsRepositoryBean" table="XdsRepositoryItem">
-        <id name="documentUniqueId" column="documentUniqueId" type="string"/>        
-        </id>
+    <class name="org.openhealthexchange.openxds.repository.Repository" table="repository">
+        <id name="documentUniqueId" column="documentuniqueid" type="string"/>
+         <property name="mimeType" column="mimetype" type="string"/>
         <property name="binaryContent" column="content" type="binary"/>
     </class>
 </hibernate-mapping>
-	
 	
