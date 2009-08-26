@@ -18,12 +18,42 @@
  */    
 package org.openhealthexchange.openxds.repository.dao;
 
+import org.openhealthexchange.openxds.repository.Repository;
 /**
  * This class provides a Relational Database XDS repository manager implementation.
  *
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
-public class XdsRepositoryManagerDao {
+public interface XdsRepositoryManagerDao {
 
+
+    /**
+     * Returns the Repository associated with the given document unique id.
+     *
+     * @param documentUniqueId the document unique id whose Repository bean is desired     
+     * 
+     * @return the Repository instance that matches specified document uniqueId
+     */
+	
+	public Repository getXdsRepositoryBean(String documentUniqueId);
+	
+	 /**
+     * Inserts an Repository object.
+     *
+     * @param Reposiotry bean to be inserted     
+     * 
+     * @return void
+     */
+	public void insert(Repository bean);
+	
+	 /**
+     * Deletes the repository associated with the given document unique id.
+     *
+     * @param documentUniqueId the document unique id whose repository item is to be deleted
+     * 
+     * @return void
+     */
+	public void delete(String documentUniqueId);
+	
 }
