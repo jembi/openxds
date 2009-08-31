@@ -6,15 +6,14 @@ package gov.nist.registry.common2.xml;
 
 import gov.nist.registry.common2.MetadataTypes;
 import gov.nist.registry.common2.exception.XdsInternalException;
-
+import gov.nist.registry.common2.registry.Properties;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.io.StringReader;
-
 import org.apache.axiom.om.OMElement;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 public class SchemaValidation implements MetadataTypes {
@@ -34,83 +33,83 @@ public class SchemaValidation implements MetadataTypes {
 	// even though this says validate_local, it is used by all requests
 	public static String validate_local(OMElement ele, int metadataType)  throws XdsInternalException {
 		String msg;
-		
-		// This should cover all use cases except xdstest2 running on a users desktop
-		msg = SchemaValidation.run(ele.toString(), metadataType, "localhost", "9080");
-		if (msg.indexOf("Failed to read schema document") == -1) 
-			return msg;
-		
-		// Xdstest2 needs to reference the public register server
-		// port 80 makes it easier when strict firewalls are in place
-		msg = SchemaValidation.run(ele.toString(), metadataType, "129.6.24.109", "80");
+		msg = SchemaValidation.run(ele.toString(), metadataType);
 		return msg;
 	}
 
 
 	// empty string as result means no errors
-	static private String run(String metadata, int metadataType, String host, String portString) throws XdsInternalException {
+	static private String run(String metadata, int metadataType) throws XdsInternalException {
+
 
 		MyErrorHandler errors = null;
 		DOMParser p = null;
-		//String portString = "9080";
-		String localSchema = System.getenv("XDSSchemaDir");
-
-		// Decode schema location
+		String localSchema =null;
+		String SchemaLoc = Properties.loader().getString("XDSSchemaDir");
+		//localSchema = CommonProperties.getInstance().getProperty("XDSSchemaDir");
+		
+		File file =new File(SchemaLoc);
+		try{
+			localSchema = file.getCanonicalPath();
+		}catch (Exception e) {
+		    throw new XdsInternalException("I/O exception occured while getting the canonical path");
+		}
+  		// Decode schema location
 		String schemaLocation;
 		switch (metadataType) {
 		case METADATA_TYPE_Rb:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:xsd:lcm:3.0 " + 
 			((localSchema == null) ? 
-					"http://" + host + ":" + portString + "/xdsref/schema/v3/lcm.xsd" :
-					localSchema + "/v3/lcm.xsd");
+					"/schema/v3/lcm.xsd":
+					localSchema + "/schema/v3/lcm.xsd");
 			break;
 		case METADATA_TYPE_PR:
 		case METADATA_TYPE_R:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:registry:xsd:2.1 " +
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v2/rs.xsd" :
-			localSchema + "/v2/rs.xsd");
+			"/schema/v2/rs.xsd" :
+			localSchema + "/schema/v2/rs.xsd");
 			break;
 		case METADATA_TYPE_Q:
 			schemaLocation =
 			"urn:oasis:names:tc:ebxml-regrep:query:xsd:2.1 " +
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v2/query.xsd " :
-			localSchema + "/v2/query.xsd "	) + 
+			"/schema/v2/query.xsd " :
+			localSchema + "/schema/v2/query.xsd "	) + 
 			
 			"urn:oasis:names:tc:ebxml-regrep:registry:xsd:2.1 " +
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v2/rs.xsd" :
-			localSchema + "/v2/rs.xsd" ) ;
+			"/schema/v2/rs.xsd" :
+			localSchema + "/schema/v2/rs.xsd" ) ;
 			
 			break;
 		case METADATA_TYPE_SQ:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 " + 
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v3/query.xsd " : 
-			localSchema + "/v3/query.xsd "  ) +
+			"/schema/v3/query.xsd " : 
+			localSchema + "/schema/v3/query.xsd "  ) +
 			
 			"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0 " + 
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v3/rs.xsd" :
-			localSchema + "/v3/rs.xsd" );
+			"/schema/v3/rs.xsd" :
+			localSchema + "/schema/v3/rs.xsd" );
 			break;
 		case METADATA_TYPE_RET:
 			schemaLocation = "urn:ihe:iti:xds-b:2007 " + 
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v3/XDS.b_DocumentRepository.xsd " :
-				localSchema + "/v3/XDS.b_DocumentRepository.xsd ") +
+			"/schema/v3/XDS.b_DocumentRepository.xsd " :
+				localSchema + "/schema/v3/XDS.b_DocumentRepository.xsd ") +
 			
 			"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0 " + 
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/v3/rs.xsd" :
-			localSchema + "/v3/rs.xsd"	);
+			"/schema/v3/rs.xsd" :
+			localSchema + "/schema/v3/rs.xsd"	);
 			break;
 		case AUDIT_LOG:
 			schemaLocation = "noNamespaceSchemaLocation " + 
 			((localSchema == null) ?
-			"http://" + host + ":" + portString + "/xdsref/schema/audit/healthcare-security-audit.xsd " :
-				localSchema + "/audit/healthcare-security-audit.xsd ");
+			"/schema/audit/healthcare-security-audit.xsd " :
+				localSchema + "/schema/audit/healthcare-security-audit.xsd ");
 			break;
 		default:
 			throw new XdsInternalException("SchemaValidation: invalid metadata type = " + metadataType);
@@ -118,8 +117,8 @@ public class SchemaValidation implements MetadataTypes {
 
 		schemaLocation += " http://schemas.xmlsoap.org/soap/envelope/ " + 
 		((localSchema == null) ?
-		"http://" + host + ":" + portString + "/xdsref/schema/v3/soap.xsd" :
-			localSchema + 	"/v3/soap.xsd");
+		"/schema/v3/soap.xsd" :
+			localSchema + 	"/schema/v3/soap.xsd");
 
 		// build parse to do schema validation
 		try {
