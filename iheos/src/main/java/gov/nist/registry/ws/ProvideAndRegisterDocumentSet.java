@@ -313,8 +313,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			}
 			repository = false;
-			//TODO: Change the code to RegisterDocumentSet-b
-			auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
+			auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
 			result = soap.getResult();
 			log_headers(soap);
 
@@ -410,8 +409,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository", e);
 		}
-		//TODO: Change the code to ProvideAndRegisterDocumentSet-b
-		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 //TODO: remove the old code			
 //		String doc_path = document_path(uid, mime_type);
 //		ByteBuffer buffer = new ByteBuffer();
@@ -477,8 +475,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository", e);
 		}
-		//TODO: Change the code to ProvideAndRegisterDocumentSet-b
-		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet);
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 //TODO: remove the old code
 //		String doc_path = document_path(uid, mime_type);
 //		FileOutputStream fos = null;

@@ -332,8 +332,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 								if (!status) {
 									return;
 								}
-								//TODO: Change the code to RegisterDocumentSet-b
-								auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
+								auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
 							}
 						}
 					}
@@ -348,8 +347,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				if (!status) {
 					return;
 				}
-				//TODO: Change the code to RegisterDocumentSet-b
-				auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
+				auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
 				// Approve
 				ArrayList approvable_object_ids = ra.approvable_object_ids(m);
 

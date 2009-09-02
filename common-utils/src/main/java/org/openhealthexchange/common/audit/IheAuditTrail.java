@@ -752,7 +752,7 @@ p	 * @param factory
 					if(isStoredQuery){
 						query.idTypeCode = AuditCodeMappings.ParticipantObjectIdTypeCode.RegistryStoredQuery;
 					}else{
-						query.idTypeCode =	AuditCodeMappings.ParticipantObjectIdTypeCode.RegistryStoredQuery;
+						query.idTypeCode =	AuditCodeMappings.ParticipantObjectIdTypeCode.RegistrySQLQuery;
 					}
 					factory.addParticipantObject(query);
 				}
