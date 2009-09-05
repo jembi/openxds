@@ -73,16 +73,6 @@
 	    <version>${axis2.version}</version>
 	</dependency> 	
 	<dependency>
-	    <groupId>org.apache.axis2</groupId>
-	    <artifactId>axis2-saaj-api</artifactId>
-	    <version>${axis2.version}</version>
-	</dependency> 	
-	<dependency>
-	    <groupId>backport-util-concurrent</groupId>
-	    <artifactId>backport-util-concurrent</artifactId>
-	    <version>3.1</version>
-	</dependency> 	
-	<dependency>
 	    <groupId>org.apache.geronimo.specs</groupId>
 	    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
 	    <version>1.0.1</version>
@@ -90,7 +80,7 @@
 	<dependency>
 	    <groupId>org.apache.httpcomponents</groupId>
 	    <artifactId>httpcore</artifactId>
-	    <version>4.0-beta1</version>
+	    <version>4.0</version>
 	</dependency> 	
 	<dependency>
 	    <groupId>javax.mail</groupId>
@@ -120,7 +110,7 @@
 	<dependency>
 	    <groupId>org.apache.ws.commons.schema</groupId>
 	    <artifactId>XmlSchema</artifactId>
-	    <version>1.4.2</version>
+	    <version>1.4.3</version>
 	</dependency> 	
   </dependencies>
 
