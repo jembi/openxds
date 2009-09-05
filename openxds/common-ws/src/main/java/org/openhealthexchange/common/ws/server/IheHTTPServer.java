@@ -1,3 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * Contributors:
+ *   ASF(Apache Software Foundation) - inital API and implementation
+ *   MOSS (Misys Open Source Solutions) - Modified
+ */
 package org.openhealthexchange.common.ws.server;
 
 import java.io.File;
@@ -18,26 +40,25 @@ import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.axis2.transport.TransportListener;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.axis2.transport.http.server.HttpUtils;
 import org.apache.axis2.transport.http.server.SessionManager;
 import org.apache.axis2.util.OptionsParser;
-import org.apache.log4j.Logger;
+import org.apache.axis2.util.Utils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.common.ihe.IheActor;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 
 public class IheHTTPServer implements TransportListener {
-	private static final Logger LOG = Logger.getLogger(SimpleHttpServer.class);
+    private static final Log log = LogFactory.getLog(IheHTTPServer.class);
 
     /**
      * Embedded commons http core based server
      */
     SimpleHttpServer embedded = null;
-    private String localAddress = null;
+    private String localAddress;
     IheActor actor = null; 
 
-	public static int DEFAULT_PORT = 8080;
+    public static int DEFAULT_PORT = 8080;
 
     private String hostAddress = null;
 
@@ -130,8 +151,7 @@ public class IheHTTPServer implements TransportListener {
         System.out.println("[IheHTTPServer] Starting");
         System.out.println("[IheHTTPServer] Using the Axis2 Repository "
                            + new File(repository).getAbsolutePath());
-        //TODO: get port
-        //System.out.println("[IheHTTPServer] Listening on port " + port);
+        System.out.println("[IheHTTPServer] Listening on port " + port);
         try {
             ConfigurationContext configctx = ConfigurationContextFactory
                     .createConfigurationContextFromFileSystem(repository, null);
@@ -139,7 +159,7 @@ public class IheHTTPServer implements TransportListener {
             //TODO: get ConnectionDescription
             //IheHTTPServer receiver = new IheHTTPServer(configctx, new ConnectionDescription());
             IheHTTPServer receiver = new IheHTTPServer(configctx, null);
-            
+
             Runtime.getRuntime().addShutdownHook(new ShutdownThread(receiver));
             receiver.start();
             ListenerManager listenerManager = configctx .getListenerManager();
@@ -167,7 +187,7 @@ public class IheHTTPServer implements TransportListener {
 
             System.out.println("[IheHTTPServer] Started");
         } catch (Throwable t) {
-            LOG.fatal("Error starting IheHTTPServer", t);
+            log.fatal("Error starting IheHTTPServer", t);
             System.out.println("[IheHTTPServer] Shutting down");
         }
     }
@@ -193,7 +213,7 @@ public class IheHTTPServer implements TransportListener {
             embedded.init();
             embedded.start();
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             throw AxisFault.makeFault(e);
         }
     }
@@ -209,7 +229,7 @@ public class IheHTTPServer implements TransportListener {
             try {
                 embedded.destroy();
             } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -249,7 +269,7 @@ public class IheHTTPServer implements TransportListener {
         } else {
             try {
                 if(localAddress==null){
-                    localAddress = HttpUtils.getIpAddress(configurationContext.getAxisConfiguration());
+                    localAddress = Utils.getIpAddress(configurationContext.getAxisConfiguration());
                 }
                 if (localAddress == null) {
                    ipAddress = "127.0.0.1";
@@ -280,7 +300,7 @@ public class IheHTTPServer implements TransportListener {
     /**
      * Getter for httpFactory
      */
-    public IheHttpFactory getTestHttpFactory() {
+    public IheHttpFactory getHttpFactory() {
         return httpFactory;
     }
 
@@ -345,7 +365,6 @@ public class IheHTTPServer implements TransportListener {
     public void destroy() {
         this.configurationContext = null;
     }
-
 
     public IheActor getIheActor() {
 		return this.actor;

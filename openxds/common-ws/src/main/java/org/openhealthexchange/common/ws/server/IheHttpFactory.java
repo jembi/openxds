@@ -1,8 +1,35 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * Contributors:
+ *   ASF(Apache Software Foundation) - inital API and implementation
+ *   MOSS (Misys Open Source Solutions) - Modified
+ */
 package org.openhealthexchange.common.ws.server;
 
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -38,19 +65,12 @@ import com.misyshealthcare.connect.net.ConnectionFactory;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 import com.misyshealthcare.connect.net.IServerConnection;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 
 /**
  * Factory used to configure and create the various instances required in http transports.
  * Either configure this class in axis2.xml, or in code via the setters, or subclass it and specialize some factory methods to gain more control.
  */
 public class IheHttpFactory {
-
     /**
      * Name of axis2.xml port parameter for SimpleHTTPServer configuration
      */
@@ -230,31 +250,18 @@ public class IheHttpFactory {
      * Create the listener for request connections
      */
     public IOProcessor newRequestConnectionListener(
-            int port,
-            final HttpConnectionManager manager, 
-            final HttpParams params) throws IOException {
-        return new IheConnectionListener(
-                new ServerSocket(port), 
-                manager, 
-                new DefaultConnectionListenerFailureHandler(), 
-                params);
-    }
-
-    /**
-     * Create the listener for request connections
-     */
-    public IOProcessor newRequestConnectionListener(
             IConnectionDescription connection,
             final HttpConnectionManager manager, 
             final HttpParams params) throws IOException {
 		IServerConnection serverConn = ConnectionFactory.getServerConnection(connection);
 		ServerSocket serversocket = serverConn.getServerSocket();
-        return new IheConnectionListener(
-        		serversocket,
+   return new IheConnectionListener(
+		   		serversocket,
                 manager, 
                 new DefaultConnectionListenerFailureHandler(), 
                 params);
-    }    
+    }
+
     /**
      * Create and set the parameters applied to incoming request connections
      */
@@ -347,6 +354,7 @@ public class IheHttpFactory {
     public TransportInDescription getHttpConfiguration() {
         return httpConfiguration;
     }
+
 
     /**
      * Getter for ConnectionDescription

@@ -1,24 +1,49 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * Contributors:
+ *   ASF(Apache Software Foundation) - inital API and implementation
+ *   MOSS (Misys Open Source Solutions) - Modified
+ */
 package org.openhealthexchange.common.ws.server;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.server.AxisParams;
 import org.apache.axis2.transport.http.server.HttpConnectionManager;
 import org.apache.axis2.transport.http.server.IOProcessor;
 import org.apache.axis2.transport.http.server.WorkerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.params.HttpParams;
-import org.apache.log4j.Logger;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
-
+/**
+ * A simple, but configurable and extensible HTTP server.
+ */
 public class SimpleHttpServer {
 
-	private static final Logger LOG = Logger.getLogger(SimpleHttpServer.class);
+    private static Log LOG = LogFactory.getLog(SimpleHttpServer.class);
 
     private static final int SHUTDOWN_GRACE_PERIOD = 3000; // ms
 
@@ -33,7 +58,7 @@ public class SimpleHttpServer {
     private ExecutorService requestExecutor = null;
 
     public SimpleHttpServer(ConfigurationContext configurationContext, WorkerFactory workerFactory,
-                            IConnectionDescription connection) throws IOException {    	
+    						IConnectionDescription connection) throws IOException {    	
         this(new IheHttpFactory(configurationContext, connection, workerFactory), connection);
     }
 
@@ -92,5 +117,5 @@ public class SimpleHttpServer {
         return this.connection.getPort();
     }
 
-
 }
+
