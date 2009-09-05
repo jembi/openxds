@@ -480,6 +480,6 @@
         <hapi.version>0.5.1</hapi.version>
         <omar.version>3.1</omar.version>
   		<oasis.version>1.0</oasis.version> 
-  		<axis2.version>1.4.1</axis2.version>
+  		<axis2.version>1.5</axis2.version>
     </properties>
 </project>
