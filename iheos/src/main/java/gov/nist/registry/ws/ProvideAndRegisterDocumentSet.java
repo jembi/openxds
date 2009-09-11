@@ -407,7 +407,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			context.setConnection(connection);
 			rm.insert(item, context);
 		}catch(RepositoryException e) {
-			throw new XdsException("Error saving document to the repository", e);
+			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 //TODO: remove the old code			
@@ -461,8 +461,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if (mime_type == null || mime_type.equals(""))
 			throw new MetadataException("ExtrinsicObject " + id + " does not have a mimeType");
 
-        StreamSource source = new StreamSource( new StringReader(bytes.toString()));
-        DataHandler dataHandler = new DataHandler(source, mime_type);
+        DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
 
 		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
 		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
@@ -473,7 +472,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			context.setConnection(connection);
 			rm.insert(item, context);
 		}catch(RepositoryException e) {
-			throw new XdsException("Error saving document to the repository", e);
+			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
 //TODO: remove the old code
