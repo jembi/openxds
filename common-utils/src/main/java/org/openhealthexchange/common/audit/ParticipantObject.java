@@ -26,6 +26,7 @@ import org.openhealthexchange.openpixpdq.ihe.registry.HL7;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.ParticipantObjectIdTypeCode;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.ParticipantObjectRoleCode;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.ParticipantObjectTypeCode;
+import com.misyshealthcare.connect.util.Pair;
 
 /**
  * ParticipantObject get the participant info to the Audit Trail.
@@ -40,7 +41,7 @@ public class ParticipantObject {
 	private String id;
 	private String name;
 	private String query; //B64 encoded query;
-	private String detail;
+	private Pair detail; //Pair<Type(String), Value(String)>
 	
 	ParticipantObjectIdTypeCode idTypeCode = ParticipantObjectIdTypeCode.Patient;
 	ParticipantObjectTypeCode typeCode;
@@ -186,12 +187,12 @@ public class ParticipantObject {
 	}
 
 
-	public String getDetail() {
+	public Pair getDetail() {
 		return detail;
 	}
 
 
-	public void setDetail(String detail) {
+	public void setDetail(Pair detail) {
 		this.detail = detail;
 	}
 	

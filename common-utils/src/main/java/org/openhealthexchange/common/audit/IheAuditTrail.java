@@ -821,7 +821,7 @@ p	 * @param factory
 	 * @param eventActionCode
 	 *            the {@link EventActionCode}
 	 */
-	public void logRegisterDocument(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
+	public void logDocumentImport(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
 		try {
 			if (patient == null)  
 				throw new IllegalArgumentException("Required patient is missing");
@@ -839,7 +839,7 @@ p	 * @param factory
 			
 			documentImport(source, patient, set, typeCode);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log patient identity feed", e);
+			LOG.error("Unable to log Register Document Set", e);
 		}		
 	}
 	
@@ -854,10 +854,10 @@ p	 * @param factory
 	 *            the patient related to the Document
 	 * @param set
 	 *            the SubmissionSet related to the Document
-	 * @param eventActionCode
-	 *            the {@link EventActionCode}
+	 * @param typeCode
+	 *            the {@link AuditCodeMappings.AuditTypeCodes}
 	 */
-	public void logRopositoryDocument(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
+	public void logDocumentExport(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
 		try {
 			if (set == null)  
 				throw new IllegalArgumentException("Required SubmissionSet is missing");
@@ -875,7 +875,7 @@ p	 * @param factory
 			
 			documentExport(source, patient, set, typeCode);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log patient identity feed", e);
+			LOG.error("Unable to log RegisterDocumentSet", e);
 		}		
 	}
 	

@@ -262,8 +262,8 @@ public class AuditObjectFactory {
 		
 		if (participantObject.getDetail() != null) {
 			TypeValuePairType tvpt = messageFactory.createTypeValuePairType();
-			tvpt.setType("MessageID");
-			tvpt.setValue(participantObject.getDetail().getBytes());
+			tvpt.setType((String)participantObject.getDetail()._first);
+			tvpt.setValue(((String)participantObject.getDetail()._second).getBytes());
 			participant.getParticipantObjectDetail().add(tvpt);
 		}
 		if (participantObject.getSensitivity() != null)

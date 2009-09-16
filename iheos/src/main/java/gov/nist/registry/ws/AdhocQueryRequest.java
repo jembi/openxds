@@ -288,11 +288,7 @@ public class AdhocQueryRequest extends XdsCommon {
 					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
 					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)){
 				ArrayList<OMElement> res = fact.run();
-				Metadata m = null; 
-				if (res != null) {
-					m = new Metadata(res.get(0), false /* parse */, true /* find_wrapper */);
-				}
-				auditLog(m, ahqr, true, fact.query_id);
+				auditLog(ahqr, true, fact.query_id);
 				return res;
 			}else {					
 			//Create RegistryStoredQueryContext
@@ -301,10 +297,8 @@ public class AdhocQueryRequest extends XdsCommon {
 			
 				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
 				response = qm.storedQuery(context);
-				Metadata m = null; 
-				if (response != null) {
-					m = new Metadata(response, false /* parse */, true /* find_wrapper */);				}
-				auditLog(m, ahqr, true, fact.query_id);
+
+				auditLog(ahqr, true, fact.query_id);
 				Iterator<OMElement> temp= response.getChildElements();
 				while(temp.hasNext()){
 					OMElement temp1 = temp.next();
@@ -314,7 +308,7 @@ public class AdhocQueryRequest extends XdsCommon {
 				}
 			 }
 			}catch(Exception e) {
-				throw new XdsInternalException("Failed to query the Registry", e);
+				throw new XdsInternalException("Failed to query the Registry - " + e.getMessage() , e);
 			}
 			
 		return omlist;
@@ -355,7 +349,7 @@ public class AdhocQueryRequest extends XdsCommon {
 		OMElement results = br.query(ahqr.toString(), isleafClass);
 
 		Metadata metadata = MetadataParser.parseNonSubmission(results);
-		auditLog(metadata, ahqr, false, null);
+		auditLog(ahqr, false, null);
 		if (is_secure) {
 			BasicQuery bq = new BasicQuery();
 			bq.secure_URI(metadata);
@@ -368,15 +362,10 @@ public class AdhocQueryRequest extends XdsCommon {
 	}
 
 	 /**
-	    * Audit Logging of PDQ Query Message.
-	    * 
-	    * @param patients the patients returned
-	    * @param hl7Header the message header from the request
-	    * @param queryTag the query tag from the MSA segment of the PDQ request
-	    * @param qpd the QPD segment of the PDQ request
-	 * @throws MetadataException 
-	    */
-	   private void auditLog(Metadata m, OMElement aqr, boolean isStoredQuery, String id) throws MetadataException {
+      * Audit Logging of Document Query messages.
+      * 
+      */
+      private void auditLog(OMElement aqr, boolean isStoredQuery, String id) throws MetadataValidationException, XdsInternalException {
 	       if (auditLog == null)
 	       	 return;
 	   
@@ -387,12 +376,18 @@ public class AdhocQueryRequest extends XdsCommon {
 	        	source = new ActiveParticipant("","","127.0.0.1");
 			
 			//Patient Info
-			ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", m.getSubmissionSetPatientId());
+			ParticipantObject patientObj = null;
 			
 			//Query Info
+			if (isStoredQuery) {
+				ParamParser parser = new ParamParser();
+				HashMap params = parser.parse(aqr);
+				String patientId = (String)params.get("$XDSDocumentEntryPatientId");				
+				patientObj = new ParticipantObject("PatientIdentifier", patientId);
+			}  
+			
 			ParticipantObject queryObj = new ParticipantObject();
-			Base64Converter coder = new Base64Converter();
-			queryObj.setQuery(coder.encode(aqr.toString()));
+			queryObj.setQuery(aqr.toString());
 			if(isStoredQuery)
 				queryObj.setId(id);
 		

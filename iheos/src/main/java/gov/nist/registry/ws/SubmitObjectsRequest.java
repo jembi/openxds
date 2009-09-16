@@ -191,7 +191,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 				
 				generateAuditLog(m);
 
-				log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
+				String ssUid = m.getSubmissionSetUniqueId();
+				log_message.addOtherParam("SSuid", ssUid);
 				
 				ArrayList<String> doc_uids = new ArrayList<String>();
 				for (String id : m.getExtrinsicObjectIds()) {
@@ -332,7 +333,6 @@ public class SubmitObjectsRequest extends XdsCommon {
 								if (!status) {
 									return;
 								}
-								auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
 							}
 						}
 					}
@@ -347,7 +347,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				if (!status) {
 					return;
 				}
-				auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
+				auditLog(patient_id, ssUid, AuditTypeCodes.RegisterDocumentSet_b);
 				// Approve
 				ArrayList approvable_object_ids = ra.approvable_object_ids(m);
 
@@ -495,13 +495,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 	
 	/**
 	 * Audit Logging of Register Document Set message.
-	 * 
-	 * @param hl7Header the header message from the source application
-	 * @param patient the patient to create, update or merged
-	 * @param eventActionCode the {@link EventActionCode}
-	 * @throws MetadataException 
 	 */
-	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode) throws MetadataException {
+	private void auditLog(String patientId, String submissionSetUid, AuditCodeMappings.AuditTypeCodes typeCode) {
 		if (auditLog == null)
 			return;
 		
@@ -511,10 +506,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 	        else 
 	        	source = new ActiveParticipant("","","127.0.0.1");
 		
-		ParticipantObject set = new ParticipantObject( meatdata.getSubmissionSet().getLocalName(),  meatdata.getSubmissionSetUniqueId());
-		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
+		ParticipantObject set = new ParticipantObject("SubmissionSet", submissionSetUid);
+		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", patientId);
 		
-		auditLog.logRegisterDocument(source, patientObj, set, typeCode);		
+		auditLog.logDocumentImport(source, patientObj, set, typeCode);		
 	}
 
 }
