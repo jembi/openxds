@@ -17,6 +17,7 @@
 		<Description>XDS Registry</Description>
 		<XdsRegistry connection="xds-registry" />
 		<PixRegistry connection="pix-registry" />
+		<AuditTrail consumer="log4j_audittrail" />
 	</Actor>
 	<!-- Actor name="xdsreg_secure" type="XdsRegistry">
 		<Description>Secure XDS Registry</Description>
@@ -29,6 +30,7 @@
 		<Description>XDS Repository</Description>
 		<XdsRepository connection="xds-repository" />
 		<XdsRegistryClient connection="xds-registry-client" />
+		<AuditTrail consumer="log4j_audittrail" />
 	</Actor>
 	<!-- Actor name="xdsrep_secure" type="XdsRepository">
 		<Description>Secure XDS Repository</Description>

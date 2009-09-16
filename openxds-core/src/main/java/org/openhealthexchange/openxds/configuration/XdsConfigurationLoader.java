@@ -85,9 +85,6 @@ public class XdsConfigurationLoader {
 	/* Current root logger appender */
 	Appender currentAppender = null;
 	
-	/* The IHE Audit Trail for this actor. */
-	private IheAuditTrail auditTrail = null;
-	
 	/* The actor definitions loaded by the config file */
 	private Vector<ActorDescription> actorDefinitions = null;
 	
@@ -914,7 +911,10 @@ public class XdsConfigurationLoader {
 	 */
 	private boolean createXdsAuditActor(String name, Collection<IConnectionDescription> auditConnections, IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+
 		if (auditTrail != null) {
 			AuditBroker broker = AuditBroker.getInstance();
 			broker.registerAuditSource(auditTrail);
@@ -942,6 +942,9 @@ public class XdsConfigurationLoader {
 			IConnectionDescription pixRegistryConnection, Collection<IConnectionDescription> auditConnections,			
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		// Build a new audit trail if there are any connections to audit repositories.
+		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
 
 		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection, auditTrail);
         if (xdsRegistry != null) {
@@ -971,6 +974,9 @@ public class XdsConfigurationLoader {
 			IConnectionDescription xdsRegistryClientConnection, Collection<IConnectionDescription> auditConnections,			
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		// Build a new audit trail if there are any connections to audit repositories.
+		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
 
 		XdsRepository xdsRepository = new XdsRepository(xdsRepositoryServerConnection, xdsRegistryClientConnection, auditTrail);
         if (xdsRepositoryServerConnection != null) {
