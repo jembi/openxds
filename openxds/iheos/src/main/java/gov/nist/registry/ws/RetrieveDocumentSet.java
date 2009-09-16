@@ -256,7 +256,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 			for(Pair doc : doclist){		
 				ParticipantObject docObj = new ParticipantObject();
 				docObj.setId(doc._first.toString());
-				docObj.setDetail(doc._second.toString());
+				docObj.setDetail(new Pair("RepositoryUniqueId", doc._second.toString()));
 				docs.add(docObj);
 			}
 			//Finally Log it.

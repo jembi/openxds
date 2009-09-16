@@ -62,7 +62,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
     IConnectionDescription registryClientConnection = null;
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
-	private boolean repository = true;
 	private final static Logger logger = Logger.getLogger(ProvideAndRegisterDocumentSet.class);
 
 	static {
@@ -312,8 +311,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			catch (XdsException e) {
 				response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			}
-			repository = false;
-			auditLog(m, AuditTypeCodes.RegisterDocumentSet_b);
 			result = soap.getResult();
 			log_headers(soap);
 
@@ -336,6 +333,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 						else
 							response.add_error(MetadataSupport.XDSRepositoryError, "Registry returned Failure but no error list", "ProvideAndRegistryDocumentSet.java", log_message);
 					}
+					//ITI-42 Succeed, log a success message
+					auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
 				}
 			}
 		}
@@ -409,7 +408,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
-		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
 //TODO: remove the old code			
 //		String doc_path = document_path(uid, mime_type);
 //		ByteBuffer buffer = new ByteBuffer();
@@ -474,7 +473,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
-		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b);
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
 //TODO: remove the old code
 //		String doc_path = document_path(uid, mime_type);
 //		FileOutputStream fos = null;
@@ -498,7 +497,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	void setRepositoryUniqueId(Metadata m) throws MetadataException {
 		for (OMElement eo : m.getExtrinsicObjects()) {
 			m.setSlot(eo, "repositoryUniqueId", Repository.getRepositoryUniqueId());
-	}
+		}
 	}
 
 	String document_path(String uid, String mime_type)  throws MetadataException, XdsException {
@@ -512,12 +511,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	/**
 	 * Audit Logging of ProvodeAndRegisterDocumentSet message.
 	 * 
-	 * @param hl7Header the header message from the source application
-	 * @param patient the patient to create, update or merged
-	 * @param eventActionCode the {@link EventActionCode}
 	 * @throws MetadataException 
 	 */
-	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode) throws MetadataException {
+	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode, boolean isITI41) throws MetadataException {
 		if (auditLog == null)
 			return;
 		
@@ -529,11 +525,12 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		
 		ParticipantObject set = new ParticipantObject( meatdata.getSubmissionSet().getLocalName(),  meatdata.getSubmissionSetUniqueId());
 		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
-		if(repository){
-			auditLog.logRegisterDocument(source, patientObj, set, typeCode);
+		if(isITI41){
+			auditLog.logDocumentImport(source, patientObj, set, typeCode);
 		}else{
-			auditLog.logRopositoryDocument(source, patientObj, set, typeCode);	
+			auditLog.logDocumentExport(source, patientObj, set, typeCode);	
 		}
 	}
+	
 
 }
