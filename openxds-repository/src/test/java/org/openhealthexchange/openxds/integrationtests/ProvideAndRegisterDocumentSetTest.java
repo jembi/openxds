@@ -19,47 +19,43 @@
 package org.openhealthexchange.openxds.integrationtests;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Iterator;
+import java.util.UUID;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.mail.util.ByteArrayDataSource;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMText;
-import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.description.WSDL2Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openhealthexchange.common.utils.OMUtil;
 
 /**
- * This class is an integrated test for IHE transaction ITI-43, namely,
- * RetrieveDocumentSet-b.
+ * This class is an integrated test for IHE transaction ITI-41, namely,
+ * ProvideAndRegisterDocumentSet-b. 
+ * <p>
+ * Before running this test case, be sure to configure the following:
+ * <ul>
+ *  <li>Both the XDS Repository and Registry servers have to be configured and started.</li>
+ *  <li>The repositoryUrl needs be to set in this file.</li>
+ * </ul> 
+ * 
+ * Each test method can be run independently, so the order of each test method 
+ * is not important.
+ * 
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  * @author <a href="mailto:rasakannu.palaniyandi@misys.com">raja</a>
  */
-public class ProvideAndRegisterDocumentSetTest {
-	private static final String repositoryUrl = "http://localhost:8020/axis2/services/xdsrepositoryb";
+public class ProvideAndRegisterDocumentSetTest extends XdsTest {
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -75,150 +71,70 @@ public class ProvideAndRegisterDocumentSetTest {
 	}
 
 	/**
-	 * Test method for RetrieveDocumentSet-b (ITI-43)
+	 * Test method for ProvideAndRegisterDocumentSet-b (ITI-41)
+	 * 
 	 * @throws  
 	 * @throws Exception 
 	 */
-@Test
+	@Test
 	public void testSubmitDocument() throws Exception {
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/submit_document.xml"));
 		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		//replace the document uuid.
+		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
+		message = message.replace("$doc1", uuid);
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			  String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "urn:uuid:1819622c-28ac-4e7d-a15d-b3e588a2ce2d", null);
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a document
+		request = addOneDocument(request, document, uuid);
+        
+		System.out.println("Request:\n" +request);
 
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);
-			 
-            OMText binaryData = fac.createOMText(handler, true);
-            docElem.addChild(binaryData);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
 
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            
-			System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
+	
+	
 	@Test
 	public void testSubmitMultipleDocument() throws Exception {
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/submit_multiple_documents.xml"));
 		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
-		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/MedicalSummary.xml"));
+		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/medical_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "doc1", null);
-			
-			//Add a Discharge summary documents
-			OMElement docElem1 = fac.createOMElement("Document", ns);
-			docElem1.addAttribute("id", "doc2", null);
-			
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, "doc1");
+		//Add a Discharge summary documents
+		request = addOneDocument(request, document1, "doc2");
 
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);
-            
-            DataSource ds1 = new ByteArrayDataSource(document2, "text/xml"); 
-			DataHandler handler1 = new DataHandler(ds1);			 
-            OMText binaryData1 = fac.createOMText(handler1, true);
-            
-            docElem.addChild(binaryData);
-            docElem1.addChild(binaryData1);
-            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            submitObjectsRequest.insertSiblingAfter(docElem1);
-            
-			System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
 	
 	
@@ -231,330 +147,152 @@ public class ProvideAndRegisterDocumentSetTest {
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
 		message = message.replace("$folder_uniqueid", "2.16.840.1.113883.3.65.3." + System.currentTimeMillis());
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "doc1", null);
-			
+		ServiceClient sender = getRepositoryServiceClient();			
 		
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);
-            
-            docElem.addChild(binaryData);
-            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
-	}
-	
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, "doc1");
+		
+        System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+	}	
 	
 	
 	@Test
 	public void testAddendumDocument() throws Exception {
+		//First submit a document
+		String doc_uuid = submitOneDocument();
+		
+		//Then add an Addendum
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/document_addendum.xml"));
 		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
-		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		//replace document , submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$appendum_doc_uuid", "urn:uuid:1819622c-28ac-4e7d-a15d-b3e588a2ce2d");
+		//populate the document uuid to be appended.
+		message = message.replace("$appendum_doc_uuid", doc_uuid);
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "doc1", null);			
+		ServiceClient sender = getRepositoryServiceClient();			
 		
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);            
-            docElem.addChild(binaryData);            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, "doc1");
+
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
 	
 	@Test
 	public void testReplaceDocument() throws Exception {
+		//First submit a document
+		String doc_uuid = submitOneDocument();
+
+		//Then add a replacement doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/document_replacement.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
-		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/medical_summary.xml"));
+		//replace document and submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$rplc_doc_uuid", "urn:uuid:1819622c-28ac-4e7d-a15d-b3e588a2ce2d");
+		//populate the document uuid to be replaced.
+		message = message.replace("$rplc_doc_uuid", doc_uuid);
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "urn:uuid:1444422c-28ac-4e7d-a15d-b3e588a2ce2c", null);			
+		ServiceClient sender = getRepositoryServiceClient();			
 		
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);            
-            docElem.addChild(binaryData);            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a medical summary document
+		request = addOneDocument(request, document1, "doc1");
+
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
 	
 	@Test
 	public void testTransformationDocument() throws Exception {
+		//First submit a document
+		String doc_uuid = submitOneDocument();
+
+		//Then add a transformation doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/document_transformation.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/CCR_Header.gif"));
-		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/medical_summary.xml"));
+		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$tran_doc_uuid", "urn:uuid:1444422c-28ac-4e7d-a15d-b3e588a2ce2c");
+		//populate the document uuid to be transformed
+		message = message.replace("$tran_doc_uuid", doc_uuid);
+
+		ServiceClient sender = getRepositoryServiceClient();			
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "doc1", null);			
+		OMElement request = OMUtil.xmlStringToOM(message);			
 		
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);            
-            docElem.addChild(binaryData);            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		//Add a transformation document
+		request = addOneDocument(request, document1, "doc1");
+
+        System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
 	
 	
 	@Test
 	public void testTranformWithReplaceDocument() throws Exception {
+		//First submit a document
+		String doc_uuid = submitOneDocument();
+
+		//Then add a transform with replace doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/document_trans_replace.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
-		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/medical_summary.xml"));
+		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$tran_rplc_doc_uuid", "urn:uuid:1444422c-28ac-4e7d-a15d-b3e588a2ce2c");
+		//populate the document uuid to be transformed and replaced
+		message = message.replace("$tran_rplc_doc_uuid", doc_uuid);
+
+		ServiceClient sender = getRepositoryServiceClient();			
 		
-		Options options = new Options();
-		options.setAction("urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b");		
-	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
-	    options.setTo( new EndpointReference(repositoryUrl) );
-		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-		//use SOAP12, 
-		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
-		try{
-			
-			String repository = "c:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
-	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
-			ServiceClient sender = new ServiceClient(configctx,null);
-			sender.setOptions(options);
-			sender.engageModule("addressing");	
-			
-			OMElement request = OMUtil.xmlStringToOM(message);			
-			
-			//Add a referral summary document
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace ns = fac.createOMNamespace("urn:ihe:iti:xds-b:2007" , null);
-			OMElement docElem = fac.createOMElement("Document", ns);
-			docElem.addAttribute("id", "doc1", null);			
+		OMElement request = OMUtil.xmlStringToOM(message);			
 		
-            // A string, turn it into an StreamSource
-		    DataSource ds = new ByteArrayDataSource(document1, "text/xml"); 
-			DataHandler handler = new DataHandler(ds);			 
-            OMText binaryData = fac.createOMText(handler, true);            
-            docElem.addChild(binaryData);            
-            Iterator iter = request.getChildrenWithLocalName("SubmitObjectsRequest");
-            OMElement submitObjectsRequest = null;
-            for (;iter.hasNext();) {
-            	submitObjectsRequest = (OMElement)iter.next();
-            	if (submitObjectsRequest != null)
-            		break;
-            }
-            submitObjectsRequest.insertSiblingAfter(docElem);
-            System.out.println("Request:\n" +request);
-			OMElement response = sender.sendReceive( request );
-			assertNotNull(response); 
-			String result = response.toString();
-			System.out.println("Result:\n" +result);
-		} catch(AxisFault e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		} catch(XMLStreamException e) {
-			e.printStackTrace();
-			fail("tstSubmitDocument Failed");
-		}catch (Exception e) {
-			System.out.println("error"+e);
-		}
+		//Add a transformation document
+		request = addOneDocument(request, document1, "doc1");
+
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
 	}
 	
-	static public String getStringFromInputStream(InputStream in) throws java.io.IOException {
-		int count;
-		byte[] by = new byte[256];
-
-		StringBuffer buf = new StringBuffer();
-		while ( (count=in.read(by)) > 0 ) {
-			for (int i=0; i<count; i++) {
-				by[i] &= 0x7f;
-			}
-			buf.append(new String(by,0,count));
-		}
-		return new String(buf);
-	}
-
 }
