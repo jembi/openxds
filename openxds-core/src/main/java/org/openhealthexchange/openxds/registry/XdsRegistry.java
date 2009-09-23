@@ -18,6 +18,8 @@
  */
 package org.openhealthexchange.openxds.registry;
 
+import java.net.URL;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -25,10 +27,10 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
-import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistry;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
@@ -80,9 +82,10 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         //1. First initiate the Registry server
         try {
 	        //TODO: move this to a global location, and get the repository path
-	        String repository = "c:\\axis2-1.5\\repository";        
+	        URL axis2repo = XdsRegistry.class.getResource("/axis2repository");
+	        URL axis2xml = XdsRegistry.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
+	        .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2xml.getPath());
 	        registryServer = new IheHTTPServer(configctx, this); 		
 	
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(registryServer));

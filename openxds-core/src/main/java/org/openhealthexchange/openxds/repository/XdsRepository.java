@@ -18,6 +18,8 @@
  */
 package org.openhealthexchange.openxds.repository;
 
+import java.net.URL;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -25,9 +27,9 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.common.ihe.IheActor;
 import org.openhealthexchange.common.ws.server.IheHTTPServer;
-import org.openhealthexchange.common.audit.IheAuditTrail;
 import org.openhealthexchange.openxds.repository.api.IXdsRepository;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 
@@ -73,9 +75,10 @@ public class XdsRepository extends IheActor implements IXdsRepository {
         //initiate the Repository server
         try {
 	        //TODO: move this to a global location, and get the repository path
-	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
+	        URL axis2repo = XdsRepository.class.getResource("/axis2repository");
+	        URL axis2xml = XdsRepository.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(repository, null);
+	        .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2xml.getPath());
 	        repositoryServer = new IheHTTPServer(configctx, this); 		
 	
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(repositoryServer));
