@@ -533,6 +533,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			source.setAccessPointId(remoteIP);
 			
 			ActiveParticipant dest = new ActiveParticipant();
+			//TODO: Needs to be improved
 			String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsrepositoryb"; 
 			dest.setUserId(userid);
 			dest.setAccessPointId(localIP);

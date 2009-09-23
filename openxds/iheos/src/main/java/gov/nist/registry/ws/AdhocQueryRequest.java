@@ -381,7 +381,7 @@ public class AdhocQueryRequest extends XdsCommon {
 	       ActiveParticipant source = new ActiveParticipant();
 			source.setUserId(replyto);
 			source.setAccessPointId(remoteIP);
-			
+			//TODO: Needs to be improved
 			String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
 			ActiveParticipant dest = new ActiveParticipant();
 			dest.setUserId(userid);
