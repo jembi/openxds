@@ -177,6 +177,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 			if (document_response != null) 
 				document_responses.add(document_response);
 		}
+		if(auditLog != null)
 		auditLog(doclist, AuditCodeMappings.AuditTypeCodes.RetrieveDocumentSet);
 		return document_responses;
 	}
@@ -246,11 +247,17 @@ public class RetrieveDocumentSet extends XdsCommon {
 	   private void auditLog(ArrayList<Pair> doclist, AuditCodeMappings.AuditTypeCodes eventTypeCode) throws MetadataException {
 	       if (auditLog == null)
 	       	 return;
-	       ActiveParticipant source = null;
-	        if(connection != null)
-	        	source = new ActiveParticipant(connection);
-	        else 
-	        	source = new ActiveParticipant("","","127.0.0.1");
+	       
+	        String replyto = getMessageContext().getReplyTo().getAddress();
+			String remoteIP = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
+			String localIP = (String)getMessageContext().getProperty(MessageContext.TRANSPORT_ADDR);
+			
+	        ActiveParticipant source = new ActiveParticipant();
+			source.setUserId(replyto);
+			source.setAccessPointId(remoteIP);
+			
+			ActiveParticipant dest = new ActiveParticipant();
+			dest.setAccessPointId(localIP);
 			//Document Info
 	        Collection<ParticipantObject> docs = new ArrayList<ParticipantObject>();
 			for(Pair doc : doclist){		
@@ -260,7 +267,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 				docs.add(docObj);
 			}
 			//Finally Log it.
-			auditLog.logRepositoryQuery(source, docs, eventTypeCode);
+			auditLog.logRepositoryQuery(source, dest, docs, eventTypeCode);
 	   }
 
 

@@ -97,7 +97,7 @@ public class ParamParser {
 			OMElement value_element = (OMElement) it.next();
 			if (!value_element.getLocalName().equals("Value"))
 				continue;
-			String value_string = value_element.getText();
+			String value_string = value_element.getText().trim();
 			
 			if (value_string.charAt(0) == '\'' || value_string.charAt(0) =='‘' &&
 					value_string.charAt(value_string.length()-1) == '\'' || value_string.charAt(value_string.length()-1) == '’') {

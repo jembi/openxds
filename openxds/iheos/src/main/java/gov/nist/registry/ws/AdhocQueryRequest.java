@@ -288,7 +288,9 @@ public class AdhocQueryRequest extends XdsCommon {
 					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
 					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)){
 				ArrayList<OMElement> res = fact.run();
+				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);
+				}
 				return res;
 			}else {					
 			//Create RegistryStoredQueryContext
@@ -297,8 +299,9 @@ public class AdhocQueryRequest extends XdsCommon {
 			
 				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
 				response = qm.storedQuery(context);
-
+				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);
+				}
 				Iterator<OMElement> temp= response.getChildElements();
 				while(temp.hasNext()){
 					OMElement temp1 = temp.next();
@@ -349,7 +352,9 @@ public class AdhocQueryRequest extends XdsCommon {
 		OMElement results = br.query(ahqr.toString(), isleafClass);
 
 		Metadata metadata = MetadataParser.parseNonSubmission(results);
+		if(auditLog != null){
 		auditLog(ahqr, false, null);
+		}
 		if (is_secure) {
 			BasicQuery bq = new BasicQuery();
 			bq.secure_URI(metadata);
@@ -369,11 +374,18 @@ public class AdhocQueryRequest extends XdsCommon {
 	       if (auditLog == null)
 	       	 return;
 	   
-	       ActiveParticipant source = null;
-	        if(connection != null)
-	        	source = new ActiveParticipant(connection);
-	        else 
-	        	source = new ActiveParticipant("","","127.0.0.1");
+	       String replyto = getMessageContext().getReplyTo().getAddress();
+			String remoteIP = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
+			String localIP = (String)getMessageContext().getProperty(MessageContext.TRANSPORT_ADDR);
+			
+	       ActiveParticipant source = new ActiveParticipant();
+			source.setUserId(replyto);
+			source.setAccessPointId(remoteIP);
+			
+			String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
+			ActiveParticipant dest = new ActiveParticipant();
+			dest.setUserId(userid);
+			dest.setAccessPointId(localIP);
 			
 			//Patient Info
 			ParticipantObject patientObj = null;
@@ -383,7 +395,7 @@ public class AdhocQueryRequest extends XdsCommon {
 				ParamParser parser = new ParamParser();
 				HashMap params = parser.parse(aqr);
 				String patientId = (String)params.get("$XDSDocumentEntryPatientId");				
-				patientObj = new ParticipantObject("PatientIdentifier", patientId);
+				if(patientId != null) patientObj = new ParticipantObject("PatientIdentifier", patientId);
 			}  
 			
 			ParticipantObject queryObj = new ParticipantObject();
@@ -392,7 +404,7 @@ public class AdhocQueryRequest extends XdsCommon {
 				queryObj.setId(id);
 		
 			//Finally Log it.
-			auditLog.logRegistryQuery(source, patientObj, queryObj, isStoredQuery);
+			auditLog.logRegistryQuery(source, dest, patientObj, queryObj, isStoredQuery);
 	   }
 
 }

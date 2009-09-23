@@ -334,6 +334,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 							response.add_error(MetadataSupport.XDSRepositoryError, "Registry returned Failure but no error list", "ProvideAndRegistryDocumentSet.java", log_message);
 					}
 					//ITI-42 Succeed, log a success message
+					if(auditLog != null)
 					auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
 				}
 			}
@@ -396,7 +397,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if ( validate_content_type && !mime_type.equals(content_type))
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
-
+					
 		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
 		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
 		item.setDocumentUniqueId(uid);
@@ -408,6 +409,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
+		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
 //TODO: remove the old code			
 //		String doc_path = document_path(uid, mime_type);
@@ -473,6 +475,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
+		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
 //TODO: remove the old code
 //		String doc_path = document_path(uid, mime_type);
@@ -516,19 +519,33 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	private void auditLog(Metadata meatdata, AuditCodeMappings.AuditTypeCodes typeCode, boolean isITI41) throws MetadataException {
 		if (auditLog == null)
 			return;
+		String replyto = getMessageContext().getReplyTo().getAddress();
+		String remoteIP = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
+		String localIP = (String)getMessageContext().getProperty(MessageContext.TRANSPORT_ADDR);
+
+	
 		
-		   ActiveParticipant source = null;
-	        if(connection != null)
-	        	source = new ActiveParticipant(connection);
-	        else 
-	        	source = new ActiveParticipant("","","127.0.0.1");
-		
-		ParticipantObject set = new ParticipantObject( meatdata.getSubmissionSet().getLocalName(),  meatdata.getSubmissionSetUniqueId());
+		ParticipantObject set = new ParticipantObject("SubmissionSet",  meatdata.getSubmissionSetUniqueId());
 		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
 		if(isITI41){
-			auditLog.logDocumentImport(source, patientObj, set, typeCode);
+			ActiveParticipant source = new ActiveParticipant();
+			source.setUserId(replyto);
+			source.setAccessPointId(remoteIP);
+			
+			ActiveParticipant dest = new ActiveParticipant();
+			String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsrepositoryb"; 
+			dest.setUserId(userid);
+			dest.setAccessPointId(localIP);
+			auditLog.logDocumentImport(source, dest, patientObj, set, typeCode);
 		}else{
-			auditLog.logDocumentExport(source, patientObj, set, typeCode);	
+			ActiveParticipant source = new ActiveParticipant();
+			source.setUserId(replyto);
+			source.setAccessPointId(localIP);
+			
+			ActiveParticipant dest = new ActiveParticipant();
+			dest.setUserId(registry_endpoint());
+			dest.setAccessPointId(localIP);			
+			auditLog.logDocumentExport(source, dest, patientObj, set, typeCode);	
 		}
 	}
 	
