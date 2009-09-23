@@ -347,6 +347,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				if (!status) {
 					return;
 				}
+				if(auditLog != null)
 				auditLog(patient_id, ssUid, AuditTypeCodes.RegisterDocumentSet_b);
 				// Approve
 				ArrayList approvable_object_ids = ra.approvable_object_ids(m);
@@ -499,17 +500,22 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private void auditLog(String patientId, String submissionSetUid, AuditCodeMappings.AuditTypeCodes typeCode) {
 		if (auditLog == null)
 			return;
-		
-		   ActiveParticipant source = null;
-	        if(connection != null)
-	        	source = new ActiveParticipant(connection);
-	        else 
-	        	source = new ActiveParticipant("","","127.0.0.1");
+		String replyto = getMessageContext().getReplyTo().getAddress();
+		String remoteIP = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
+		String localIP = (String)getMessageContext().getProperty(MessageContext.TRANSPORT_ADDR);
 		
 		ParticipantObject set = new ParticipantObject("SubmissionSet", submissionSetUid);
 		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", patientId);
 		
-		auditLog.logDocumentImport(source, patientObj, set, typeCode);		
+		ActiveParticipant source = new ActiveParticipant();
+		source.setUserId(replyto);
+		source.setAccessPointId(remoteIP);
+		
+		String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
+		ActiveParticipant dest = new ActiveParticipant();
+		dest.setUserId(userid);
+		dest.setAccessPointId(localIP);
+		auditLog.logDocumentImport(source, dest, patientObj, set, typeCode);		
 	}
 
 }

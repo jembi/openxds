@@ -133,13 +133,6 @@ p	 * @param factory
                               ActiveParticipantIds ourRole, AuditSourceType ... sourceTypes) throws JAXBException {
 		AuditTrailDescription desc = messenger.getAuditTrailDescription();
 
-        // add ourselves as an active participant:
-		ActiveParticipant us = new ActiveParticipant(desc.getFacilityName()+"|" + desc.getApplicationName(), actorName, desc.getIp());
-		us.setRequestor(requestor);
-		us.role = ourRole; 
-		us.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
-		factory.addActiveParticipant(us);
-
         // add the source id:
         Set<AuditSourceType> auditSourceTypes = new HashSet<AuditSourceType>();
         if (sourceTypes != null) {
@@ -147,7 +140,7 @@ p	 * @param factory
                 if (sourceType != null)
                     auditSourceTypes.add( sourceType );
             }
-        }                               
+        }
         factory.addAuditSourceId( desc.getEnterpriseSiteId(), desc.getAuditSourceId(), auditSourceTypes);
 
         // send the message.
@@ -203,6 +196,12 @@ p	 * @param factory
 		for (IMessageTransmitter messenger: messengers) {
 			AuditObjectFactory factory = new AuditObjectFactory(messenger);
 			factory.setEventIdType(new EventId(AuditEventIds.ApplicationActivity, message, EventActionCode.Execute, SuccessCode.Success));
+			AuditTrailDescription desc = messenger.getAuditTrailDescription();
+			ActiveParticipant us = new ActiveParticipant(desc.getFacilityName()+"|" + desc.getApplicationName(), actorName, desc.getIp());
+			us.setRequestor(false);
+			us.role = ActiveParticipantIds.Application; 
+			us.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
+			factory.addActiveParticipant(us);
 			formatAndLog(messenger, factory, false, ActiveParticipantIds.Application);
 		}
 	}
@@ -241,7 +240,7 @@ p	 * @param factory
 	 * @param typeCode the type of message 
 	 * @param action What they did with the patient record.
 	 */
-	private void documentImport(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, 
+	private void documentImport(ActiveParticipant source, ActiveParticipant destination, ParticipantObject patient, ParticipantObject set, 
 			AuditCodeMappings.AuditTypeCodes typeCode) throws JAXBException {
 		for (IMessageTransmitter messenger : messengers) {
 			AuditObjectFactory factory = new AuditObjectFactory(messenger);
@@ -255,7 +254,7 @@ p	 * @param factory
 			
 			factory.setEventIdType(new EventId(AuditEventIds.Import, typeCode, EventActionCode.Create, SuccessCode.Success));
 			if (source != null) factory.addActiveParticipant(source);
-			
+			if (destination != null) factory.addActiveParticipant(destination);
 			formatAndLog(messenger, factory, false, ActiveParticipantIds.Destination, source.getAuditSourceType());
 		}
 	}
@@ -280,7 +279,7 @@ p	 * @param factory
 	 * @param set the SubmissionSet related to the Document
 	 * @param eventActionCode  the {@link EventActionCode}
 	 */
-	protected void documentExport(ActiveParticipant repository, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode)
+	protected void documentExport(ActiveParticipant repository, ActiveParticipant registry, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode)
 		throws JAXBException 
 	{
 		for (IMessageTransmitter messenger: messengers) {
@@ -295,6 +294,7 @@ p	 * @param factory
 			// Note, AuditTypeCode is not used for data export.
 			factory.setEventIdType(new EventId(AuditEventIds.Export, typeCode, EventActionCode.Read, SuccessCode.Success));
 			factory.addActiveParticipant(repository);
+			if (registry != null) factory.addActiveParticipant(registry);
 
             formatAndLog(messenger, factory, false, ActiveParticipantIds.Destination, repository.getAuditSourceType());
 		}
@@ -715,7 +715,7 @@ p	 * @param factory
 		 * @param isStoredQuery
 		 *            boolean to define the query type
 		 */
-	public void logRegistryQuery(ActiveParticipant source, ParticipantObject patient, 
+	public void logRegistryQuery(ActiveParticipant source, ActiveParticipant destination, ParticipantObject patient, 
 			ParticipantObject query, boolean isStoredQuery) { 
 		try {
 			if (query == null)  //query is required
@@ -738,6 +738,13 @@ p	 * @param factory
 					source.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
 					source.setRequestor(true);
 					factory.addActiveParticipant(source);
+	            }
+	            
+	            if (destination !=null ) {
+	            	destination.role = ActiveParticipantIds.Destination;
+	    			destination.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
+	            	destination.setRequestor(false);
+					factory.addActiveParticipant(destination);
 	            }
 	            
 				if (patient != null) {
@@ -776,7 +783,7 @@ p	 * @param factory
 		 * @param eventTypeCode
 		 *            the query type code
 		 */
-	public void logRepositoryQuery(ActiveParticipant source,  Collection<ParticipantObject> documents, AuditCodeMappings.AuditTypeCodes eventTypeCode) { 
+	public void logRepositoryQuery(ActiveParticipant source, ActiveParticipant dest, Collection<ParticipantObject> documents, AuditCodeMappings.AuditTypeCodes eventTypeCode) { 
 		try {
 			if (documents == null)  
 				throw new IllegalArgumentException("Required DocumentURI is missing");
@@ -792,6 +799,11 @@ p	 * @param factory
 					source.setRequestor(false);
 					factory.addActiveParticipant(source);
 	            }
+	            
+	            	dest.role = ActiveParticipantIds.Destination;
+	            	dest.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
+	            	dest.setRequestor(true);
+					factory.addActiveParticipant(dest);
 	            
 				if (documents != null) {
 					for(ParticipantObject document: documents ) {
@@ -821,7 +833,7 @@ p	 * @param factory
 	 * @param eventActionCode
 	 *            the {@link EventActionCode}
 	 */
-	public void logDocumentImport(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
+	public void logDocumentImport(ActiveParticipant source, ActiveParticipant destination, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
 		try {
 			if (patient == null)  
 				throw new IllegalArgumentException("Required patient is missing");
@@ -837,7 +849,13 @@ p	 * @param factory
 				source.setRequestor(true);
 			}
 			
-			documentImport(source, patient, set, typeCode);
+			if (destination != null) {
+				destination.role = ActiveParticipantIds.Destination;
+				destination.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
+				destination.setRequestor(false);
+			}
+			
+			documentImport(source, destination, patient, set, typeCode);
 		} catch (JAXBException e) {
 			LOG.error("Unable to log Register Document Set", e);
 		}		
@@ -857,7 +875,7 @@ p	 * @param factory
 	 * @param typeCode
 	 *            the {@link AuditCodeMappings.AuditTypeCodes}
 	 */
-	public void logDocumentExport(ActiveParticipant source, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
+	public void logDocumentExport(ActiveParticipant source, ActiveParticipant destination, ParticipantObject patient, ParticipantObject set, AuditCodeMappings.AuditTypeCodes typeCode) {
 		try {
 			if (set == null)  
 				throw new IllegalArgumentException("Required SubmissionSet is missing");
@@ -873,7 +891,13 @@ p	 * @param factory
 				source.setRequestor(true);
 			}
 			
-			documentExport(source, patient, set, typeCode);
+			if (destination != null) {
+				destination.role = ActiveParticipantIds.Destination;
+				destination.setAccessPointTypeCode(NetworkAccessPointType.IPAddress);
+				destination.setRequestor(false);
+			}
+			
+			documentExport(source, destination, patient, set, typeCode);
 		} catch (JAXBException e) {
 			LOG.error("Unable to log RegisterDocumentSet", e);
 		}		
