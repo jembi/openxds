@@ -59,7 +59,7 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 			//Creating context with request.
 			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
 			//Adding RegistryOperator role for the user.
-			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			//omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
 			
 			// Sending request to OMAR methods.
 			omarResponse = lcm.submitObjects(omarContext);
@@ -95,7 +95,7 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 			//Creating context with request.
 			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
 			//Adding RegistryOperator role for the user.
-			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			//omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
 			// Sending request to OMAR methods.
 			omarResponse = lcm.approveObjects(omarContext);
 			// 
@@ -124,7 +124,7 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 			//Creating context with request.
 			omarContext = new CommonRequestContext(contextId,(RegistryRequestType) registryRequest);
 			//Adding RegistryOperator role for the user.
-			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
+			//omarContext.setUser(AuthenticationServiceImpl.getInstance().registryOperator);
 			// Sending request to OMAR methods.
 			omarResponse = lcm.deprecateObjects(omarContext);
 			
