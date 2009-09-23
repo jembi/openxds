@@ -28,6 +28,7 @@ import org.openhealthexchange.openxds.registry.api.RegistryPatientContext;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
 import org.openhealthexchange.openxds.util.ConversionHelper;
 import org.openhie.openempi.context.Context;
+import org.openhie.openempi.model.IdentifierDomain;
 import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonIdentifier;
 import org.openhie.openempi.service.PersonManagerService;
@@ -99,15 +100,20 @@ public class XdsRegistryPatientManager implements IXdsRegistryPatientManager
 	}
 
 	private PersonIdentifier findExistingPersonIdForPatient(PersonManagerService personManagerService, Patient patient) {
-		List<PatientIdentifier> ids = patient.getPatientIds();
-		List<PersonIdentifier> pids = new java.util.ArrayList<PersonIdentifier>(ids.size());
+		List<PersonIdentifier> pids =null;
+		if(patient.getPatientIds() != null){
+			pids = new java.util.ArrayList<PersonIdentifier>(patient.getPatientIds().size());
+			for (PatientIdentifier pid : patient.getPatientIds()) {
+			 pids.add(ConversionHelper.getPersonIdentifier(pid));
+		}
 		Person person = personManagerService.getPerson(pids);
 		if (person == null) {
 			return null;
 		}
 		return person.getPersonIdentifiers().iterator().next();
+		}
+		return null;
 	}
-
 	public void unmergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
 		//TODO:
 	}

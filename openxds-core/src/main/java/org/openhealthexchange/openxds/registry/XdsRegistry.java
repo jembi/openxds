@@ -80,7 +80,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         //1. First initiate the Registry server
         try {
 	        //TODO: move this to a global location, and get the repository path
-	        String repository = "C:\\tools\\axis2-1.4.1\\repository";        
+	        String repository = "c:\\axis2-1.5\\repository";        
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(repository, null);
 	        registryServer = new IheHTTPServer(configctx, this); 		
@@ -120,13 +120,13 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         log.info("XDS PIX Registry Server started: " + pixRegistryConnection.getDescription() );
         
         //3. initialize OpenEMPI
-//		initializeOpenEMPI();
+        initializeOpenEMPI();
 
     }
 
 	private void initializeOpenEMPI() {
 		ModuleManager.getInstance().getBean("context");
-//		org.openhie.openempi.context.Context.startup();
+		org.openhie.openempi.context.Context.startup();
 		org.openhie.openempi.context.Context.authenticate("admin", "admin");
 	}
    

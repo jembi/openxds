@@ -63,12 +63,12 @@ public class ModuleManager {
 	
 	private String[] getConfigLocations() {
         return new String[] {
-//                "classpath:/applicationContext-resources.xml",
+                "classpath:/applicationContext-resources.xml",
 //                "classpath:/applicationContext-dao.xml",
                 "classpath*:/applicationContext.xml", // for modular projects
-               // "classpath*:/applicationContext-service.xml",
-               // "classpath*:/applicationContext-dao.xml",// for web projects
-                "classpath*:/repository.cfg.xml"// for openxds repository modular projects
+                "classpath*:/applicationContext-service.xml",
+                "classpath*:/applicationContext-dao.xml",// for web projects
+               // "classpath*:/repository.cfg.xml"// for openxds repository modular projects
             };
     }
 

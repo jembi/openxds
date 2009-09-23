@@ -35,6 +35,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.openhealthexchange.common.audit.IheAuditTrail;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openpixpdq.ihe.configuration.Configuration;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
@@ -43,6 +44,7 @@ import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
 import org.openhealthexchange.openxds.XdsBroker;
 import org.openhealthexchange.openxds.registry.XdsRegistry;
+import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
 import org.openhealthexchange.openxds.repository.XdsRepository;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -942,11 +944,12 @@ public class XdsConfigurationLoader {
 			IConnectionDescription pixRegistryConnection, Collection<IConnectionDescription> auditConnections,			
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
-		IheAuditTrail auditTrail = null;
+		IheAuditTrail auditTrail = null;		
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-
+		IXdsRegistryPatientManager patientManager = (IXdsRegistryPatientManager)ModuleManager.getInstance().getBean("registryPatientManager");
 		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection, auditTrail);
+		xdsRegistry.registerPatientManager(patientManager);
         if (xdsRegistry != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXdsRegistry(xdsRegistry);

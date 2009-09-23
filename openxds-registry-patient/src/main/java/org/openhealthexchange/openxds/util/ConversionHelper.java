@@ -1,6 +1,7 @@
 package org.openhealthexchange.openxds.util;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +18,7 @@ import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonIdentifier;
 import org.openhie.openempi.model.Race;
 import org.openhie.openempi.model.Religion;
+import org.openhie.openempi.model.User;
 
 import com.misyshealthcare.connect.base.SharedEnums.SexType;
 import com.misyshealthcare.connect.base.demographicdata.Address;
@@ -157,6 +159,7 @@ public class ConversionHelper
 		for (PatientIdentifier pid : patient.getPatientIds()) {
 			person.addPersonIdentifier(getPersonIdentifier(pid));
 		}
+		person.setDateChanged(new Date());
 		log.trace("Converted object: " + patient + " to " + person);
 		return person;
 	}
@@ -210,7 +213,8 @@ public class ConversionHelper
 		IdentifierDomain id = new IdentifierDomain();
 		id.setNamespaceIdentifier(personIdentifier.getAssigningAuthority().getNamespaceId());
 		id.setUniversalIdentifier(personIdentifier.getAssigningAuthority().getUniversalId());
-		id.setUniversalIdentifierTypeCode(personIdentifier.getAssigningAuthority().getUniversalIdType());
+		id.setUniversalIdentifierTypeCode(personIdentifier.getAssigningAuthority().getUniversalIdType());		
+		pi.setIdentifierDomain(id);		
 		return pi;
 	}
 
