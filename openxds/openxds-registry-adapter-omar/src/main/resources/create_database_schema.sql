@@ -1584,8 +1584,8 @@ INSERT INTO ADHOCQUERY VALUES ('urn:uuid:958f3006-baad-4929-a4de-ff1114824431',N
 'SELECT fol.* FROM RegistryPackage fol, ExternalIdentifier patId
 , Slot lupdateTimef 
 , Slot lupdateTimet 
-, Classification cl 
-, Slot clScheme 
+--, Classification cl 
+--, Slot clScheme 
 WHERE ( patId.registryobject = fol.id AND 
 	patId.identificationScheme = ''urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a'' AND 
 	patId.value = ($XDSFolderPatientId))
@@ -1595,12 +1595,12 @@ AND ( lupdateTimef.parent = fol.id AND
 AND ( lupdateTimet.parent = fol.id AND
 	lupdateTimet.name = ''lastUpdateTime'' AND
 	lupdateTimef.value < ($XDSFolderLastUpdateTimeTo))
-AND (cl.classifiedObject = fol.id AND
-	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
-	cl.nodeRepresentation IN ($XDSFolderCodeList))
-AND (clScheme.parent = cl.id AND 
-	clScheme.name = ''codingScheme'' AND	
-	clScheme.value = ($XDSFolderCodeListScheme))
+--AND (cl.classifiedObject = fol.id AND
+--	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
+--	cl.nodeRepresentation IN ($XDSFolderCodeList))
+--AND (clScheme.parent = cl.id AND 
+--	clScheme.name = ''codingScheme'' AND	
+--	clScheme.value = ($XDSFolderCodeListScheme))
 AND fol.status = ($XDSFolderStatus)');
 
 --GetFolder
