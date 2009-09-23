@@ -1553,9 +1553,9 @@ INSERT INTO ADHOCQUERY VALUES('urn:uuid:5c4f972b-d56b-40ac-a5fc-c8ca9b40b9d4',NU
 WHERE
 (ei.registryObject = eo.id AND
 ei.identificationScheme = ''urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab'' AND
-ei.value IN ($XDSDocumentEntryUniqueId))
+(ei.value IN ($XDSDocumentEntryUniqueId)))
 AND
- (eo.id IN ($XDSDocumentEntryEntryUUID))');
+(eo.id IN ($XDSDocumentEntryEntryUUID))');
 
 --GetAssociations
 
