@@ -32,8 +32,7 @@
 
     <bean id="registryLifeCycleManager" class="org.openhealthexchange.openxds.registry.adapter.omar31.XdsRegistryLifeCycleManager"/>
 
-    <!-- TODO: replace the mockup class -->
-    <bean id="registryPatientManager" class="org.openhealthexchange.openxds.registry.patient.MockupXdsRegistryPatientManager"/>
+     <bean id="registryPatientManager" class="org.openhealthexchange.openxds.registry.patient.XdsRegistryPatientManager"/>
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
