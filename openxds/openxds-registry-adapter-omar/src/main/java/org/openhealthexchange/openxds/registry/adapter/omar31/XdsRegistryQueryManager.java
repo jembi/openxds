@@ -77,7 +77,7 @@ public class XdsRegistryQueryManager implements IXdsRegistryQueryManager {
 			}
 			BindingUtility.getInstance().addSlotsToRequest(req, slotsMap);
 			// Adding RegistryOperator role for the user.
-			//omarContext.setUser(AuthenticationServiceImpl.getInstance().registryGuest);
+			omarContext.setUser(AuthenticationServiceImpl.getInstance().registryGuest);
 			Map<String, Object> idToRepositoryItemMap = new HashMap<String, Object>();
 			omarContext.setRepositoryItemsMap(idToRepositoryItemMap);
 			omarContext.pushRegistryRequest(req);
