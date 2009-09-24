@@ -201,7 +201,12 @@ public class RegistryErrorList extends ErrorLogger {
 		error.addAttribute("codeContext", context, null);
 		error.addAttribute("errorCode", code, null);
 		error.addAttribute("location", location, null);
-		error.addAttribute("severity", "Error", null);
+		String severity;
+  		if (version == version_3)
+  			severity = MetadataSupport.error_severity_type_namespace + "Error";
+		else
+			severity = "Error";
+		error.addAttribute("severity", severity, null);
 		registryErrorList().addChild(error);
 		this.has_errors = true;
 	}
