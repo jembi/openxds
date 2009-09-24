@@ -804,6 +804,9 @@ insert into nationality (nationality_cd, nationality_name, nationality_descripti
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (343,'KIRIBATI','KIRIBATI','KI');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (344,'KIRIBATI','KIRIBATI','KIR');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (345,'KIRIBATI','KIRIBATI','296');
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (346,'KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','KP');
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (347,'KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','PRK');
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (348,'KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','KOREA, DEMOCRATIC PEOPLE''S REPUBLIC OF','408');
 
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (349,'KOREA, REPUBLIC OF','KOREA, REPUBLIC OF','KR');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (350,'KOREA, REPUBLIC OF','KOREA, REPUBLIC OF','KOR');
@@ -815,6 +818,10 @@ insert into nationality (nationality_cd, nationality_name, nationality_descripti
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (355,'KYRGYZSTAN','KYRGYZSTAN','KG');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (356,'KYRGYZSTAN','KYRGYZSTAN','KGZ');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (357,'KYRGYZSTAN','KYRGYZSTAN','417');
+
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (358,'LAO PEOPLE''S DEMOCRATIC REPUBLIC','LAO PEOPLE''S DEMOCRATIC REPUBLIC','LA');
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (359,'LAO PEOPLE''S DEMOCRATIC REPUBLIC','LAO PEOPLE''S DEMOCRATIC REPUBLIC','LAO');
+insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (360,'LAO PEOPLE''S DEMOCRATIC REPUBLIC','LAO PEOPLE''S DEMOCRATIC REPUBLIC','418');
 
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (361,'LATVIA','LATVIA','LV');
 insert into nationality (nationality_cd, nationality_name, nationality_description, nationality_code) values (362,'LATVIA','LATVIA','LVA');
@@ -1508,6 +1515,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (116,'
 insert into race (race_cd, race_name, race_description, race_code) values (117,'Turtle Mountain','Turtle Mountain','1147-8');
 insert into race (race_cd, race_name, race_description, race_code) values (118,'White Earth','White Earth','1148-6');
 insert into race (race_cd, race_name, race_description, race_code) values (119,'Chippewa Cree','Chippewa Cree','1150-2');
+insert into race (race_cd, race_name, race_description, race_code) values (120,'Rocky Boy''s Chippewa Cree','Rocky Boy''s Chippewa Cree','1151-0');
 insert into race (race_cd, race_name, race_description, race_code) values (121,'Chitimacha','Chitimacha','1153-6');
 insert into race (race_cd, race_name, race_description, race_code) values (122,'Choctaw','Choctaw','1155-1');
 insert into race (race_cd, race_name, race_description, race_code) values (123,'Clifton Choctaw','Clifton Choctaw','1156-9');
@@ -1518,6 +1526,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (127,'
 insert into race (race_cd, race_name, race_description, race_code) values (128,'Chumash','Chumash','1162-7');
 insert into race (race_cd, race_name, race_description, race_code) values (129,'Santa Ynez','Santa Ynez','1163-5');
 insert into race (race_cd, race_name, race_description, race_code) values (130,'Clear Lake','Clear Lake','1165-0');
+insert into race (race_cd, race_name, race_description, race_code) values (131,'Coeur D''Alene','Coeur D''Alene','1167-6');
 insert into race (race_cd, race_name, race_description, race_code) values (132,'Coharie','Coharie','1169-2');
 insert into race (race_cd, race_name, race_description, race_code) values (133,'Colorado River','Colorado River','1171-8');
 insert into race (race_cd, race_name, race_description, race_code) values (134,'Colville','Colville','1173-4');
@@ -1884,6 +1893,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (494,'
 insert into race (race_cd, race_name, race_description, race_code) values (495,'Stewart','Stewart','1647-7');
 insert into race (race_cd, race_name, race_description, race_code) values (496,'Stockbridge','Stockbridge','1649-3');
 insert into race (race_cd, race_name, race_description, race_code) values (497,'Susanville','Susanville','1651-9');
+insert into race (race_cd, race_name, race_description, race_code) values (498,'Tohono O''Odham','Tohono O''Odham','1653-5');
 insert into race (race_cd, race_name, race_description, race_code) values (499,'Ak-Chin','Ak-Chin','1654-3');
 insert into race (race_cd, race_name, race_description, race_code) values (500,'Gila Bend','Gila Bend','1655-0');
 insert into race (race_cd, race_name, race_description, race_code) values (501,'San Xavier','San Xavier','1656-8');
@@ -2085,6 +2095,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (696,'
 insert into race (race_cd, race_name, race_description, race_code) values (697,'Wales','Wales','1886-1');
 insert into race (race_cd, race_name, race_description, race_code) values (698,'White Mountain','White Mountain','1887-9');
 insert into race (race_cd, race_name, race_description, race_code) values (699,'White Mountain Inupiat','White Mountain Inupiat','1888-7');
+insert into race (race_cd, race_name, race_description, race_code) values (700,'Mary''s Igloo','Mary''s Igloo','1889-5');
 insert into race (race_cd, race_name, race_description, race_code) values (701,'Siberian Eskimo','Siberian Eskimo','1891-1');
 insert into race (race_cd, race_name, race_description, race_code) values (702,'Gambell','Gambell','1892-9');
 insert into race (race_cd, race_name, race_description, race_code) values (703,'Savoonga','Savoonga','1893-7');
@@ -2098,11 +2109,13 @@ insert into race (race_cd, race_name, race_description, race_code) values (710,'
 insert into race (race_cd, race_name, race_description, race_code) values (711,'Aniak','Aniak','1902-6');
 insert into race (race_cd, race_name, race_description, race_code) values (712,'Atmautluak','Atmautluak','1903-4');
 insert into race (race_cd, race_name, race_description, race_code) values (713,'Bethel','Bethel','1904-2');
+insert into race (race_cd, race_name, race_description, race_code) values (714,'Bill Moore''s Slough','Bill Moore''s Slough','1905-9');
 insert into race (race_cd, race_name, race_description, race_code) values (715,'Bristol Bay Yupik','Bristol Bay Yupik','1906-7');
 insert into race (race_cd, race_name, race_description, race_code) values (716,'Calista Yupik','Calista Yupik','1907-5');
 insert into race (race_cd, race_name, race_description, race_code) values (717,'Chefornak','Chefornak','1908-3');
 insert into race (race_cd, race_name, race_description, race_code) values (718,'Chevak','Chevak','1909-1');
 insert into race (race_cd, race_name, race_description, race_code) values (719,'Chuathbaluk','Chuathbaluk','1910-9');
+insert into race (race_cd, race_name, race_description, race_code) values (720,'Clark''s Point','Clark''s Point','1911-7');
 insert into race (race_cd, race_name, race_description, race_code) values (721,'Crooked Creek','Crooked Creek','1912-5');
 insert into race (race_cd, race_name, race_description, race_code) values (722,'Dillingham','Dillingham','1913-3');
 insert into race (race_cd, race_name, race_description, race_code) values (723,'Eek','Eek','1914-1');
@@ -2144,6 +2157,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (758,'
 insert into race (race_cd, race_name, race_description, race_code) values (759,'Red Devil','Red Devil','1950-5');
 insert into race (race_cd, race_name, race_description, race_code) values (760,'St. Michael','St. Michael','1951-3');
 insert into race (race_cd, race_name, race_description, race_code) values (761,'Scammon Bay','Scammon Bay','1952-1');
+insert into race (race_cd, race_name, race_description, race_code) values (762,'Sheldon''s Point','Sheldon''s Point','1953-9');
 insert into race (race_cd, race_name, race_description, race_code) values (763,'Sleetmute','Sleetmute','1954-7');
 insert into race (race_cd, race_name, race_description, race_code) values (764,'Stebbins','Stebbins','1955-4');
 insert into race (race_cd, race_name, race_description, race_code) values (765,'Togiak','Togiak','1956-2');
@@ -2153,6 +2167,7 @@ insert into race (race_cd, race_name, race_description, race_code) values (768,'
 insert into race (race_cd, race_name, race_description, race_code) values (769,'Tununak','Tununak','1960-4');
 insert into race (race_cd, race_name, race_description, race_code) values (770,'Twin Hills','Twin Hills','1961-2');
 insert into race (race_cd, race_name, race_description, race_code) values (771,'Georgetown','Georgetown','1962-0');
+insert into race (race_cd, race_name, race_description, race_code) values (772,'St. Mary''s','St. Mary''s','1963-8');
 insert into race (race_cd, race_name, race_description, race_code) values (773,'Umkumiate','Umkumiate','1964-6');
 insert into race (race_cd, race_name, race_description, race_code) values (774,'Aleut','Aleut','1966-1');
 insert into race (race_cd, race_name, race_description, race_code) values (775,'Alutiiq Aleut','Alutiiq Aleut','1968-7');
