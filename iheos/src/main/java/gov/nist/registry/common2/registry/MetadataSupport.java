@@ -52,6 +52,7 @@ public class MetadataSupport {
 
 	static public String status_type_namespace ="urn:oasis:names:tc:ebxml-regrep:StatusType:";
 	static public String response_status_type_namespace = "urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:";
+    static public String error_severity_type_namespace = "urn:oasis:names:tc:ebxml-regrep:ErrorSeverityType:";
 	static public String association_type_namespace = "urn:oasis:names:tc:ebxml-regrep:AssociationType:";
 
 	public static QName name_qname = new QName("Name");
