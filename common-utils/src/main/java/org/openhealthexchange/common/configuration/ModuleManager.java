@@ -68,7 +68,8 @@ public class ModuleManager {
                 "classpath*:/applicationContext.xml", // for modular projects
                 "classpath*:/applicationContext-service.xml",
                 "classpath*:/applicationContext-dao.xml",// for web projects
-               // "classpath*:/repository.cfg.xml"// for openxds repository modular projects
+                //"classpath*:/repository.cfg.xml"// for openxds repository modular projects
+                "classpath*:/externalidentifier.cfg.xml" // for openxds-registry-adapter-omar projects.
             };
     }
 

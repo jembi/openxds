@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class
+		name="org.openhealthexchange.openxds.registry.ExternalIdentifier"
+		table="externalidentifier">
+		<id name="id" column="id" type="string" />
+		<property name="home" column="home" type="string" />
+		<property name="lid" column="lid" type="string" not-null="true" />
+		<property name="objecttype" column="objecttype" type="string" />
+		<property name="status" column="status" type="string"
+			not-null="true" />
+		<property name="versionname" column="versionname" type="string" />
+		<property name="comment" column="comment_" type="string" />
+		<property name="registryobject" column="registryobject"
+			type="string" not-null="true" />
+		<property name="identificationscheme"
+			column="identificationscheme" type="string" not-null="true" />
+		<property name="value" column="value" type="string"
+			not-null="true" />
+	</class>
+</hibernate-mapping>
