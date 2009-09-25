@@ -25,6 +25,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.openhealthexchange.openxds.repository.Repository;
+import org.openhealthexchange.openxds.repository.api.RepositoryException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -41,18 +42,19 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.dao.XdsRepositoryManagerDao#insert()
 	 */
-	public void insert(Repository bean) {
+	public void insert(Repository bean) throws RepositoryException{
 		 try {
 	        	this.getHibernateTemplate().save(bean);	        	
 	        } catch (Exception e){
 	        	LOG.error("Failed to insert Repository bean",e);
+	        	throw new RepositoryException(e);
 	        }
 		}
 	
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.dao.XdsRepositoryManagerDao#getXdsRepositoryBean()
 	 */
-	public Repository getXdsRepositoryBean(String documentUniqueId) {
+	public Repository getXdsRepositoryBean(String documentUniqueId) throws RepositoryException{
 		List<?> list = null;
 		Repository xdsRepositoryBean = null;
 		String parameters[] = {documentUniqueId};
@@ -61,8 +63,9 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 				"from Repository where documentuniqueid=?", parameters);
 		}catch (Exception e) {
 			LOG.error("Failed to retrieve Repository bean from repository",e);
+			throw new RepositoryException(e);
 		}
-		
+	
 		if (list.size() > 0)
 			xdsRepositoryBean = (Repository) list.get(0);
 		return xdsRepositoryBean;		
@@ -71,7 +74,7 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 	/* (non-Javadoc)
 	 * @see org.openhealthexchange.openxds.repository.dao.XdsRepositoryManagerDao#delete()
 	 */
-	public void delete(final String documentUniqueId) {
+	public void delete(final String documentUniqueId) throws RepositoryException{
 		
 		try {
 			this.getHibernateTemplate().execute(new HibernateCallback(){
@@ -83,6 +86,7 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 			});					
 		} catch (Exception e) {
 			LOG.error("Failed to delete Repository bean in repository",e);
+			throw new RepositoryException(e);
 		}
 		
 	}
