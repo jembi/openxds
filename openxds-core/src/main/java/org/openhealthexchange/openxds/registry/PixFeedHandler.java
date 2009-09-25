@@ -294,7 +294,8 @@ class PixFeedHandler extends BaseHandler implements Application {
 			IXdsRegistryLifeCycleManager lifeCycleManager =(IXdsRegistryLifeCycleManager)ModuleManager.getInstance().getBean("registryLifeCycleManager");
 			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
 		} catch (Exception e) {
-			log.debug("error while merging patient document in xds regsitry");
+			log.error("error while merging patient document in xds regsitry");
+			throw new ApplicationException(e);
 		}
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
 
