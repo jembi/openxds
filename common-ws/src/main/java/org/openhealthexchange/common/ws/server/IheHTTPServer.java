@@ -75,6 +75,12 @@ public class IheHTTPServer implements TransportListener {
     public IheHTTPServer(ConfigurationContext configurationContext, IheActor actor) throws AxisFault {
         this(new IheHttpFactory(configurationContext, actor.getConnection()));
         this.actor = actor;
+
+        if (actor.getConnection().getHostname() != null) {
+            hostAddress = actor.getConnection().getHostname();
+        } else {
+            hostAddress = httpFactory.getHostAddress();
+        }
     }
 
     /**
@@ -102,15 +108,15 @@ public class IheHTTPServer implements TransportListener {
         try {
             this.configurationContext = axisConf;
 
-            if (httpFactory == null) {
-                httpFactory = new IheHttpFactory(configurationContext, actor.getConnection());
-            }
-
-            if (actor.getConnection().getHostname() != null) {
-                hostAddress = actor.getConnection().getHostname();
-            } else {
-                hostAddress = httpFactory.getHostAddress();
-            }
+//            if (httpFactory == null) {
+//                httpFactory = new IheHttpFactory(configurationContext, actor.getConnection());
+//            }
+//
+//            if (actor.getConnection().getHostname() != null) {
+//                hostAddress = actor.getConnection().getHostname();
+//            } else {
+//                hostAddress = httpFactory.getHostAddress();
+//            }
         } catch (Exception e1) {
             throw AxisFault.makeFault(e1);
         }
