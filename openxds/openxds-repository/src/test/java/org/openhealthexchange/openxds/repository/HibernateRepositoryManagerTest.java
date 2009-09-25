@@ -18,27 +18,21 @@
  */
 package org.openhealthexchange.openxds.repository;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openhealthexchange.common.configuration.ModuleManager;
-import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
-import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryRequestContext;
-import org.openhealthexchange.openxds.repository.service.XdsRepositoryManagerImpl;
-
 import com.misyshealthcare.connect.net.ConnectionFactory;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
@@ -49,8 +43,6 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  *
  */
 public class HibernateRepositoryManagerTest {
-	
-	XdsRepositoryManagerImpl managerImpl=null;
 	private static File content1K;
     private IXdsRepositoryManager repositoryManager;
 	private RepositoryRequestContext requestContext = new RepositoryRequestContext();
