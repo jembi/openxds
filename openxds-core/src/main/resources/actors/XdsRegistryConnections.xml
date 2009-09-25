@@ -46,7 +46,7 @@
         <!--The host name of the PIX Registry Server-->
         <HostName>localhost</HostName>
         <!--The port for PIX Feed transaction-->
-        <Port>3600</Port>
+        <Port>3602</Port>
         <Identifier name="ReceivingApplication">
             <NamespaceId>PAT_IDENTITY_X_REF_MGR_MISYS</NamespaceId>
             <!-- NamespaceId>MESA_XREF</NamespaceId-->
@@ -72,7 +72,7 @@
         <!--The host name of the PIX Manager Server-->
         <HostName>localhost</HostName>
         <!--The port for PIX TLS transaction-->
-        <Port>3610</Port>
+        <Port>3611</Port>
         <Identifier name="ReceivingApplication">
             <NamespaceId>PAT_IDENTITY_X_REF_MGR_MISYS_TLS</NamespaceId>
         </Identifier>
