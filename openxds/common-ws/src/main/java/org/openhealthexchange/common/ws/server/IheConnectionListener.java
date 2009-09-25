@@ -38,7 +38,7 @@ import org.apache.http.params.HttpParams;
 
 public class IheConnectionListener implements IOProcessor {
 
-    private static Log LOG = LogFactory.getLog(DefaultConnectionListener.class);
+    private static Log LOG = LogFactory.getLog(IheConnectionListener.class);
 
     private volatile boolean destroyed = false;
 
