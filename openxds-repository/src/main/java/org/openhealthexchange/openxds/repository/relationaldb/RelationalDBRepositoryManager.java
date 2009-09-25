@@ -17,7 +17,7 @@
  *     Misys plc - Initial API and Implementation
  */
 
-package org.openhealthexchange.openxds.repository.service;
+package org.openhealthexchange.openxds.repository.relationaldb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -45,8 +45,8 @@ import org.springframework.transaction.annotation.Propagation;
  * 
  */
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class XdsRepositoryManagerImpl implements IXdsRepositoryManager {
-	private static final Logger LOG = Logger.getLogger(XdsRepositoryManagerImpl.class);
+public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
+	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryManager.class);
 	
 	
 	private XdsRepositoryManagerDao xdsRepositoryManagerDao;

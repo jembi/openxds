@@ -17,7 +17,7 @@
  *     Misys plc - Initial API and Implementation
  */
 
-package org.openhealthexchange.openxds.repository;
+package org.openhealthexchange.openxds.repository.filesystem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +29,8 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.log4j.Logger;
+import org.openhealthexchange.openxds.repository.Utility;
+import org.openhealthexchange.openxds.repository.XdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryItem;
 import org.openhealthexchange.openxds.repository.api.IXdsRepositoryManager;
 import org.openhealthexchange.openxds.repository.api.RepositoryException;
