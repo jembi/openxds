@@ -51,6 +51,15 @@ CREATE TABLE AffectedObject (
   PRIMARY KEY (id, eventId)
 );
 
+DROP TABLE IF EXISTS repository CASCADE;
+CREATE TABLE repository
+(
+  documentuniqueid character varying(255) NOT NULL PRIMARY KEY,
+  mimetype character varying(255),
+  "content" bytea 
+);
+
+
 DROP TABLE IF EXISTS Classification CASCADE;
 CREATE TABLE Classification (
 --Identifiable Attributes
@@ -1201,6 +1210,7 @@ GRANT  DELETE, INSERT, SELECT, UPDATE ON  UsageParameter TO public;
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  TelephoneNumber TO public; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  User_ TO public; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  Person TO public; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  repository TO public; 
 
 
 
