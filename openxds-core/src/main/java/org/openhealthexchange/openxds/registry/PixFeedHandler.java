@@ -18,7 +18,10 @@
  */
 package org.openhealthexchange.openxds.registry;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.openhealthexchange.common.configuration.ModuleManager;
 import org.openhealthexchange.openpixpdq.data.MessageHeader;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
@@ -29,7 +32,10 @@ import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7v231ToBaseConvertor;
 import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
+import org.openhealthexchange.openxds.registry.api.IXdsRegistryLifeCycleManager;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryPatientManager;
+import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleContext;
+import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientContext;
 import org.openhealthexchange.openxds.registry.api.RegistryPatientException;
 
@@ -176,7 +182,8 @@ class PixFeedHandler extends BaseHandler implements Application {
 
 		//Validate incoming message first
 		PID pid = (PID)msgIn.get("PID");
-		PatientIdentifier patientId = getPatientIdentifiers(pid);				
+		PatientIdentifier patientId = getPatientIdentifiers(pid);	
+		
 		boolean isValidMessage = validateMessage(reply, hl7Header, patientId, null, true);
 		if (!isValidMessage) return reply;
 		
@@ -190,7 +197,6 @@ class PixFeedHandler extends BaseHandler implements Application {
 		}catch (RegistryPatientException e) {
 			throw new ApplicationException(e);
 		} 
-		
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
 
 		//TODO: revisit Audit
@@ -282,7 +288,14 @@ class PixFeedHandler extends BaseHandler implements Application {
 		}catch (RegistryPatientException e) {
 			throw new ApplicationException(e);
 		}
-		
+		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
+		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
+		try {
+			IXdsRegistryLifeCycleManager lifeCycleManager =(IXdsRegistryLifeCycleManager)ModuleManager.getInstance().getBean("registryLifeCycleManager");
+			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
+		} catch (Exception e) {
+			log.debug("error while merging patient document in xds regsitry");
+		}
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
 
 		//TODO: revisit Audit
@@ -292,7 +305,53 @@ class PixFeedHandler extends BaseHandler implements Application {
 
 		return reply;
 	}
-
+	
+	 private String getPatientIdentifier(List<PatientIdentifier> patient){
+		 for (PatientIdentifier patientIdentifier: patient) {
+					String assignAuth = getAssigningAuthority(patientIdentifier);
+					String assignFac = getAssigningFacility(patientIdentifier);
+					String patientId = patientIdentifier.getId();
+					String typeCode = patientIdentifier.getIdentifierTypeCode();
+					if(assignFac == null && typeCode ==null)
+						return patientId + "^^^" + assignAuth ;
+					else if(assignFac !=null && typeCode == null){
+						return patientId + "^^^" + assignAuth + "^^" + assignFac;
+					}else if(assignFac == null && typeCode != null){
+						return patientId + "^^^" + assignAuth + "^"+ typeCode;
+					}else if(assignFac != null && typeCode != null){
+						return patientId + "^^^" + assignAuth + "^" + typeCode + "^" + assignFac;
+					}
+				}
+		 return null;
+	 }
+	
+	 private String getAssigningFacility(PatientIdentifier patientIdentifier){
+		 String assignFacNam = patientIdentifier.getAssigningFacility().getNamespaceId();
+		 String assignFacUniversal = patientIdentifier.getAssigningFacility().getUniversalId();
+		 String assignFacUniversaltype = patientIdentifier.getAssigningFacility().getUniversalIdType();
+		 if(assignFacNam != null && assignFacUniversal != null && assignFacUniversaltype !=null)
+		    return assignFacNam +"&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
+		 else if(assignFacNam == null && assignFacUniversal != null && assignFacUniversaltype !=null){
+			 return  "&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
+		 }else if(assignFacNam != null && assignFacUniversaltype == null){
+			 return  assignFacNam + "&"+ assignFacUniversal + "&";
+		 }
+		return null;
+	 }
+	 
+	 private String getAssigningAuthority(PatientIdentifier patientIdentifier){
+		 String assignFacNam = patientIdentifier.getAssigningAuthority().getNamespaceId();
+		 String assignFacUniversal = patientIdentifier.getAssigningAuthority().getUniversalId();
+		 String assignFacUniversaltype = patientIdentifier.getAssigningAuthority().getUniversalIdType();
+		 if(assignFacNam != null && assignFacUniversal != null && assignFacUniversaltype !=null)
+		    return assignFacNam +"&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
+		 else if(assignFacNam == null && assignFacUniversal != null && assignFacUniversaltype !=null){
+			 return  "&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
+		 }else if(assignFacNam != null && assignFacUniversaltype == null){
+			 return  assignFacNam + "&"+ assignFacUniversal + "&";
+		 }
+		return null;
+	 }
 //TODO: revisit Audit log	
 //	/**
 //	 * Audit Logging of PIX Feed message.
