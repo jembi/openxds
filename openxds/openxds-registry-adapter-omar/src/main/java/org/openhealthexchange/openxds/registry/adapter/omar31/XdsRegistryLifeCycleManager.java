@@ -29,6 +29,8 @@ import org.freebxml.omar.common.spi.RequestContext;
 import org.freebxml.omar.server.security.authentication.AuthenticationServiceImpl;
 import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
+import org.openhealthexchange.common.configuration.ModuleManager;
+import org.openhealthexchange.openxds.registry.MergeDocument;
 import org.openhealthexchange.openxds.registry.api.IXdsRegistryLifeCycleManager;
 import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthexchange.openxds.registry.api.RegistryLifeCycleException;
@@ -79,7 +81,12 @@ public class XdsRegistryLifeCycleManager implements IXdsRegistryLifeCycleManager
 
 	public void mergePatients(String survivingPatient, String mergePatient, 
 			RegistryLifeCycleContext context) throws RegistryLifeCycleException {
-		//TODO: implement
+		  try {
+		    	MergeDocument manager = (MergeDocument)ModuleManager.getInstance().getBean("mergeDocument");
+				manager.mergedocuments(survivingPatient, mergePatient);
+			} catch (Exception e) {
+				throw new RegistryLifeCycleException(e);
+			}
 	}
 
 	
