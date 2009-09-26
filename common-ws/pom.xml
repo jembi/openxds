@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?><project>
   <parent>
     <artifactId>openxds</artifactId>
-    <groupId>org.openhealthexchange.openxds</groupId>
+    <groupId>org.openhealthtools.openxds</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.openhealthexchange.openxds</groupId>
+  <groupId>org.openhealthtools.openxds</groupId>
   <artifactId>common-ws</artifactId>
   <name>common-ws</name>
   <packaging>jar</packaging>
 
   <dependencies>
   	<dependency>
-  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>apache-axis2</artifactId>
   		<version>${project.version}</version>
   		<type>pom</type>
   	</dependency>
   	<dependency>
-  		<groupId>org.openhealthexchange.openxds</groupId>
+  		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>common-utils</artifactId>
   		<version>${project.version}</version>
   	</dependency>
