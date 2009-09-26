@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-     Copyright (c) 2009 Misys plc, Sysnet International, Medem and others
+     Copyright (c) 2009 Sysnet International and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
      permissions and limitations under the License.
 
      Contributors:
-        Sysnet International - Initial API and Implementation
+       Sysnet International   - initial API and implementation
+       Misys Open Source Solutions - modification and bug fixes
 
 -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
 
     <persistence-unit name="ApplicationEntityManager" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>org.openhealthexchange.openxds.model.User</class>
-        <class>org.openhealthexchange.openxds.model.Role</class>
+        <class>org.openhealthtools.openxds.model.User</class>
+        <class>org.openhealthtools.openxds.model.Role</class>
         
         <!-- 
         Adding more <class>f.q.c.Name</class> elements here is not required.  

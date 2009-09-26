@@ -16,8 +16,8 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
-<axisconfig name="AxisJava2.0">
+  
+  <axisconfig name="AxisJava2.0">
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
@@ -174,7 +174,7 @@
     <!-- Transport Ins -->
     <!-- ================================================= -->
     <!-- transportReceiver name="http" class="org.apache.axis2.transport.http.SimpleHTTPServer" -->
-    <transportReceiver name="http" class="org.openhealthexchange.common.ws.server.IheHTTPServer">
+    <transportReceiver name="http" class="org.openhealthtools.common.ws.server.IheHTTPServer">
         <parameter name="port">8080</parameter>
         <!-- Here is the complete list of supported parameters (see example settings further below):
             port: the port to listen on (default 6060)

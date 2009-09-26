@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-     Copyright (C) 2009 Misys plc, Sysnet International, Medem and others
+
+     Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,6 +14,9 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
      implied. See the License for the specific language governing
      permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
 
 
 -->
@@ -75,16 +79,16 @@
      </property>
   </bean>  
   	
-   <bean id="repositoryManagerDao" class="org.openhealthexchange.openxds.repository.dao.XdsRepositoryManagerDaoImpl">
+   <bean id="repositoryManagerDao" class="org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDaoImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
     
-  <bean id="repositoryManager" class="org.openhealthexchange.openxds.repository.relationaldb.RelationalDBRepositoryManager">
+  <bean id="repositoryManager" class="org.openhealthtools.openxds.repository.relationaldb.RelationalDBRepositoryManager">
     <property name="repositoryUniqueId" value="1.3.6.1.4.1.21367.2009.1.2.701"/>
     <property name="xdsRepositoryManagerDao" ref="repositoryManagerDao" />    
   </bean>
   
-  <!--  bean id="repositoryManager" class="org.openhealthexchange.openxds.repository.FileSystemRepositoryManager">
+  <!--  bean id="repositoryManager" class="org.openhealthtools.openxds.repository.FileSystemRepositoryManager">
 		<property name="repositoryUniqueId" value="1.3.6.1.4.1.21367.2009.1.2.701"/>
 		
 		<repositoryRoot is required by FileSystemRepository>

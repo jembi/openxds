@@ -1,5 +1,5 @@
 ====
-     Copyright (c) 2009 Misys plc, Sysnet International, Medem and others
+     Copyright (c) 2009 Sysnet International and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
      permissions and limitations under the License.
 
      Contributors:
-        Sysnet International - Initial API and Implementation
+       Sysnet International   - initial API and implementation
+       Misys Open Source Solutions - modification and bug fixes
 ====
 This file exists so that a unit test which tests sending email with an attachment succeeds.
