@@ -18,11 +18,11 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthexchange.common.configuration.ModuleManager;
-import org.openhealthexchange.openxds.registry.api.IXdsRegistryQueryManager;
-import org.openhealthexchange.openxds.registry.api.RegistryQueryException;
-import org.openhealthexchange.openxds.registry.api.RegistrySQLQueryContext;
-import org.openhealthexchange.openxds.registry.api.RegistryStoredQueryContext;
+import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.registry.api.IXdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.api.RegistryQueryException;
+import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
+import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
 
 public class BackendRegistry {
 	ErrorLogger response;
