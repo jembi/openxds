@@ -17,10 +17,10 @@
  * under the License.
  * 
  * Contributors:
- *   ASF(Apache Software Foundation) - inital API and implementation
- *   MOSS (Misys Open Source Solutions) - Modified
+ *   Apache Software Foundation  - inital API and implementation
+ *   Misys Open Source Solutions - modified
  */
-package org.openhealthexchange.common.ws.server;
+package org.openhealthtools.common.ws.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ import org.apache.axis2.util.OptionsParser;
 import org.apache.axis2.util.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthexchange.common.ihe.IheActor;
+import org.openhealthtools.common.ihe.IheActor;
 
 
 public class IheHTTPServer implements TransportListener {

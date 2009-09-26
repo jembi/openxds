@@ -17,10 +17,10 @@
  * under the License.
  * 
  * Contributors:
- *   ASF(Apache Software Foundation) - inital API and implementation
- *   MOSS (Misys Open Source Solutions) - Modified
+ *   Apache Software Foundation  - inital API and implementation
+ *   Misys Open Source Solutions - modified
  */
-package org.openhealthexchange.common.ws.server;
+package org.openhealthtools.common.ws.server;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
