@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.openhealthexchange.openxds</groupId>
+		<groupId>org.openhealthtools.openxds</groupId>
 		<artifactId>openxds</artifactId>
 		<version>1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
@@ -54,6 +54,29 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+	        <plugin>
+	            <groupId>com.google.code.maven-license-plugin</groupId>
+	            <artifactId>maven-license-plugin</artifactId>
+	            <configuration>
+	                <header>${project.parent.basedir}/src/main/resources/header.txt</header>
+	                <excludes>
+	                    <exclude>**/*.bat</exclude>
+	                    <exclude>**/ByteArrayDataSource.java</exclude>
+	                    <exclude>**/Utility.java</exclude>
+	                    <exclude>**/repository.datasource.cfg.xml</exclude>
+	                    <exclude>**/repository.hbm.xml</exclude>
+	                    <exclude>**/repository.jdbc.cfg.xml</exclude>
+	                    <exclude>**/*.properties</exclude>
+	                </excludes>
+	                <executions>
+		               <execution>
+		                  <goals>
+		                      <goal>check</goal>
+		                  </goals>
+		               </execution>
+		            </executions>                    
+	            </configuration>
+	        </plugin>
 		</plugins>
 		<testResources>
 			<testResource>
@@ -72,7 +95,7 @@
   		<version>2.0</version>
   	</dependency>
 		<dependency>
-			<groupId>org.openhealthexchange.openxds</groupId>
+			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>openxds-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -87,7 +110,7 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openhealthexchange.openxds</groupId>
+			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>common-utils</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>

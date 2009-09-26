@@ -36,7 +36,7 @@
     <property name="connection.pool_size">2</property>
     <property name="show_sql">false</property>
    <!--  <property name="hibernate.transaction.factory_class">net.sf.hibernate.transaction.JDBCTransactionFactory</property> -->
-	<property name="hibernate.hbm2ddl.auto">update</property>
+	<!-- property name="hibernate.hbm2ddl.auto">update</property-->
     <!-- Mapping files -->
     <mapping resource="repository.hbm.xml"/>
 
