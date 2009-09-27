@@ -1,0 +1,2 @@
+@rem Run this command to update and format copyright header
+mvn license:format -Dyear=2009 -Dcompany="Misys Open Source Solutions (MOSS) and others" -Dcontributor1="Misys Open Source Solutions - initial API and implementation" -Dcontributor2=""
