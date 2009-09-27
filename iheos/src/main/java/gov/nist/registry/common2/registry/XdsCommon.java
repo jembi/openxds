@@ -21,10 +21,6 @@ public class XdsCommon  {
 	MessageContext messageContext = null;
 	private final static Logger logger = Logger.getLogger(XdsCommon.class);
 
-	static {
-		BasicConfigurator.configure();
-	}
-
 
 	public MessageContext getMessageContext() {
 		return messageContext;

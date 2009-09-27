@@ -21,13 +21,13 @@ package org.openhealthtools.openxds.registry;
 
 import java.net.URL;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.configuration.ModuleManager;
@@ -49,14 +49,14 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  */
 public class XdsRegistry extends IheActor implements IXdsRegistry {
     /** Logger for problems */
-    private static Logger log = Logger.getLogger(XdsRegistry.class);
+    private static Log log = LogFactory.getLog(XdsRegistry.class);
     /** The connection description of this PIX Registry server */
 	private IConnectionDescription pixRegistryConnection = null;
 
-    /** The XDS Registry PIX Server */
+    /** The PIX Registry Server */
     private HL7Server pixServer = null;
     /** The XDS Registry Server */    
-    IheHTTPServer registryServer = null;
+    private IheHTTPServer registryServer = null;
     /** The XDS Registry Patient Manager*/
     private IXdsRegistryPatientManager patientManager = null;
 
@@ -80,9 +80,33 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
         //call the super one to initiate standard start process
         super.start();
 
-        //1. First initiate the Registry server
-        try {
-	        //TODO: move this to a global location, and get the repository path
+        //1. first start the Registry server
+        if (initXdsRegistry()) 
+            log.info("XDS Registry started: " + connection.getDescription() );        	
+        else
+            log.fatal("XDS Registry initialization failed: " + connection.getDescription() );        	
+        
+        //2. now start the PIX Registry server
+        if (initPixRegistry()) 
+            log.info("PIX Registry started: " + pixRegistryConnection.getDescription() );        	
+        else
+            log.fatal("PIX Registry failed to start: " + pixRegistryConnection.getDescription() );        	
+ 
+        //3. initialize OpenEMPI
+        //initializeOpenEMPI();
+    }
+
+    /**
+     * Starts a XDS Registry server to accept XDS messages from an XDS 
+     * repository or XDS consumer.
+     * 
+     * @return <code>true</code> if the initialization is successful; 
+     * 		   otherwise <code>false</code>.
+     */
+	private boolean initXdsRegistry() {
+		boolean isSuccess = false;
+		
+		try {
 	        URL axis2repo = XdsRegistry.class.getResource("/axis2repository");
 	        URL axis2xml = XdsRegistry.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
@@ -99,50 +123,61 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
 	            listenerManager.init(configctx);
 	        }
 	        listenerManager.addListener(trsIn, true);
-        }catch(AxisFault e) {
-        	log.error("Failed to initiate the Registry server", e);
-        }
-        log.info("XDS Registry Server started: " + connection.getDescription() );
-        
-        //2. now initiate PIX Server
-        LowerLayerProtocol llp = LowerLayerProtocol.makeLLP(); // The transport protocol
-        pixServer = new HL7Server(pixRegistryConnection, llp, new PipeParser());
-        Application pixFeed  = new PixFeedHandler(this);
-        
-        //Admission of in-patient into a facility
-        pixServer.registerApplication("ADT", "A01", pixFeed);  
-        //Registration of an out-patient for a visit of the facility
-        pixServer.registerApplication("ADT", "A04", pixFeed);  
-        //Pre-admission of an in-patient
-        pixServer.registerApplication("ADT", "A05", pixFeed);   
-        //Update patient information
-        pixServer.registerApplication("ADT", "A08", pixFeed);  
-        //Merge patients
-        pixServer.registerApplication("ADT", "A40", pixFeed);  
-        //now start the Pix Manager pixServer
-        pixServer.start();
-        log.info("XDS PIX Registry Server started: " + pixRegistryConnection.getDescription() );
-        
-        //3. initialize OpenEMPI
-        //initializeOpenEMPI();
-
+	        isSuccess = true;
+		}catch(Exception e) {
+        	log.fatal("Failed to start the XDS Registry server", e);			
+		}
+		
+        return isSuccess;
+	}
+	
+	/**
+	 * Starts a PIX Registry Server to accept PIX Feed messages. 
+	 * 
+     * @return <code>true</code> if the initialization is successful; 
+     * 		   otherwise <code>false</code>.
+	 */
+    private boolean initPixRegistry() {
+		boolean isSuccess = false;
+		try {
+	        LowerLayerProtocol llp = LowerLayerProtocol.makeLLP(); // The transport protocol
+	        pixServer = new HL7Server(pixRegistryConnection, llp, new PipeParser());
+	        Application pixFeed  = new PixFeedHandler(this);
+	        
+	        //Admission of in-patient into a facility
+	        pixServer.registerApplication("ADT", "A01", pixFeed);  
+	        //Registration of an out-patient for a visit of the facility
+	        pixServer.registerApplication("ADT", "A04", pixFeed);  
+	        //Pre-admission of an in-patient
+	        pixServer.registerApplication("ADT", "A05", pixFeed);   
+	        //Update patient information
+	        pixServer.registerApplication("ADT", "A08", pixFeed);  
+	        //Merge patients
+	        pixServer.registerApplication("ADT", "A40", pixFeed);  
+	        //now start the Pix Registry Server
+	        pixServer.start();
+	        isSuccess = true;
+		}catch(Exception e) {
+        	log.fatal("Failed to start the PIX Registry server", e);			
+		}
+        return isSuccess;
     }
-
+    
 	private void initializeOpenEMPI() {
 		ModuleManager.getInstance().getBean("context");
 		org.openhie.openempi.context.Context.startup();
 		org.openhie.openempi.context.Context.authenticate("admin", "admin");
-	}
+	}	
    
     @Override
     public void stop() {
         //stop the PIX Server first
         pixServer.stop();
-        log.info("PIX Registry Server stopped: " + pixRegistryConnection.getDescription() );
+        log.info("PIX Registry stopped: " + pixRegistryConnection.getDescription() );
 
         //stop the Registry Server
         registryServer.stop();
-        log.info("XDS Registry Server stopped: " + connection.getDescription() );
+        log.info("XDS Registry stopped: " + connection.getDescription() );
         
         //call the super one to initiate standard stop process 
         super.stop();

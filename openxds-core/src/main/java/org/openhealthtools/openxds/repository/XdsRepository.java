@@ -27,7 +27,8 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
@@ -43,7 +44,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  */
 public class XdsRepository extends IheActor implements IXdsRepository {
     /** Logger for problems during SOAP exchanges */
-    private static Logger log = Logger.getLogger(XdsRepository.class);
+    private static Log log = LogFactory.getLog(XdsRepository.class);
 
     /**The client side of XDS Registry connection*/
 	private IConnectionDescription registryClientConnection = null;
@@ -73,9 +74,16 @@ public class XdsRepository extends IheActor implements IXdsRepository {
         //call the super one to initiate standard start process
         super.start();
 
-        //initiate the Repository server
+        //start the Repository server
+        if (initXdsRepository()) 
+            log.info("XDS Repository started: " + connection.getDescription() );        	
+        else
+            log.fatal("XDS Repository initialization failed: " + connection.getDescription() );        	
+    }
+    
+    private boolean initXdsRepository() {
+		boolean isSuccess = false;
         try {
-	        //TODO: move this to a global location, and get the repository path
 	        URL axis2repo = XdsRepository.class.getResource("/axis2repository");
 	        URL axis2xml = XdsRepository.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
@@ -92,19 +100,19 @@ public class XdsRepository extends IheActor implements IXdsRepository {
 	            listenerManager.init(configctx);
 	        }
 	        listenerManager.addListener(trsIn, true);
+	        isSuccess = true;
         }catch(AxisFault e) {
-        	log.error("Failed to initiate the Repository server", e);
+        	log.fatal("Failed to start the XDS Repository server", e);			
         }
-        log.info("XDS Repository Server started: " + connection.getDescription() );
-        
+
+        return isSuccess;
     }
     
-
     @Override
     public void stop() {
         //stop the Repository Server
         repositoryServer.stop();
-        log.info("XDS Repository Server stopped: " + connection.getDescription() );
+        log.info("XDS Repository stopped: " + connection.getDescription() );
 
         //call the super one to initiate standard stop process
         super.stop();

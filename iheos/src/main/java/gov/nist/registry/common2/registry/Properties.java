@@ -13,10 +13,6 @@ public class Properties {
 	java.util.Properties properties = null;
 	private final static Logger logger = Logger.getLogger(Properties.class);
 	private static Properties properties_object = null;
-
-	static {
-		BasicConfigurator.configure();
-	}
 	
 	private Properties() {  init(); }
 	

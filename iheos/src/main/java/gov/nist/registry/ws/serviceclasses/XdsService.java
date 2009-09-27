@@ -48,7 +48,7 @@ public class XdsService {
 	static public String technicalFramework = null;
 
 	static {
-		BasicConfigurator.configure();
+//		BasicConfigurator.configure();
 		properties = Properties.loader();
 		technicalFramework = properties.getString("tf");
 	}
