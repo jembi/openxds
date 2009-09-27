@@ -213,7 +213,6 @@ public class IheHTTPServer implements TransportListener {
      * Start this server as a NON-daemon.
      */
     public void start() throws AxisFault {
-        System.out.println("[IheHTTPServer] Start called");
         try {
             embedded = new SimpleHttpServer(httpFactory, actor.getConnection());
             embedded.init();
@@ -230,7 +229,6 @@ public class IheHTTPServer implements TransportListener {
      * This will interrupt any pending accept().
      */
     public void stop() {
-        System.out.println("[IheHTTPServer] Stop called");
         if (embedded != null) {
             try {
                 embedded.destroy();
