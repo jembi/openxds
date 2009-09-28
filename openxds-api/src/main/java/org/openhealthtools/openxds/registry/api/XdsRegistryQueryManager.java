@@ -28,7 +28,7 @@ import org.apache.axiom.om.OMElement;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface IXdsRegistryQueryManager {
+public interface XdsRegistryQueryManager {
     /**
      * Sends a Registry Stored Query (AdhocQueryRequest) to the underneath Registry 
      * storage service. The available Registry objects for query are ExtrinsicObject, 

@@ -20,11 +20,11 @@
 package org.openhealthtools.common.configuration;
 
 import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryLifeCycleManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryPatientManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryQueryManager;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -90,49 +90,49 @@ public class ModuleManager {
 	}
 
 	/**
-	 * The factory method to get {@link IXdsRegistryLifeCycleManager}
+	 * The factory method to get {@link XdsRegistryLifeCycleManager}
 	 * 
-	 * @return the singleton {@link IXdsRegistryLifeCycleManager} instance
+	 * @return the singleton {@link XdsRegistryLifeCycleManager} instance
 	 */
-	public static IXdsRegistryLifeCycleManager getXdsRegistryLifeCycleManager() {
-		return (IXdsRegistryLifeCycleManager)getInstance().getBean("registryLifeCycleManager");
+	public static XdsRegistryLifeCycleManager getXdsRegistryLifeCycleManager() {
+		return (XdsRegistryLifeCycleManager)getInstance().getBean("registryLifeCycleManager");
 	}
 
 	/**
-	 * The factory method to get {@link IXdsRegistryQueryManager}
+	 * The factory method to get {@link XdsRegistryQueryManager}
 	 * 
-	 * @return the singleton {@link IXdsRegistryQueryManager} instance
+	 * @return the singleton {@link XdsRegistryQueryManager} instance
 	 */
-	public static IXdsRegistryQueryManager getXdsRegistryQueryManager() {
-		return(IXdsRegistryQueryManager)getInstance().getBean("registryQueryManager");
+	public static XdsRegistryQueryManager getXdsRegistryQueryManager() {
+		return(XdsRegistryQueryManager)getInstance().getBean("registryQueryManager");
 	}
 	
 	/**
-	 * The factory method to get {@link IXdsRegistryPatientManager}
+	 * The factory method to get {@link XdsRegistryPatientManager}
 	 * 
-	 * @return the singleton {@link IXdsRegistryPatientManager} instance
+	 * @return the singleton {@link XdsRegistryPatientManager} instance
 	 */
-	public static IXdsRegistryPatientManager getXdsRegistryPatientManager() {
-		return (IXdsRegistryPatientManager)getInstance().getBean("registryPatientManager");
+	public static XdsRegistryPatientManager getXdsRegistryPatientManager() {
+		return (XdsRegistryPatientManager)getInstance().getBean("registryPatientManager");
 	}
 
 	/**
-	 * The factory method to get {@link IXdsRepositoryManager}
+	 * The factory method to get {@link XdsRepositoryManager}
 	 * 
-	 * @return the singleton {@link IXdsRepositoryManager} instance
+	 * @return the singleton {@link XdsRepositoryManager} instance
 	 */
-	public static IXdsRepositoryManager getXdsRepositoryManager() {
-		return (IXdsRepositoryManager)getInstance().getBean("repositoryManager");		
+	public static XdsRepositoryManager getXdsRepositoryManager() {
+		return (XdsRepositoryManager)getInstance().getBean("repositoryManager");		
 	}
 
 	/**
-	 * The factory method to get {@link IXdsRepositoryItem}. RepositoryItem is non-singleton 
+	 * The factory method to get {@link XdsRepositoryItem}. RepositoryItem is non-singleton 
 	 * bean.
 	 * 
-	 * @return an {@link IXdsRepositoryItem} instance
+	 * @return an {@link XdsRepositoryItem} instance
 	 */
-	public static IXdsRepositoryItem getXdsReposiotryItem() {
-		return (IXdsRepositoryItem)getInstance().getBean("repositoryItem");
+	public static XdsRepositoryItem getXdsReposiotryItem() {
+		return (XdsRepositoryItem)getInstance().getBean("repositoryItem");
 	}
 
 }

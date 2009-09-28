@@ -28,7 +28,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
  */
-public interface IXdsRepository {
+public interface XdsRepository {
     /**
 	 * Starts this XDS Repository actor.  Do any initialization and logging that
 	 * might be needed.

@@ -19,11 +19,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"> 
    
-    <bean id="repositoryItem" scope="prototype" class="org.openhealthtools.openxds.repository.XdsRepositoryItem"/>
+    <bean id="registryQueryManager" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryManagerImpl"/>
 
-    <bean id="registryQueryManager" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryManager"/>
-
-    <bean id="registryLifeCycleManager" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleManager"/>
+    <bean id="registryLifeCycleManager" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleManagerImpl"/>
 
     <bean id="registryPatientManager" class="org.openhealthtools.openxds.registry.patient.MockupXdsRegistryPatientManager"/>
 

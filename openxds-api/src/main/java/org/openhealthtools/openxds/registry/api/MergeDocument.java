@@ -17,7 +17,9 @@
  *    Misys Open Source Solutions - initial API and implementation
  *
  */
-package org.openhealthtools.openxds.registry;
+package org.openhealthtools.openxds.registry.api;
+
+
 /**
  * This interface defines the operations to merge XDS documents,submissionSet and folders. 
  *

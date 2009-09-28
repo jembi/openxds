@@ -24,7 +24,7 @@ package org.openhealthtools.openxds.registry.api;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface IXdsRegistry {
+public interface XdsRegistry {
     /**
 	 * Starts this XDS Registry actor.  Do any initialization and logging that
 	 * might be needed.

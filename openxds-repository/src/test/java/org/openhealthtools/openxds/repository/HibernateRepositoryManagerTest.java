@@ -32,9 +32,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.openxds.repository.Utility;
-import org.openhealthtools.openxds.repository.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
 import com.misyshealthcare.connect.net.ConnectionFactory;
@@ -48,7 +48,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  */
 public class HibernateRepositoryManagerTest {
 	private static File content1K;
-    private IXdsRepositoryManager repositoryManager;
+    private XdsRepositoryManager repositoryManager;
 	private RepositoryRequestContext requestContext = new RepositoryRequestContext();
     private static final String id = Utility.getInstance().createId();
     String documentId = Utility.getInstance().stripId(id);
@@ -74,13 +74,13 @@ public class HibernateRepositoryManagerTest {
 	}
 	
 	/**
-	 * Test method for {@link org.openhealthtools.openxds.repository.service.XdsRepositoryManagerImpl#insert(org.openhealthtools.openxds.repository.api.IXdsRepositoryItem, org.openhealthtools.openxds.repository.api.RepositoryRequestContext)}.
+	 * Test method for {@link org.openhealthtools.openxds.repository.service.XdsRepositoryManagerImpl#insert(org.openhealthtools.openxds.repository.api.XdsRepositoryItem, org.openhealthtools.openxds.repository.api.RepositoryRequestContext)}.
 	 */
 	@Test
 	public void testInsertIXdsRepositoryItemRepositoryRequestContext() {
 		try {
 		
-			IXdsRepositoryItem ro = createRepositoryItem(id, content1K);
+			XdsRepositoryItem ro = createRepositoryItem(id, content1K);
 			repositoryManager.insert(ro, requestContext);				
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class HibernateRepositoryManagerTest {
 	@Test
 	public void testGetRepositoryItem() {
 		try{
-		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+		XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
 		assertNotNull(repositoryItem);
 		}catch (Exception e) {
 		   System.out.println("" +e);
@@ -127,9 +127,9 @@ public class HibernateRepositoryManagerTest {
         return temp;
     }
 	
-	 private IXdsRepositoryItem createRepositoryItem(String id, File content) throws Exception {    	
+	 private XdsRepositoryItem createRepositoryItem(String id, File content) throws Exception {    	
 	        DataHandler contentDataHandler = new DataHandler(new FileDataSource(content));
-	        IXdsRepositoryItem repositoryItem = new XdsRepositoryItem(id, contentDataHandler);
+	        XdsRepositoryItem repositoryItem = new XdsRepositoryItemImpl(id, contentDataHandler);
 	        return repositoryItem;
 	        
 	    }

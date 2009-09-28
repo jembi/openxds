@@ -20,6 +20,8 @@
 package org.openhealthtools.openxds.registry;
 
 import org.apache.log4j.Logger;
+import org.openhealthtools.openxds.registry.api.InvalidPatientException;
+import org.openhealthtools.openxds.registry.api.MergeDocument;
 import org.openhealthtools.openxds.registry.dao.MergeDocumentDao;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

@@ -33,8 +33,8 @@ import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.registry.api.IXdsRegistry;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistry;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
 
 import ca.uhn.hl7v2.app.Application;
 import ca.uhn.hl7v2.llp.LowerLayerProtocol;
@@ -47,9 +47,9 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsRegistry extends IheActor implements IXdsRegistry {
+public class XdsRegistryImpl extends IheActor implements XdsRegistry {
     /** Logger for problems */
-    private static Log log = LogFactory.getLog(XdsRegistry.class);
+    private static Log log = LogFactory.getLog(XdsRegistryImpl.class);
     /** The connection description of this PIX Registry server */
 	private IConnectionDescription pixRegistryConnection = null;
 
@@ -58,7 +58,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
     /** The XDS Registry Server */    
     private IheHTTPServer registryServer = null;
     /** The XDS Registry Patient Manager*/
-    private IXdsRegistryPatientManager patientManager = null;
+    private XdsRegistryPatientManager patientManager = null;
 
     /**
      * Creates a new XdsRegistry actor.
@@ -67,7 +67,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
      * @param registryConnection the connection description of this Registry server
      * 				to accept Register Document Set and Stored Query transactions 
      */
-     public XdsRegistry(IConnectionDescription pixFeedConnection,
+     public XdsRegistryImpl(IConnectionDescription pixFeedConnection,
     		 IConnectionDescription registryConnection, IheAuditTrail auditTrail) {
     	 super(registryConnection, auditTrail);
          this.pixRegistryConnection = pixFeedConnection;
@@ -107,8 +107,8 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
 		boolean isSuccess = false;
 		
 		try {
-	        URL axis2repo = XdsRegistry.class.getResource("/axis2repository");
-	        URL axis2xml = XdsRegistry.class.getResource("/axis2repository/axis2.xml");
+	        URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
+	        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2xml.getPath());
 	        registryServer = new IheHTTPServer(configctx, this); 		
@@ -191,7 +191,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
      *
      * @param patientManager the patient manager to be registered
      */
-    public void registerPatientManager(IXdsRegistryPatientManager patientManager) {
+    public void registerPatientManager(XdsRegistryPatientManager patientManager) {
        this.patientManager = patientManager;
     }
     
@@ -200,7 +200,7 @@ public class XdsRegistry extends IheActor implements IXdsRegistry {
      * 
      * @return the patient manager
      */
-    IXdsRegistryPatientManager getPatientManager() {
+    XdsRegistryPatientManager getPatientManager() {
     	return this.patientManager;
     }    
     

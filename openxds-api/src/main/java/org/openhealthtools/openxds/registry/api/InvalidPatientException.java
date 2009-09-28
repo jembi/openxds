@@ -17,7 +17,7 @@
  *    Misys Open Source Solutions - initial API and implementation
  *
  */
-package org.openhealthtools.openxds.registry;
+package org.openhealthtools.openxds.registry.api;
 /**
  * This exception is generated when there is a problem,
  * when merging patient documents

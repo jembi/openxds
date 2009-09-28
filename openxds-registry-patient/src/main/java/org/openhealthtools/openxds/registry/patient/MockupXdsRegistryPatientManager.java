@@ -21,12 +21,12 @@ package org.openhealthtools.openxds.registry.patient;
 
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 
 public class MockupXdsRegistryPatientManager implements
-		IXdsRegistryPatientManager {
+		XdsRegistryPatientManager {
 
 	public void createPatient(Patient patient, RegistryPatientContext context)
 			throws RegistryPatientException {

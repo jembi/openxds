@@ -19,7 +19,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
@@ -114,7 +114,7 @@ public class BackendRegistry {
 		if (log_message != null)
 			log_message.addOtherParam("ebxmlrr request (" + reason + ")", sql);
 
-		IXdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
+		XdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
 
 		RegistrySQLQueryContext context = new RegistrySQLQueryContext(sql, leaf_class);
 		OMElement response_xml = null;
@@ -177,7 +177,7 @@ public class BackendRegistry {
 			log_message.addOtherParam("ebxmlrr request (" + reason + ")", ahqr.toString());
 
 		//TODO: initiate RegistryQueryManager
-		IXdsRegistryQueryManager qm = null;
+		XdsRegistryQueryManager qm = null;
 		//TODO: convert ahqr OMElement to context, extract id and query parameters
 		String id = "123";  //
 		Map params = new HashMap();		

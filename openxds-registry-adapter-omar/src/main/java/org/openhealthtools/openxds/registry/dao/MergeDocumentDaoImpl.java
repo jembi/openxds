@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.openhealthtools.openxds.registry.ExternalIdentifier;
-import org.openhealthtools.openxds.registry.InvalidPatientException;
+import org.openhealthtools.openxds.registry.api.InvalidPatientException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  * This class defines the operations to merge XDS documents,submissionSet and folders. 

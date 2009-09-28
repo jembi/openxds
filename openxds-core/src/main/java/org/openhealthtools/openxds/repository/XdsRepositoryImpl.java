@@ -32,8 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.repository.api.IXdsRepository;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
@@ -42,9 +42,9 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsRepository extends IheActor implements IXdsRepository {
+public class XdsRepositoryImpl extends IheActor implements XdsRepository {
     /** Logger for problems during SOAP exchanges */
-    private static Log log = LogFactory.getLog(XdsRepository.class);
+    private static Log log = LogFactory.getLog(XdsRepositoryImpl.class);
 
     /**The client side of XDS Registry connection*/
 	private IConnectionDescription registryClientConnection = null;
@@ -53,7 +53,7 @@ public class XdsRepository extends IheActor implements IXdsRepository {
     IheHTTPServer repositoryServer = null;
 
     /** The XDS Repository Manager*/
-    private IXdsRepositoryManager repositoryManager = null;
+    private XdsRepositoryManager repositoryManager = null;
 
 
     /**
@@ -62,7 +62,7 @@ public class XdsRepository extends IheActor implements IXdsRepository {
      * @param repositoryConnection the connection description of this Repository server
      * 		to accept Provide and Register Document Set and Retrieve Document Set transactions 
      */
-     public XdsRepository(IConnectionDescription repositoryServerConnection, IConnectionDescription registryClientConnection, IheAuditTrail auditTrail) {
+     public XdsRepositoryImpl(IConnectionDescription repositoryServerConnection, IConnectionDescription registryClientConnection, IheAuditTrail auditTrail) {
     	 super(repositoryServerConnection, auditTrail);
          this.connection = repositoryServerConnection;
          this.registryClientConnection = registryClientConnection;
@@ -84,8 +84,8 @@ public class XdsRepository extends IheActor implements IXdsRepository {
     private boolean initXdsRepository() {
 		boolean isSuccess = false;
         try {
-	        URL axis2repo = XdsRepository.class.getResource("/axis2repository");
-	        URL axis2xml = XdsRepository.class.getResource("/axis2repository/axis2.xml");
+	        URL axis2repo = XdsRepositoryImpl.class.getResource("/axis2repository");
+	        URL axis2xml = XdsRepositoryImpl.class.getResource("/axis2repository/axis2.xml");
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2xml.getPath());
 	        repositoryServer = new IheHTTPServer(configctx, this); 		
@@ -119,22 +119,22 @@ public class XdsRepository extends IheActor implements IXdsRepository {
     }
 
     /**
-     * Registers an {@link IXdsRepositoryManager} which delegates repository item insertion,
+     * Registers an {@link XdsRepositoryManager} which delegates repository item insertion,
      * retrieving and deletion from this XDS Repository actor to the 
      * underneath repository manager implementation.
      *
-     * @param repositoryManager the {@link IXdsRepositoryManager} to be registered
+     * @param repositoryManager the {@link XdsRepositoryManager} to be registered
      */
-    public void registerRepositoryManager(IXdsRepositoryManager repositoryManager) {
+    public void registerRepositoryManager(XdsRepositoryManager repositoryManager) {
        this.repositoryManager = repositoryManager;
     }
     
     /**
-     * Gets the {@link IXdsRepositoryManager} for this <code>XdsRegistry</code>
+     * Gets the {@link XdsRepositoryManager} for this <code>XdsRegistry</code>
      * 
-     * @return an {@link IXdsRepositoryManager} instance
+     * @return an {@link XdsRepositoryManager} instance
      */
-    IXdsRepositoryManager getRepositoryManager() {
+    XdsRepositoryManager getRepositoryManager() {
     	return this.repositoryManager;
     }    
     

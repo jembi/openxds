@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface IXdsRepositoryManager {
+public interface XdsRepositoryManager {
 	
 	/**
 	 * Get the repository unique Id that represents this Repository.
@@ -37,52 +37,52 @@ public interface IXdsRepositoryManager {
 	
 		
     /**
-     * Inserts an {@link IXdsRepositoryItem}.
+     * Inserts an {@link XdsRepositoryItem}.
      *
-     * @param item the {@link IXdsRepositoryItem} to be inserted
+     * @param item the {@link XdsRepositoryItem} to be inserted
      * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
      * @throws RepositoryException if failed to insert
      */
-    public void insert(IXdsRepositoryItem item, RepositoryRequestContext context) throws RepositoryException;
+    public void insert(XdsRepositoryItem item, RepositoryRequestContext context) throws RepositoryException;
 
     /**
-     * Inserts a list of {@link IXdsRepositoryItem}s. This is possible when a 
+     * Inserts a list of {@link XdsRepositoryItem}s. This is possible when a 
      * submission set includes multiple documents. All the repository item will
      * be insert in an atomic mode, either all will be inserted or non will be
      * inserted.
      *
-     * @param items a List of {@link IXdsRepositoryItem}s to be inserted 
+     * @param items a List of {@link XdsRepositoryItem}s to be inserted 
      * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
      * @throws RepositoryException if failed to insert any repository item
      */
-    public void insert(List<IXdsRepositoryItem> items, RepositoryRequestContext context) throws RepositoryException;
+    public void insert(List<XdsRepositoryItem> items, RepositoryRequestContext context) throws RepositoryException;
 
     /**
-     * Returns the {@link IXdsRepositoryItem} associated with the given document unique id.
+     * Returns the {@link XdsRepositoryItem} associated with the given document unique id.
      *
-     * @param documentUniqueId the document unique id whose {@link IXdsRepositoryItem} item is desired
+     * @param documentUniqueId the document unique id whose {@link XdsRepositoryItem} item is desired
      * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
-     * @return the {@link IXdsRepositoryItem} instance that matches specified document uniqueId
+     * @return the {@link XdsRepositoryItem} instance that matches specified document uniqueId
      * 
      * @throws RegistryException if there are any processing errors getting repository item
      */
-    public IXdsRepositoryItem getRepositoryItem(String documentUniqueId, RepositoryRequestContext context) throws RepositoryException;
+    public XdsRepositoryItem getRepositoryItem(String documentUniqueId, RepositoryRequestContext context) throws RepositoryException;
 
     /**
-     * Returns the List of {@link IXdsRepositoryItem} associated with the given document unique ids.
+     * Returns the List of {@link XdsRepositoryItem} associated with the given document unique ids.
      * The IHE XDS transaction ITI-43 allows for multiple document retrieval.
      * 
-     * @param documentUniqueIds the document unique id whose {@link IXdsRepositoryItem} item are desired
+     * @param documentUniqueIds the document unique id whose {@link XdsRepositoryItem} item are desired
      * @param context the {@link RepositoryRequestContext} associated with this request.
      * 
-     * @return the List of {@link IXdsRepositoryItem} instances that match specified ids
+     * @return the List of {@link XdsRepositoryItem} instances that match specified ids
      * 
      * @throws RegistryException if there are any processing errors getting repository items
      */
-    public List<IXdsRepositoryItem> getRepositoryItems(List<String> documentUniqueIds, RepositoryRequestContext context) throws RepositoryException;
+    public List<XdsRepositoryItem> getRepositoryItems(List<String> documentUniqueIds, RepositoryRequestContext context) throws RepositoryException;
 
     /**
      * Deletes the repository item associated with the given document unique id.
