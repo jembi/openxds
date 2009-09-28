@@ -424,7 +424,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			XdsException, XdsInternalException {
 		if (Properties.loader().getBoolean("validate_patient_id")) {
 			try {
-				IXdsRegistryPatientManager patientMan = (IXdsRegistryPatientManager)ModuleManager.getInstance().getBean("registryPatientManager");
+				IXdsRegistryPatientManager patientMan = ModuleManager.getXdsRegistryPatientManager();
 
 				//TODO:get the patient id
 				PatientIdentifier pid = null; 
@@ -457,7 +457,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private boolean submit_to_backend_registry(String sor_string) throws XdsInternalException {
 		boolean status = true;
 
-		IXdsRegistryLifeCycleManager lcm = (IXdsRegistryLifeCycleManager)ModuleManager.getInstance().getBean("registryLifeCycleManager");
+		IXdsRegistryLifeCycleManager lcm = ModuleManager.getXdsRegistryLifeCycleManager();
 		OMElement result = null;
 		try {
 			OMElement request = OMUtil.xmlStringToOM(sor_string);

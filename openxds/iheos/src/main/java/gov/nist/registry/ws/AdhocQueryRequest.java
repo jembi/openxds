@@ -297,7 +297,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
 			OMElement response = null;
 			
-				IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
+				IXdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
 				response = qm.storedQuery(context);
 				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);

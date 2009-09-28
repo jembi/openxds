@@ -398,8 +398,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
 					
-		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
-		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
+		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
+		IXdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {
@@ -464,8 +464,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
         DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
 
-		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
-		IXdsRepositoryItem item = (IXdsRepositoryItem)ModuleManager.getInstance().getBean("repositoryItem");
+		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
+		IXdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {

@@ -62,7 +62,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	private PixManager actor = null;
    
    protected void setUp() throws Exception {
-	   repositoryManager =(IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");	   
+	   repositoryManager = ModuleManager.getXdsRepositoryManager();	   
 	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
 	   connection = ConnectionFactory.getConnectionDescription("xds-repository");
 	   requestContext.setConnection(connection);

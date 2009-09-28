@@ -60,7 +60,7 @@ public class HibernateRepositoryManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		try{
-		 repositoryManager =(IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+		 repositoryManager = ModuleManager.getXdsRepositoryManager();
 		}catch (Exception e) {
 			System.out.println(e);
 		}
