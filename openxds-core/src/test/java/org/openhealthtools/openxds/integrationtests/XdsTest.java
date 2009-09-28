@@ -22,10 +22,10 @@ package org.openhealthtools.openxds.integrationtests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -33,7 +33,6 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
@@ -54,7 +53,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
 
 /**
@@ -114,8 +112,8 @@ public abstract class XdsTest {
 	 * @throws Exception 
 	 */
 	protected String submitOneDocument(String patientId) throws Exception {
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/submit_document.xml"));
-		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
+		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -150,8 +148,8 @@ public abstract class XdsTest {
 	
 	//return folder unique Id
 	protected String submitOneDocument2Folder(String patientId) throws Exception {
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/add_document2_folder.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/referral_summary.xml"));
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -206,9 +204,15 @@ public abstract class XdsTest {
 	}
 
 	private ConfigurationContext getContext() throws AxisFault {
-		String repository = "c:\\tools\\axis2-1.5\\repository\\modules\\addressing-1.5.mar";        
+		//String repository = "c:\\tools\\axis2-1.5\\repository\\modules\\addressing-1.5.mar";        
+//		String repository = "c:\\tools\\axis2-1.5\\repository";        
+//		String axis2xml = "c:\\tools\\axis2-1.5\\conf\\axis2.xml";        
+//      ConfigurationContext configctx = ConfigurationContextFactory
+//      .createConfigurationContextFromFileSystem(repository, axis2xml);
+        URL axis2repo = XdsTest.class.getResource("/axis2repository");
+        URL axis2testxml = XdsTest.class.getResource("/axis2_test.xml");
          ConfigurationContext configctx = ConfigurationContextFactory
-         .createConfigurationContextFromFileSystem(repository, null);
+         .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2testxml.getPath());
         return configctx; 
 	}
 	

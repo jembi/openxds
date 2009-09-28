@@ -59,7 +59,7 @@ import com.sun.xml.bind.StringInputStream;
  * Before running this test case, be sure to configure the following:
  * <ul>
  *  <li>Both the XDS Repository and Registry servers have to be configured and started.</li>
- *  <li>The repositoryUrl needs be to set in this file.</li>
+ *  <li>The repositoryUrl and registryUrl needs be to set.</li>
  * </ul> 
  * 
  * Each test method can be run independently, so the order of each test method 
