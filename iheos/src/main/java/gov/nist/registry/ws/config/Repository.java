@@ -54,7 +54,7 @@ public class Repository {
 	}
 	
 	static public String getRepositoryUniqueId() {
-		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
 		return rm.getRepositoryUniqueId();
 	}
 

@@ -185,7 +185,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 	OMElement retrieve_document(String rep_id, String doc_id, String  home) throws XdsException {
 		
 		IXdsRepositoryItem repositoryItem;
-		IXdsRepositoryManager rm = (IXdsRepositoryManager)ModuleManager.getInstance().getBean("repositoryManager");
+		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
 	    try{
 	    	RepositoryRequestContext context = new RepositoryRequestContext();
 	    	context.setConnection(connection);

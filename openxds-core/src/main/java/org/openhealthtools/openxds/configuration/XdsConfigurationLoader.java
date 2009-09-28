@@ -948,7 +948,7 @@ public class XdsConfigurationLoader {
 		IheAuditTrail auditTrail = null;		
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-		IXdsRegistryPatientManager patientManager = (IXdsRegistryPatientManager)ModuleManager.getInstance().getBean("registryPatientManager");
+		IXdsRegistryPatientManager patientManager = ModuleManager.getXdsRegistryPatientManager();
 		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection, auditTrail);
 		xdsRegistry.registerPatientManager(patientManager);
         if (xdsRegistry != null) {

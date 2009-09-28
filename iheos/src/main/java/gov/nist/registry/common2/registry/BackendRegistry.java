@@ -114,7 +114,7 @@ public class BackendRegistry {
 		if (log_message != null)
 			log_message.addOtherParam("ebxmlrr request (" + reason + ")", sql);
 
-		IXdsRegistryQueryManager qm = (IXdsRegistryQueryManager)ModuleManager.getInstance().getBean("registryQueryManager");
+		IXdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
 
 		RegistrySQLQueryContext context = new RegistrySQLQueryContext(sql, leaf_class);
 		OMElement response_xml = null;

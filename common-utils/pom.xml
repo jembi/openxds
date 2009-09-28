@@ -18,6 +18,11 @@
 			<version>1.2.8</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openhealthtools.openxds</groupId>
+			<artifactId>openxds-api</artifactId>
+	  		<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.openhealthexchange.openpixpdq</groupId>
 			<artifactId>openpixpdq</artifactId>
 			<version>${openpixpdq.version}</version>
