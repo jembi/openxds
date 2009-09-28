@@ -33,8 +33,8 @@ import junit.framework.TestCase;
 import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
 import com.misyshealthcare.connect.net.ConnectionFactory;
@@ -52,7 +52,7 @@ public class FileSystemRepositoryTest extends TestCase {
    private static File content1K;
    private static File content1M;
    private static File content2M;
-   private IXdsRepositoryManager repositoryManager;
+   private XdsRepositoryManager repositoryManager;
  //  private FileSystemRepositoryManager repositoryManager;
    private RepositoryRequestContext requestContext = new RepositoryRequestContext();
    private static final String id = Utility.getInstance().createId();
@@ -86,7 +86,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	 */
 	public void testInsertRepoItem(){
 		try {
-			IXdsRepositoryItem ro = createRepositoryItem(id, content1M);
+			XdsRepositoryItem ro = createRepositoryItem(id, content1M);
 			repositoryManager.insert(ro, requestContext);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,9 +97,9 @@ public class FileSystemRepositoryTest extends TestCase {
 	 * Test FileSystemRepositoryManager: getRepoItem method
 	 */
     public void testgetRepoItem(){
-    	IXdsRepositoryItem invalidRepositoryId =null;
+    	XdsRepositoryItem invalidRepositoryId =null;
     	try {    		
-    		IXdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+    		XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
     		assertEquals(repositoryItem.getDocumentUniqueId(),documentId);
     		invalidRepositoryId = repositoryManager.getRepositoryItem("3d1a4aa5-e353-4d97-ae60-aa3ca9c96515", new RepositoryRequestContext());
     	} catch (Exception e) {
@@ -136,9 +136,9 @@ public class FileSystemRepositoryTest extends TestCase {
         return temp;
     }
     
-    private IXdsRepositoryItem createRepositoryItem(String id, File content) throws Exception {    	
+    private XdsRepositoryItem createRepositoryItem(String id, File content) throws Exception {    	
         DataHandler contentDataHandler = new DataHandler(new FileDataSource(content));
-        IXdsRepositoryItem repositoryItem = new XdsRepositoryItem(id, contentDataHandler);
+        XdsRepositoryItem repositoryItem = new XdsRepositoryItemImpl(id, contentDataHandler);
         return repositoryItem;
         
     }

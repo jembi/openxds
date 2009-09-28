@@ -27,7 +27,7 @@ import javax.activation.DataHandler;
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface IXdsRepositoryItem {
+public interface XdsRepositoryItem {
 
 	/**
 	 * Gets the document unique Id.

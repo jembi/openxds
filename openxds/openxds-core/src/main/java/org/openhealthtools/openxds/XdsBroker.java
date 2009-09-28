@@ -25,8 +25,8 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.openpixpdq.ihe.IPdSupplier;
 import org.openhealthexchange.openpixpdq.ihe.IPixManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistry;
-import org.openhealthtools.openxds.repository.api.IXdsRepository;
+import org.openhealthtools.openxds.registry.api.XdsRegistry;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 
 import com.misyshealthcare.connect.base.IBrokerController;
 
@@ -46,9 +46,9 @@ public class XdsBroker   {
 	private static final Logger log = Logger.getLogger(XdsBroker.class);
 		
     /** A list of all known xds registries */
-    private Vector<IXdsRegistry> xdsRegistries = new Vector<IXdsRegistry>();
+    private Vector<XdsRegistry> xdsRegistries = new Vector<XdsRegistry>();
     /** A list of all known xds repositories */
-    private Vector<IXdsRepository> xdsRepositories = new Vector<IXdsRepository>();
+    private Vector<XdsRepository> xdsRepositories = new Vector<XdsRepository>();
 
 	/**
 	 * A private constructor for creating the singleton instance.
@@ -77,7 +77,7 @@ public class XdsBroker   {
 	 * @param xdsRegistry an XDS Registry
 	 * @return <code>true</code> if this XDS Registry was successfully added
 	 */
-    public synchronized boolean registerXdsRegistry(IXdsRegistry xdsRegistry) {
+    public synchronized boolean registerXdsRegistry(XdsRegistry xdsRegistry) {
 		// If the xdsRegistry is new, add it to the list
 		if ((xdsRegistry != null) && (!xdsRegistries.contains(xdsRegistry))) {
 			xdsRegistry.start();
@@ -95,7 +95,7 @@ public class XdsBroker   {
 	 * @param xdsRepository an XDS Repository
 	 * @return <code>true</code> if this XDS Repository was successfully added
 	 */
-    public synchronized boolean registerXdsRepository(IXdsRepository xdsRepository) {
+    public synchronized boolean registerXdsRepository(XdsRepository xdsRepository) {
 		// If the xdsRepository is new, add it to the list
 		if ((xdsRepository != null) && (!xdsRepositories.contains(xdsRepository))) {
 			xdsRepository.start();
@@ -117,9 +117,9 @@ public class XdsBroker   {
 	 * @return <code>true</code> if all Registries were actually unregistered
 	 */
      public synchronized boolean unregisterXdsRegistries(IBrokerController controller) {
-		ArrayList<IXdsRegistry> removed = new ArrayList<IXdsRegistry>();
+		ArrayList<XdsRegistry> removed = new ArrayList<XdsRegistry>();
 		// Find all the sources to remove
-		for (IXdsRegistry actor: xdsRegistries) {
+		for (XdsRegistry actor: xdsRegistries) {
 			if ((controller == null) || controller.shouldUnregister(actor)) {
 				removed.add(actor);
 			}
@@ -128,7 +128,7 @@ public class XdsBroker   {
 		// Remove them
 		xdsRegistries.removeAll(removed);
 		// Stop them all too
-		for (IXdsRegistry actor: removed) actor.stop();
+		for (XdsRegistry actor: removed) actor.stop();
 		return true;
 	}
 
@@ -142,9 +142,9 @@ public class XdsBroker   {
  	 * @return <code>true</code> if all Repositories were actually unregistered
  	 */
      public synchronized boolean unregisterXdsRepositories(IBrokerController controller) {
- 		ArrayList<IXdsRepository> removed = new ArrayList<IXdsRepository>();
+ 		ArrayList<XdsRepository> removed = new ArrayList<XdsRepository>();
  		// Find all the sources to remove
- 		for (IXdsRepository actor: xdsRepositories) {
+ 		for (XdsRepository actor: xdsRepositories) {
  			if ((controller == null) || controller.shouldUnregister(actor)) {
  				removed.add(actor);
  			}
@@ -153,7 +153,7 @@ public class XdsBroker   {
  		// Remove them
  		xdsRepositories.removeAll(removed);
  		// Stop them all too
- 		for (IXdsRepository actor: removed) actor.stop();
+ 		for (XdsRepository actor: removed) actor.stop();
  		return true;
  	}
 	

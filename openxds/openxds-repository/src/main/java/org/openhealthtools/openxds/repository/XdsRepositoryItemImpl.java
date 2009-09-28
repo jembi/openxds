@@ -24,7 +24,7 @@ package org.openhealthtools.openxds.repository;
 import java.io.InputStream;
 import javax.activation.DataHandler;
 import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 
 /**
@@ -34,21 +34,21 @@ import org.openhealthtools.openxds.repository.api.RepositoryException;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
  */
-public class XdsRepositoryItem implements IXdsRepositoryItem {
+public class XdsRepositoryItemImpl implements XdsRepositoryItem {
 
-	private static final Logger LOG = Logger.getLogger(XdsRepositoryItem.class);
+	private static final Logger LOG = Logger.getLogger(XdsRepositoryItemImpl.class);
 
     private String id;
     private DataHandler handler;
     private String mimeType;
     
-    public XdsRepositoryItem(){   	
+    public XdsRepositoryItemImpl(){   	
     }
 	    
     /**
     * Constructor.
     */
-    public XdsRepositoryItem(String id, DataHandler handler) {
+    public XdsRepositoryItemImpl(String id, DataHandler handler) {
 	        this.id = id;
 	        this.handler = handler;
 	    }

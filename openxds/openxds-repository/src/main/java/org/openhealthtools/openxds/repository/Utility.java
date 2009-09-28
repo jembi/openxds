@@ -35,7 +35,7 @@ import java.util.zip.ZipOutputStream;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -172,11 +172,11 @@ public class Utility {
      * @return a <code>RepositoryItem</code> value
      * @throws IOException encountered during IO operations
      */
-    public IXdsRepositoryItem createRepositoryItem(String id, String content) throws IOException {
+    public XdsRepositoryItem createRepositoryItem(String id, String content) throws IOException {
         File file = createTempFile(content, true);
         
         DataHandler dh = new DataHandler(new FileDataSource(file));
-        IXdsRepositoryItem ri = new XdsRepositoryItem(id, dh);
+        XdsRepositoryItem ri = new XdsRepositoryItemImpl(id, dh);
         return ri;
     }    
 

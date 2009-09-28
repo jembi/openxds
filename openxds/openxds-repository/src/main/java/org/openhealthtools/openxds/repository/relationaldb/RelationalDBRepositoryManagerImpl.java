@@ -27,8 +27,8 @@ import java.util.List;
 import javax.activation.DataHandler;
 import org.apache.log4j.Logger;
 import org.openhealthtools.openxds.repository.*;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDao;
@@ -42,8 +42,8 @@ import org.springframework.transaction.annotation.Propagation;
  * 
  */
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
-	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryManager.class);
+public class RelationalDBRepositoryManagerImpl implements XdsRepositoryManager {
+	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryManagerImpl.class);
 	
 	
 	private XdsRepositoryManagerDao xdsRepositoryManagerDao;
@@ -71,16 +71,16 @@ public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#getRepositoryItem()
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public IXdsRepositoryItem getRepositoryItem(String documentUniqueId,
+	public XdsRepositoryItem getRepositoryItem(String documentUniqueId,
 			RepositoryRequestContext context) throws RepositoryException {
-		XdsRepositoryItem repositoryItem = null;
+		XdsRepositoryItemImpl repositoryItem = null;
 		// Strip off the "urn:uuid:"
 		String id = Utility.getInstance().stripId(documentUniqueId);		
 		try {
 			Repository repository = xdsRepositoryManagerDao.getXdsRepositoryBean(id);
 			if(repository != null){
 	        DataHandler contentDataHandler = new DataHandler(new ByteArrayDataSource(repository.getBinaryContent(), repository.getMimeType()));
-			repositoryItem = new XdsRepositoryItem();
+			repositoryItem = new XdsRepositoryItemImpl();
 			repositoryItem.setDataHandler(contentDataHandler);
 			repositoryItem.setDocumentUniqueId(repository.getDocumentUniqueId());
 			repositoryItem.setMimeType(repository.getMimeType());
@@ -97,16 +97,16 @@ public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#getRepositoryItems()
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public List<IXdsRepositoryItem> getRepositoryItems(
+	public List<XdsRepositoryItem> getRepositoryItems(
 			List<String> documentUniqueIds, RepositoryRequestContext context)
 			throws RepositoryException {
-		List<IXdsRepositoryItem> repositoryItems = null;
+		List<XdsRepositoryItem> repositoryItems = null;
 		try {
 			if (documentUniqueIds != null) {
 				Iterator<String> item = documentUniqueIds.iterator();
 				while (item.hasNext()) {
 					String repositoryItem = item.next();
-					IXdsRepositoryItem xdsRepositoryItem = getRepositoryItem(repositoryItem, context);
+					XdsRepositoryItem xdsRepositoryItem = getRepositoryItem(repositoryItem, context);
 					if (xdsRepositoryItem != null)
 						repositoryItems.add(xdsRepositoryItem);
 				}
@@ -123,7 +123,7 @@ public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#insert()
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void insert(IXdsRepositoryItem item, RepositoryRequestContext context)
+	public void insert(XdsRepositoryItem item, RepositoryRequestContext context)
 			throws RepositoryException {
 		Repository bean =null;
 		byte contentBytes[]= null;
@@ -156,13 +156,13 @@ public class RelationalDBRepositoryManager implements IXdsRepositoryManager {
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#insert()
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void insert(List<IXdsRepositoryItem> items,
+	public void insert(List<XdsRepositoryItem> items,
 			RepositoryRequestContext context) throws RepositoryException {
 		try {
 			if (items != null) {
-				Iterator<IXdsRepositoryItem> item = items.iterator();
+				Iterator<XdsRepositoryItem> item = items.iterator();
 				while (item.hasNext()) {
-					IXdsRepositoryItem repositoryItem = item.next();
+					XdsRepositoryItem repositoryItem = item.next();
 					insert(repositoryItem, context);
 				}
 			}

@@ -19,7 +19,7 @@
  */
 package org.openhealthtools.openxds.registry.dao;
 
-import org.openhealthtools.openxds.registry.InvalidPatientException;
+import org.openhealthtools.openxds.registry.api.InvalidPatientException;
 /**
  * This interface defines the operations to merge XDS documents,submissionSet and folders. 
  *

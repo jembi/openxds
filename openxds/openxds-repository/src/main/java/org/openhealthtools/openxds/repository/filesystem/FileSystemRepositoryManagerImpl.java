@@ -30,9 +30,9 @@ import javax.activation.FileDataSource;
 
 import org.apache.log4j.Logger;
 import org.openhealthtools.openxds.repository.Utility;
-import org.openhealthtools.openxds.repository.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
@@ -46,9 +46,9 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
-public class FileSystemRepositoryManager implements IXdsRepositoryManager {
+public class FileSystemRepositoryManagerImpl implements XdsRepositoryManager {
 	private static final Logger LOG = Logger
-			.getLogger(FileSystemRepositoryManager.class);
+			.getLogger(FileSystemRepositoryManagerImpl.class);
 	
 	/**The repository root folder*/
 	private String repositoryRoot = null;
@@ -95,7 +95,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#insert()
 	 */
-	public void insert(IXdsRepositoryItem item, RepositoryRequestContext context)
+	public void insert(XdsRepositoryItem item, RepositoryRequestContext context)
 			throws RepositoryException {
 		IConnectionDescription connection = context.getConnection();
 		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
@@ -139,14 +139,14 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#insert()
 	 */
-	public void insert(List<IXdsRepositoryItem> items,
+	public void insert(List<XdsRepositoryItem> items,
 			RepositoryRequestContext context) throws RepositoryException {
 
 		try {
 			if (items != null) {
-				Iterator<IXdsRepositoryItem> item = items.iterator();
+				Iterator<XdsRepositoryItem> item = items.iterator();
 				while (item.hasNext()) {
-					IXdsRepositoryItem repositoryItem = item.next();
+					XdsRepositoryItem repositoryItem = item.next();
 					insert(repositoryItem, context);
 				}
 			}
@@ -160,9 +160,9 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#getRepositoryItem()
 	 */
-	public IXdsRepositoryItem getRepositoryItem(String documentUniqueId, RepositoryRequestContext context)
+	public XdsRepositoryItem getRepositoryItem(String documentUniqueId, RepositoryRequestContext context)
 			throws RepositoryException {
-		XdsRepositoryItem repositoryItem = null;
+		XdsRepositoryItemImpl repositoryItem = null;
 		// Strip off the "urn:uuid:"
 		documentUniqueId = Utility.getInstance().stripId(documentUniqueId);		
 		try {
@@ -198,7 +198,7 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 
 			DataHandler contentDataHandler = new DataHandler(
 					new FileDataSource(targetFile));
-			repositoryItem = new XdsRepositoryItem(documentUniqueId,
+			repositoryItem = new XdsRepositoryItemImpl(documentUniqueId,
 					contentDataHandler);
 			repositoryItem.setMimeType(targetFileMimeType);
 
@@ -212,15 +212,15 @@ public class FileSystemRepositoryManager implements IXdsRepositoryManager {
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryManager#getRepositoryItem()
 	 */
-	public List<IXdsRepositoryItem> getRepositoryItems(
+	public List<XdsRepositoryItem> getRepositoryItems(
 			List<String> documentUniqueIds, RepositoryRequestContext context) throws RepositoryException {
-		List<IXdsRepositoryItem> repositoryItems = null;
+		List<XdsRepositoryItem> repositoryItems = null;
 		try {
 			if (documentUniqueIds != null) {
 				Iterator<String> item = documentUniqueIds.iterator();
 				while (item.hasNext()) {
 					String repositoryItem = item.next();
-					IXdsRepositoryItem xdsRepositoryItem = getRepositoryItem(repositoryItem, context);
+					XdsRepositoryItem xdsRepositoryItem = getRepositoryItem(repositoryItem, context);
 					if (xdsRepositoryItem != null)
 						repositoryItems.add(xdsRepositoryItem);
 				}

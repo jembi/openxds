@@ -40,9 +40,9 @@ import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.repository.api.IXdsRepository;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.IXdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
@@ -83,7 +83,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			if (connection == null) {
 				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
 			}
-			registryClientConnection = ((IXdsRepository)actor).getRegistryClientConnection();
+			registryClientConnection = ((XdsRepository)actor).getRegistryClientConnection();
 			if (registryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XdsRepository XdsRegistryClient connection configuration.");			
 			}
@@ -398,8 +398,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
 					
-		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
-		IXdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
+		XdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
+		XdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {
@@ -464,8 +464,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
         DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
 
-		IXdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
-		IXdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
+		XdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
+		XdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {

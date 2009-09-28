@@ -44,9 +44,9 @@ import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.openxds.XdsBroker;
-import org.openhealthtools.openxds.registry.XdsRegistry;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryPatientManager;
-import org.openhealthtools.openxds.repository.XdsRepository;
+import org.openhealthtools.openxds.registry.XdsRegistryImpl;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
+import org.openhealthtools.openxds.repository.XdsRepositoryImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -948,8 +948,8 @@ public class XdsConfigurationLoader {
 		IheAuditTrail auditTrail = null;		
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-		IXdsRegistryPatientManager patientManager = ModuleManager.getXdsRegistryPatientManager();
-		XdsRegistry xdsRegistry = new XdsRegistry(pixRegistryConnection, xdsRegistryConnection, auditTrail);
+		XdsRegistryPatientManager patientManager = ModuleManager.getXdsRegistryPatientManager();
+		XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryConnection, xdsRegistryConnection, auditTrail);
 		xdsRegistry.registerPatientManager(patientManager);
         if (xdsRegistry != null) {
             XdsBroker broker = XdsBroker.getInstance();
@@ -982,7 +982,7 @@ public class XdsConfigurationLoader {
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
 
-		XdsRepository xdsRepository = new XdsRepository(xdsRepositoryServerConnection, xdsRegistryClientConnection, auditTrail);
+		XdsRepositoryImpl xdsRepository = new XdsRepositoryImpl(xdsRepositoryServerConnection, xdsRegistryClientConnection, auditTrail);
         if (xdsRepositoryServerConnection != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXdsRepository(xdsRepository);
@@ -1274,8 +1274,8 @@ public class XdsConfigurationLoader {
 		public boolean shouldUnregister(Object actor) {
 			// Unregister any IHE Actor
 			if (actor instanceof IheAuditTrail) return true;
-            if (actor instanceof XdsRegistry) return true;
-            if (actor instanceof XdsRepository) return true;
+            if (actor instanceof XdsRegistryImpl) return true;
+            if (actor instanceof XdsRepositoryImpl) return true;
 
             return false;
 		}

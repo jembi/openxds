@@ -45,9 +45,9 @@ import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
-import org.openhealthtools.openxds.repository.api.IXdsRepository;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
@@ -297,7 +297,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
 			OMElement response = null;
 			
-				IXdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
+				XdsRegistryQueryManager qm = ModuleManager.getXdsRegistryQueryManager();
 				response = qm.storedQuery(context);
 				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);

@@ -33,8 +33,8 @@ import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryLifeCycleManager;
-import org.openhealthtools.openxds.registry.api.IXdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
@@ -71,17 +71,17 @@ import com.misyshealthcare.connect.net.Identifier;
 class PixFeedHandler extends BaseHandler implements Application {
 
     private static Logger log = Logger.getLogger(PixFeedHandler.class);
-	private XdsRegistry actor = null;
+	private XdsRegistryImpl actor = null;
 	
     /** The XDS Registry Patient Manager*/
-    private IXdsRegistryPatientManager patientManager = null;
+    private XdsRegistryPatientManager patientManager = null;
 
     /**
 	 * Constructor
 	 * 
-	 * @param actor the {@link XdsRegistry} actor
+	 * @param actor the {@link XdsRegistryImpl} actor
 	 */
-	PixFeedHandler(XdsRegistry actor) {
+	PixFeedHandler(XdsRegistryImpl actor) {
 		super(actor.getPixRegistryConnection());
 		this.actor = actor;
 		this.patientManager = actor.getPatientManager();
@@ -292,7 +292,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
 		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
 		try {
-			IXdsRegistryLifeCycleManager lifeCycleManager = ModuleManager.getXdsRegistryLifeCycleManager();
+			XdsRegistryLifeCycleManager lifeCycleManager = ModuleManager.getXdsRegistryLifeCycleManager();
 			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
 		} catch (Exception e) {
 			log.error("error while merging patient document in xds regsitry");

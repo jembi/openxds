@@ -29,7 +29,7 @@ import org.apache.axiom.om.OMElement;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
  */
-public interface IXdsRegistryLifeCycleManager {
+public interface XdsRegistryLifeCycleManager {
     /**
      * Submits a list of Registry objects to the underneath Registry storage service. All 
      * the objects will be saved to the Registry database if successful. The available
