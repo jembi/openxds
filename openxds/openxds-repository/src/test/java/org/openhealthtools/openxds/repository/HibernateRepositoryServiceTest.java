@@ -46,7 +46,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  *
  */
-public class HibernateRepositoryManagerTest {
+public class HibernateRepositoryServiceTest {
 	private static File content1K;
     private XdsRepositoryService repositoryManager;
 	private RepositoryRequestContext requestContext = new RepositoryRequestContext();

@@ -42,8 +42,8 @@ import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
    * 
    * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
    */
-  public class XdsRegistryQueryManagerTest extends TestCase {
-	private static final Logger log =  Logger.getLogger(XdsRegistryQueryManagerTest.class);
+  public class XdsRegistryQueryServiceTest extends TestCase {
+	private static final Logger log =  Logger.getLogger(XdsRegistryQueryServiceTest.class);
 	protected static BindingUtility bu = BindingUtility.getInstance();
 	protected static XdsRegistryQueryService queryManager = new  XdsRegistryQueryServiceImpl();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();
