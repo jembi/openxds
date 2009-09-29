@@ -8,6 +8,8 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.xml.Util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
@@ -38,6 +40,7 @@ public class Soap {
 				serviceClient = new ServiceClient();
 
 			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
+			serviceClient.getOptions().setFrom(new EndpointReference(InetAddress.getLocalHost().getHostAddress()));
 
 			if (System.getenv("XDSHTTP10") != null) {
 				System.out.println("Generating HTTP 1.0");
@@ -98,6 +101,8 @@ public class Soap {
 			return result;
 
 		} catch (AxisFault e) {
+			throw new XdsException(ExceptionUtil.exception_details(e));
+		} catch (UnknownHostException e) {
 			throw new XdsException(ExceptionUtil.exception_details(e));
 		}
 	}
