@@ -6,7 +6,7 @@ import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 import com.misyshealthcare.connect.net.SecureConnectionDescription;
@@ -54,7 +54,7 @@ public class Repository {
 	}
 	
 	static public String getRepositoryUniqueId() {
-		XdsRepositoryManager rm = ModuleManager.getXdsRepositoryManager();
+		XdsRepositoryService rm = ModuleManager.getXdsRepositoryService();
 		return rm.getRepositoryUniqueId();
 	}
 

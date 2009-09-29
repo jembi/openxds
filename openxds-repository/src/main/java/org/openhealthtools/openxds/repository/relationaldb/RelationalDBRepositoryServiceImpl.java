@@ -28,7 +28,7 @@ import javax.activation.DataHandler;
 import org.apache.log4j.Logger;
 import org.openhealthtools.openxds.repository.*;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDao;
@@ -42,8 +42,8 @@ import org.springframework.transaction.annotation.Propagation;
  * 
  */
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class RelationalDBRepositoryManagerImpl implements XdsRepositoryManager {
-	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryManagerImpl.class);
+public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
+	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryServiceImpl.class);
 	
 	
 	private XdsRepositoryManagerDao xdsRepositoryManagerDao;

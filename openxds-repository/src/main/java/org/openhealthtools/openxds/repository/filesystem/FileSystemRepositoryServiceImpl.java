@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.openhealthtools.openxds.repository.Utility;
 import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
@@ -46,9 +46,9 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
-public class FileSystemRepositoryManagerImpl implements XdsRepositoryManager {
+public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 	private static final Logger LOG = Logger
-			.getLogger(FileSystemRepositoryManagerImpl.class);
+			.getLogger(FileSystemRepositoryServiceImpl.class);
 	
 	/**The repository root folder*/
 	private String repositoryRoot = null;

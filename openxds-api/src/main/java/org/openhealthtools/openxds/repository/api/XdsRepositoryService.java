@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface XdsRepositoryManager {
+public interface XdsRepositoryService {
 	
 	/**
 	 * Get the repository unique Id that represents this Repository.

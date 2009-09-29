@@ -33,7 +33,7 @@ import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
@@ -53,7 +53,7 @@ public class XdsRepositoryImpl extends IheActor implements XdsRepository {
     IheHTTPServer repositoryServer = null;
 
     /** The XDS Repository Manager*/
-    private XdsRepositoryManager repositoryManager = null;
+    private XdsRepositoryService repositoryManager = null;
 
 
     /**
@@ -119,22 +119,22 @@ public class XdsRepositoryImpl extends IheActor implements XdsRepository {
     }
 
     /**
-     * Registers an {@link XdsRepositoryManager} which delegates repository item insertion,
+     * Registers an {@link XdsRepositoryService} which delegates repository item insertion,
      * retrieving and deletion from this XDS Repository actor to the 
      * underneath repository manager implementation.
      *
-     * @param repositoryManager the {@link XdsRepositoryManager} to be registered
+     * @param repositoryManager the {@link XdsRepositoryService} to be registered
      */
-    public void registerRepositoryManager(XdsRepositoryManager repositoryManager) {
+    public void registerRepositoryManager(XdsRepositoryService repositoryManager) {
        this.repositoryManager = repositoryManager;
     }
     
     /**
-     * Gets the {@link XdsRepositoryManager} for this <code>XdsRegistry</code>
+     * Gets the {@link XdsRepositoryService} for this <code>XdsRegistry</code>
      * 
-     * @return an {@link XdsRepositoryManager} instance
+     * @return an {@link XdsRepositoryService} instance
      */
-    XdsRepositoryManager getRepositoryManager() {
+    XdsRepositoryService getRepositoryManager() {
     	return this.repositoryManager;
     }    
     

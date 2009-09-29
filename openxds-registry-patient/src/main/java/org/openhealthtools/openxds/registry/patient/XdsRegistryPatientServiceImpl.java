@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.util.ConversionHelper;
@@ -43,9 +43,9 @@ import org.openhie.openempi.service.PersonQueryService;
  * @author <a href="mailto:support@sysnet.com">Odysseas Pentakalos</a>
  *
  */
-public class XdsRegistryPatientManagerImpl implements XdsRegistryPatientManager
+public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 {
-	private static Logger log = Logger.getLogger(XdsRegistryPatientManagerImpl.class);
+	private static Logger log = Logger.getLogger(XdsRegistryPatientServiceImpl.class);
 	
 	public boolean isValidPatient(PatientIdentifier pid, RegistryPatientContext context) throws RegistryPatientException {
 		PersonQueryService personQueryService = Context.getPersonQueryService();

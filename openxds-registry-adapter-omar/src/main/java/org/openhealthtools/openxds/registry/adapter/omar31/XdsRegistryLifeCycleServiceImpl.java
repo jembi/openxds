@@ -32,7 +32,7 @@ import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.openxds.registry.api.MergeDocument;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 
@@ -45,7 +45,7 @@ import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
  * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  *
  */
-public class XdsRegistryLifeCycleManagerImpl implements XdsRegistryLifeCycleManager {
+public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleService {
 	
 	protected static LifeCycleManager lcm = LifeCycleManagerFactory.getInstance().getLifeCycleManager();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();

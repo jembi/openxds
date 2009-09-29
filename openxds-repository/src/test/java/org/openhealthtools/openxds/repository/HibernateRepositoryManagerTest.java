@@ -34,7 +34,7 @@ import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.openxds.repository.Utility;
 import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
 import com.misyshealthcare.connect.net.ConnectionFactory;
@@ -48,7 +48,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  */
 public class HibernateRepositoryManagerTest {
 	private static File content1K;
-    private XdsRepositoryManager repositoryManager;
+    private XdsRepositoryService repositoryManager;
 	private RepositoryRequestContext requestContext = new RepositoryRequestContext();
     private static final String id = Utility.getInstance().createId();
     String documentId = Utility.getInstance().stripId(id);
@@ -60,7 +60,7 @@ public class HibernateRepositoryManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		try{
-		 repositoryManager = ModuleManager.getXdsRepositoryManager();
+		 repositoryManager = ModuleManager.getXdsRepositoryService();
 		}catch (Exception e) {
 			System.out.println(e);
 		}

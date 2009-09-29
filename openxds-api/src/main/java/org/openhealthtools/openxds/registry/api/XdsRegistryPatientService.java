@@ -29,7 +29,7 @@ import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface XdsRegistryPatientManager {
+public interface XdsRegistryPatientService {
     /**
      * Whether the given patient is a valid patient in the patient manager implementation.
      *

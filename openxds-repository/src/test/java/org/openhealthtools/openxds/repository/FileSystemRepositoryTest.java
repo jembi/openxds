@@ -34,7 +34,7 @@ import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
 import com.misyshealthcare.connect.net.ConnectionFactory;
@@ -52,7 +52,7 @@ public class FileSystemRepositoryTest extends TestCase {
    private static File content1K;
    private static File content1M;
    private static File content2M;
-   private XdsRepositoryManager repositoryManager;
+   private XdsRepositoryService repositoryManager;
  //  private FileSystemRepositoryManager repositoryManager;
    private RepositoryRequestContext requestContext = new RepositoryRequestContext();
    private static final String id = Utility.getInstance().createId();
@@ -62,7 +62,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	private PixManager actor = null;
    
    protected void setUp() throws Exception {
-	   repositoryManager = ModuleManager.getXdsRepositoryManager();	   
+	   repositoryManager = ModuleManager.getXdsRepositoryService();	   
 	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
 	   connection = ConnectionFactory.getConnectionDescription("xds-repository");
 	   requestContext.setConnection(connection);
