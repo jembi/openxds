@@ -25,7 +25,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -222,6 +224,12 @@ public abstract class XdsTest {
 	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
 	    options.setTo( new EndpointReference(url) );
 		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+		try {
+			String from = InetAddress.getLocalHost().getHostAddress();	
+			options.setFrom(new EndpointReference(from));
+		}catch(UnknownHostException e) {
+			//ignore From
+		}
 		if (enableMTOM)
 			options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 		else
