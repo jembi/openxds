@@ -72,11 +72,13 @@ public class XdsService {
 	protected OMElement beginTransaction(String service_name, OMElement request, short actor) {
 
 		// This gets around a bug in Leopard (MacOS X 10.5) on Macs
-		System.setProperty("http.nonProxyHosts", "");
+		// Though removing this property fixes a Mac problem, but it disables transactions via proxy server in a production environment
+		//System.setProperty("http.nonProxyHosts", "");
 
 
 		this.service_name = service_name;
 
+//TODO: need re-work as it is not efficient to block IPs		
 //		String incoming_ip_address = getMessageContext().getFrom().getAddress();
 //		for (int i=1; i<100; i++) {
 //			String entry = this.properties.getString("BlockIp" + i);
@@ -85,15 +87,13 @@ public class XdsService {
 //			if (entry.equals(incoming_ip_address))
 //				return start_up_error(request, null, actor, "Continuous jamming from IP " + incoming_ip_address + " - access blocked");
 //		}
-//
-//
-//		logger.info("Start " + service_name + " : " + getMessageContext().getFrom().getAddress()  + " : " + getMessageContext().getTo().toString());
+
+
+		logger.info("Start " + service_name + " : " + getMessageContext().getFrom().getAddress()  + " : " + getMessageContext().getTo().toString());
 		try {
 			startTestLog();
 			if (log != null && log_message == null) {
-//TODO:
-//				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
-				log_message = log.createMessage("localhost");
+				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
 			}
 			log_message.addOtherParam(Fields.service, service_name);
 			is_secure = getMessageContext().getTo().toString().indexOf("https://") != -1;
@@ -107,8 +107,6 @@ public class XdsService {
 				return start_up_error(request, null, actor, "Request body is null");
 			}
 
-			//TODO: change TransportHeader to HashMap
-			//TransportHeaders transportHeaders = (TransportHeaders) getMessageContext().getProperty("TRANSPORT_HEADERS") ;
             HashMap transportHeaders = (HashMap)getMessageContext().getProperty("TRANSPORT_HEADERS");
 			for (Object o_key : transportHeaders.keySet()) {
 				String key = (String) o_key;
@@ -135,7 +133,7 @@ public class XdsService {
 					addSoap( "Soap Envelope", getMessageContext().getEnvelope().toStringWithConsume() );
 				}  catch (OMException e) {} catch (XMLStreamException e) {}
 			}
-//			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
+			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
 			log_message.addHTTPParam(Fields.endpoint , getMessageContext().getTo().toString() ) ; 
 
 			return null;  // no error
