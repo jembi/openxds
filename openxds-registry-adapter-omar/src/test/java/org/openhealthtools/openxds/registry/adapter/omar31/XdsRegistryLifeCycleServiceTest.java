@@ -45,8 +45,8 @@ import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
  * 
  * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  */
-public class XdsRegistryLifeCycleManagerTest extends TestCase{
-	 private static final Logger log =  Logger.getLogger(XdsRegistryLifeCycleManagerTest.class);
+public class XdsRegistryLifeCycleServiceTest extends TestCase{
+	 private static final Logger log =  Logger.getLogger(XdsRegistryLifeCycleServiceTest.class);
 	//DocumentEntry
 	private static final String XDS_DOCUMENT_ENTRY = "urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1";
 	
