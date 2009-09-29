@@ -41,7 +41,7 @@ import org.oasis.ebxml.registry.bindings.query.AdhocQueryRequest;
 import org.oasis.ebxml.registry.bindings.query.AdhocQueryResponse;
 import org.oasis.ebxml.registry.bindings.rim.RegistryObjectListType;
 import org.openhealthtools.common.utils.OMUtil;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
@@ -53,8 +53,8 @@ import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  */
-public class XdsRegistryQueryManagerImpl implements XdsRegistryQueryManager {
-	private static final Logger log = Logger.getLogger(XdsRegistryQueryManagerImpl.class);
+public class XdsRegistryQueryServiceImpl implements XdsRegistryQueryService {
+	private static final Logger log = Logger.getLogger(XdsRegistryQueryServiceImpl.class);
 	protected static QueryManager qm = QueryManagerFactory.getInstance().getQueryManager();
 	
     public OMElement storedQuery(RegistryStoredQueryContext context)  throws RegistryQueryException {

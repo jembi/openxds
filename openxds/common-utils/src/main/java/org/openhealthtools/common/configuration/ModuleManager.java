@@ -20,11 +20,11 @@
 package org.openhealthtools.common.configuration;
 
 import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryManager;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -69,13 +69,13 @@ public class ModuleManager {
 	
 	private String[] getConfigLocations() {
         return new String[] {
-                "classpath:/applicationContext-resources.xml",
+                "classpath*:/applicationContext-resources.xml",
 //                "classpath:/applicationContext-dao.xml",
                 "classpath*:/applicationContext.xml", // for modular projects
 //                "classpath*:/applicationContext-service.xml",
 //               "classpath*:/applicationContext-dao.xml",// for web projects
                 "classpath*:/repository.cfg.xml",// for openxds repository modular projects
-                "classpath*:/externalidentifier.cfg.xml" // for openxds-registry-adapter-omar projects.
+//                "classpath*:/externalidentifier.cfg.xml" // for openxds-registry-adapter-omar projects.
             };
     }
 
@@ -90,39 +90,39 @@ public class ModuleManager {
 	}
 
 	/**
-	 * The factory method to get {@link XdsRegistryLifeCycleManager}
+	 * The factory method to get {@link XdsRegistryLifeCycleService}
 	 * 
-	 * @return the singleton {@link XdsRegistryLifeCycleManager} instance
+	 * @return the singleton {@link XdsRegistryLifeCycleService} instance
 	 */
-	public static XdsRegistryLifeCycleManager getXdsRegistryLifeCycleManager() {
-		return (XdsRegistryLifeCycleManager)getInstance().getBean("registryLifeCycleManager");
+	public static XdsRegistryLifeCycleService getXdsRegistryLifeCycleService() {
+		return (XdsRegistryLifeCycleService)getInstance().getBean("registryLifeCycleService");
 	}
 
 	/**
-	 * The factory method to get {@link XdsRegistryQueryManager}
+	 * The factory method to get {@link XdsRegistryQueryService}
 	 * 
-	 * @return the singleton {@link XdsRegistryQueryManager} instance
+	 * @return the singleton {@link XdsRegistryQueryService} instance
 	 */
-	public static XdsRegistryQueryManager getXdsRegistryQueryManager() {
-		return(XdsRegistryQueryManager)getInstance().getBean("registryQueryManager");
+	public static XdsRegistryQueryService getXdsRegistryQueryService() {
+		return(XdsRegistryQueryService)getInstance().getBean("registryQueryService");
 	}
 	
 	/**
-	 * The factory method to get {@link XdsRegistryPatientManager}
+	 * The factory method to get {@link XdsRegistryPatientService}
 	 * 
-	 * @return the singleton {@link XdsRegistryPatientManager} instance
+	 * @return the singleton {@link XdsRegistryPatientService} instance
 	 */
-	public static XdsRegistryPatientManager getXdsRegistryPatientManager() {
-		return (XdsRegistryPatientManager)getInstance().getBean("registryPatientManager");
+	public static XdsRegistryPatientService getXdsRegistryPatientService() {
+		return (XdsRegistryPatientService)getInstance().getBean("registryPatientService");
 	}
 
 	/**
-	 * The factory method to get {@link XdsRepositoryManager}
+	 * The factory method to get {@link XdsRepositoryService}
 	 * 
-	 * @return the singleton {@link XdsRepositoryManager} instance
+	 * @return the singleton {@link XdsRepositoryService} instance
 	 */
-	public static XdsRepositoryManager getXdsRepositoryManager() {
-		return (XdsRepositoryManager)getInstance().getBean("repositoryManager");		
+	public static XdsRepositoryService getXdsRepositoryService() {
+		return (XdsRepositoryService)getInstance().getBean("repositoryService");		
 	}
 
 	/**

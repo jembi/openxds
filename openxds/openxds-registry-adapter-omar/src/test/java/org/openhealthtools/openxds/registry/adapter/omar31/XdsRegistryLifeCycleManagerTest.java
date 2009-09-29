@@ -34,8 +34,8 @@ import org.apache.log4j.Logger;
 import org.freebxml.omar.common.BindingUtility;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
 import org.openhealthtools.openxds.registry.adapter.omar31.ConversionHelper;
-import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleManagerImpl;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
+import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleServiceImpl;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 
 
@@ -73,7 +73,7 @@ public class XdsRegistryLifeCycleManagerTest extends TestCase{
     
 	 protected static ConversionHelper helper = ConversionHelper.getInstance();
 	 protected static BindingUtility bu = BindingUtility.getInstance();
-	 protected static XdsRegistryLifeCycleManager registryManager =new  XdsRegistryLifeCycleManagerImpl();
+	 protected static XdsRegistryLifeCycleService registryManager =new  XdsRegistryLifeCycleServiceImpl();
 	 
 	 /**
 	  * Test SubmitObjedctsRequest

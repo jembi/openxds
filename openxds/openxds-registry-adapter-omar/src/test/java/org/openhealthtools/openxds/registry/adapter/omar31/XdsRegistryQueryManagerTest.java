@@ -32,8 +32,8 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.log4j.Logger;
 import org.freebxml.omar.common.BindingUtility;
 import org.openhealthtools.openxds.registry.adapter.omar31.ConversionHelper;
-import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryManagerImpl;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryManager;
+import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryServiceImpl;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
 
   /**
@@ -45,7 +45,7 @@ import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
   public class XdsRegistryQueryManagerTest extends TestCase {
 	private static final Logger log =  Logger.getLogger(XdsRegistryQueryManagerTest.class);
 	protected static BindingUtility bu = BindingUtility.getInstance();
-	protected static XdsRegistryQueryManager queryManager = new  XdsRegistryQueryManagerImpl();
+	protected static XdsRegistryQueryService queryManager = new  XdsRegistryQueryServiceImpl();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();
 	private static final String FindDocumentsId = "urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d";
 	private static final String FindFoldersId = "urn:uuid:958f3006-baad-4929-a4de-ff1114824431";

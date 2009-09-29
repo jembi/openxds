@@ -34,7 +34,7 @@ import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
 import ca.uhn.hl7v2.app.Application;
 import ca.uhn.hl7v2.llp.LowerLayerProtocol;
@@ -58,7 +58,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
     /** The XDS Registry Server */    
     private IheHTTPServer registryServer = null;
     /** The XDS Registry Patient Manager*/
-    private XdsRegistryPatientManager patientManager = null;
+    private XdsRegistryPatientService patientManager = null;
 
     /**
      * Creates a new XdsRegistry actor.
@@ -191,7 +191,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
      *
      * @param patientManager the patient manager to be registered
      */
-    public void registerPatientManager(XdsRegistryPatientManager patientManager) {
+    public void registerPatientManager(XdsRegistryPatientService patientManager) {
        this.patientManager = patientManager;
     }
     
@@ -200,7 +200,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
      * 
      * @return the patient manager
      */
-    XdsRegistryPatientManager getPatientManager() {
+    XdsRegistryPatientService getPatientManager() {
     	return this.patientManager;
     }    
     

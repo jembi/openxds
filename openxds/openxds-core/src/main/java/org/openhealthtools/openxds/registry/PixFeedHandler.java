@@ -33,8 +33,8 @@ import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleManager;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientManager;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
@@ -74,7 +74,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	private XdsRegistryImpl actor = null;
 	
     /** The XDS Registry Patient Manager*/
-    private XdsRegistryPatientManager patientManager = null;
+    private XdsRegistryPatientService patientManager = null;
 
     /**
 	 * Constructor
@@ -292,7 +292,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
 		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
 		try {
-			XdsRegistryLifeCycleManager lifeCycleManager = ModuleManager.getXdsRegistryLifeCycleManager();
+			XdsRegistryLifeCycleService lifeCycleManager = ModuleManager.getXdsRegistryLifeCycleService();
 			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
 		} catch (Exception e) {
 			log.error("error while merging patient document in xds regsitry");
