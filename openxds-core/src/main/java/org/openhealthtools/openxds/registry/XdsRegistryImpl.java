@@ -93,7 +93,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
             log.fatal("PIX Registry failed to start: " + pixRegistryConnection.getDescription() );        	
  
         //3. initialize OpenEMPI
-        //initializeOpenEMPI();
+        initializeOpenEMPI();
     }
 
     /**
