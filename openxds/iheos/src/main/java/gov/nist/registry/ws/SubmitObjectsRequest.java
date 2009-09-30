@@ -55,6 +55,7 @@ import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
 import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.Identifier;
 
 public class SubmitObjectsRequest extends XdsCommon {
 	boolean submit_raw = false;
@@ -87,6 +88,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 		}
 	}
 	
+	public SubmitObjectsRequest() {
+		// TODO Auto-generated constructor stub
+	}
+
 	void loadSourceIds() throws XdsInternalException {
 		if (sourceIds != null) return;
 		String sids = connection.getProperty("sourceIds");
@@ -425,10 +430,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 		if (Properties.loader().getBoolean("validate_patient_id")) {
 			try {
 				XdsRegistryPatientService patientMan = ModuleManager.getXdsRegistryPatientService();
-
-				//TODO:get the patient id
-				PatientIdentifier pid = null; 
-				//PatientIdentifier pid = new PatientIdentifier(patient_id);
+				PatientIdentifier pid = getPatientIdentifier(patient_id); 
 				boolean known_patient_id = patientMan.isValidPatient(pid, null);
 				if ( !known_patient_id)
 					throw new XdsUnknownPatientIdException("PatientId " + patient_id + " is not known to the Registry");
@@ -438,7 +440,21 @@ public class SubmitObjectsRequest extends XdsCommon {
 			}
 		}
 	}
-
+   private PatientIdentifier getPatientIdentifier(String patientId){
+    	Identifier assigningAuthority = null;
+    	String[] patient = patientId.split("\\^");
+    	String patId = patient[0];
+    	String[] assignAuth = patient[3].split("\\&");
+    	assigningAuthority =  new Identifier(assignAuth[0], assignAuth[1], assignAuth[2]);
+    	PatientIdentifier identifier =new PatientIdentifier();
+    	identifier.setId(patId);
+    	identifier.setAssigningAuthority(assigningAuthority);
+    	return identifier;
+    }
+    public static void main(String[] args) {
+		 SubmitObjectsRequest  objectsRequest =new SubmitObjectsRequest();
+		 objectsRequest.getPatientIdentifier("987^^^IHENA&1.3.6.1.4.1.21367.2009.1.2.300&ISO");
+	}
 //	private void validate_assigning_authority(String patient_id, Validator val)
 //			throws XdsException {
 //		int ups = patient_id.indexOf("^^^");
