@@ -23,8 +23,8 @@
     <!-- ================================================= -->
     <parameter name="hotdeployment">true</parameter>
     <parameter name="hotupdate">false</parameter>
-    <parameter name="enableMTOM">true</parameter>
-    <parameter name="enableSwA">true</parameter>
+    <parameter name="enableMTOM">false</parameter>
+    <parameter name="enableSwA">false</parameter>
 
     <!--Uncomment if you want to enable file caching for attachments -->
     <!--parameter name="cacheAttachments">true</parameter>
