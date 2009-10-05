@@ -31,8 +31,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
-public class MergeDocumentDaoImpl extends HibernateDaoSupport implements MergeDocumentDao {
-	private static final Logger LOG = Logger.getLogger(MergeDocumentDaoImpl.class);
+public class MergePatientDaoImpl extends HibernateDaoSupport implements MergePatientDao {
+	private static final Logger LOG = Logger.getLogger(MergePatientDaoImpl.class);
 	
 	 /* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.registry.dao.MergeDocumentDao#mergedocuments()
@@ -54,23 +54,4 @@ public class MergeDocumentDaoImpl extends HibernateDaoSupport implements MergeDo
 		}
 		LOG.debug("******************Patient Document is merged succussfully ****************************"); 
 	}
-
-	 /* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.dao.MergeDocumentDao#isValidPatient()
-	 */
-	public boolean isValidPatient(String patient) throws InvalidPatientException{
-		List<?> list = null;
-		String parameters[] = {patient};
-		try{
-		list = this.getHibernateTemplate().find(
-				"from ExternalIdentifier where value=?", parameters);
-		}catch (Exception e) {
-			LOG.error("Failed to retrieve external identifier",e);
-			throw new InvalidPatientException(e);
-		}
-	  if (list.size() > 0)
-			return true;
-		return false;
-	}
-
 }

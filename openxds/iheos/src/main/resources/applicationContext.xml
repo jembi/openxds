@@ -25,8 +25,11 @@
 		
    
     <bean id="registryQueryService" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryServiceImpl"/>
+    
 
-    <bean id="registryLifeCycleService" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleServiceImpl"/>
+    <bean id="registryLifeCycleService" class="org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleServiceImpl">
+    	<property name="mergePatientDao" ref="mergePatientDao" />
+    </bean>
 
     <bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.XdsRegistryPatientServiceImpl"/>
 
@@ -72,7 +75,7 @@
   <bean id="registryManagerTransaction"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="mergeDocument" />
+		<property name="target" ref="registryLifeCycleService" />
 		<property name="transactionAttributeSource">
 			<bean
 				class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
@@ -106,7 +109,7 @@
     <property name="xdsRepositoryManagerDao" ref="repositoryManagerDao" />    
   </bean>
   
-  <!--  bean id="repositoryService" class="org.openhealthtools.openxds.repository.FileSystemRepositoryServiceImpl">
+  <!--bean id="repositoryService" class="org.openhealthtools.openxds.repository.FileSystemRepositoryServiceImpl">
 		<property name="repositoryUniqueId" value="1.3.6.1.4.1.21367.2009.1.2.701"/>
 		
 		<repositoryRoot is required by FileSystemRepository>
@@ -115,13 +118,8 @@
 
     <bean id="repositoryItem" scope="prototype" class="org.openhealthtools.openxds.repository.XdsRepositoryItemImpl"/>
 
-	<bean id="mergeDocument"
-		class="org.openhealthtools.openxds.registry.MergeDocumentImpl">
-		<property name="mergeDocumentDao" ref="mergeDocumentDao" />
-	</bean>
-
-	<bean id="mergeDocumentDao"
-		class="org.openhealthtools.openxds.registry.dao.MergeDocumentDaoImpl">
+	<bean id="mergePatientDao"
+		class="org.openhealthtools.openxds.registry.dao.MergePatientDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
    

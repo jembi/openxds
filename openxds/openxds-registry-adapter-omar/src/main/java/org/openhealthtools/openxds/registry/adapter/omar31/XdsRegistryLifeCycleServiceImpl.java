@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.log4j.Logger;
 import org.freebxml.omar.common.CommonRequestContext;
 import org.freebxml.omar.common.spi.LifeCycleManager;
 import org.freebxml.omar.common.spi.LifeCycleManagerFactory;
@@ -30,11 +31,20 @@ import org.freebxml.omar.common.spi.RequestContext;
 import org.freebxml.omar.server.security.authentication.AuthenticationServiceImpl;
 import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
+import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.registry.api.InvalidPatientException;
 import org.openhealthtools.openxds.registry.api.MergeDocument;
+import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+import org.openhealthtools.openxds.registry.dao.MergePatientDao;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.misyshealthcare.connect.net.Identifier;
 
 /**
  * This class adapts to the freebXML Omar 3.1 registry and 
@@ -46,10 +56,10 @@ import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
  *
  */
 public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleService {
-	
+	private static Logger LOG = Logger.getLogger(XdsRegistryLifeCycleServiceImpl.class);
 	protected static LifeCycleManager lcm = LifeCycleManagerFactory.getInstance().getLifeCycleManager();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();
-	
+	MergePatientDao mergePatientDao =null;
 	public OMElement submitObjects(OMElement request, RegistryLifeCycleContext context)  throws RegistryLifeCycleException {
 		RequestContext omarContext;
 		RegistryResponse omarResponse = null;
@@ -79,12 +89,25 @@ public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleServ
 
 		return response;
 	}
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void mergePatients(String survivingPatient, String mergePatient, 
 			RegistryLifeCycleContext context) throws RegistryLifeCycleException {
+    	 boolean flag = false;
 		  try {
-		    	MergeDocument manager = (MergeDocument)ModuleManager.getInstance().getBean("mergeDocument");
-				manager.mergedocuments(survivingPatient, mergePatient);
+			 XdsRegistryPatientService patientService =(XdsRegistryPatientService) ModuleManager.getInstance().getBean("registryPatientService");
+			 flag = patientService.isValidPatient(getPatientIdentifier(survivingPatient), null);
+			    if(!flag){
+			    	LOG.debug("surviving patient is not available in registry");
+			    	throw new RegistryLifeCycleException(
+							"surviving patient is not available in registry");
+			    }
+			    flag = patientService.isValidPatient(getPatientIdentifier(mergePatient), null);
+			    if(!flag){
+			    	LOG.debug("merge patient is not available in registry");
+			    	throw new RegistryLifeCycleException(
+					"merge patient is not available in registry");
+			    }
+			  mergePatientDao.mergeDocument(survivingPatient, mergePatient);
 			} catch (Exception e) {
 				throw new RegistryLifeCycleException(e);
 			}
@@ -147,6 +170,23 @@ public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleServ
 		}
 
 		return response;
+	}
+	public MergePatientDao getMergePatientDao() {
+		return mergePatientDao;
+	}
+	public void setMergePatientDao(MergePatientDao mergePatientDao) {
+		this.mergePatientDao = mergePatientDao;
+	}
+    private PatientIdentifier getPatientIdentifier(String patientId){
+	    	Identifier assigningAuthority = null;
+	    	String[] patient = patientId.split("\\^");
+	    	String patId = patient[0];
+	    	String[] assignAuth = patient[3].split("\\&");
+	    	assigningAuthority =  new Identifier(assignAuth[0], assignAuth[1], assignAuth[2]);
+	    	PatientIdentifier identifier =new PatientIdentifier();
+	    	identifier.setId(patId);
+	    	identifier.setAssigningAuthority(assigningAuthority);
+	    	return identifier;
 	}
 
 }
