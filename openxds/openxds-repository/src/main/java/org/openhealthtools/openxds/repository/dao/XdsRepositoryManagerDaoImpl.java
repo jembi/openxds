@@ -21,7 +21,9 @@ package org.openhealthtools.openxds.repository.dao;
 
 import java.sql.SQLException;
 import java.util.List;
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -38,7 +40,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements XdsRepositoryManagerDao{
 	
-	private static final Logger LOG = Logger.getLogger(XdsRepositoryManagerDaoImpl.class);
+	private static final Log log = LogFactory.getLog(XdsRepositoryManagerDaoImpl.class);
 
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDao#insert()
@@ -47,7 +49,7 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 		 try {
 	        	this.getHibernateTemplate().save(bean);	        	
 	        } catch (Exception e){
-	        	LOG.error("Failed to insert Repository bean",e);
+	        	log.error("Failed to insert Repository bean",e);
 	        	throw new RepositoryException(e);
 	        }
 		}
@@ -63,7 +65,7 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 		list = this.getHibernateTemplate().find(
 				"from Repository where documentuniqueid=?", parameters);
 		}catch (Exception e) {
-			LOG.error("Failed to retrieve Repository bean from repository",e);
+			log.error("Failed to retrieve Repository bean from repository",e);
 			throw new RepositoryException(e);
 		}
 	
@@ -86,7 +88,7 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 				}
 			});					
 		} catch (Exception e) {
-			LOG.error("Failed to delete Repository bean in repository",e);
+			log.error("Failed to delete Repository bean in repository",e);
 			throw new RepositoryException(e);
 		}
 		

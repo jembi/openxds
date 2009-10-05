@@ -77,7 +77,7 @@ class BsdMessenger implements IMessageTransmitter {
 			port = description.getPort();
 			desc = description;
 		} catch (UnknownHostException e) {
-			IheAuditTrail.LOG.error("Problem resolving host name for BSD logging ATNA messeger.", e);
+			IheAuditTrail.log.error("Problem resolving host name for BSD logging ATNA messeger.", e);
 		}
 	}
 	
@@ -99,7 +99,7 @@ class BsdMessenger implements IMessageTransmitter {
 		//if (length > 1024) IheAuditTrail.LOG.warn("Data might be truncated, BSD messages longer than 1024 are dangerous.");
         //IHE define the max message length to be 32768, ITI v2 page 175
         if (length > 32768) {
-            IheAuditTrail.LOG.error("BSD messages cannot be longer than 32768.");
+            IheAuditTrail.log.error("BSD messages cannot be longer than 32768.");
             return;
         }
         try {
@@ -109,7 +109,7 @@ class BsdMessenger implements IMessageTransmitter {
 			socket.send(packet);
 			socket.close();
 		} catch (Exception e) {
-			IheAuditTrail.LOG.error("Problem sending BSD log message.", e);
+			IheAuditTrail.log.error("Problem sending BSD log message.", e);
 		}
 	}
 

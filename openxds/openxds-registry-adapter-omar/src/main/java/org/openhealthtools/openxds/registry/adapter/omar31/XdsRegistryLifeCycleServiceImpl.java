@@ -23,7 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.freebxml.omar.common.CommonRequestContext;
 import org.freebxml.omar.common.spi.LifeCycleManager;
 import org.freebxml.omar.common.spi.LifeCycleManagerFactory;
@@ -33,12 +34,9 @@ import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.registry.api.InvalidPatientException;
-import org.openhealthtools.openxds.registry.api.MergeDocument;
-import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.dao.MergePatientDao;
 import org.springframework.transaction.annotation.Propagation;
@@ -56,7 +54,7 @@ import com.misyshealthcare.connect.net.Identifier;
  *
  */
 public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleService {
-	private static Logger LOG = Logger.getLogger(XdsRegistryLifeCycleServiceImpl.class);
+	private static Log log = LogFactory.getLog(XdsRegistryLifeCycleServiceImpl.class);
 	protected static LifeCycleManager lcm = LifeCycleManagerFactory.getInstance().getLifeCycleManager();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();
 	MergePatientDao mergePatientDao =null;
@@ -97,13 +95,13 @@ public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleServ
 			 XdsRegistryPatientService patientService =(XdsRegistryPatientService) ModuleManager.getInstance().getBean("registryPatientService");
 			 flag = patientService.isValidPatient(getPatientIdentifier(survivingPatient), null);
 			    if(!flag){
-			    	LOG.debug("surviving patient is not available in registry");
+			    	log.debug("surviving patient is not available in registry");
 			    	throw new RegistryLifeCycleException(
 							"surviving patient is not available in registry");
 			    }
 			    flag = patientService.isValidPatient(getPatientIdentifier(mergePatient), null);
 			    if(!flag){
-			    	LOG.debug("merge patient is not available in registry");
+			    	log.debug("merge patient is not available in registry");
 			    	throw new RegistryLifeCycleException(
 					"merge patient is not available in registry");
 			    }

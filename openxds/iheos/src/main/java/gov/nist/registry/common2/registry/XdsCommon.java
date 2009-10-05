@@ -7,8 +7,8 @@ import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class XdsCommon  {
 
@@ -19,7 +19,7 @@ public class XdsCommon  {
 	public static final short xds_b = 3;
 	public short xds_version = xds_none;
 	MessageContext messageContext = null;
-	private final static Logger logger = Logger.getLogger(XdsCommon.class);
+	private final static Log logger = LogFactory.getLog(XdsCommon.class);
 
 
 	public MessageContext getMessageContext() {

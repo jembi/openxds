@@ -22,18 +22,15 @@ package org.openhealthtools.openxds.registry.adapter.omar31;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set; 
+import java.util.Set;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
-
-import org.openhealthtools.openxds.registry.adapter.omar31.XdsRimException;
-
-import com.misyshealthcare.connect.net.CodeSet;
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  * This class implements builders for the various Axiom OMElement contents
@@ -44,7 +41,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  */
 public class RimAxiom {
 
-    private static final Logger myLog =  Logger.getLogger(RimAxiom.class);
+    private static final Log myLog =  LogFactory.getLog(RimAxiom.class);
 
     private static final String XDS_RIM_V3_NAMESPACE = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0";
     private static final String HAS_MEMBER   = "urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember";
@@ -55,7 +52,7 @@ public class RimAxiom {
     
     private OMElement root = null;
     private String id = null;
-    private Logger log = null;
+    private Log log = null;
 
     /**
      * Create a new XML builder.
@@ -63,7 +60,7 @@ public class RimAxiom {
      * @param id The ID to assign to the ExtrinsicObject being built
      * @param connection The connection description for where this XML will be sent
      */
-    RimAxiom(String id, Logger log) {
+    RimAxiom(String id, Log log) {
         this.id = id;
         this.log = log;
     }
@@ -76,7 +73,7 @@ public class RimAxiom {
      * @param log The log to use when reporting warnings and errors
      * @return The ebRIM XML builder
      */
-    public static RimAxiom newXdsDocumentEntryBuilder(String id, Logger log) {
+    public static RimAxiom newXdsDocumentEntryBuilder(String id, Log log) {
         RimAxiom xml = new RimAxiom(id, log);
 		OMFactory fac = OMAbstractFactory.getOMFactory();
         xml.root = fac.createOMElement("ExtrinsicObject", nsRim);
@@ -92,7 +89,7 @@ public class RimAxiom {
      * @param log The log to use when reporting warnings and errors
      * @return The ebRIM XML builder
      */
-    public static RimAxiom newXdsSubmissionSetBuilder(String id, Logger log) {
+    public static RimAxiom newXdsSubmissionSetBuilder(String id, Log log) {
         RimAxiom xml = new RimAxiom(id, log);
    
 		OMFactory fac = OMAbstractFactory.getOMFactory();

@@ -27,7 +27,8 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthexchange.openpixpdq.data.PersonName;
@@ -90,7 +91,7 @@ import com.misyshealthcare.connect.util.LibraryConfig;
  */
 public class IheAuditTrail implements IAuditTrail {
 	
-	static Logger LOG = Logger.getLogger(IheAuditTrail.class);
+	final static Log log = LogFactory.getLog(IheAuditTrail.class);
 	private String actorName;
 	private List<IMessageTransmitter> messengers = null;
 
@@ -482,7 +483,7 @@ p	 * @param factory
 		try {
 			applicationActivity(AuditTypeCodes.ApplicationStart);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log actor start for: " + actorName, e);
+			log.error("Unable to log actor start for: " + actorName, e);
 		}
 	}
 	
@@ -491,7 +492,7 @@ p	 * @param factory
 		try {
 			applicationActivity(AuditTypeCodes.ApplicationStop);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log actor stop for: " + actorName, e);
+			log.error("Unable to log actor stop for: " + actorName, e);
 		}
 	}
 	
@@ -509,7 +510,7 @@ p	 * @param factory
 			otherServerAP.role = ActiveParticipantIds.Destination;
 			this.securityAlert(success, otherServerAP);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log node authentication.", e);
+			log.error("Unable to log node authentication.", e);
 		}
 	}
 
@@ -528,7 +529,7 @@ p	 * @param factory
                 this.userAuthentication(user, AuditTypeCodes.Login, success);
             }
 		} catch (JAXBException e) {
-			LOG.error("Unable to log user authentication.", e);
+			log.error("Unable to log user authentication.", e);
 		}
 	}
 
@@ -544,7 +545,7 @@ p	 * @param factory
 			user.role = ActiveParticipantIds.Source;
 			this.userAuthentication(user, AuditTypeCodes.Logout, success);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log user authentication.", e);
+			log.error("Unable to log user authentication.", e);
 		}
 	}
 	
@@ -567,7 +568,7 @@ p	 * @param factory
 			
 			this.dataImport(user, media, patient);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log record import.", e);
+			log.error("Unable to log record import.", e);
 		}
 	}
 	
@@ -588,7 +589,7 @@ p	 * @param factory
 			
 			this.dataExport(user, media, patient);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log record export.", e);
+			log.error("Unable to log record export.", e);
 		}
 	}
 	
@@ -616,7 +617,7 @@ p	 * @param factory
 			patientRecord(source, patient, AuditTypeCodes.PatientIdentityFeed, 
 					     eventActionCode);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log patient identity feed", e);
+			log.error("Unable to log patient identity feed", e);
 		}		
 	}
 
@@ -641,7 +642,7 @@ p	 * @param factory
 			patients.add(patient);
 			patientQuery(source, patients, query);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log PIX Query", e);
+			log.error("Unable to log PIX Query", e);
 		}		
 	}
 
@@ -664,7 +665,7 @@ p	 * @param factory
 
 			patientQuery(source, patients, query);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log PDQ Query", e);
+			log.error("Unable to log PDQ Query", e);
 		}		
 	}
 	
@@ -701,7 +702,7 @@ p	 * @param factory
 				formatAndLog(messenger, factory, true, ActiveParticipantIds.Source, destination.getAuditSourceType());
 			}
 		} catch (JAXBException e) {
-			LOG.error("Unable to log PIX update notification", e);
+			log.error("Unable to log PIX update notification", e);
 		}				
 	}
 	
@@ -771,7 +772,7 @@ p	 * @param factory
 				formatAndLog(messenger, factory, false, ActiveParticipantIds.Destination, source.getAuditSourceType());
 			}
 		} catch (JAXBException e) {
-			LOG.error("Unable to log Registry Query", e);
+			log.error("Unable to log Registry Query", e);
 		}		
 	}
 	
@@ -821,7 +822,7 @@ p	 * @param factory
 				formatAndLog(messenger, factory, true, ActiveParticipantIds.Destination, source.getAuditSourceType());
 			}
 		} catch (JAXBException e) {
-			LOG.error("Unable to log Repository Query", e);
+			log.error("Unable to log Repository Query", e);
 		}		
 	}
 	
@@ -861,7 +862,7 @@ p	 * @param factory
 			
 			documentImport(source, destination, patient, set, typeCode);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log Register Document Set", e);
+			log.error("Unable to log Register Document Set", e);
 		}		
 	}
 	
@@ -903,7 +904,7 @@ p	 * @param factory
 			
 			documentExport(source, destination, patient, set, typeCode);
 		} catch (JAXBException e) {
-			LOG.error("Unable to log RegisterDocumentSet", e);
+			log.error("Unable to log RegisterDocumentSet", e);
 		}		
 	}
 	

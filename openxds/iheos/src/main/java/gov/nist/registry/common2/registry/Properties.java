@@ -4,14 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 
 public class Properties {
 	java.util.Properties properties = null;
-	private final static Logger logger = Logger.getLogger(Properties.class);
+	private final static Log logger = LogFactory.getLog(Properties.class);
 	private static Properties properties_object = null;
 	
 	private Properties() {  init(); }

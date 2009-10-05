@@ -28,16 +28,18 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.repository.Utility;
 import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 import com.misyshealthcare.connect.net.CodeSet;
 import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.util.Pair;
 
 /**
  * This class provides a file system based repository manager implementation.
@@ -47,8 +49,8 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  */
 public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
-	private static final Logger LOG = Logger
-			.getLogger(FileSystemRepositoryServiceImpl.class);
+	private static final Log log = LogFactory
+			.getLog(FileSystemRepositoryServiceImpl.class);
 	
 	/**The repository root folder*/
 	private String repositoryRoot = null;
@@ -104,7 +106,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 		try {
 			String id = item.getDocumentUniqueId();
     		String mimeTypeCode = item.getDataHandler().getContentType();
-            String ext = mimeTypeCodeSet.getExt(mimeTypeCode);
+            String ext = mimeTypeCodeSet.getExt(mimeTypeCode, null);
 
             if(id == null || ext == null)
             	throw new RepositoryException("Invalid document");
@@ -113,13 +115,13 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 
 			String itemPath = getRepositoryItemPath(id,ext);
 
-			LOG.debug("itemPath = " + itemPath);
+			log.debug("itemPath = " + itemPath);
 
 			File itemFile = new File(itemPath);
 
 			if (itemFile.exists()) {
 				String errmsg = "RepositoryItem already exist, id=" + id;
-				LOG.error(errmsg);
+				log.error(errmsg);
 				throw new RepositoryException(errmsg);
 			}
 			itemFile.createNewFile();
@@ -130,7 +132,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 			fos.close();
 
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 
@@ -151,7 +153,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 
@@ -172,27 +174,28 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 			}
 			
 			CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");
-			Set<String> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
+			Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 			String targetFileMimeType = null;
 			File targetFile = null;
 			
 			//look up the file
-			for (String mimeType : mimeTypes) {
-				String ext = mimeTypeCodeSet.getExt(mimeType);
+			for (Pair code : mimeTypes) {
+				String mimeType = (String)code._first;
+				String ext = mimeTypeCodeSet.getExt(mimeType, null);
 				File file = new File(repositoryRoot, documentUniqueId + "." + ext);
 				if (file.exists()) {
 					targetFileMimeType = mimeType;
 					targetFile = file;
-					if (LOG.isDebugEnabled())
-						LOG.debug("Repository File " + file.getPath() + " found");
+					if (log.isDebugEnabled())
+						log.debug("Repository File " + file.getPath() + " found");
 				} else
-					if (LOG.isDebugEnabled())
-						LOG.debug("Repository File " + file.getPath() + " does not exist");
+					if (log.isDebugEnabled())
+						log.debug("Repository File " + file.getPath() + " does not exist");
 			}
 
 			if (targetFile == null) {
 				String errmsg = "Cannot find the repository file with document id:" + documentUniqueId;
-				LOG.error(errmsg);
+				log.error(errmsg);
 				throw new RepositoryException(errmsg);
 			}
 
@@ -227,7 +230,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 		return repositoryItems;
@@ -245,25 +248,26 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 		}
 
 		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");
-		Set<String> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
+		Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 		File targetFile = null;
 		
 		//look up the file
-		for (String mimeType : mimeTypes) {
-			String ext = mimeTypeCodeSet.getExt(mimeType);
+		for (Pair code : mimeTypes) {
+			String mimeType = (String)code._first;
+			String ext = mimeTypeCodeSet.getExt(mimeType, null);
 			File file = new File(repositoryRoot, documentUniqueId + "." + ext);
 			if (file.exists()) {
 				targetFile = file;
-				if (LOG.isDebugEnabled())
-					LOG.debug("Repository File " + file.getPath() + " found");
+				if (log.isDebugEnabled())
+					log.debug("Repository File " + file.getPath() + " found");
 			} else
-				if (LOG.isDebugEnabled())
-					LOG.debug("Repository File " + file.getPath() + " does not exist");
+				if (log.isDebugEnabled())
+					log.debug("Repository File " + file.getPath() + " does not exist");
 		}
 		
 		if (targetFile == null) {
 			String errmsg = "The repository does not contain a file with document id:" + documentUniqueId;
-			LOG.error(errmsg);
+			log.error(errmsg);
 			throw new RepositoryException(errmsg);
 		}
 
@@ -271,10 +275,10 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 
 		if (deletedOK) {
 			String msg = "deleted OK";
-			LOG.debug(msg);
+			log.debug(msg);
 		} else {
 			String msg = null;
-			LOG.error(msg);
+			log.error(msg);
 		}
 	}
 
@@ -291,7 +295,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 	}

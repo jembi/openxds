@@ -3,10 +3,11 @@ package gov.nist.registry.common2.registry;
 import gov.nist.registry.common2.exception.MetadataException;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class BasicQuery {
-	protected final static Logger logger = Logger.getLogger(BasicQuery.class);
+	protected final static Log logger = LogFactory.getLog(BasicQuery.class);
 
 	public void secure_URI(Metadata metadata) throws MetadataException {
 		for (OMElement doc : metadata.getExtrinsicObjects()) {

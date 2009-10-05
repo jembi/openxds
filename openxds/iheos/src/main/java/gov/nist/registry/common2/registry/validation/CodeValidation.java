@@ -17,6 +17,7 @@ import org.apache.axiom.om.OMElement;
 import com.misyshealthcare.connect.net.CodeSet;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 import com.misyshealthcare.connect.net.Identifier;
+import com.misyshealthcare.connect.util.Pair;
 
 
 //this gets invoked from both Validator.java and directly from Repository.  Should optimize the implementation so that codes.xml
@@ -81,12 +82,12 @@ public class CodeValidation {
 		mime_map = new HashMap<String, String>();
 		ext_map = new HashMap<String, String>();
 
-		Set<String> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
-		for (String mimeType : mimeTypes) {
-			String ext = mimeTypeCodeSet.getExt(mimeType);
-			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + mimeType );
-			mime_map.put(mimeType, ext);
-			ext_map.put(ext, mimeType);
+		Set<Pair> codes = mimeTypeCodeSet.getCodeSetKeys();
+		for (Pair code : codes) {
+			String ext = mimeTypeCodeSet.getExt((String)code._first, (String)code._second);
+			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + (String)code._first );
+			mime_map.put((String)code._first, ext);
+			ext_map.put(ext, (String)code._first);
 		}
 	}
 
@@ -154,11 +155,9 @@ public class CodeValidation {
 		}
 		for ( String codeType : connection.getAllCodeTypeNames()){
 			CodeSet codeSet = connection.getCodeSet(codeType);
-			String code_scheme = codeSet.getCodingScheme(code);
-			if (codeSet.containsCode(code) &&
-			     (code_scheme == null || code_scheme.equals(coding_scheme) )
-			) {
-				val("Coding of " + code_scheme, null);
+			if (codeSet.containsCode(code, coding_scheme))
+		    {
+				val("Coding of " + coding_scheme, null);
 				return;
 			}
 		}

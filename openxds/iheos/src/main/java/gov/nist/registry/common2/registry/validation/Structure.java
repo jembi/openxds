@@ -14,14 +14,15 @@ import gov.nist.registry.xdslog.Message;
 import java.util.ArrayList;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Structure {
 	Metadata m;
 	RegistryErrorList rel;
 	boolean is_submit;
 	Message log_message;
-	private final static Logger logger = Logger.getLogger(Structure.class);
+	private final static Log logger = LogFactory.getLog(Structure.class);
 
 
 	public Structure(Metadata m, boolean is_submit) throws XdsInternalException {

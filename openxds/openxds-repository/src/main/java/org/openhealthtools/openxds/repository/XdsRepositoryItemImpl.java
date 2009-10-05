@@ -22,10 +22,13 @@ package org.openhealthtools.openxds.repository;
 
 
 import java.io.InputStream;
+
 import javax.activation.DataHandler;
-import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 
 /**
  * This class represents a repository item which includes the content
@@ -36,7 +39,7 @@ import org.openhealthtools.openxds.repository.api.RepositoryException;
  */
 public class XdsRepositoryItemImpl implements XdsRepositoryItem {
 
-	private static final Logger LOG = Logger.getLogger(XdsRepositoryItemImpl.class);
+	private static final Log log = LogFactory.getLog(XdsRepositoryItemImpl.class);
 
     private String id;
     private DataHandler handler;

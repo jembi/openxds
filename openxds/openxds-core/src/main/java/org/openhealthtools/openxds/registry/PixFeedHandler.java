@@ -21,7 +21,8 @@ package org.openhealthtools.openxds.registry;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.MessageHeader;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
@@ -33,12 +34,11 @@ import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
 import org.openhealthtools.common.configuration.ModuleManager;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
-import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.app.Application;
@@ -70,7 +70,7 @@ import com.misyshealthcare.connect.net.Identifier;
  */
 class PixFeedHandler extends BaseHandler implements Application {
 
-    private static Logger log = Logger.getLogger(PixFeedHandler.class);
+    private static Log log = LogFactory.getLog(PixFeedHandler.class);
 	private XdsRegistryImpl actor = null;
 	
     /** The XDS Registry Patient Manager*/
