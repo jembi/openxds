@@ -31,22 +31,20 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.transport.http.TransportHeaders;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.LogFactory;
 
 public class XdsService {
 	protected Log log = null;
 	Message log_message;
 	public static short registry_actor = 1;
 	public static short repository_actor = 2;
-	private final static Logger logger = Logger.getLogger(XdsService.class);
+	private final static org.apache.commons.logging.Log logger = LogFactory.getLog(XdsService.class);
 	String service_name;
 	static Properties properties = null;
 	boolean is_secure;
 	MessageContext return_message_context = null;
 	static public String technicalFramework = null;
-
+	
 	static {
 //		BasicConfigurator.configure();
 		properties = Properties.loader();
@@ -78,7 +76,13 @@ public class XdsService {
 
 		this.service_name = service_name;
 
-//TODO: need re-work as it is not efficient to block IPs		
+		String incoming_ip_address = null;
+		if (getMessageContext().getFrom() != null) {
+			incoming_ip_address = getMessageContext().getFrom().getAddress();
+		} else {
+			incoming_ip_address = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
+		}
+
 //		String incoming_ip_address = getMessageContext().getFrom().getAddress();
 //		for (int i=1; i<100; i++) {
 //			String entry = this.properties.getString("BlockIp" + i);
@@ -88,12 +92,12 @@ public class XdsService {
 //				return start_up_error(request, null, actor, "Continuous jamming from IP " + incoming_ip_address + " - access blocked");
 //		}
 
-
-		logger.info("Start " + service_name + " : " + getMessageContext().getFrom().getAddress()  + " : " + getMessageContext().getTo().toString());
+		logger.info("Start " + service_name + " : " + incoming_ip_address  + " : " + getMessageContext().getTo().toString());
 		try {
 			startTestLog();
 			if (log != null && log_message == null) {
-				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
+//				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
+				log_message = log.createMessage(incoming_ip_address);
 			}
 			log_message.addOtherParam(Fields.service, service_name);
 			is_secure = getMessageContext().getTo().toString().indexOf("https://") != -1;
@@ -111,7 +115,10 @@ public class XdsService {
 			for (Object o_key : transportHeaders.keySet()) {
 				String key = (String) o_key;
 				String value = (String) transportHeaders.get(key);
-
+                
+				if (logger.isDebugEnabled()) {
+					logger.debug("key=" + key +", value=" + value );
+				}
 				Vector<String> thdrs = new Vector<String>();
 				thdrs.add(key + " : " + value);
 				addHttp( "HTTP Header", thdrs ) ;
@@ -133,7 +140,8 @@ public class XdsService {
 					addSoap( "Soap Envelope", getMessageContext().getEnvelope().toStringWithConsume() );
 				}  catch (OMException e) {} catch (XMLStreamException e) {}
 			}
-			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
+//			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
+			log_message.addHTTPParam(Fields.fromIpAddress , incoming_ip_address ) ;  			
 			log_message.addHTTPParam(Fields.endpoint , getMessageContext().getTo().toString() ) ; 
 
 			return null;  // no error
