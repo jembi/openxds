@@ -22,19 +22,16 @@ package org.openhealthtools.openxds.registry.adapter.omar31;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.freebxml.omar.common.BindingUtility;
-import org.openhealthtools.openxds.registry.adapter.omar31.ConversionHelper;
-import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryQueryServiceImpl;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
   /**
    * The XDSRegistryQueryManagerTest which tests the query operations to 
@@ -43,7 +40,7 @@ import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
    * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
    */
   public class XdsRegistryQueryServiceTest extends TestCase {
-	private static final Logger log =  Logger.getLogger(XdsRegistryQueryServiceTest.class);
+	private static final Log log =  LogFactory.getLog(XdsRegistryQueryServiceTest.class);
 	protected static BindingUtility bu = BindingUtility.getInstance();
 	protected static XdsRegistryQueryService queryManager = new  XdsRegistryQueryServiceImpl();
 	protected static ConversionHelper helper = ConversionHelper.getInstance();

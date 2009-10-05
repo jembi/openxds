@@ -24,16 +24,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.activation.DataHandler;
-import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.repository.*;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.repository.ByteArrayDataSource;
+import org.openhealthtools.openxds.repository.Repository;
+import org.openhealthtools.openxds.repository.Utility;
+import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDao;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides a xds repository manager service implementation.
@@ -43,7 +49,7 @@ import org.springframework.transaction.annotation.Propagation;
  */
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
-	private static final Logger LOG = Logger.getLogger(RelationalDBRepositoryServiceImpl.class);
+	private static final Log log = LogFactory.getLog(RelationalDBRepositoryServiceImpl.class);
 	
 	
 	private XdsRepositoryManagerDao xdsRepositoryManagerDao;
@@ -86,7 +92,7 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 			repositoryItem.setMimeType(repository.getMimeType());
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 		return repositoryItem;
@@ -113,7 +119,7 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 		return repositoryItems;
@@ -136,13 +142,13 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 		//check whether document unique id is already exists in repository or not
 		bean = xdsRepositoryManagerDao.getXdsRepositoryBean(id);
 		if(bean != null){
-			LOG.debug("document unique id already exist");
+			log.debug("document unique id already exist");
 			throw new RepositoryException("document unique id already exist in repository");
 		}
 		try {
 			contentBytes = readBytes(item.getDataHandler().getInputStream());
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 		    throw new RepositoryException("error while converting datahandler object into byte array");
 		}		     
         bean = new Repository();
@@ -167,7 +173,7 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 	}
@@ -184,10 +190,10 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 			xdsRepositoryManagerDao.delete(id);
 		 }
 		 catch (Exception e) {
-			 LOG.error(e); 
+			 log.error(e); 
 			throw new RepositoryException(e);
 		}
-		LOG.debug("Reposiotry bean deleted successfully"); 
+		log.debug("Reposiotry bean deleted successfully"); 
 				
 	}
 	/* (non-Javadoc)
@@ -205,7 +211,7 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			log.error(e);
 			throw new RepositoryException(e);
 		}
 		

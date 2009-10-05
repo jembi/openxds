@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.beepcore.beep.core.BEEPError;
 import org.beepcore.beep.core.BEEPException;
 import org.beepcore.beep.core.BEEPInterruptedException;
@@ -49,7 +50,7 @@ import org.beepcore.beep.transport.tcp.TCPSessionCreator;
  * @version 1.0 - Nov 23, 2005
  */
 public class RSyslogMessenger implements IMessageTransmitter {
-	private static final Logger LOG = Logger.getLogger(RSyslogMessenger.class);
+	private static final Log log = LogFactory.getLog(RSyslogMessenger.class);
 	
 	private Session session;
 	private Channel channel;
@@ -108,9 +109,9 @@ public class RSyslogMessenger implements IMessageTransmitter {
 		try {
 			channel.getSession();
 			channel.sendMSG(output, reply);
-			LOG.debug("Sent messasge.");
+			log.debug("Sent messasge.");
 		} catch (BEEPException e) {
-			LOG.error("Unable to send message.", e);
+			log.error("Unable to send message.", e);
 		}
 
 		readResponse(reply);
@@ -139,14 +140,14 @@ public class RSyslogMessenger implements IMessageTransmitter {
 			channel = session.startChannel(profileUri, false, iam);
 		} catch (BEEPError e) {
 			if (e.getCode() == 550) {
-				LOG.error("Host does not support cooked profile.", e);
+				log.error("Host does not support cooked profile.", e);
 			} else {
-            		LOG.error("Unable to open channel.", e);
+            		log.error("Unable to open channel.", e);
 			}
 		} catch (BEEPException e) {
-			LOG.error("Unable to open channel.", e);
+			log.error("Unable to open channel.", e);
 		}
-		LOG.debug("Opened channel successfully.");
+		log.debug("Opened channel successfully.");
 	}
 	
 	private void close() {
@@ -154,9 +155,9 @@ public class RSyslogMessenger implements IMessageTransmitter {
 			channel.close();
 			session.close();
 		} catch (BEEPException e) {
-			LOG.error("Unable to close channel.", e);
+			log.error("Unable to close channel.", e);
 		}
-		LOG.debug("Closed channel and session successfully.");
+		log.debug("Closed channel and session successfully.");
 	}
 	
 	private OutputDataStream formatMessage(String message, String format, Severity severity) {
@@ -187,7 +188,7 @@ public class RSyslogMessenger implements IMessageTransmitter {
 //					output.add(new BufferSegment(entry.substring(start, end).getBytes("UTF-8")));
 //				}
 //				output.setComplete();
-//			} catch (Exception e) { LOG.error("Problem with encoding string."); }
+//			} catch (Exception e) { log.error("Problem with encoding string."); }
 		}
 
 		StringOutputDataStream output = new StringOutputDataStream(entry);
@@ -212,15 +213,15 @@ public class RSyslogMessenger implements IMessageTransmitter {
 					fullInput += (char) input;
 					input = is.read();
 				}
-				LOG.debug("Reply from " + remoteHostName + ": Message: " + fullInput);
+				log.debug("Reply from " + remoteHostName + ": Message: " + fullInput);
 			} else {
-				LOG.debug("No reply from host.");
+				log.debug("No reply from host.");
 			}
 
 		} catch (BEEPInterruptedException e) {
-			LOG.error("Interrupted while reading BEEP reply.", e);
+			log.error("Interrupted while reading BEEP reply.", e);
 		} catch (IOException e) {
-			LOG.error("Unable to read BEEP reply.", e);
+			log.error("Unable to read BEEP reply.", e);
 		}
 	}
 	
@@ -246,7 +247,7 @@ public class RSyslogMessenger implements IMessageTransmitter {
 		"<AuditSourceIdentification AuditSourceID=\"Misys\" />\r\n" +
 			"</AuditMessage>\r\n";
 		IMessageTransmitter rsm = new RSyslogMessenger(description);
-		LOG.setLevel(Level.ALL);
+//		log.setLevel(Level.ALL);
 		rsm.sendMessage(message);
     }
 

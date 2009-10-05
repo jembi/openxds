@@ -7,7 +7,6 @@ import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
@@ -15,10 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class GetSubmissionSetAndContents extends StoredQuery {
-	private final static Logger logger = Logger.getLogger(GetSubmissionSetAndContents.class);
+	private final static Log logger = LogFactory.getLog(GetSubmissionSetAndContents.class);
 
 	// used for self test only
 	public GetSubmissionSetAndContents(HashMap<String, String> params, ErrorLogger response, Message log_message) {

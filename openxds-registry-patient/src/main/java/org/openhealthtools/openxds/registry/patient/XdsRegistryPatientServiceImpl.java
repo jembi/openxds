@@ -21,15 +21,15 @@ package org.openhealthtools.openxds.registry.patient;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.Patient;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.util.ConversionHelper;
 import org.openhie.openempi.context.Context;
-import org.openhie.openempi.model.IdentifierDomain;
 import org.openhie.openempi.model.Person;
 import org.openhie.openempi.model.PersonIdentifier;
 import org.openhie.openempi.service.PersonManagerService;
@@ -45,7 +45,7 @@ import org.openhie.openempi.service.PersonQueryService;
  */
 public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 {
-	private static Logger log = Logger.getLogger(XdsRegistryPatientServiceImpl.class);
+	private static Log log = LogFactory.getLog(XdsRegistryPatientServiceImpl.class);
 	
 	public boolean isValidPatient(PatientIdentifier pid, RegistryPatientContext context) throws RegistryPatientException {
 		PersonQueryService personQueryService = Context.getPersonQueryService();

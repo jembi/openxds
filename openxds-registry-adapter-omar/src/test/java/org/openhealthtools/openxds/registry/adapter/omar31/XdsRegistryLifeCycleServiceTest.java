@@ -30,13 +30,12 @@ import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.freebxml.omar.common.BindingUtility;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
-import org.openhealthtools.openxds.registry.adapter.omar31.ConversionHelper;
-import org.openhealthtools.openxds.registry.adapter.omar31.XdsRegistryLifeCycleServiceImpl;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 
 
 /**
@@ -46,7 +45,7 @@ import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
  * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  */
 public class XdsRegistryLifeCycleServiceTest extends TestCase{
-	 private static final Logger log =  Logger.getLogger(XdsRegistryLifeCycleServiceTest.class);
+	 private static final Log log =  LogFactory.getLog(XdsRegistryLifeCycleServiceTest.class);
 	//DocumentEntry
 	private static final String XDS_DOCUMENT_ENTRY = "urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1";
 	

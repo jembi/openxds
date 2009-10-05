@@ -22,9 +22,8 @@ package org.openhealthtools.openxds;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
-import org.openhealthexchange.openpixpdq.ihe.IPdSupplier;
-import org.openhealthexchange.openpixpdq.ihe.IPixManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 
@@ -43,7 +42,7 @@ public class XdsBroker   {
 	private static XdsBroker singleton = null;
 	
 	/** Log for problems encountered by the XdsBroker */
-	private static final Logger log = Logger.getLogger(XdsBroker.class);
+	private static final Log log = LogFactory.getLog(XdsBroker.class);
 		
     /** A list of all known xds registries */
     private Vector<XdsRegistry> xdsRegistries = new Vector<XdsRegistry>();

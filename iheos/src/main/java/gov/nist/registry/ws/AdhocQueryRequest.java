@@ -11,7 +11,6 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
-import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.BackendRegistry;
 import gov.nist.registry.common2.registry.BasicQuery;
@@ -25,32 +24,26 @@ import gov.nist.registry.ws.sq.ParamParser;
 import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.Logger;
-import org.apache.tools.ant.util.Base64Converter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
-import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
-import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 
@@ -61,7 +54,7 @@ public class AdhocQueryRequest extends XdsCommon {
 	IConnectionDescription connection = null;
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
-	private final static Logger logger = Logger.getLogger(AdhocQueryRequest.class);
+	private final static Log logger = LogFactory.getLog(AdhocQueryRequest.class);
 
 
 	public AdhocQueryRequest(Message log_message, MessageContext messageContext, boolean is_secure, short xds_version) {

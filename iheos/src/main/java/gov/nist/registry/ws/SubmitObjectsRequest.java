@@ -37,7 +37,8 @@ import javax.xml.transform.TransformerConfigurationException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
@@ -45,11 +46,11 @@ import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.OMUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
+import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
@@ -61,7 +62,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	boolean submit_raw = false;
 	ContentValidationService validater;
 	short xds_version;
-	private final static Logger logger = Logger.getLogger(SubmitObjectsRequest.class);
+	private final static Log logger = LogFactory.getLog(SubmitObjectsRequest.class);
  	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
 	/* The IHE Audit Trail for this actor. */

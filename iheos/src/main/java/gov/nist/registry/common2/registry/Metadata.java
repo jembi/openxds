@@ -1,6 +1,5 @@
 package gov.nist.registry.common2.registry;
 
-import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.NoMetadataException;
@@ -22,12 +21,13 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Metadata {
 	protected OMFactory fac;
 	boolean grok_metadata = true;
-	private final static Logger logger = Logger.getLogger(Metadata.class);
+	private final static Log logger = LogFactory.getLog(Metadata.class);
 
 	public static final List<String> iheAssocTypes = new ArrayList<String>() {
 		{

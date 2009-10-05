@@ -5,7 +5,6 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.And;
 import gov.nist.registry.common2.registry.MetadataSupport;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,10 +12,11 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ParamParser {
-	private final static Logger logger = Logger.getLogger(ParamParser.class);
+	private final static Log logger = LogFactory.getLog(ParamParser.class);
 
 	QName name_qname = new QName("name");
 	QName valuelist_qname = new QName("ValueList");

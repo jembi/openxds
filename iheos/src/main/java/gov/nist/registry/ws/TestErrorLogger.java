@@ -3,10 +3,11 @@ package gov.nist.registry.ws;
 import gov.nist.registry.common2.registry.ErrorLogger;
 import gov.nist.registry.xdslog.Message;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class TestErrorLogger extends ErrorLogger {
-	private final static Logger logger = Logger.getLogger(TestErrorLogger.class);
+	private final static Log logger = LogFactory.getLog(TestErrorLogger.class);
 
 
 	public void add_error(String code, String msg, String location,

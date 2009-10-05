@@ -27,7 +27,8 @@ import javax.xml.registry.RegistryException;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.freebxml.omar.common.BindingUtility;
 import org.freebxml.omar.common.CommonRequestContext;
 import org.freebxml.omar.common.IterativeQueryParams;
@@ -41,10 +42,10 @@ import org.oasis.ebxml.registry.bindings.query.AdhocQueryRequest;
 import org.oasis.ebxml.registry.bindings.query.AdhocQueryResponse;
 import org.oasis.ebxml.registry.bindings.rim.RegistryObjectListType;
 import org.openhealthtools.common.utils.OMUtil;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
 /**
  * The Registry Query Manager which defines the operations to 
@@ -54,7 +55,7 @@ import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
  * @author <a href="mailto:anilkumar.reddy@misys.com">Anil kumar</a>
  */
 public class XdsRegistryQueryServiceImpl implements XdsRegistryQueryService {
-	private static final Logger log = Logger.getLogger(XdsRegistryQueryServiceImpl.class);
+	private static final Log log = LogFactory.getLog(XdsRegistryQueryServiceImpl.class);
 	protected static QueryManager qm = QueryManagerFactory.getInstance().getQueryManager();
 	
     public OMElement storedQuery(RegistryStoredQueryContext context)  throws RegistryQueryException {

@@ -16,7 +16,8 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class RegistryErrorList extends ErrorLogger {
 	public final static short version_2 = 2;
@@ -32,7 +33,7 @@ public class RegistryErrorList extends ErrorLogger {
 	protected OMNamespace ebQns;
 	boolean log = true;  // generate log entries?
 	boolean format_for_html = false;
-	private final static Logger logger = Logger.getLogger(RegistryErrorList.class);
+	private final static Log logger = LogFactory.getLog(RegistryErrorList.class);
 	boolean verbose = true;
 	
 	public void setVerbose(boolean verbose) {

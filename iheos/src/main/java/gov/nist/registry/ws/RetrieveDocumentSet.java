@@ -7,7 +7,6 @@ import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
@@ -19,23 +18,22 @@ import gov.nist.registry.xdslog.Message;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.Logger;
-import org.apache.tools.ant.util.Base64Converter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
+import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
@@ -51,7 +49,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 	IConnectionDescription connection = null;
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
-	private final static Logger logger = Logger.getLogger(RetrieveDocumentSet.class);
+	private final static Log logger = LogFactory.getLog(RetrieveDocumentSet.class);
 
 	public RetrieveDocumentSet(Message log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;

@@ -30,6 +30,8 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
@@ -74,7 +76,7 @@ import com.misyshealthcare.connect.util.LibraryConfig.IPatientIdConverter;
 public class XdsConfigurationLoader {
 
 	/* Logger for debugging messages */
-	private static final Logger log = Logger.getLogger(XdsConfigurationLoader.class);
+	private static final Log log = LogFactory.getLog(XdsConfigurationLoader.class);
 	
 	/* Logger for IHE Actor message traffic */
 	private static final Log4jLogger iheLog = new Log4jLogger();

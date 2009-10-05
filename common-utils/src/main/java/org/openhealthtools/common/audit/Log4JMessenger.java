@@ -46,7 +46,7 @@ class Log4JMessenger implements IMessageTransmitter {
 
 	public void sendMessage(String message) {
 		if (log4Messenger != null) log4Messenger.debug(message);
-		else IheAuditTrail.LOG.error("Unable to send Log4J ATNA audit message");
+		else IheAuditTrail.log.error("Unable to send Log4J ATNA audit message");
 	}
 
 	public void sendMessage(String message, Severity severity) {

@@ -19,7 +19,8 @@
  */
 package org.openhealthtools.common.configuration;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
@@ -36,7 +37,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class ModuleManager {
 	
-	private static final Logger LOGGER = Logger.getLogger(ModuleManager.class);
+	private static final Log log = LogFactory.getLog(ModuleManager.class);
 
 	private static final ModuleManager SINGLETON = new ModuleManager();
 
