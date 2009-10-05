@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>openxds-core</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
