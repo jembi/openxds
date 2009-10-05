@@ -30,7 +30,7 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.repository.ModuleManager;
 import org.openhealthtools.openxds.repository.Utility;
 import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
@@ -64,7 +64,7 @@ public class HibernateRepositoryServiceTest {
 		}catch (Exception e) {
 			System.out.println(e);
 		}
-		   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
+		   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("/XdsRepositoryConnectionsTest.xml").getPath());
 		   connection = ConnectionFactory.getConnectionDescription("xds-repository");
 		   requestContext.setConnection(connection);
 	       char content1KArray[] = new char[1024]; //1Kb

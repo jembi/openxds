@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 
 import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.repository.ModuleManager;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
@@ -62,8 +62,9 @@ public class FileSystemRepositoryTest extends TestCase {
 	private PixManager actor = null;
    
    protected void setUp() throws Exception {
-	   repositoryManager = ModuleManager.getXdsRepositoryService();	   
-	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("XdsRepositoryConnectionsTest.xml").getPath());
+	   try{
+	   repositoryManager = ModuleManager.getXdsFileRepository();
+	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("/XdsRepositoryConnectionsTest.xml").getPath());
 	   connection = ConnectionFactory.getConnectionDescription("xds-repository");
 	   requestContext.setConnection(connection);
        	 if (content1K == null) {			   
@@ -78,7 +79,10 @@ public class FileSystemRepositoryTest extends TestCase {
 	            content1K = createTempFile(true, new String(content1KArray));
 	            content1M = createTempFile(true, new String(content1MArray));
 	            content2M = createTempFile(true, new String(content2MArray));
-	    	  }    
+	    	  }
+	   }catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
    /**
