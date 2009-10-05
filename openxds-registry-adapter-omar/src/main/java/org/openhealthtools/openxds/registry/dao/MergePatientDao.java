@@ -26,16 +26,8 @@ import org.openhealthtools.openxds.registry.api.InvalidPatientException;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  * 
  */
-public interface MergeDocumentDao {
+public interface MergePatientDao {
 	
-	
-	/*
-	 * This method check whether patient is available in Xds registry or not
-	 * @Param Patient object
-	 * @return Boolean
-	 * @throws InvalidPatientException.
-	 */
-	public boolean isValidPatient(String patient) throws InvalidPatientException;
 	
 	/*
 	 * merge dcouments,submissionSet and folder from mergepatient to surviving patient.
