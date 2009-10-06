@@ -192,7 +192,7 @@
         -->
         <!-- <parameter name="hostname">http://www.myApp.com/ws</parameter> -->
         <!-- <parameter name="originServer">My-Server/1.1</parameter>           -->
-        <!-- <parameter name="requestTimeout">10000</parameter>                   -->
+        <parameter name="requestTimeout">30000</parameter>     
         <!-- <parameter name="requestTcpNoDelay">false</parameter>                   -->
         <!-- <parameter name="requestCoreThreadPoolSize">50</parameter>                      -->
         <!-- <parameter name="requestMaxThreadPoolSize">100</parameter>                     -->
