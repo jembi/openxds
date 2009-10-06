@@ -23,10 +23,8 @@ package org.openhealthtools.openxds.integrationtests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.util.Random;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,7 +34,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.client.ServiceClient;
@@ -49,7 +46,6 @@ import org.openhealthtools.common.utils.OMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import com.sun.xml.bind.StringInputStream;
 
 /**
@@ -67,6 +63,7 @@ import com.sun.xml.bind.StringInputStream;
  * 
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:rasakannu.palaniyandi@misys.com">Raja</a>
  */
 public class RegistrytStoredQueryTest extends XdsTest {
 	
@@ -180,31 +177,7 @@ public class RegistrytStoredQueryTest extends XdsTest {
 //	    }
 		return nodes;
 	}
-	
-	private String findDocumentsQuery(String patientId, String status){
-		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
-		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"LeafClass\"/>\n"+
-		              	 "  <rim:AdhocQuery id=\"urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d\">\n";
-		if (patientId != null) {
-			request +=   "   <rim:Slot name=\"$XDSDocumentEntryPatientId\">\n"+
-			         	 "     <rim:ValueList>\n" + 
-			             "       <rim:Value>'"+patientId+"'</rim:Value>\n" +
-			             "     </rim:ValueList>\n"+
-			             "   </rim:Slot>\n";
-		}
-		if (status != null) {
-			request +=   "   <rim:Slot name=\"$XDSDocumentEntryStatus\">\n" +
-						 "     <rim:ValueList>\n" + 
-						 "       <rim:Value>('urn:oasis:names:tc:ebxml-regrep:StatusType:"+status+"')</rim:Value>\n" +
-						 "     </rim:ValueList>\n" +
-						 "   </rim:Slot>\n";			
-		}
-        request +=       "  </rim:AdhocQuery>\n" +
-                         "</query:AdhocQueryRequest>";
 		
-		return request;
-	}
-
 	private String findFoldersQuery(String folderPatientId, String status){
 		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
 		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"LeafClass\"/>\n"+
