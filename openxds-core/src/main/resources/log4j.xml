@@ -160,6 +160,11 @@
       <priority value="WARN"/>
    </category>
 
+   <!-- Limit the net.sf.ehcache category to ERROR -->
+   <category name="net.sf.ehcache">
+      <priority value="ERROR"/>
+   </category>
+
    <!-- Limit the org.jgroups category to WARN as its INFO is verbose -->
    <category name="org.jgroups">
       <priority value="WARN"/>
