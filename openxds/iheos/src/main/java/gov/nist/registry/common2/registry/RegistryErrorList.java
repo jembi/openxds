@@ -180,15 +180,21 @@ public class RegistryErrorList extends ErrorLogger {
 
 			if (this.getVersion() == RegistryErrorList.version_3)
 				registry_error_2.setNamespace(MetadataSupport.ebRSns3);
-			registryErrorList().addChild(registry_error_2);
-			if (registry_error.getAttributeValue(MetadataSupport.severity_qname).equals("Error")) 
+			registryErrorList().addChild(registry_error_2);			
+			if (registry_error.getAttributeValue(MetadataSupport.severity_qname).equals(normalizedError())) 
 				has_errors = true;
 			else
 				has_warnings = true;
 		}
 	}
 
-
+	private String normalizedError() {
+		if (this.getVersion() == RegistryErrorList.version_3) 
+			return MetadataSupport.error_severity_type_namespace + "Error";
+		else
+			return "Error";
+	}
+	
 	public boolean hasContent() {
 		return this.has_errors || this.has_warnings;
 	}
