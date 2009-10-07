@@ -37,9 +37,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
 import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
@@ -290,7 +290,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
 			OMElement response = null;
 			
-				XdsRegistryQueryService qm = ModuleManager.getXdsRegistryQueryService();
+				XdsRegistryQueryService qm = XdsFactory.getXdsRegistryQueryService();
 				response = qm.storedQuery(context);
 				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);

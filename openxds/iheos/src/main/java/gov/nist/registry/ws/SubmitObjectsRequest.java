@@ -42,10 +42,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.OMUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
@@ -430,7 +430,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			XdsException, XdsInternalException {
 		if (Properties.loader().getBoolean("validate_patient_id")) {
 			try {
-				XdsRegistryPatientService patientMan = ModuleManager.getXdsRegistryPatientService();
+				XdsRegistryPatientService patientMan = XdsFactory.getXdsRegistryPatientService();
 				PatientIdentifier pid = getPatientIdentifier(patient_id); 
 				boolean known_patient_id = patientMan.isValidPatient(pid, null);
 				if ( !known_patient_id)
@@ -474,7 +474,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private boolean submit_to_backend_registry(String sor_string) throws XdsInternalException {
 		boolean status = true;
 
-		XdsRegistryLifeCycleService lcm = ModuleManager.getXdsRegistryLifeCycleService();
+		XdsRegistryLifeCycleService lcm = XdsFactory.getXdsRegistryLifeCycleService();
 		OMElement result = null;
 		try {
 			OMElement request = OMUtil.xmlStringToOM(sor_string);

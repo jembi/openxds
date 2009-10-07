@@ -30,9 +30,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
@@ -164,7 +164,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
     }
     
 	private void initializeOpenEMPI() {
-		ModuleManager.getInstance().getBean("context");
+		XdsFactory.getInstance().getBean("context");
 		org.openhie.openempi.context.Context.startup();
 		org.openhie.openempi.context.Context.authenticate("admin", "admin");
 	}	

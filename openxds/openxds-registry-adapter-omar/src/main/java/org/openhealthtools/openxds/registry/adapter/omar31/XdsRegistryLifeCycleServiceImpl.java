@@ -33,7 +33,7 @@ import org.freebxml.omar.server.security.authentication.AuthenticationServiceImp
 import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
@@ -92,7 +92,7 @@ public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleServ
 			RegistryLifeCycleContext context) throws RegistryLifeCycleException {
     	 boolean flag = false;
 		  try {
-			 XdsRegistryPatientService patientService =(XdsRegistryPatientService) ModuleManager.getInstance().getBean("registryPatientService");
+			 XdsRegistryPatientService patientService = XdsFactory.getXdsRegistryPatientService();
 			 flag = patientService.isValidPatient(getPatientIdentifier(survivingPatient), null);
 			    if(!flag){
 			    	log.debug("surviving patient is not available in registry");

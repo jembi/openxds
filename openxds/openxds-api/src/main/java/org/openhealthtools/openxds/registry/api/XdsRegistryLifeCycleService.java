@@ -24,7 +24,7 @@ import org.apache.axiom.om.OMElement;
 
 /**
  * This interface defines the operations to manipulate XDS Registry
- * objects.
+ * objects. LifeCycle operations include submit, approve and deprecate objects.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
@@ -65,9 +65,10 @@ public interface XdsRegistryLifeCycleService {
 	 * Merges two patients together because they have been found to be
 	 * the same patient.  The first argument describes the surviving patient 
 	 * demographics; the second argument represents the patient to be merged
-	 * with the surviving patient. After successful merge, the registry 
-	 * objects such as ExtrinsicObject and RegistryPackage of the merge patient
-	 * will be moved to the surviving patient.
+	 * with the surviving patient. After the successful merge, the registry 
+	 * objects such as ExtrinsicObject (for document) and RegistryPackage 
+	 * (for submission set and folder) of the merge patient will be moved 
+	 * to the surviving patient.
 	 * 
 	 * @param survivingPatient the surviving patient id
 	 * @param mergePatient the id of patient to be replaced, and merged with the surviving patient

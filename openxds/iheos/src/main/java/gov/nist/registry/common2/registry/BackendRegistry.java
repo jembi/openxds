@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
@@ -114,7 +114,7 @@ public class BackendRegistry {
 		if (log_message != null)
 			log_message.addOtherParam("ebxmlrr request (" + reason + ")", sql);
 
-		XdsRegistryQueryService qm = ModuleManager.getXdsRegistryQueryService();
+		XdsRegistryQueryService qm = XdsFactory.getXdsRegistryQueryService();
 
 		RegistrySQLQueryContext context = new RegistrySQLQueryContext(sql, leaf_class);
 		OMElement response_xml = null;
