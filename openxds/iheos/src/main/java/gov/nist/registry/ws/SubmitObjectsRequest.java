@@ -108,6 +108,11 @@ public class SubmitObjectsRequest extends XdsCommon {
 	public OMElement submitObjectsRequest(OMElement sor, ContentValidationService validater) {
 		this.validater = validater;
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("Request from the Repository:");
+			logger.debug(sor.toString());
+		}
+
 		try {
 			sor.build();
 			
@@ -168,6 +173,11 @@ public class SubmitObjectsRequest extends XdsCommon {
 		OMElement res = null;
 		try {
 			res =  response.getResponse();
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("Response from the Registry");
+				logger.debug(res.toString());
+			}
 		} catch (XdsInternalException e) {
 
 		}
