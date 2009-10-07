@@ -160,6 +160,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		OMElement res = null;
 		try {
 			res =  response.getResponse();
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Response from the Repository: ");
+				logger.debug(res.toString());
+			}
 		} catch (XdsInternalException e) {
 			//System.out.println("Error generating response");
 			try {
@@ -207,7 +212,12 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				(xds_version == xds_a) ? MetadataTypes.METADATA_TYPE_R : MetadataTypes.METADATA_TYPE_RET);
 
 		OMElement sor = find_sor(pnr);
-
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Request from the Source:");
+			logger.debug(sor.toString());
+		}
+		
 		Metadata m = new Metadata(sor);
 		
 		generateAuditLog(m);

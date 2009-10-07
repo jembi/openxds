@@ -117,7 +117,7 @@ public class XdsService {
 				String value = (String) transportHeaders.get(key);
                 
 				if (logger.isDebugEnabled()) {
-					logger.debug("key=" + key +", value=" + value );
+					logger.debug("request header=" + key +", value=" + value );
 				}
 				Vector<String> thdrs = new Vector<String>();
 				thdrs.add(key + " : " + value);
