@@ -44,7 +44,7 @@ import org.openhealthexchange.openpixpdq.ihe.log.IMesaLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.XdsBroker;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
@@ -950,7 +950,7 @@ public class XdsConfigurationLoader {
 		IheAuditTrail auditTrail = null;		
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-		XdsRegistryPatientService patientManager = ModuleManager.getXdsRegistryPatientService();
+		XdsRegistryPatientService patientManager = XdsFactory.getXdsRegistryPatientService();
 		XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryConnection, xdsRegistryConnection, auditTrail);
 		xdsRegistry.registerPatientManager(patientManager);
         if (xdsRegistry != null) {

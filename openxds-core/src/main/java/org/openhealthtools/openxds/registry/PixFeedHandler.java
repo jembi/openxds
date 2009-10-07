@@ -33,7 +33,7 @@ import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7v231ToBaseConvertor;
 import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
-import org.openhealthtools.common.configuration.ModuleManager;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
@@ -292,7 +292,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
 		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
 		try {
-			XdsRegistryLifeCycleService lifeCycleManager = ModuleManager.getXdsRegistryLifeCycleService();
+			XdsRegistryLifeCycleService lifeCycleManager = XdsFactory.getXdsRegistryLifeCycleService();
 			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
 		} catch (Exception e) {
 			log.error("error while merging patient document in xds regsitry");

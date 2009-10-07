@@ -36,9 +36,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
@@ -397,8 +397,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
 					
-		XdsRepositoryService rm = ModuleManager.getXdsRepositoryService();
-		XdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
+		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
+		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {
@@ -463,8 +463,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
         DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
 
-		XdsRepositoryService rm = ModuleManager.getXdsRepositoryService();
-		XdsRepositoryItem item = ModuleManager.getXdsReposiotryItem();
+		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
+		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		try {

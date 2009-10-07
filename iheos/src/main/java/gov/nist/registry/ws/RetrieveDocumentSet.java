@@ -27,9 +27,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
@@ -183,7 +183,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 	OMElement retrieve_document(String rep_id, String doc_id, String  home) throws XdsException {
 		
 		XdsRepositoryItem repositoryItem;
-		XdsRepositoryService rm = ModuleManager.getXdsRepositoryService();
+		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
 	    try{
 	    	RepositoryRequestContext context = new RepositoryRequestContext();
 	    	context.setConnection(connection);

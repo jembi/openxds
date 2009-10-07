@@ -17,7 +17,7 @@
  *    Misys Open Source Solutions - initial API and implementation
  *
  */
-package org.openhealthtools.common.configuration;
+package org.openhealthtools.openxds;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,15 +35,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
  */
-public class ModuleManager {
+public class XdsFactory {
 	
-	private static final Log log = LogFactory.getLog(ModuleManager.class);
+	private static final Log log = LogFactory.getLog(XdsFactory.class);
 
-	private static final ModuleManager SINGLETON = new ModuleManager();
+	private static final XdsFactory SINGLETON = new XdsFactory();
 
 	private ConfigurableApplicationContext applicationContext;
 
-	private ModuleManager() {
+	private XdsFactory() {
 		super();
 		initializeSpring();
 	}
@@ -51,9 +51,9 @@ public class ModuleManager {
 	/**
 	 * Singleton 
 	 *
-	 * @return the Singleton of ModuleManager
+	 * @return the Singleton of XdsFactory
 	 */
-	public static ModuleManager getInstance() {
+	public static XdsFactory getInstance() {
 		return SINGLETON;
 	}
 
