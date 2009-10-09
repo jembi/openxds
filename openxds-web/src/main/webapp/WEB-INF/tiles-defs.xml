@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN" "http://struts.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	<definition name="admin.home" template="/WEB-INF/pages/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/header.jsp" />
+		<put-attribute name="body" value="/WEB-INF/pages/content.jsp" />
+	</definition>
+	
+	<!-- <definition name="query.result" template="/WEB-INF/pages/documentLayout.jsp">
+		<put-attribute name="querymenu" value="/WEB-INF/pages/menu.jsp" />
+		<put-attribute name="result" value="/WEB-INF/pages/result.jsp" />
+	</definition>
+	 -->
+</tiles-definitions>

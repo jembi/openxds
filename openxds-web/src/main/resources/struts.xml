@@ -27,9 +27,32 @@
  <!-- Constants -->
     <constant name="struts.custom.i18n.resources" value="ApplicationResources,errors"/>
 	<package name="default" namespace="/" extends="struts-default">
-      
-        <action name="config" class="org.openhealthtools.openxds.action.ConfigAction" method="configuration">
+      <result-types>
+      	<result-type name="tiles"
+      		class="org.apache.struts2.views.tiles.TilesResult" />
+      </result-types>
+
+        <action name="config" class="org.openhealthtools.openxds.webapp.action.ConfigAction" method="configuration">
             <result name="success">/WEB-INF/pages/config.jsp</result>
+        </action>  
+        
+         <action name="query" class="org.openhealthtools.openxds.webapp.action.ViewAction">
+            <result name="success">/WEB-INF/pages/documentLayout.jsp</result>
         </action>
+         <action name="query1" class="org.openhealthtools.openxds.webapp.action.ViewAction" method="query">
+            <result name="success">/WEB-INF/pages/documentviewer.jsp</result>
+            <result name="input">/WEB-INF/pages/menu.jsp</result>
+        </action>
+        
+        <action name="innerquery" class="org.openhealthtools.openxds.webapp.action.ViewAction" method="innerquery">
+            <result name="success">/WEB-INF/pages/result.jsp</result>
+        </action>
+      
+        <action name="home" class="org.openhealthtools.openxds.webapp.action.ViewAction">
+            <result name="success" type="tiles">admin.home</result>
+            <!-- <result name="success">/WEB-INF/pages/DocumentViewer.jsp</result>-->
+        </action>
+        
+        
     </package>
 </struts>
