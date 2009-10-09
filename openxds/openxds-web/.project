@@ -3,6 +3,15 @@
 	<name>openxds-web</name>
 	<comment></comment>
 	<projects>
+		<project>openxds-api</project>
+		<project>openxds-registry-adapter-omar</project>
+		<project>openxds-core</project>
+		<project>apache-axis2</project>
+		<project>common-utils</project>
+		<project>openxds-repository</project>
+		<project>iheos</project>
+		<project>openxds-registry-patient</project>
+		<project>common-ws</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

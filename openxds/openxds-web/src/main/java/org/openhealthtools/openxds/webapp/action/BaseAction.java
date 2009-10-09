@@ -19,9 +19,12 @@
  */
 package org.openhealthtools.openxds.webapp.action;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,6 +33,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts2.ServletActionContext;
+import org.openhealthtools.openxds.webapp.control.HttpUtils;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -39,7 +44,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * user and saving messages/errors. This class is intended to
  * be a base class for all Action classes.
  * 
- * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
+ * @author <a href="anilkumar.reddy@misys.com">Anil Kumar</a>
  */
 public class BaseAction extends ActionSupport {
     private static final long serialVersionUID = 3525445612504421307L;
@@ -72,7 +77,8 @@ public class BaseAction extends ActionSupport {
      */
     protected String save;
 
-
+    PrintWriter _writer = null;
+	HttpUtils _h = null; 
     /**
      * Simple method that returns "cancel" result
      * @return "cancel"
@@ -135,4 +141,32 @@ public class BaseAction extends ActionSupport {
     public void setSave(String save) {
         this.save = save;
     }
+    
+
+	protected HttpUtils h() throws ServletException {
+		if (_h == null)
+			_h = new HttpUtils(get_writer());
+		return _h;
+	}
+
+	protected void close() {
+		if (_h != null) {
+			_h.close();
+			_h = null;
+		}
+		_writer = null;
+	}
+
+	private PrintWriter get_writer()
+	throws ServletException {
+		if (_writer == null) {
+			try {
+				_writer = getResponse().getWriter();
+			} catch (IOException e) {
+				throw new ServletException("doGet: cannot getWriter()");
+			}
+		}
+		return _writer;
+	}
+
 }
