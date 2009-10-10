@@ -44,15 +44,17 @@ public class SchemaValidation implements MetadataTypes {
 
 		MyErrorHandler errors = null;
 		DOMParser p = null;
-		String localSchema =null;
-		String SchemaLoc = Properties.loader().getString("XDSSchemaDir");
-		//localSchema = CommonProperties.getInstance().getProperty("XDSSchemaDir");
-		
-		File file =new File(SchemaLoc);
-		try{
-			localSchema = file.getCanonicalPath();
-		}catch (Exception e) {
-		    throw new XdsInternalException("I/O exception occured while getting the canonical path");
+		//Check System property first which takes a priority
+		String localSchema = System.getenv("XDSSchemaDir");
+
+		if (localSchema == null) {
+			String SchemaLoc = Properties.loader().getString("XDSSchemaDir");
+			File file =new File(SchemaLoc);
+			try{
+				localSchema = file.getCanonicalPath();
+			}catch (Exception e) {
+			    throw new XdsInternalException("I/O exception occured while getting the canonical path");
+			}
 		}
   		// Decode schema location
 		String schemaLocation;
