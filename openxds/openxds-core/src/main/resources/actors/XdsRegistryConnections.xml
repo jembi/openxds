@@ -30,7 +30,7 @@
 		
 		<Property name="sourceIds" value="1.3.6.1.4.1.21367.2009.1.2"/>
 	
-     	<Identifier name="AssigningAuthority">
+     	<Identifier type="domain" name="GLOBAL">
 			<NamespaceId>IHENA</NamespaceId>
 			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
 			<UniversalIdType>ISO</UniversalIdType>
@@ -46,7 +46,7 @@
 		<!--The port for TLS transaction-->
 		<Port>8011</Port>
 
-     	<Identifier name="AssigningAuthority">
+     	<Identifier type="domain" name="GLOBAL">
 			<NamespaceId>IHENA</NamespaceId>
 			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
 			<UniversalIdType>ISO</UniversalIdType>
@@ -81,9 +81,9 @@
         <Property name="test" value="true"/>
 
         <Identifier type="domain" name="GLOBAL">
-	        <NamespaceId>IHENA</NamespaceId>
-            <UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
-            <UniversalIdType>ISO</UniversalIdType>
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>
 
     </StandardConnection>
@@ -105,9 +105,9 @@
         <Property name="test" value="true"/>
 
 	    <Identifier type="domain" name="GLOBAL">
-            <NamespaceId>IHENA</NamespaceId>
-            <UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
-            <UniversalIdType>ISO</UniversalIdType>
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2009.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>
 
  		<!-- Trust and Keystore -->

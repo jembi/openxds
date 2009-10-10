@@ -40,6 +40,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
+import org.openhealthexchange.openpixpdq.ihe.registry.HL7;
+import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.ihe.IheActor;
@@ -51,6 +53,8 @@ import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+
+import ca.uhn.hl7v2.model.v23.datatype.CX;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
@@ -451,17 +455,25 @@ public class SubmitObjectsRequest extends XdsCommon {
 			}
 		}
 	}
-   private PatientIdentifier getPatientIdentifier(String patientId){
-    	Identifier assigningAuthority = null;
-    	String[] patient = patientId.split("\\^");
-    	String patId = patient[0];
-    	String[] assignAuth = patient[3].split("\\&");
-    	assigningAuthority =  new Identifier(assignAuth[0], assignAuth[1], assignAuth[2]);
-    	PatientIdentifier identifier =new PatientIdentifier();
-    	identifier.setId(patId);
-    	identifier.setAssigningAuthority(assigningAuthority);
-    	return identifier;
+
+	/**
+	 * Converts a patientId from CX format to an {@link PatientIdentifier} object.
+	 * 
+	 * @param patientId the patient id, exp. 12321^^^&1.3.6.1.4.1.21367.2009.1.2.300&ISO
+	 * @return the {@link PatientIdentifier}
+	 */
+	private PatientIdentifier getPatientIdentifier(String patientId){
+   		String patId = HL7.getIdFromCX(patientId);
+   	
+    	Identifier assigningAuthority = HL7.getAssigningAuthorityFromCX(patientId);
+    	Identifier aa = AssigningAuthorityUtil.reconcileIdentifier(assigningAuthority, connection);
+
+    	PatientIdentifier pid = new PatientIdentifier();
+    	pid.setId(patId);
+    	pid.setAssigningAuthority(aa);
+    	return pid;
     }
+   
     public static void main(String[] args) {
 		 SubmitObjectsRequest  objectsRequest =new SubmitObjectsRequest();
 		 objectsRequest.getPatientIdentifier("987^^^IHENA&1.3.6.1.4.1.21367.2009.1.2.300&ISO");
