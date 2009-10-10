@@ -45,15 +45,15 @@
     <!-- XDS Repository Configuration                                        -->
     <!-- =================================================================== -->   
     <bean id="repositoryService" class="org.openhealthtools.openxds.repository.relationaldb.RelationalDBRepositoryServiceImpl">
-        <property name="repositoryUniqueId" value="1.3.6.1.4.1.21367.2009.1.2.701"/>
+        <property name="repositoryUniqueId" value="${repositoryUniqueId}"/>
         <property name="xdsRepositoryManagerDao" ref="repositoryManagerDao" />    
     </bean>
 
     <!--bean id="repositoryService" class="org.openhealthtools.openxds.repository.FileSystemRepositoryServiceImpl">
-		<property name="repositoryUniqueId" value="1.3.6.1.4.1.21367.2009.1.2.701"/>
+		<property name="repositoryUniqueId" value="${repositoryUniqueId}"/>
 		
 		<repositoryRoot is required by FileSystemRepository>
-   	    <property name="repositoryRoot" value="C:/OpenXDS/repository" />
+   	    <property name="repositoryRoot" value="S{fileSystemRepositoryBaseDir}" />
     </bean-->
   
     <bean id="repositoryManagerDao" class="org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDaoImpl">
@@ -68,8 +68,8 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:jdbc.properties</value>
-                <value>classpath:mail.properties</value>
+                <value>classpath:openempi.jdbc.properties</value>
+                <value>classpath:openempi.mail.properties</value>
                 <value>classpath:openxds.properties</value>
             </list>
         </property>
@@ -78,7 +78,7 @@
     <!-- =================================================================== -->
     <!-- DataSource and Transaction Configuration                            -->
     <!-- =================================================================== -->   
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" destroy-method="close">
 		<property name="driverClassName" value="${openxds.db.driver}"/>
 		<property name="url" value="${openxds.db.url}"/>
 		<property name="username" value="${openxds.db.username}"/>
