@@ -19,32 +19,36 @@
  */
 package org.openhealthtools.openxds.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import javax.xml.namespace.QName;
+import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.description.WSDL2Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.configuration.ModuleManager;
 import org.openhealthtools.common.utils.OMUtil;
-import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 /**
  * This class is an integrated test for IHE transaction ITI-43, namely,
  * RetrieveDocumentSet-b.
  *  
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
- * @author <a href="mailto:rasakannu.palaniyandi@misys.com">Raja</a>
  */
-public class RetrieveDocumentSetTest extends XdsTest {
-
+public class RetrieveDocumentSetTest {
+	private static final String repositoryUrl = "http://localhost:8020/axis2/services/xdsrepositoryb";
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -63,113 +67,43 @@ public class RetrieveDocumentSetTest extends XdsTest {
 	 * Test method for RetrieveDocumentSet-b (ITI-43)
 	 */
 	@Test
-	public void testRetrieveDocumentSetb() throws Exception {
-
-		//1. Submit a document first for a random patientId
-		String patientId = new Random().nextInt()
-				+ "^^^&amp;1.3.6.1.4.1.21367.2009.1.2.372&amp;ISO";
-		String uuid = submitOneDocument(patientId);
-
-		//2. Generate StoredQuery request message
-		String message = findDocumentsQuery(patientId, "Approved");
-		OMElement request = OMUtil.xmlStringToOM(message);
-		System.out.println("Request:\n" + request);
-
-		//3. Send a StoredQuery
-		ServiceClient sender = getRegistryServiceClient();
-		OMElement response = sender.sendReceive(request);
-
-		//4. Get DocumentUniqueId from the response.
-		List extrinsicObjects = getExtrinsicObjects(response);
-		String documentUniqueId = getDocumentId(extrinsicObjects);
-
-		//5. Get RepositoryUniqueId from the response.
-		XdsRepositoryService xdsService = (XdsRepositoryService) ModuleManager
-				.getInstance().getBean("repositoryService");
-		String reposiotryUniqueId = xdsService.getRepositoryUniqueId();
-
-		//6. Generate Retrieve document request message
-		String retrieveDoc = retrieveDocuments(reposiotryUniqueId,
-				documentUniqueId);
-		OMElement retrieveDocRequest = OMUtil.xmlStringToOM(retrieveDoc);
-
-		//7. Send a Retrieve document set request
-		ServiceClient retrieveDocSender = getRetrieveDocumentServiceClient();
-		OMElement retrieveDocResponse = retrieveDocSender
-				.sendReceive(retrieveDocRequest);
-
-		assertNotNull(retrieveDocResponse);
-
-		String responseStatus;
-		//8. Verify the response is correct
-		List registryResponse = new ArrayList();
-		for (Iterator it = retrieveDocResponse.getChildElements(); it.hasNext();) {
-			OMElement obj = (OMElement) it.next();
-			String type = obj.getLocalName();
-			if (type.equals("RegistryResponse")) {
-				registryResponse.add(obj);
-			}
+	public void testRetrieveDocumentSetb() {
+		String message = "<xdsb:RetrieveDocumentSetRequest xmlns:xdsb=\"urn:ihe:iti:xds-b:2007\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd\">" +
+				"  <xdsb:DocumentRequest>" +
+				"    <xdsb:RepositoryUniqueId>1.3.6.1.4.1.21367.2009.1.2.701</xdsb:RepositoryUniqueId>" +
+				"    <xdsb:DocumentUniqueId>2.16.840.1.113883.3.65.2.1246359239406.1</xdsb:DocumentUniqueId>" +
+				"  </xdsb:DocumentRequest>" +
+				"</xdsb:RetrieveDocumentSetRequest>";
+		
+		Options options = new Options();
+		options.setAction("urn:ihe:iti:2007:RetrieveDocumentSet");		
+	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
+	    options.setTo( new EndpointReference(repositoryUrl) );
+		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+		//use SOAP12, 
+		options.setSoapVersionURI(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+		try{
+			
+			  String repository = "d:\\axis-1.4.1\\repository\\modules\\addressing-1.41.mar";        
+		        ConfigurationContext configctx = ConfigurationContextFactory
+		        .createConfigurationContextFromFileSystem(repository, null);
+			ServiceClient sender = new ServiceClient(configctx,null);
+			sender.setOptions(options);
+			sender.engageModule("addressing");			
+			OMElement response = sender.sendReceive( OMUtil.xmlStringToOM(message) );
+			assertNotNull(response); 
+			String result = response.toString();
+			System.out.println("Result:\n" +result);
+		} catch(AxisFault e) {
+			e.printStackTrace();
+			fail("testRetrieveDocumentSetb Failed");
+		} catch(XMLStreamException e) {
+			e.printStackTrace();
+			fail("testRetrieveDocumentSetb Failed");
+		}catch (Exception e) {
+			System.out.println("error"+e);
 		}
-		responseStatus = getRetrieveDocumentStatus(registryResponse);
-		assertEquals(
-				"urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success",
-				responseStatus);
-
-	}
-
-	private List getExtrinsicObjects(OMElement element) {
-		List extrinsicObjects = new ArrayList();
-		for (Iterator it = element.getChildElements(); it.hasNext();) {
-			OMElement obj = (OMElement) it.next();
-			for (Iterator it1 = obj.getChildElements(); it1.hasNext();) {
-				OMElement obj1 = (OMElement) it1.next();
-				for (Iterator it2 = obj1.getChildElements(); it2.hasNext();) {
-					OMElement obj2 = (OMElement) it2.next();
-					String type = obj2.getLocalName();
-					if (type.equals("ExternalIdentifier")) {
-						extrinsicObjects.add(obj2);
-					}
-				}
-			}
-		}
-		return extrinsicObjects;
-	}
-
-	private String getDocumentId(List extrinsicObjects) {
-		String documentId = null;
-		for (Iterator<OMElement> it = extrinsicObjects.iterator(); it.hasNext();) {
-			OMElement ele = it.next();
-			if (ele.getAttributeValue(new QName("identificationScheme"))
-					.equals("urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab")) {
-				documentId = ele.getAttributeValue(new QName("value"));
-			}
-		}
-		return documentId;
-	}
-
-	private String getRetrieveDocumentStatus(List retrieveDoc) {
-		String retrieveDocStatus = null;
-		for (Iterator<OMElement> it = retrieveDoc.iterator(); it.hasNext();) {
-			OMElement ele = it.next();
-			retrieveDocStatus = ele.getAttributeValue(new QName("status"));
-		}
-		return retrieveDocStatus;
-
-	}
-
-	private String retrieveDocuments(String repoId, String docId) {
-
-		String request = "<xdsb:RetrieveDocumentSetRequest xmlns:xdsb=\"urn:ihe:iti:xds-b:2007\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd\">\n"
-				+ "  <xdsb:DocumentRequest>\n"
-				+ "    <xdsb:RepositoryUniqueId>"
-				+ repoId
-				+ "</xdsb:RepositoryUniqueId>\n"
-				+ "    <xdsb:DocumentUniqueId>"
-				+ docId
-				+ "</xdsb:DocumentUniqueId>\n"
-				+ "  </xdsb:DocumentRequest>\n"
-				+ "</xdsb:RetrieveDocumentSetRequest>\n";
-		return request;
 	}
 
 }

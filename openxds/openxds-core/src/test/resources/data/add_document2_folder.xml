@@ -140,7 +140,7 @@
                         <rim:LocalizedString value="Restricted VIP Sharing"/>
                     </rim:Name>
                 </rim:Classification>
-                <rim:ExternalIdentifier id="ei-doc1-1" registryObject="doc1" identificationScheme="urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427" value="ad479512dd91412^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO">
+                <rim:ExternalIdentifier id="ei-doc1-1" registryObject="doc1" identificationScheme="urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427" value="$patientId">
                     <rim:Name>
                         <rim:LocalizedString value="XDSDocumentEntry.patientId"/>
                     </rim:Name>
@@ -164,7 +164,7 @@
                     <rim:LocalizedString value="XDSFolder.uniqueId"/>
                 </rim:Name>
             </rim:ExternalIdentifier>
-            <rim:ExternalIdentifier id="fol-id1" registryObject="Folder" identificationScheme="urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a" value="ad479512dd91412^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO">
+            <rim:ExternalIdentifier id="fol-id1" registryObject="Folder" identificationScheme="urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a" value="$patientId">
                 <rim:Name>
                     <rim:LocalizedString value="XDSFolder.patientId"/>
                 </rim:Name>
@@ -210,7 +210,7 @@
                         <rim:LocalizedString value="Transfer summarization"/>
                     </rim:Name>
                 </rim:Classification>
-                <rim:ExternalIdentifier id="ei-ss1" registryObject="SubmissionSet" identificationScheme="urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446" value="ad479512dd91412^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO">
+                <rim:ExternalIdentifier id="ei-ss1" registryObject="SubmissionSet" identificationScheme="urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446" value="$patientId">
                     <rim:Name>
                         <rim:LocalizedString value="XDSSubmissionSet.patientId"/>
                     </rim:Name>

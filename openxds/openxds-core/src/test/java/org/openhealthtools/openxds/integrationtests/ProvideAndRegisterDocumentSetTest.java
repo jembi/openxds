@@ -22,16 +22,13 @@ package org.openhealthtools.openxds.integrationtests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.util.UUID;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.ServiceClient;
 import org.junit.After;
 import org.junit.Before;
@@ -79,11 +76,14 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	 */
 	@Test
 	public void testSubmitDocument() throws Exception {
+		createPatient(patientId);
+		
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
 		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		//replace the document uuid.
 		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
 		message = message.replace("$doc1", uuid);
@@ -110,6 +110,8 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	
 	@Test
 	public void testSubmitMultipleDocument() throws Exception {
+		createPatient(patientId);
+
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_multiple_documents.xml"));
 		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
@@ -117,6 +119,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		
 		ServiceClient sender = getRepositoryServiceClient();			
 		
@@ -147,6 +150,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
 		message = message.replace("$folder_uniqueid", "2.16.840.1.113883.3.65.3." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		
 		ServiceClient sender = getRepositoryServiceClient();			
 		
@@ -170,7 +174,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	@Test
 	public void testAddendumDocument() throws Exception {
 		//First submit a document
-		String doc_uuid = submitOneDocument();
+		String doc_uuid = submitOneDocument(patientId);
 		
 		//Then add an Addendum
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_addendum.xml"));
@@ -178,6 +182,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		//replace document , submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		//populate the document uuid to be appended.
 		message = message.replace("$appendum_doc_uuid", doc_uuid);
 		
@@ -202,7 +207,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	@Test
 	public void testReplaceDocument() throws Exception {
 		//First submit a document
-		String doc_uuid = submitOneDocument();
+		String doc_uuid = submitOneDocument(patientId);
 
 		//Then add a replacement doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_replacement.xml"));
@@ -210,6 +215,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		//replace document and submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		//populate the document uuid to be replaced.
 		message = message.replace("$rplc_doc_uuid", doc_uuid);
 		
@@ -234,7 +240,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	@Test
 	public void testTransformationDocument() throws Exception {
 		//First submit a document
-		String doc_uuid = submitOneDocument();
+		String doc_uuid = submitOneDocument(patientId);
 
 		//Then add a transformation doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_transformation.xml"));
@@ -242,6 +248,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		//populate the document uuid to be transformed
 		message = message.replace("$tran_doc_uuid", doc_uuid);
 
@@ -267,7 +274,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 	@Test
 	public void testTranformWithReplaceDocument() throws Exception {
 		//First submit a document
-		String doc_uuid = submitOneDocument();
+		String doc_uuid = submitOneDocument(patientId);
 
 		//Then add a transform with replace doc
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_trans_replace.xml"));
@@ -275,6 +282,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
 		//populate the document uuid to be transformed and replaced
 		message = message.replace("$tran_rplc_doc_uuid", doc_uuid);
 

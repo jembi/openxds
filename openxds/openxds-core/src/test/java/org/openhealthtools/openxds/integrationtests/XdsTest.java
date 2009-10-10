@@ -29,6 +29,8 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Iterator;
+import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.activation.DataHandler;
@@ -55,23 +57,63 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
+import org.openhealthexchange.openpixpdq.ihe.registry.HL7;
 import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+
+import ca.uhn.hl7v2.app.Connection;
+import ca.uhn.hl7v2.app.ConnectionHub;
+import ca.uhn.hl7v2.app.Initiator;
+import ca.uhn.hl7v2.llp.MinLowerLayerProtocol;
+import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.v231.segment.MSA;
+import ca.uhn.hl7v2.parser.PipeParser;
+
+import com.misyshealthcare.connect.net.Identifier;
 
 /**
  * The base class of all XDS TestCases.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
- * @author <a href="mailto:rasakannu.palaniyandi@misys.com">Raja</a>
  */
 public abstract class XdsTest {
-	protected static final String repositoryUrl = "http://localhost:8020/axis2/services/xdsrepositoryb";
-	protected static final String registryUrl = "http://localhost:8010/axis2/services/xdsregistryb";
-
+	protected static String hostName;
+	protected static String repositoryUrl;
+	protected static String registryUrl;
+	protected static int pixRegistryPort;
+	protected static String patientId;
+	protected static String assigningAuthority;
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		InputStream is = XdsTest.class.getClassLoader().getResourceAsStream("test.properties");
+		if (is == null) { 
+			throw new Exception("Cannot load test.propertises"); 
+		}
+		Properties properties = new java.util.Properties();
+		try {
+			properties.load(is);
+		}
+		catch (Exception e) {
+			throw new Exception("Cannot load test.properties", e); 
+		}
+		hostName = properties.getProperty("pixRegistryHostName");
+		repositoryUrl = properties.getProperty("repositoryUrl");
+		registryUrl = properties.getProperty("registryUrl");
+		pixRegistryPort = Integer.parseInt(properties.getProperty("pixRegistryPort"));
+		patientId = properties.getProperty("patientId");
+		assigningAuthority = properties.getProperty("assigningAuthority");
+		
+		//Initialize openEMPI 
+		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
+		XdsFactory.getInstance().getBean("context");
+		org.openhie.openempi.context.Context.startup();
+		org.openhie.openempi.context.Context.authenticate("admin", "admin");
+
 	}
 
 	/**
@@ -95,16 +137,48 @@ public abstract class XdsTest {
 	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * Submit one document to support ProvideAndRegisterDocumentSet-b (ITI-41)
-	 * 
-	 * @return XDSDocumentEntry.uuid
-	 * @throws  
-	 * @throws Exception 
+	/*
+	 * Generates a new patient Id for testing 
 	 */
-	protected String submitOneDocument() throws Exception {
-		//submit one document using the default patientId
-		return submitOneDocument(null);
+	protected String generateAPatientId() throws Exception {
+		String patientId = new Random().nextInt() + "^^^" + assigningAuthority;
+		createPatient(patientId);
+		return patientId;
+	}
+
+	
+	protected void createPatient(String patientId) throws Exception {
+		patientId = patientId.replace("&amp;", "&");
+		//If it is a valid patient, then no need to re-create.
+		if (isValidPatient(patientId))
+			return; 
+		
+		String msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|PAT_IDENTITY_X_REF_MGR_MISYS|ALLSCRIPTS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
+	      "EVN||20090512132906-0300\r" +
+	      "PID|||"+ patientId +"||FARNSWORTH^STEVE||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
+	      "PV1||O|";
+		PipeParser pipeParser = new PipeParser();
+		Message adt = pipeParser.parse(msg);
+		ConnectionHub connectionHub = ConnectionHub.getInstance();
+		Connection connection = connectionHub.attach(hostName, pixRegistryPort, new PipeParser(), MinLowerLayerProtocol.class);
+		Initiator initiator = connection.getInitiator();
+		Message response = initiator.sendAndReceive(adt);
+		String responseString = pipeParser.encode(response);	        
+		System.out.println("Received response:\n" + responseString);
+ 		MSA msa = (MSA)response.get("MSA");
+	}
+	
+	//patientId format example: 12321^^^&1.3.6.1.4.1.21367.2009.1.2.300&ISO
+	private boolean isValidPatient(String patientId) throws Exception {
+		String id = HL7.getIdFromCX(patientId);
+		Identifier aa = HL7.getAssigningAuthorityFromCX(patientId);
+		PatientIdentifier pi = new PatientIdentifier();
+		pi.setId(id);
+		pi.setAssigningAuthority(aa);
+
+		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
+		boolean isValid = ps.isValidPatient(pi, null);	
+		return isValid;
 	}
 	
 	/**
@@ -114,7 +188,7 @@ public abstract class XdsTest {
 	 * @throws  
 	 * @throws Exception 
 	 */
-	protected String submitOneDocument(String patientId) throws Exception {
+	protected String submitOneDocument(String patientId) throws Exception {		
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
 		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
@@ -125,7 +199,7 @@ public abstract class XdsTest {
 		message = message.replace("$doc1", uuid);
 		//replace the patient id
 		if (patientId != null) 
-			message = message.replace("ad479512dd91412^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO", patientId);
+			message = message.replace("$patientId", patientId);
 
 		
 		ServiceClient sender = getRepositoryServiceClient();			
@@ -162,8 +236,7 @@ public abstract class XdsTest {
 		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
 		message = message.replace("doc1", uuid);
 		//replace the patient id
-		if (patientId != null) 
-			message = message.replace("ad479512dd91412^^^&amp;1.3.6.1.4.1.21367.2005.3.7&amp;ISO", patientId);
+		message = message.replace("$patientId", patientId);
 		
 		ServiceClient sender = getRepositoryServiceClient();			
 		
@@ -203,16 +276,6 @@ public abstract class XdsTest {
 		boolean enableMTOM = false;
 		sender.setOptions(getOptions(action, enableMTOM, registryUrl));
 		sender.engageModule("addressing");				
-		return sender;
-	}
-	
-	protected ServiceClient getRetrieveDocumentServiceClient() throws AxisFault{
-		ConfigurationContext configctx = getContext();
-		ServiceClient sender = new ServiceClient(configctx,null);
-		String action = "urn:ihe:iti:2007:RetrieveDocumentSet";
-		boolean enableMTOM = true;
-		sender.setOptions(getOptions(action, enableMTOM, repositoryUrl));
-		sender.engageModule("addressing");
 		return sender;
 	}
 
@@ -286,30 +349,6 @@ public abstract class XdsTest {
 			buf.append(new String(by,0,count));
 		}
 		return new String(buf);
-	}
-	
-	public String findDocumentsQuery(String patientId, String status){
-		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
-		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"LeafClass\"/>\n"+
-		              	 "  <rim:AdhocQuery id=\"urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d\">\n";
-		if (patientId != null) {
-			request +=   "   <rim:Slot name=\"$XDSDocumentEntryPatientId\">\n"+
-			         	 "     <rim:ValueList>\n" + 
-			             "       <rim:Value>'"+patientId+"'</rim:Value>\n" +
-			             "     </rim:ValueList>\n"+
-			             "   </rim:Slot>\n";
-		}
-		if (status != null) {
-			request +=   "   <rim:Slot name=\"$XDSDocumentEntryStatus\">\n" +
-						 "     <rim:ValueList>\n" + 
-						 "       <rim:Value>('urn:oasis:names:tc:ebxml-regrep:StatusType:"+status+"')</rim:Value>\n" +
-						 "     </rim:ValueList>\n" +
-						 "   </rim:Slot>\n";			
-		}
-       request +=       "  </rim:AdhocQuery>\n" +
-                        "</query:AdhocQueryRequest>";
-		
-		return request;
 	}
 	
 }
