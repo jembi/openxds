@@ -481,7 +481,7 @@
         
         <!-- Properties defined by OpenXDS -->
         <openpixpdq.version>1.0</openpixpdq.version>
-        <braid.version>1.2</braid.version>
+        <braid.version>1.2.2</braid.version>
         <hapi.version>0.5.1</hapi.version>
         <omar.version>3.1</omar.version>
   		<oasis.version>1.0</oasis.version> 
