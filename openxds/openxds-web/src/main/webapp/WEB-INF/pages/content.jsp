@@ -9,7 +9,7 @@
   <td class = "TableBODY">
 		<iframe
 			id="iSelectedApplication"  class="iSelectedApplication" name="iSelectedApplication" width="100%"
-			height="100%" src="" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0"
+			height="90.5%" src="" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0"
 			MARGINWIDTH="0" FRAMEBORDER="0" BORDER="0" scrolling="auto"> </iframe>
 			
 </td>
