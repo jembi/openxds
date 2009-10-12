@@ -1557,16 +1557,16 @@ INSERT INTO ADHOCQUERY VALUES ('urn:uuid:f26abbcb-ac74-4422-8a30-edb644bbc1a9',N
 , Classification ctc 
 WHERE ( ss.id = patId.registryobject AND 
 	  patId.identificationScheme= ''urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446'' AND 
-	  patId.value = ($XDSSubmissionSetPatientId))
+	  patId.value = $XDSSubmissionSetPatientId)
 AND ( sid.registryobject = ss.id AND 
 	sid.identificationScheme = ''urn:uuid:554ac39e-e3fe-47fe-b233-965d2a147832'' AND 
 	sid.value IN ($XDSSubmissionSetSourceId))
 AND ( subTimeFrom.parent = ss.id AND
 	subTimeFrom.name = ''submissionTime'' AND
-	subTimeFrom.value >= ($XDSSubmissionSetSubmissionTimeFrom))
+	subTimeFrom.value >= $XDSSubmissionSetSubmissionTimeFrom)
 AND (subTimeTo.parent = ss.id AND
 	subTimeTo.name = ''submissionTime'' AND
-	subTimeTo.value < ($XDSSubmissionSetSubmissionTimeTo))
+	subTimeTo.value < $XDSSubmissionSetSubmissionTimeTo)
 AND ( ap.parent = ss.id AND 
 	ap.name = ''authorPerson'' AND 
 	ap.value LIKE $XDSSubmissionSetAuthorPerson)
@@ -1613,23 +1613,23 @@ INSERT INTO ADHOCQUERY VALUES ('urn:uuid:958f3006-baad-4929-a4de-ff1114824431',N
 'SELECT fol.* FROM RegistryPackage fol, ExternalIdentifier patId
 , Slot lupdateTimef 
 , Slot lupdateTimet 
---, Classification cl 
---, Slot clScheme 
+, Classification cl 
+, Slot clScheme 
 WHERE ( patId.registryobject = fol.id AND 
 	patId.identificationScheme = ''urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a'' AND 
-	patId.value = ($XDSFolderPatientId))
+	patId.value = $XDSFolderPatientId)
 AND ( lupdateTimef.parent = fol.id AND 
 	lupdateTimef.name = ''lastUpdateTime'' AND 
-	lupdateTimef.value >= ($XDSFolderLastUpdateTimeFrom))
+	lupdateTimef.value >= $XDSFolderLastUpdateTimeFrom)
 AND ( lupdateTimet.parent = fol.id AND
 	lupdateTimet.name = ''lastUpdateTime'' AND
-	lupdateTimef.value < ($XDSFolderLastUpdateTimeTo))
---AND (cl.classifiedObject = fol.id AND
---	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
---	cl.nodeRepresentation IN ($XDSFolderCodeList))
---AND (clScheme.parent = cl.id AND 
---	clScheme.name = ''codingScheme'' AND	
---	clScheme.value = ($XDSFolderCodeListScheme))
+	lupdateTimef.value < $XDSFolderLastUpdateTimeTo)
+AND (cl.classifiedObject = fol.id AND
+	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
+	cl.nodeRepresentation IN ($XDSFolderCodeList))
+AND (clScheme.parent = cl.id AND 
+	clScheme.name = ''codingScheme'' AND	
+	clScheme.value = $XDSFolderCodeListScheme)
 AND fol.status = ($XDSFolderStatus)');
 
 --GetFolder
