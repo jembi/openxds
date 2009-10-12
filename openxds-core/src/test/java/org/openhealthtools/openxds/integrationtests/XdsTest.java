@@ -279,6 +279,15 @@ public abstract class XdsTest {
 		return sender;
 	}
 
+	protected ServiceClient getRetrieveDocumentServiceClient() throws AxisFault{
+		ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2007:RetrieveDocumentSet";
+		boolean enableMTOM = true;
+		sender.setOptions(getOptions(action, enableMTOM, repositoryUrl));
+		sender.engageModule("addressing");
+		return sender;
+	}
 	private ConfigurationContext getContext() throws AxisFault {
 		//String repository = "c:\\tools\\axis2-1.5\\repository\\modules\\addressing-1.5.mar";        
 //		String repository = "c:\\tools\\axis2-1.5\\repository";        
