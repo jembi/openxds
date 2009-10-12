@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<parent>
+		<artifactId>openxds</artifactId>
+		<groupId>org.openhealthtools.openxds</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openhealthtools.openxds</groupId>
+	<artifactId>openxds-config</artifactId>
+	<name>openxds-config</name>
+	<packaging>jar</packaging>
+	
+</project>
