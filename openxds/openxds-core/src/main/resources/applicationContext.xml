@@ -53,7 +53,7 @@
 		<property name="repositoryUniqueId" value="${repositoryUniqueId}"/>
 		
 		<repositoryRoot is required by FileSystemRepository>
-   	    <property name="repositoryRoot" value="S{fileSystemRepositoryBaseDir}" />
+   	    <property name="repositoryRoot" value="${fileSystemRepositoryBaseDir}" />
     </bean-->
   
     <bean id="repositoryManagerDao" class="org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDaoImpl">

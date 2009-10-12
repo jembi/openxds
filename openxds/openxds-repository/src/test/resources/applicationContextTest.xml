@@ -38,10 +38,10 @@
     <bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="jdbc:postgresql://localhost/openxds" />
-		<property name="username" value="${db.username}" />
-		<property name="password" value="${db.password}" />
+		<property name="driverClassName" value="${openxds.db.driver}" />
+		<property name="url" value="${openxds.db.url}" />
+		<property name="username" value="${openxds.db.username}" />
+		<property name="password" value="${openxds.db.password}" />
 	</bean>
     
    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
@@ -68,14 +68,14 @@
      <property name="dataSource" ref="dataSource" />
      <property name="mappingResources">
         <list>
-           <value>repository.hbm.xml</value>
+           <value>openxds.repository.hbm.xml</value>
          
         </list>
      </property>
      <property name="hibernateProperties">
         <props>
-           <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-		   <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+           <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		   <prop key="hibernate.show_sql">false</prop>
         </props>
      </property>
   </bean>  
