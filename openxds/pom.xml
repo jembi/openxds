@@ -233,6 +233,7 @@
         <module>apache-axis2</module>
         <module>common-utils</module>
         <module>common-ws</module>
+        <module>openxds-config</module>
         <module>iheos</module>
         <module>openxds-api</module>
         <module>openxds-core</module>
