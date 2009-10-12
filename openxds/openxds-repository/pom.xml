@@ -187,5 +187,10 @@
 			<artifactId>spring</artifactId>
 			<version>1.2.6</version>
 		</dependency>
+		 <dependency>
+        	<groupId>org.openhealthtools.openxds</groupId>
+        	<artifactId>openxds-config</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
 	</dependencies>
 </project>
