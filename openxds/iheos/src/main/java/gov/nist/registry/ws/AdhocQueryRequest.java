@@ -85,6 +85,11 @@ public class AdhocQueryRequest extends XdsCommon {
 	}
 
 	public OMElement adhocQueryRequest(OMElement ahqr) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Request from the XDS Consumer:");
+			logger.debug(ahqr.toString());
+		}
+
 		ahqr.build();
 
 		OMNamespace ns = ahqr.getNamespace();
@@ -160,6 +165,11 @@ public class AdhocQueryRequest extends XdsCommon {
 		OMElement res = null;
 		try {
 			res =  response.getResponse();
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Response from the Registry");
+				logger.debug(res.toString());
+			}
 		} catch (XdsInternalException e) {
 
 		}
