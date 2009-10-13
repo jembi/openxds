@@ -76,6 +76,12 @@
   		<groupId>org.freebxml.omar</groupId>
   		<artifactId>omar</artifactId>
   		<version>3.1</version>
-  	</dependency>    		
+  	</dependency>
+    <dependency>
+	    <groupId>org.apache.axis2</groupId> 
+	    <artifactId>addressing</artifactId> 
+	    <type>mar</type> 
+	    <version>${axis2.version}</version> 
+	</dependency>    		
   </dependencies>
 </project>
