@@ -78,7 +78,7 @@
     <!-- =================================================================== -->
     <!-- DataSource and Transaction Configuration                            -->
     <!-- =================================================================== -->   
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" destroy-method="close">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${openxds.db.driver}"/>
 		<property name="url" value="${openxds.db.url}"/>
 		<property name="username" value="${openxds.db.username}"/>
