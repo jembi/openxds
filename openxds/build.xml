@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project openxds-core with libraries in sub-folder">
+  <description>
+    A build file to build openxds.jar which can be run stand alone
+  </description>
+  <property file="build.properties" />
+	
+  <target name="create_run_jar">
+	<path id="jar.class.path">
+	  <fileset dir="${output.jar.dir}/${openxds.lib.dir}">
+	    <include name="**/*.jar"/>
+	    <include name="**/*.mar"/>
+	  </fileset>
+	</path>
+    <pathconvert property="manifest.classpath.prop" pathsep=" ">
+       <path refid="jar.class.path"/>
+     </pathconvert>  	
+	<jar destfile="${output.jar.dir}/${output.jar.name}">
+        <manifest>
+            <attribute name="Main-Class" value="org.openhealthexchange.openxds.XdsServer"/>
+            <attribute name="Class-Path" value=". ${manifest.classpath.prop}"/>
+        </manifest>
+        <fileset dir="${eclise.openxds.dir}/openxds-core/target/classes/">
+			<include name="org/**" />
+        </fileset>
+    	<fileset dir="${eclise.openxds.dir}/openxds-api/target/classes">
+        	<include name="org/**" />
+        </fileset>
+        <fileset dir="${eclise.openxds.dir}/common-ws/target/classes">
+        	<include name="org/**" />
+        </fileset>
+        <fileset dir="${eclise.openxds.dir}/common-utils/target/classes">
+        	<include name="org/**" />
+        </fileset> 
+        <fileset dir="${eclise.openxds.dir}/iheos/target/classes">
+        	<include name="org/**" />
+            <include name="gov/**" />
+            <include name="applicationContext.xml" />
+            <include name="iheos.aar" />
+            <include name="xds.properties" />
+        </fileset>
+        <fileset dir="${eclise.openxds.dir}/openxds-repository/target/classes">
+        	<include name="org/**" />
+            <include name="repository.hbm.xml" />
+            <include name="repository.cfg.xml" />
+        </fileset>
+        <fileset dir="${eclise.openxds.dir}/openxds-registry-adapter-omar/target/classes">
+        	<include name="org/**" />
+            <include name="data/**" />
+            <include name="ehcache.xml" />
+            <include name="jaxr-ebxml.properties" />
+            <include name="omar-common.properties" />
+            <include name="omar.properties" />
+            <include name="repository.datasource.cfg.xml" />
+            <!--include name="repository.hbm.xml" /-->
+            <include name="repository.jdbc.cfg.xml" />
+        </fileset>
+        <fileset dir="${eclise.openxds.dir}/openxds-registry-patient/target/classes">
+        	<include name="org/**" />
+            <include name="META-INF/**" />
+            <include name="Core.class" />
+            <include name="hibernate.cfg.xml" />
+	<include name="jdbc.properties" />
+	<include name="mail.properties" />
+            <include name="sql-map-config.xml" />
+        </fileset>	
+    </jar>
+    <delete dir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <mkdir dir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/postgresql/postgresql/8.3-603.jdbc4/postgresql-8.3-603.jdbc4.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/commons-lang/commons-lang/2.3/commons-lang-2.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/commons-dbcp/commons-dbcp/1.2.1/commons-dbcp-1.2.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/commons-pool/commons-pool/1.2/commons-pool-1.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/junit/junit/4.4/junit-4.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/log4j/log4j/1.2.13/log4j-1.2.13.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/jmock/jmock/2.4.0/jmock-2.4.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/jmock/jmock-junit4/2.4.0/jmock-junit4-2.4.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/junit/junit-dep/4.4/junit-dep-4.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-core/2.5.4/spring-core-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-test/2.5.4/spring-test-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/security/spring-security-core-tiger/2.0.1/spring-security-core-tiger-2.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/security/spring-security-core/2.0.1/spring-security-core-2.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-context/2.5.4/spring-context-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-beans/2.5.4/spring-beans-2.5.4.jar"  todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-aop/2.5.4/spring-aop-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-codec/commons-codec/1.3/commons-codec-1.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-collections/commons-collections/3.2/commons-collections-3.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/mail/mail/1.4/mail-1.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/activation/activation/1.1/activation-1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/annogen/annogen/0.1.0/annogen-0.1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ws/commons/axiom/axiom-api/1.2.8/axiom-api-1.2.8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.1/geronimo-activation_1.1_spec-1.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.2/geronimo-javamail_1.4_spec-1.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/jaxen/jaxen/1.1.1/jaxen-1.1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ws/commons/axiom/axiom-c14n/1.2.8/axiom-c14n-1.2.8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ws/commons/axiom/axiom-impl/1.2.8/axiom-impl-1.2.8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/woodstox/wstx-asl/3.2.4/wstx-asl-3.2.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ws/commons/axiom/axiom-dom/1.2.8/axiom-dom-1.2.8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-adb/1.5/axis2-adb-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xalan/xalan/2.7.0/xalan-2.7.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-io/commons-io/1.4/commons-io-1.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-kernel/1.5/axis2-kernel-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-transport-http/1.5/axis2-transport-http-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-transport-local/1.5/axis2-transport-local-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-httpclient/commons-httpclient/3.0/commons-httpclient-3.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-fileupload/commons-fileupload/1.2/commons-fileupload-1.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/httpcomponents/httpcore/4.0/httpcore-4.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/backport-util-concurrent/backport-util-concurrent/3.1/backport-util-concurrent-3.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ws/commons/schema/XmlSchema/1.4.3/XmlSchema-1.4.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/neethi/neethi/2.0.4/neethi-2.0.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/woden/woden-api/1.0M8/woden-api-1.0M8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ant/ant/1.7.0/ant-1.7.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xerces/xmlParserAPIs/2.6.0/xmlParserAPIs-2.6.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/woden/woden-impl-dom/1.0M8/woden-impl-dom-1.0M8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-adb-codegen/1.5/axis2-adb-codegen-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-codegen/1.5/axis2-codegen-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-java2wsdl/1.5/axis2-java2wsdl-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/axis2/axis2-saaj/1.5/axis2-saaj-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/stax/stax-api/1.0.1/stax-api-1.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/openhealthexchange/openpixpdq/openpixpdq/1.0/openpixpdq-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/com/misys/braid/braid-base/1.2.2/braid-base-1.2.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/openhie/openempi/openempi-core/1.0-SNAPSHOT/openempi-core-1.0-SNAPSHOT.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/com/eaio/uuid/uuid/3.1/uuid-3.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/simmetrics/simmetrics/1.6.2/simmetrics-1.6.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/net/sf/ehcache/ehcache/1.4.1/ehcache-1.4.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/net/sf/jsr107cache/jsr107cache/1.0/jsr107cache-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/aspectj/aspectjweaver/1.6.0/aspectjweaver-1.6.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/aspectj/aspectjrt/1.6.0/aspectjrt-1.6.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-java5/1.2.6/xfire-java5-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-aegis/1.2.6/xfire-aegis-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-core/1.2.6/xfire-core-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/jdom/jdom/1.0/jdom-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/net/java/dev/stax-utils/stax-utils/20040917/stax-utils-20040917.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-annotations/1.2.6/xfire-annotations-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xfire/xfire-jsr181-api/1.0-M1/xfire-jsr181-api-1.0-M1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-spring/1.2.6/xfire-spring-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/apache/xbean/xbean-spring/2.8/xbean-spring-2.8.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/codehaus/xfire/xfire-xmlbeans/1.2.6/xfire-xmlbeans-1.2.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/xmlbeans/xbean/2.2.0/xbean-2.2.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hibernate/hibernate/3.2.6.ga/hibernate-3.2.6.ga.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/javax/transaction/jta/1.0/jta-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/asm/asm-attrs/1.5.3/asm-attrs-1.5.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/antlr/antlr/2.7.6/antlr-2.7.6.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/cglib/cglib/2.1_3/cglib-2.1_3.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/asm/asm/1.5.3/asm-1.5.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hibernate/hibernate-annotations/3.3.0.ga/hibernate-annotations-3.3.0.ga.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hibernate/hibernate-validator/3.0.0.ga/hibernate-validator-3.0.0.ga.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hibernate/hibernate-search/3.0.0.GA/hibernate-search-3.0.0.GA.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/hibernate/hibernate-commons-annotations/3.3.0.ga/hibernate-commons-annotations-3.3.0.ga.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/org/apache/lucene/lucene-core/2.2.0/lucene-core-2.2.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-jdbc/2.5.4/spring-jdbc-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-tx/2.5.4/spring-tx-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-orm/2.5.4/spring-orm-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-aspects/2.5.4/spring-aspects-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/springframework/spring-context-support/2.5.4/spring-context-support-2.5.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/velocity/velocity/1.4/velocity-1.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/velocity/velocity-dep/1.4/velocity-dep-1.4.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/ca/uhn/hapi/hapi/0.5.1/hapi-0.5.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="C:/tools/axis2-1.5/repository/modules/addressing-1.5.mar" todir="${output.jar.dir}/${openxds.lib.dir}" />
+    <copy file="${maven.repository}/org/freebxml/omar/omar/3.1/omar-3.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/org/oasis/ebxml/oasis-regrep/1.0/oasis-regrep-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/bind/jaxb-api/1.0.1/jaxb-api-1.0.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/jaxb-xjc/1.0.5/jaxb-xjc-1.0.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/jaxb-libs/1.0.5/jaxb-libs-1.0.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/jaxb-impl/1.0.5/jaxb-impl-1.0.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/relaxngDatatype/1.0/relaxngDatatype-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/rpc/jaxrpc-spi/1.1.3_01/jaxrpc-spi-1.1.3_01.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/jaxrpc-api/1.1/jaxrpc-api-1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/rpc/jaxrpc-impl/1.1.3_01/jaxrpc-impl-1.1.3_01.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/messaging/saaj/saaj-impl/1.3/saaj-impl-1.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/soap/saaj-api/1.3/saaj-api-1.3.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/fastinfoset/FastInfoset/1.0.2/FastInfoset-1.0.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/javax/xml/jaxr-api/1.0/jaxr-api-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xacml/sunxacml/1.0/sunxacml-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/xml-security/xmlsec/1.0/xmlsec-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/wss/xws-security/2.0EA/xws-security-2.0EA.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/soap/soapprocessor/1.0/soapprocessor-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/edu/oswego/cs/concurrent/1.0/concurrent-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/hibernate/hibernate/2.0/hibernate-2.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/org/apache/axis2/axis2-jaxws/1.5/axis2-jaxws-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/org/apache/axis2/axis2-metadata/1.5/axis2-metadata-1.5.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/xml-resolver/xml-resolver/1.2/xml-resolver-1.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/bind/jaxb-impl/2.1.7/jaxb-impl-2.1.7.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/xml/bind/jaxb-xjc/2.1.7/jaxb-xjc-2.1.7.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/cglib/cglib-full/2.0.2/cglib-full-2.0.2.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/com/sun/msv/datatype/xsd/xsdlib/20060615/xsdlib-20060615.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/relaxngDatatype/relaxngDatatype/20020414/relaxngDatatype-20020414.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/soap/soap/2.3.1/soap-2.3.1.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+    <copy file="${maven.repository}/gov/nist/xds/xds/1.0/xds-1.0.jar" todir="${output.jar.dir}/${openxds.lib.dir}"/>
+  </target>
+</project>
