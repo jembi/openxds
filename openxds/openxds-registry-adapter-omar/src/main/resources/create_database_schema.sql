@@ -1473,7 +1473,7 @@ INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectTy
 --Find Documents
 
 INSERT INTO ADHOCQUERY VALUES ('urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d',NULL,'urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT DISTINCT doc.*
+'SELECT doc.*
 FROM ExtrinsicObject doc, ExternalIdentifier patId
 , Classification clCode  
 , Classification psc  
@@ -1544,7 +1544,7 @@ AND (conf.classifiedObject = doc.id AND
 AND (fmtCode.classifiedObject = doc.id AND 
      fmtCode.classificationScheme = ''urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d'' AND
      fmtCode.nodeRepresentation IN ($XDSDocumentEntryFormatCode))
-AND doc.status = ($XDSDocumentEntryStatus)');
+AND doc.status IN ($XDSDocumentEntryStatus)');
 
 --FindSubmisstionSets
 
