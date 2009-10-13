@@ -442,7 +442,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	
 	private void validate_patient_id(String patient_id) throws SQLException,
 			XdsException, XdsInternalException {
-		if (Properties.loader().getBoolean("validate_patient_id")) {
+		if (Properties.loader().getBoolean("validate.patient.id")) {
 			try {
 				XdsRegistryPatientService patientMan = XdsFactory.getXdsRegistryPatientService();
 				PatientIdentifier pid = getPatientIdentifier(patient_id); 

@@ -45,10 +45,10 @@ public class SchemaValidation implements MetadataTypes {
 		MyErrorHandler errors = null;
 		DOMParser p = null;
 		//Check System property first which takes a priority
-		String localSchema = System.getenv("XDSSchemaDir");
+		String localSchema = System.getenv("xds.schema.dir");
 
 		if (localSchema == null) {
-			String SchemaLoc = Properties.loader().getString("XDSSchemaDir");
+			String SchemaLoc = Properties.loader().getString("xds.schema.dir");
 			File file =new File(SchemaLoc);
 			try{
 				localSchema = file.getCanonicalPath();

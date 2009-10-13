@@ -45,15 +45,15 @@
     <!-- XDS Repository Configuration                                        -->
     <!-- =================================================================== -->   
     <bean id="repositoryService" class="org.openhealthtools.openxds.repository.relationaldb.RelationalDBRepositoryServiceImpl">
-        <property name="repositoryUniqueId" value="${repositoryUniqueId}"/>
+        <property name="repositoryUniqueId" value="${repository.uniqueId}"/>
         <property name="xdsRepositoryManagerDao" ref="repositoryManagerDao" />    
     </bean>
 
     <!--bean id="repositoryService" class="org.openhealthtools.openxds.repository.FileSystemRepositoryServiceImpl">
-		<property name="repositoryUniqueId" value="${repositoryUniqueId}"/>
+		<property name="repositoryUniqueId" value="${repository.uniqueId}"/>
 		
 		<repositoryRoot is required by FileSystemRepository>
-   	    <property name="repositoryRoot" value="${fileSystemRepositoryBaseDir}" />
+   	    <property name="repositoryRoot" value="${file.system.repository.base.dir}" />
     </bean-->
   
     <bean id="repositoryManagerDao" class="org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDaoImpl">
