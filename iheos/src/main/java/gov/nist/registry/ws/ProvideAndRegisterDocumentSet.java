@@ -420,24 +420,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}
 		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
-//TODO: remove the old code			
-//		String doc_path = document_path(uid, mime_type);
-//		ByteBuffer buffer = new ByteBuffer();
-//		int length = 4000;
-//		byte[] buf = new byte[length];
-//		FileOutputStream fos = null;
-//		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
-//		int size = 0;
-//		try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error when starting to read document content");   }
-//		buffer.append(buf, 0, size);
-//		while (size > 0) {
-//			try { fos.write(buf, 0, size); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
-//			try { size = is.read(buf, 0, length); }  catch (IOException e) {   throw new XdsIOException("Error reading document content");  }
-//			buffer.append(buf,0, size);
-//		}
-//		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
-//		try { is.close();  } catch (IOException e) {   throw new XdsIOException("Error closing repository item input stream");   }
-
 		// set size, hash, URI into metadata
 		try {
 			m.setSlot(extrinsic_object, "size", Integer.toString(item.getSize()));
@@ -445,13 +427,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new XdsInternalException("Error calculating size on repository file"); 
 		}
 		try {
-//TODO: remove the old code			
-//			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
 			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
 		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
         //TODO: either remove URI attribute, or make the uri work. URI is an attribute required by XDS.a
 		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
-		m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
+		//m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
 
 	}
 
@@ -486,34 +466,20 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}
 		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
-//TODO: remove the old code
-//		String doc_path = document_path(uid, mime_type);
-//		FileOutputStream fos = null;
-//		try { fos = new FileOutputStream(new File(doc_path)); } catch (FileNotFoundException e) { throw new XdsIOException("Error creating file " + doc_path + " for repository item");  }
-//		try { fos.write(bytes); } catch (IOException e) {   throw new XdsIOException("Error writing document content");   }
-//		try { fos.close(); } catch (IOException e) {   throw new XdsIOException("Error closing repository item file");   }
-
 		ByteBuffer bb = new ByteBuffer();
 		bb.append(bytes, 0, bytes.length);
 		// set size, hash, URI into metadata
 		m.setSlot(extrinsic_object, "size", Integer.toString(bytes.length));
 		try {
-//TODO: remove the old code			
-//			m.setSlot(extrinsic_object, "hash", (new Sha1Bean()).getSha1File(new File(doc_path)));
 			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
 		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
-		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
-		m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
+		//m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
 	}
 
 	void setRepositoryUniqueId(Metadata m) throws MetadataException {
 		for (OMElement eo : m.getExtrinsicObjects()) {
 			m.setSlot(eo, "repositoryUniqueId", Repository.getRepositoryUniqueId());
 		}
-	}
-
-	String document_path(String uid, String mime_type)  throws MetadataException, XdsException {
-		return Repository.getBaseDirectory() + uid + "." + (new DocumentTypes(connection)).fileExtension(mime_type);
 	}
 
 	String document_uri(String uid, String mime_type)throws MetadataException, XdsConfigurationException, XdsException {
