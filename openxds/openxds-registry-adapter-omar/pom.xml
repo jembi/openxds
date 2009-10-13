@@ -60,6 +60,11 @@
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>openxds-config</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
   		<groupId>org.freebxml.omar</groupId>
   		<artifactId>omar</artifactId>
   		<version>${omar.version}</version>

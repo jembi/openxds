@@ -10,5 +10,11 @@
 	<artifactId>openxds-config</artifactId>
 	<name>openxds-config</name>
 	<packaging>jar</packaging>
-	
+	<dependencies>
+		<dependency>
+			<groupId>org.openhealthtools.openxds</groupId>
+			<artifactId>openxds-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>
