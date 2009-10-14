@@ -6,12 +6,13 @@
 	<property file="build.properties" />
 	
     <target name="init">
-        <delete dir="${output.jar.dir}/${openxds.lib.dir}"/>
-        <mkdir dir="${output.jar.dir}/${openxds.lib.dir}"/>
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${openxds.lib.dir}"/>
     </target>
 	
     <target name="copy_files" depends="init">
-        <copy flatten="true" todir="${output.jar.dir}/${openxds.lib.dir}">
+        <copy flatten="true" todir="${openxds.lib.dir}">
         	<fileset dir="${maven.repository}" >
         	    <include name="**/*.jar"/>
         	    <include name="**/*.mar"/>
@@ -19,7 +20,7 @@
         		<exclude name="**/plexus*.jar"/>
     	    </fileset>
         </copy> 	
-        <copy flatten="true" todir="${output.jar.dir}">
+        <copy flatten="true" todir="${build.dir}">
             <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
 				<include name="commons-logging.properties" />
 				<include name="log4j.xml" />
@@ -33,7 +34,7 @@
 	
 	<target name="create_run_jar" depends="copy_files">
     	<path id="jar.class.path">
-    	  <fileset dir="${output.jar.dir}/${openxds.lib.dir}">
+    	  <fileset dir="${openxds.lib.dir}">
     	    <include name="**/*.jar"/>
     	    <include name="**/*.mar"/>
     	  </fileset>
@@ -43,7 +44,7 @@
           <classpath refid="jar.class.path" />
         </manifestclasspath>
 		<!-- Make a jar file -->
-        <jar destfile="${output.jar.dir}/${output.jar.name}">
+        <jar destfile="${build.dir}/${output.jar.name}">
             <manifest>
                 <attribute name="Main-Class" value="org.openhealthtools.openxds.XdsServer"/>
                 <attribute name="Class-Path" value=". ${manifest.classpath.prop}"/>
