@@ -143,13 +143,9 @@
 		<dependency>
 			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>iheos</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.openhealthtools.openxds</groupId>
-			<artifactId>openxds-core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>openxds-web</finalName>
