@@ -180,7 +180,7 @@ public class RegistryObjectValidator extends StoredQuery {
 		init();
 		a("SELECT rp.id FROM RegistryPackage rp, ExternalIdentifier ei"); n();
 		a("WHERE"); n();
-		a("  rp.status = 'Approved' AND"); n();
+		a("  rp.status = 'urn:oasis:names:tc:ebxml-regrep:StatusType:Approved' AND"); n();
 		a("  rp.id IN "); a(ids); a(" AND"); n();
 		a("  ei.registryObject = rp.id AND"); n();
 		a("  ei.identificationScheme = '" + MetadataSupport.XDSFolder_patientid_uuid + "'"); n();

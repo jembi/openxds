@@ -1198,38 +1198,39 @@ DROP INDEX IF EXISTS lastNm_Person_idx;
 CREATE INDEX lastNm_Person_idx ON Person(personName_lastName);
 
 --Grant Privilages
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Association TO public; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Association TO openxds; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  AuditableEvent TO public;
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  AffectedObject TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Classification TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ClassificationNode TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ClassScheme TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExternalIdentifier TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExternalLink TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExtrinsicObject TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Federation TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Name_ TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  UsageDescription TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ObjectRef TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Organization TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  RegistryPackage TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  PostalAddress TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  EmailAddress TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Registry TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Service TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  ServiceBinding TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Slot TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  SpecificationLink TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Subscription TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  NotifyAction TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Notification TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  NotificationObject TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  AdhocQuery TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  UsageParameter TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  TelephoneNumber TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  User_ TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  Person TO public; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  repository TO public; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  AffectedObject TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Classification TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ClassificationNode TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ClassScheme TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Description TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExternalIdentifier TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExternalLink TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ExtrinsicObject TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Federation TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Name_ TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  UsageDescription TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ObjectRef TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Organization TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  RegistryPackage TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  PostalAddress TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  EmailAddress TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Registry TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Service TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  ServiceBinding TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Slot TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  SpecificationLink TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Subscription TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  NotifyAction TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Notification TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  NotificationObject TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  AdhocQuery TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  UsageParameter TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  TelephoneNumber TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  User_ TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  Person TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  repository TO openxds; 
 
 
 
@@ -1468,201 +1469,3 @@ INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectTy
 INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:SpecificationLink',NULL,'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:SpecificationLink','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:ClassificationNode','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'SpecificationLink','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject','/urn:oasis:names:tc:ebxml-regrep:classificationScheme:ObjectType/RegistryObject/SpecificationLink');
 INSERT INTO CLASSIFICATIONNODE VALUES ('urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:Subscription',NULL,'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:Subscription','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:ClassificationNode','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'Subscription','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject','/urn:oasis:names:tc:ebxml-regrep:classificationScheme:ObjectType/RegistryObject/Subscription');
 
---Insert StoredQuery 
-
---Find Documents
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d',NULL,'urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT doc.*
-FROM ExtrinsicObject doc, ExternalIdentifier patId
-, Classification clCode  
-, Classification psc  
-, Classification hftc  
-, Classification ecl  
-, Slot clCodeScheme  
-, Slot psCodeScheme  
-, Slot crTimef  
-, Slot crTimet  
-, Slot serStartTimef  
-, Slot serStartTimet  
-, Slot serStopTimef  
-, Slot serStopTimet  
-, Slot hftcScheme  
-, Slot eclScheme  
-, Classification conf  
-, Classfication fmtCode  
-WHERE
-doc.objecttype = ''urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1''
- AND (doc.id = patId.registryobject AND
-patId.identificationScheme=''urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427'' AND
-patId.value = $XDSDocumentEntryPatientId )
-AND (clCode.classifiedobject = doc.id AND 
- clCode.classificationScheme = ''urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a'' AND 
-clCode.nodeRepresentation IN ($XDSDocumentEntryClassCode) )
-AND (clCodeScheme.parent = clCode.id AND  
- clCodeScheme.name = ''codingScheme'' AND 
-clCodeScheme.value IN ($XDSDocumentEntryClassCodeScheme))  
-AND (psc.classifiedObject = doc.id AND  
-psc.classificationScheme=''urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead'' AND  
-psc.nodeRepresentation IN ($XDSDocumentEntryPracticeSettingCode))
-AND (psCodeScheme.parent = psc.id AND  
- psCodeScheme.name = ''codingScheme'' AND  
-psCodeScheme.value IN ($XDSDocumentEntryPracticeSettingCodeScheme))  
-AND (crTimef.parent = doc.id AND  
-crTimef.name = ''creationTime'' AND  
- $XDSDocumentEntryCreationTimeFrom <= crTimef.value )  
-AND (crTimet.parent = doc.id AND 
-crTimet.name = ''creationTime'' AND 
-crTimet.value < $XDSDocumentEntryCreationTimeTo) 
-AND (serStartTimef.parent = doc.id AND  
-serStartTimef.name = ''serviceStartTime'' AND  
- $XDSDocumentEntryServiceStartTimeFrom <= serStartTimef.value )  
-AND (serStartTimet.parent = doc.id AND  
-serStartTimet.name = ''serviceStartTime'' AND  
-serStartTimet.value < $XDSDocumentEntryServiceStartTimeTo)  
-AND (serStopTimef.parent = doc.id AND  
-serStopTimef.name = ''serviceStopTime'' AND  
-$XDSDocumentEntryServiceStopTimeFrom <= serStopTimef.value )  
-AND (serStopTimet.parent = doc.id AND  
-serStopTimet.name = ''serviceStopTime'' AND  
-serStopTimet.value < $XDSDocumentEntryServiceStopTimeTo) 
-AND (hftc.classifiedObject = doc.id AND  
-hftc.classificationScheme = ''urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1'' AND  
-hftc.nodeRepresentation IN ($XDSDocumentEntryhealthcareFacilityTypeCode ))
-AND (hftcScheme.parent = hftc.id AND  
-hftcScheme.name = ''codingScheme'' AND  
-hftcScheme.value IN ($XDSDocumentEntryHealthcareFacilityTypeCodeScheme))  
-AND (ecl.classifiedObject = doc.id AND  
-ecl.classificationScheme = ''urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4'' AND
-ecl.nodeRepresentation IN ($XDSDocumentEntryEventCodeList))
-AND (eclScheme.parent = ecl.id AND 
- eclScheme.name = ''codingScheme'' AND
- eclScheme.value IN ($XDSDocumentEntryEventCodeListScheme))
-AND (conf.classifiedObject = doc.id AND 
- conf.classificationScheme = ''urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f'' AND 
- conf.nodeRepresentation IN ($XDSDocumentEntryConfidentialityCode ))
-AND (fmtCode.classifiedObject = doc.id AND 
-     fmtCode.classificationScheme = ''urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d'' AND
-     fmtCode.nodeRepresentation IN ($XDSDocumentEntryFormatCode))
-AND doc.status IN ($XDSDocumentEntryStatus)');
-
---FindSubmisstionSets
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:f26abbcb-ac74-4422-8a30-edb644bbc1a9',NULL,'urn:uuid:f26abbcb-ac74-4422-8a30-edb644bbc1a9','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT ss.* FROM RegistryPackage ss, ExternalIdentifier patId 
-, Slot subTimeFrom 
-, Slot subTimeTo 
-, Slot ap 
-, ExternalIdentifier sid 
-, Classification ctc 
-WHERE ( ss.id = patId.registryobject AND 
-	  patId.identificationScheme= ''urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446'' AND 
-	  patId.value = $XDSSubmissionSetPatientId)
-AND ( sid.registryobject = ss.id AND 
-	sid.identificationScheme = ''urn:uuid:554ac39e-e3fe-47fe-b233-965d2a147832'' AND 
-	sid.value IN ($XDSSubmissionSetSourceId))
-AND ( subTimeFrom.parent = ss.id AND
-	subTimeFrom.name = ''submissionTime'' AND
-	subTimeFrom.value >= $XDSSubmissionSetSubmissionTimeFrom)
-AND (subTimeTo.parent = ss.id AND
-	subTimeTo.name = ''submissionTime'' AND
-	subTimeTo.value < $XDSSubmissionSetSubmissionTimeTo)
-AND ( ap.parent = ss.id AND 
-	ap.name = ''authorPerson'' AND 
-	ap.value LIKE $XDSSubmissionSetAuthorPerson)
-AND ( ctc.classifiedObject = ss.id AND 
-	ctc.classificationScheme = ''urn:uuid:aa543740-bdda-424e-8c96-df4873be8500'' AND
-	ctc.nodeRepresentation IN ($XDSSubmissionSetContentTypeCode))
-AND ss.status = ($XDSFolderStatus)');	
-
---GetDocuments
-
-INSERT INTO ADHOCQUERY VALUES('urn:uuid:5c4f972b-d56b-40ac-a5fc-c8ca9b40b9d4',NULL,'urn:uuid:5c4f972b-d56b-40ac-a5fc-c8ca9b40b9d4','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT eo.* from ExtrinsicObject eo, ExternalIdentifier ei
-WHERE
-(ei.registryObject = eo.id AND
-ei.identificationScheme = ''urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab'' AND
-(ei.value IN ($XDSDocumentEntryUniqueId)))
-AND
-(eo.id IN ($XDSDocumentEntryEntryUUID))');
-
---GetAssociations
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:a7ae438b-4bc2-4642-93e9-be891f7bb155',NULL,'urn:uuid:a7ae438b-4bc2-4642-93e9-be891f7bb155','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT DISTINCT ass.* FROM Association ass 
-WHERE ass.sourceObject IN ($uuid)OR
-      ass.targetObject IN ($uuid)');
-
---GetSubmissionSets
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:51224314-5390-4169-9b91-b1980040715a',NULL,'urn:uuid:51224314-5390-4169-9b91-b1980040715a','urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT ss.* FROM RegistryPackage ss,
-Classification c,
-Association a
-WHERE 
-c.classifiedObject = ss.id AND 
-c.classificationNode = ''urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd'' AND 
-a.sourceObject = ss.id AND 
-a.associationType = ''urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember'' AND 
-a.targetObject IN ($uuid)');
-
---FindFolders
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:958f3006-baad-4929-a4de-ff1114824431',NULL,'urn:uuid:958f3006-baad-4929-a4de-ff1114824431',
-'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT fol.* FROM RegistryPackage fol, ExternalIdentifier patId
-, Slot lupdateTimef 
-, Slot lupdateTimet 
-, Classification cl 
-, Slot clScheme 
-WHERE ( patId.registryobject = fol.id AND 
-	patId.identificationScheme = ''urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a'' AND 
-	patId.value = $XDSFolderPatientId)
-AND ( lupdateTimef.parent = fol.id AND 
-	lupdateTimef.name = ''lastUpdateTime'' AND 
-	lupdateTimef.value >= $XDSFolderLastUpdateTimeFrom)
-AND ( lupdateTimet.parent = fol.id AND
-	lupdateTimet.name = ''lastUpdateTime'' AND
-	lupdateTimef.value < $XDSFolderLastUpdateTimeTo)
-AND (cl.classifiedObject = fol.id AND
-	cl.classificationScheme = ''urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5'' AND
-	cl.nodeRepresentation IN ($XDSFolderCodeList))
-AND (clScheme.parent = cl.id AND 
-	clScheme.name = ''codingScheme'' AND	
-	clScheme.value = $XDSFolderCodeListScheme)
-AND fol.status = ($XDSFolderStatus)');
-
---GetFolder
-
-INSERT INTO ADHOCQUERY VALUES('urn:uuid:5737b14c-8a1a-4539-b659-e03a34a5e1e4',NULL,'urn:uuid:5737b14c-8a1a-4539-b659-e03a34a5e1e4',
-'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT fol.* from RegistryPackage fol, 
-ExternalIdentifier uniq 
-WHERE 
-(uniq.registryObject = fol.id AND 
-uniq.identificationScheme = ''urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a'' AND
-uniq.value IN ($XDSFolderUniqueId))
-AND 
-(fol.id IN ($XDSFolderEntryUUID))');
-
---GetFoldersForDocuments
-
-INSERT INTO ADHOCQUERY VALUES ('urn:uuid:10cae35a-c7f9-4cf5-b61e-fc3278ffb578',NULL,'urn:uuid:10cae35a-c7f9-4cf5-b61e-fc3278ffb578',
-'urn:oasis:names:tc:ebxml-regrep:ObjectType:RegistryObject:AdhocQuery','urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted','1.1',NULL,'urn:oasis:names:tc:ebxml-regrep:QueryLanguage:SQL-92',
-'SELECT fol.* FROM RegistryPackage fol,
-Association a, 
-ExtrinsicObject doc, 
-Classification c
-WHERE 
-doc.id IN (SELECT doc.id FROM ExtrinsicObject doc, ExternalIdentifier uniqId 
-	WHERE
-	(uniqId.registryobject = doc.id AND 
-	uniqId.identificationScheme = ''urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab'' AND
-	uniqId.value = $XDSDocumentEntryUniqueId)
-	AND (doc.id = $XDSDocumentEntryEntryUUID) )
-AND 
-a.targetObject = doc.id AND 
-a.associationType = ''urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember'' AND
-a.sourceObject = fol.id AND 
-c.classifiedObject = fol.id AND 
-c.classificationNode = ''urn:uuid:d9d542f3-6cc4-48b6-8870-ea235fbc94c2''');
