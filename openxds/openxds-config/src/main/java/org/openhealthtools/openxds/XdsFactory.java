@@ -26,7 +26,8 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -41,7 +42,7 @@ public class XdsFactory {
 
 	private static final XdsFactory SINGLETON = new XdsFactory();
 
-	private ConfigurableApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
 	private XdsFactory() {
 		super();
@@ -62,7 +63,7 @@ public class XdsFactory {
 		this.applicationContext = new ClassPathXmlApplicationContext(getConfigLocations());
 		
 		//add a shutdown hook for the above context... 
-		this.applicationContext.registerShutdownHook();
+		((AbstractApplicationContext)this.applicationContext).registerShutdownHook();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
