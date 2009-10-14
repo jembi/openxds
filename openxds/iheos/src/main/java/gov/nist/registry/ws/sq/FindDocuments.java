@@ -132,7 +132,7 @@ public class FindDocuments extends StoredQuery {
 
 		String status_ns_prefix = "urn:oasis:names:tc:ebxml-regrep:StatusType:";
 
-		ArrayList new_status = new ArrayList();
+		/*ArrayList new_status = new ArrayList();
 		for (int i=0; i<status.size(); i++) {
 			String stat = (String) status.get(i);
 
@@ -140,7 +140,7 @@ public class FindDocuments extends StoredQuery {
 				throw new MetadataValidationException("Status parameter must have namespace prefix " + status_ns_prefix + " found " + stat);
 			new_status.add(stat.replaceFirst(status_ns_prefix, ""));
 		}
-		status = new_status;
+		status = new_status;*/
 
 
 
@@ -178,8 +178,8 @@ public class FindDocuments extends StoredQuery {
 
 
 		a("WHERE"); n();
-		//   a("doc.objectType = 'urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1'"); n();
-		//   a("AND ");
+		   a("doc.objectType = 'urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1'"); n();
+		   a("AND ");
 		// patientID
 		a("(doc.id = patId.registryobject AND	"); n();
 		a("  patId.identificationScheme='urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427' AND "); n();
