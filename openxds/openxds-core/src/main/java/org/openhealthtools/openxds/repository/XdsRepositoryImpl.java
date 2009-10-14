@@ -19,8 +19,8 @@
  */
 package org.openhealthtools.openxds.repository;
 
+import gov.nist.registry.common2.registry.Properties;
 import java.net.URL;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -32,9 +32,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.common.utils.UnZip;
+import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
@@ -84,10 +85,19 @@ public class XdsRepositoryImpl extends IheActor implements XdsRepository {
     private boolean initXdsRepository() {
 		boolean isSuccess = false;
         try {
-	        URL axis2repo = XdsRepositoryImpl.class.getResource("/axis2repository");
-	        URL axis2xml = XdsRepositoryImpl.class.getResource("/axis2repository/axis2.xml");
+        	URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
+ 	        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
+ 	        String axis2repopath = axis2repo.getPath();
+ 	        String axis2xmlpath = axis2xml.getPath();
+ 	        if(axis2repopath.contains(".jar")){
+ 	        	UnZip zip =new UnZip();
+ 		        String repoLoc =  Properties.loader().getString("axis.repo.location");
+ 			    zip.unZip(axis2repopath,repoLoc);
+ 			    axis2repopath =repoLoc +"/axis2repository";
+ 			    axis2xmlpath =repoLoc +"/axis2repository/axis2.xml"; 	
+ 		    }
 	        ConfigurationContext configctx = ConfigurationContextFactory
-	        .createConfigurationContextFromFileSystem(axis2repo.getPath(), axis2xml.getPath());
+	        .createConfigurationContextFromFileSystem(axis2repopath, axis2xmlpath);
 	        repositoryServer = new IheHTTPServer(configctx, this); 		
 	
 	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(repositoryServer));
