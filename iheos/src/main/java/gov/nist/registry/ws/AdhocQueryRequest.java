@@ -289,7 +289,8 @@ public class AdhocQueryRequest extends XdsCommon {
 					fact.query_id.equals(MetadataSupport.SQ_GetSubmissionSetAndContents)||
 					fact.query_id.equals(MetadataSupport.SQ_GetFolderAndContents)||
 					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
-					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)){
+					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)||
+					fact.query_id.equals(MetadataSupport.SQ_FindDocuments)){
 				ArrayList<OMElement> res = fact.run();
 				if(auditLog != null){
 				auditLog(ahqr, true, fact.query_id);
