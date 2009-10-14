@@ -85,6 +85,7 @@ public abstract class XdsTest {
 	protected static int pixRegistryPort;
 	protected static String patientId;
 	protected static String assigningAuthority;
+	protected static boolean validatePatient = false;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -107,7 +108,7 @@ public abstract class XdsTest {
 		pixRegistryPort = Integer.parseInt(properties.getProperty("pixRegistryPort"));
 		patientId = properties.getProperty("patientId");
 		assigningAuthority = properties.getProperty("assigningAuthority");
-		
+		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
 		//Initialize openEMPI 
 		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
 		XdsFactory.getInstance().getBean("context");
@@ -148,6 +149,9 @@ public abstract class XdsTest {
 
 	
 	protected void createPatient(String patientId) throws Exception {
+		if (!validatePatient)
+			return ;
+		
 		patientId = patientId.replace("&amp;", "&");
 		//If it is a valid patient, then no need to re-create.
 		if (isValidPatient(patientId))
