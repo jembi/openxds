@@ -278,47 +278,13 @@ public class AdhocQueryRequest extends XdsCommon {
 			fact.setLogMessage(log_message);
 			fact.setIsSecure(is_secure);
 			fact.setResponse(response);
-			//return fact.run();
+			return fact.run();
 			}
 			catch (Exception e) {
-				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
+				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), e.getMessage(), log_message);
 				return null;
 			}
-			try {
-			if(fact.query_id.equals(MetadataSupport.SQ_GetDocumentsAndAssociations)||
-					fact.query_id.equals(MetadataSupport.SQ_GetSubmissionSetAndContents)||
-					fact.query_id.equals(MetadataSupport.SQ_GetFolderAndContents)||
-					fact.query_id.equals(MetadataSupport.SQ_GetAll)||
-					fact.query_id.equals(MetadataSupport.SQ_GetRelatedDocuments)||
-					fact.query_id.equals(MetadataSupport.SQ_FindDocuments)){
-				ArrayList<OMElement> res = fact.run();
-				if(auditLog != null){
-				auditLog(ahqr, true, fact.query_id);
-				}
-				return res;
-			}else {					
-			//Create RegistryStoredQueryContext
-			RegistryStoredQueryContext context = new RegistryStoredQueryContext(fact.query_id, fact.params,fact.return_objects);
-			OMElement response = null;
 			
-				XdsRegistryQueryService qm = XdsFactory.getXdsRegistryQueryService();
-				response = qm.storedQuery(context);
-				if(auditLog != null){
-				auditLog(ahqr, true, fact.query_id);
-				}
-				Iterator<OMElement> temp= response.getChildElements();
-				while(temp.hasNext()){
-					OMElement temp1 = temp.next();
-					for(Iterator<OMElement>i=temp1.getChildElements(); i.hasNext();){
-						omlist.add(i.next());
-					}
-				}
-			 }
-			}catch(Exception e) {
-				throw new XdsInternalException("Failed to query the Registry - " + e.getMessage() , e);
-			}
-			
-		return omlist;
 	 }
 
 	private OMElement sql_query(OMElement ahqr) 
