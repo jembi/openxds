@@ -31,7 +31,7 @@
         </copy> 	
     </target>
 	
-	<target name="create_run_jar" depends="init">
+	<target name="create_run_jar" depends="copy_files">
     	<path id="jar.class.path">
     	  <fileset dir="${output.jar.dir}/${openxds.lib.dir}">
     	    <include name="**/*.jar"/>
