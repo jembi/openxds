@@ -19,6 +19,10 @@
  */
 package org.openhealthtools.openxds;
 
+import gov.nist.registry.common2.registry.Properties;
+
+import java.io.File;
+
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
@@ -39,22 +43,33 @@ public class XdsServer {
 	 *        <p>
 	 */
 	public static void main(String[] args) {
-		if (args.length != 2 ||		    
-		    (args.length == 2 && !args[0].equalsIgnoreCase("startup")) ) {
-			printUsage();
-			return ;
-		}
-
-		if (args.length == 2 && args[0].equalsIgnoreCase("startup") ) {
-		    //Start up the servers
-			XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
-			String actorFile = args[1];
-	        try {
-	            loader.loadConfiguration(actorFile, true);
-	        } catch (IheConfigurationException e) {
-	            e.printStackTrace();
-	        }
-		} 
+        String actorDir = Properties.loader().getString("ihe.actors.dir");
+        String actorFile = null; 
+        
+        File dir = new File(actorDir);
+        if (dir.exists()) {
+        	actorFile = dir.getAbsolutePath();
+        	//remove the current . folder from the path
+        	actorFile = actorFile.replace(File.separator+"."+File.separator, File.separator);
+        	actorFile = actorFile + File.separator + "IheActors.xml";
+        } else {
+			if (args.length != 2 ||		    
+			    (args.length == 2 && !args[0].equalsIgnoreCase("startup")) ) {
+				printUsage();
+				return ;
+			}
+			if (args.length == 2 && args[0].equalsIgnoreCase("startup") ) {
+				actorFile = args[1];
+			} 
+        }
+        
+	    //Start up the servers
+		XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
+        try {
+            loader.loadConfiguration(actorFile, true);
+        } catch (IheConfigurationException e) {
+            e.printStackTrace();
+        }
 
 	}
 	
