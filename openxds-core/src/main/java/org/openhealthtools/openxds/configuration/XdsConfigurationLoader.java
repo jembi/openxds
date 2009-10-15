@@ -950,10 +950,8 @@ public class XdsConfigurationLoader {
 		IheAuditTrail auditTrail = null;		
 		// Build a new audit trail if there are any connections to audit repositories.
 		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-		XdsRegistryPatientService patientManager = XdsFactory.getXdsRegistryPatientService();
 		XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryConnection, xdsRegistryConnection, auditTrail);
-		xdsRegistry.registerPatientManager(patientManager);
-        if (xdsRegistry != null) {
+	    if (xdsRegistry != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXdsRegistry(xdsRegistry);
             okay = true;
