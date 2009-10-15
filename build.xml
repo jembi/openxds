@@ -18,6 +18,15 @@
         	    <include name="**/*.mar"/>
         		<exclude name="**/maven*.jar"/>
         		<exclude name="**/plexus*.jar"/>
+        		<exclude name="**/wagon*.jar"/>
+        		<exclude name="**/doxia*.jar"/>
+        		<exclude name="**/surefire*.jar"/>
+        		<exclude name="**/*sources.jar"/>
+        		<exclude name="**/classworlds*.jar"/>
+        		<exclude name="**/aspectj*1.5.4.jar"/>
+        		<exclude name="**/jaxb*2.1.7.jar"/>
+        		<exclude name="**/jtidy*.jar"/>
+        		<exclude name="**/xws-sec*1.0.jar"/>
     	    </fileset>
         </copy> 	
         <copy flatten="true" todir="${build.dir}">
