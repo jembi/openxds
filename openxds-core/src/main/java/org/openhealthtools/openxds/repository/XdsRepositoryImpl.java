@@ -20,6 +20,8 @@
 package org.openhealthtools.openxds.repository;
 
 import gov.nist.registry.common2.registry.Properties;
+
+import java.io.File;
 import java.net.URL;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -85,17 +87,24 @@ public class XdsRepositoryImpl extends IheActor implements XdsRepository {
     private boolean initXdsRepository() {
 		boolean isSuccess = false;
         try {
-        	URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
- 	        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
- 	        String axis2repopath = axis2repo.getPath();
- 	        String axis2xmlpath = axis2xml.getPath();
- 	        if(axis2repopath.contains(".jar")){
- 	        	UnZip zip =new UnZip();
- 		        String repoLoc =  Properties.loader().getString("axis.repo.location");
- 			    zip.unZip(axis2repopath,repoLoc);
- 			    axis2repopath =repoLoc +"/axis2repository";
- 			    axis2xmlpath =repoLoc +"/axis2repository/axis2.xml"; 	
- 		    }
+	        String axis2repopath = null;
+	        String axis2xmlpath = null;	        	
+	        String repo = Properties.loader().getString("axis.repo.location");
+	        if (new File(repo).exists()) {
+		        axis2repopath = repo;
+		        axis2xmlpath = repo +"/axis2.xml";	        	
+	        } else {
+		        URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
+		        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
+		        axis2repopath = axis2repo.getPath();
+		        axis2xmlpath = axis2xml.getPath();
+		        if(axis2repopath.contains(".jar")){
+		        	UnZip zip =new UnZip();
+				    zip.unZip(axis2repopath,repo);
+				    axis2repopath = repo;
+				    axis2xmlpath = repo +"/axis2.xml"; 	
+			    }
+	        }
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(axis2repopath, axis2xmlpath);
 	        repositoryServer = new IheHTTPServer(configctx, this); 		

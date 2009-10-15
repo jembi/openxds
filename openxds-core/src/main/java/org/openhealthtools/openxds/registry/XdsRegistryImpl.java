@@ -20,7 +20,10 @@
 package org.openhealthtools.openxds.registry;
 
 import gov.nist.registry.common2.registry.Properties;
+
+import java.io.File;
 import java.net.URL;
+
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
@@ -31,14 +34,16 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.ihe.IheActor;
-import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.common.utils.UnZip;
+import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+
 import ca.uhn.hl7v2.app.Application;
 import ca.uhn.hl7v2.llp.LowerLayerProtocol;
 import ca.uhn.hl7v2.parser.PipeParser;
+
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
@@ -105,19 +110,26 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
 	private boolean initXdsRegistry() {
 		boolean isSuccess = false;
 		
-		try {
-			
-	        URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
-	        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
-	        String axis2repopath = axis2repo.getPath();
-	        String axis2xmlpath = axis2xml.getPath();
-	        if(axis2repopath.contains(".jar")){
-	        	UnZip zip =new UnZip();
-		        String repoLoc =  Properties.loader().getString("axis.repo.location");
-			    zip.unZip(axis2repopath,repoLoc);
-			    axis2repopath =repoLoc +"/axis2repository";
-			    axis2xmlpath =repoLoc +"/axis2repository/axis2.xml"; 	
-		    }
+		try {			
+	        String axis2repopath = null;
+	        String axis2xmlpath = null;	        	
+	        String repo = Properties.loader().getString("axis.repo.location");
+	        if (new File(repo).exists()) {
+		        axis2repopath = repo;
+		        axis2xmlpath = repo +"/axis2.xml";	        	
+	        } else {
+		        URL axis2repo = XdsRegistryImpl.class.getResource("/axis2repository");
+		        URL axis2xml = XdsRegistryImpl.class.getResource("/axis2repository/axis2.xml");
+		        axis2repopath = axis2repo.getPath();
+		        axis2xmlpath = axis2xml.getPath();
+		        if(axis2repopath.contains(".jar")){
+		        	UnZip zip =new UnZip();
+				    zip.unZip(axis2repopath,repo);
+				    axis2repopath = repo;
+				    axis2xmlpath = repo +"/axis2.xml"; 	
+			    }
+	        }
+	        
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(axis2repopath,axis2xmlpath);
 	        registryServer = new IheHTTPServer(configctx, this); 		
