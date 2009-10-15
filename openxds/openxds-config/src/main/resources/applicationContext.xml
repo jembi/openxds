@@ -38,6 +38,10 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
+
+     <!--  bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.XdsRegistryPatientServiceImpl"/ -->
+    <bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.MockupXdsRegistryPatientManager"/>
+    
     <!-- =================================================================== -->
     <!-- XDS Repository Configuration                                        -->
     <!-- =================================================================== -->   
