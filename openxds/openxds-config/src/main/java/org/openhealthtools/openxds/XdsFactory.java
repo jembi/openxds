@@ -71,9 +71,6 @@ public class XdsFactory {
 	
 	private String[] getConfigLocations() {
         return new String[] {
-                "classpath*:/applicationContext-resources.xml",
-                "classpath*:/applicationContext-service.xml",
-               "classpath*:/applicationContext-dao.xml",// for web projects
                "classpath*:/applicationContext.xml" // for modular projects
             };
     }
