@@ -62,56 +62,56 @@ public class SchemaValidation implements MetadataTypes {
 		case METADATA_TYPE_Rb:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:xsd:lcm:3.0 " + 
 			((localSchema == null) ? 
-					"/schema/v3/lcm.xsd":
-					localSchema + "/schema/v3/lcm.xsd");
+					"/v3/lcm.xsd":
+					localSchema + "/v3/lcm.xsd");
 			break;
 		case METADATA_TYPE_PR:
 		case METADATA_TYPE_R:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:registry:xsd:2.1 " +
 			((localSchema == null) ?
-			"/schema/v2/rs.xsd" :
-			localSchema + "/schema/v2/rs.xsd");
+			"/v2/rs.xsd" :
+			localSchema + "/v2/rs.xsd");
 			break;
 		case METADATA_TYPE_Q:
 			schemaLocation =
 			"urn:oasis:names:tc:ebxml-regrep:query:xsd:2.1 " +
 			((localSchema == null) ?
-			"/schema/v2/query.xsd " :
-			localSchema + "/schema/v2/query.xsd "	) + 
+			"/v2/query.xsd " :
+			localSchema + "/v2/query.xsd "	) + 
 			
 			"urn:oasis:names:tc:ebxml-regrep:registry:xsd:2.1 " +
 			((localSchema == null) ?
-			"/schema/v2/rs.xsd" :
-			localSchema + "/schema/v2/rs.xsd" ) ;
+			"/v2/rs.xsd" :
+			localSchema + "/v2/rs.xsd" ) ;
 			
 			break;
 		case METADATA_TYPE_SQ:
 			schemaLocation = "urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 " + 
 			((localSchema == null) ?
-			"/schema/v3/query.xsd " : 
-			localSchema + "/schema/v3/query.xsd "  ) +
+			"/v3/query.xsd " : 
+			localSchema + "/v3/query.xsd "  ) +
 			
 			"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0 " + 
 			((localSchema == null) ?
-			"/schema/v3/rs.xsd" :
-			localSchema + "/schema/v3/rs.xsd" );
+			"/v3/rs.xsd" :
+			localSchema + "/v3/rs.xsd" );
 			break;
 		case METADATA_TYPE_RET:
 			schemaLocation = "urn:ihe:iti:xds-b:2007 " + 
 			((localSchema == null) ?
-			"/schema/v3/XDS.b_DocumentRepository.xsd " :
-				localSchema + "/schema/v3/XDS.b_DocumentRepository.xsd ") +
+			"/v3/XDS.b_DocumentRepository.xsd " :
+				localSchema + "/v3/XDS.b_DocumentRepository.xsd ") +
 			
 			"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0 " + 
 			((localSchema == null) ?
-			"/schema/v3/rs.xsd" :
-			localSchema + "/schema/v3/rs.xsd"	);
+			"/v3/rs.xsd" :
+			localSchema + "/v3/rs.xsd"	);
 			break;
 		case AUDIT_LOG:
 			schemaLocation = "noNamespaceSchemaLocation " + 
 			((localSchema == null) ?
-			"/schema/audit/healthcare-security-audit.xsd " :
-				localSchema + "/schema/audit/healthcare-security-audit.xsd ");
+			"/audit/healthcare-security-audit.xsd " :
+				localSchema + "/audit/healthcare-security-audit.xsd ");
 			break;
 		default:
 			throw new XdsInternalException("SchemaValidation: invalid metadata type = " + metadataType);
@@ -119,8 +119,8 @@ public class SchemaValidation implements MetadataTypes {
 
 		schemaLocation += " http://schemas.xmlsoap.org/soap/envelope/ " + 
 		((localSchema == null) ?
-		"/schema/v3/soap.xsd" :
-			localSchema + 	"/schema/v3/soap.xsd");
+		"/v3/soap.xsd" :
+			localSchema + 	"/v3/soap.xsd");
 
 		// build parse to do schema validation
 		try {
