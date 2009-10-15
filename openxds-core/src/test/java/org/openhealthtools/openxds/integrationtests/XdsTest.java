@@ -110,10 +110,10 @@ public abstract class XdsTest {
 		assigningAuthority = properties.getProperty("assigningAuthority");
 		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
 		//Initialize openEMPI 
-		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
-		XdsFactory.getInstance().getBean("context");
-		org.openhie.openempi.context.Context.startup();
-		org.openhie.openempi.context.Context.authenticate("admin", "admin");
+//		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
+//		XdsFactory.getInstance().getBean("context");
+//		org.openhie.openempi.context.Context.startup();
+//		org.openhie.openempi.context.Context.authenticate("admin", "admin");
 
 	}
 
