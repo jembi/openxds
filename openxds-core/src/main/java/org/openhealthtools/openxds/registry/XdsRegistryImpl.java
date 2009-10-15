@@ -113,7 +113,7 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
 		try {			
 	        String axis2repopath = null;
 	        String axis2xmlpath = null;	        	
-	        String repo = Properties.loader().getString("axis.repo.location");
+	        String repo = Properties.loader().getString("axis2.repo.dir");
 	        if (new File(repo).exists()) {
 		        axis2repopath = repo;
 		        axis2xmlpath = repo +"/axis2.xml";	        	
