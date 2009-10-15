@@ -9,6 +9,7 @@
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${openxds.lib.dir}"/>
+        <mkdir dir="${openxds.conf.dir}"/>
     </target>
 	
     <target name="copy_files" depends="init">
@@ -29,14 +30,22 @@
         		<exclude name="**/xws-sec*1.0.jar"/>
     	    </fileset>
         </copy> 	
-        <copy flatten="true" todir="${build.dir}">
+        <copy todir="${openxds.conf.dir}">
+            <fileset dir="${eclise.openxds.dir}/openxds-core/target/classes/">
+				<include name="actors/**" />
+				<include name="axis2repository/**" />
+            </fileset>
+            <fileset dir="${eclise.openxds.dir}/iheos/target/classes/">
+				<include name="schema/**" />
+            </fileset>
             <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
 				<include name="commons-logging.properties" />
+            </fileset>
+        </copy> 	
+        <copy flatten="true" todir="${build.dir}">
+            <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
 				<include name="log4j.xml" />
 				<include name="openxds.properties" />
-            </fileset>
-            <fileset dir="${eclise.openxds.dir}/openxds-registry-patient/target/classes">
-                <include name="openempi.jdbc.properties" />
             </fileset>
         </copy> 	
     </target>
@@ -56,7 +65,7 @@
         <jar destfile="${build.dir}/${output.jar.name}">
             <manifest>
                 <attribute name="Main-Class" value="org.openhealthtools.openxds.XdsServer"/>
-                <attribute name="Class-Path" value=". ${manifest.classpath.prop}"/>
+                <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
             </manifest>
             <fileset dir="${eclise.openxds.dir}/common-utils/target/classes">
             	<include name="org/**" />
@@ -95,6 +104,7 @@
                 <include name="META-INF/**" />
                 <include name="applicationContext-resources.xml" />
                 <include name="hibernate.cfg.xml" />
+                <include name="openempi.jdbc.properties" />
 				<include name="openempi.mail.properties" />
                 <include name="sql-map-config.xml" />
             </fileset>	
