@@ -25,8 +25,9 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+
 import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.client.ServiceClient;
 import org.junit.After;
@@ -34,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
 import org.openhealthtools.openxds.XdsFactory;
-import org.openhealthtools.openxds.repository.ModuleManager;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 /**
