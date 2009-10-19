@@ -3,17 +3,23 @@
     <description>
     	A build file to build openxds.jar which can be run in a stand alone fashion
     </description>
-	<property file="build.properties" />
+	<property file="./build.properties" />
 	
     <target name="init">
+        <!-->
+        If maven is copying the deps to the build/lib dir, then we don't want to remove it here.
         <delete dir="${build.dir}"/>
         <mkdir dir="${build.dir}"/>
-        <mkdir dir="${openxds.lib.dir}"/>
+        <mkdir dir="${openxds.lib.dir}"/>-->
         <mkdir dir="${openxds.conf.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
     </target>
 	
     <target name="copy_files" depends="init">
-        <copy flatten="true" todir="${openxds.lib.dir}">
+        <!--><copy flatten="true" todir="${openxds.lib.dir}">
         	<fileset dir="${maven.repository}" >
         	    <include name="**/*.jar"/>
         	    <include name="**/*.mar"/>
@@ -29,7 +35,7 @@
         		<exclude name="**/jtidy*.jar"/>
         		<exclude name="**/xws-sec*1.0.jar"/>
     	    </fileset>
-        </copy> 	
+        </copy>--> 	
         <copy todir="${openxds.conf.dir}">
             <fileset dir="${eclise.openxds.dir}/openxds-core/target/classes/">
 				<include name="actors/**" />
@@ -46,6 +52,7 @@
             <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
 				<include name="log4j.xml" />
 				<include name="openxds.properties" />
+				<include name="applicationContext.xml" />
             </fileset>
         </copy> 	
     </target>

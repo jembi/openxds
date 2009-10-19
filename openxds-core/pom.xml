@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <artifactId>openxds-core</artifactId>
     <packaging>jar</packaging>
     <name>OpenXDS Modular Application - Core</name>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -53,6 +53,23 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../../build/lib</outputDirectory>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <testResources>
             <testResource>
@@ -64,36 +81,36 @@
 
     <!-- Dependencies calculated by AppFuse when running full-source plugin -->
     <dependencies>
-      	<dependency>
-	  		<groupId>org.openhealthtools.openxds</groupId>
-	  		<artifactId>openxds-api</artifactId>
-	  		<version>${project.version}</version>
-	  	</dependency>    
-      	<dependency>
-	  		<groupId>org.openhealthtools.openxds</groupId>
-	  		<artifactId>common-ws</artifactId>
-	  		<version>${project.version}</version>
-	  	</dependency>    
-      	<dependency>
-	  		<groupId>org.openhealthtools.openxds</groupId>
-	  		<artifactId>iheos</artifactId>
-	  		<version>${project.version}</version>
-	  	</dependency>    
-      	<dependency>
-			<groupId>org.openhealthexchange.openpixpdq</groupId>
-	  		<artifactId>openpixpdq</artifactId>
-	  		<version>${openpixpdq.version}</version>
-	  	</dependency>    
-      	<dependency>
-	  		<groupId>com.misys.braid</groupId>
-	  		<artifactId>braid-base</artifactId>
-	  		<version>${braid.version}</version>
-	  	</dependency>    
-      	<dependency>
-	  		<groupId>ca.uhn.hapi</groupId>
-	  		<artifactId>hapi</artifactId>
-	  		<version>${hapi.version}</version>
-	  	</dependency>    
+        <dependency>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>openxds-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>common-ws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>iheos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthexchange.openpixpdq</groupId>
+            <artifactId>openpixpdq</artifactId>
+            <version>${openpixpdq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.misys.braid</groupId>
+            <artifactId>braid-base</artifactId>
+            <version>${braid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi</artifactId>
+            <version>${hapi.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -220,9 +237,9 @@
             <version>${velocity.version}</version>
         </dependency>
         <dependency>
-        	<groupId>org.openhealthtools.openxds</groupId>
-        	<artifactId>openxds-config</artifactId>
-        	<version>${project.version}</version>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>openxds-config</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
