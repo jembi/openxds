@@ -56,15 +56,15 @@ public class FindFolders extends StoredQuery {
 
 		String status_ns_prefix = "urn:oasis:names:tc:ebxml-regrep:StatusType:";
 		
-		ArrayList<String> new_status = new ArrayList<String>();
+		//ArrayList<String> new_status = new ArrayList<String>();
 		for (int i=0; i<status.size(); i++) {
 			String stat = (String) status.get(i);
 			
 			if ( ! stat.startsWith(status_ns_prefix)) 
 				throw new MetadataValidationException("Status parameter must have namespace prefix " + status_ns_prefix + " found " + stat);
-			new_status.add(stat.replaceFirst(status_ns_prefix, ""));
+			//new_status.add(stat.replaceFirst(status_ns_prefix, ""));
 		}
-		status = new_status;
+		//status = new_status;
 
 
 		init();

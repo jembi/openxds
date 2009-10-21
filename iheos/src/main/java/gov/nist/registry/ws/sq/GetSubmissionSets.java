@@ -37,7 +37,7 @@ public class GetSubmissionSets extends StoredQuery {
 			metadata.addMetadata(ele, true);
 
 			if (metadata.getSubmissionSetIds().size() > 0) {
-				OMElement assocs_ele = this.get_associations("HasMember", metadata.getSubmissionSetIds(), uuids);
+				OMElement assocs_ele = this.get_associations("urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember", metadata.getSubmissionSetIds(), uuids);
 				metadata.addMetadata(assocs_ele, true);
 			}
 		} 
@@ -56,7 +56,7 @@ public class GetSubmissionSets extends StoredQuery {
 		n();
 		a("WHERE ");  n();
 		a("	  a.sourceObject = rp.id AND");  n(); 
-		a("   a.associationType = 'HasMember' AND"); n();
+		a("   a.associationType = 'urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember' AND"); n();
 		a("	  a.targetObject IN "); a(uuids);  a(" AND"); n(); 
 		a("   ei.registryObject = rp.id AND"); n();
 		a("   ei.identificationScheme = 'urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446'"); n();
