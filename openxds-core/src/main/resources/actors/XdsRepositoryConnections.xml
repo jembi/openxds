@@ -68,4 +68,20 @@
 		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 	</StandardConnection>
 
+	<SecureConnection name="secure-xds-registry-client">
+		<!--The host name of the XDS Registry Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8011</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+
+		<!-- Trust and Keystore -->
+		<!-- Used by Connectathon 2009 -->
+		<KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
 </Configuration>
