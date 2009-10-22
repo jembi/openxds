@@ -59,7 +59,12 @@
 	</dependency> 
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
-	    <artifactId>axis2-java2wsdl</artifactId>
+	    <artifactId>axis2-transport-http</artifactId>
+	    <version>1.5a</version>
+	</dependency> 
+	<dependency>
+	    <groupId>org.apache.axis2</groupId>
+	    <artifactId>axis2-transport-local</artifactId>
 	    <version>${axis2.version}</version>
 	</dependency> 
 	<dependency>
