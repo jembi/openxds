@@ -121,7 +121,7 @@ public class QueryTest extends XdsTest {
 	
 	public String findDocumentsQuery(String patientId){
 		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
-		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"LeafClass\"/>\n"+
+		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"ObjectRef\"/>\n"+
 		              	 "  <rim:AdhocQuery id=\"urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d\">\n";
 		if (patientId != null) {
 			request +=   "   <rim:Slot name=\"$XDSDocumentEntryPatientId\">\n"+

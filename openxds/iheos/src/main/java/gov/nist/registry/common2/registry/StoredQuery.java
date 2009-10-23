@@ -65,17 +65,17 @@ public abstract class StoredQuery extends BasicQuery {
 	protected ArrayList<String> get_ids_from_registry_response(OMElement rr) {
 		ArrayList<String> ids = new ArrayList<String>();
 
-		OMElement ahqr = MetadataSupport.firstChildWithLocalName(rr, "AdhocQueryResponse") ;
+		/*OMElement ahqr = MetadataSupport.firstChildWithLocalName(rr, "AdhocQueryResponse") ;
 		if (ahqr == null)
 			return ids;
 
 		OMElement sqr = MetadataSupport.firstChildWithLocalName(ahqr, "SQLQueryResult") ;
 		if (sqr == null)
-			return ids;
+			return ids;*/
 
-		for (Iterator<OMElement> it=sqr.getChildElements(); it.hasNext();) {
+		for (Iterator<OMElement> it=rr.getChildElements(); it.hasNext();) {
 			OMElement ele = (OMElement) it.next();
-			if (ele.getLocalName().equals("ObjectRef"))
+			if (ele.getLocalName().equals("RegistryObjectList"))
 				continue;
 			ids.add(ele.getAttributeValue(MetadataSupport.id_qname));
 		}
@@ -705,9 +705,9 @@ public abstract class StoredQuery extends BasicQuery {
 			
 		init();
 		if (this.return_leaf_class) {
-		     a("SELECT *  "); n();
+		     a("SELECT DISTINCT *  "); n();
 		} else {
-		     a("SELECT ass.id  "); n();
+		     a("SELECT DISTINCT ass.id  "); n();
 		}
 		a("FROM Association ass, ExtrinsicObject eo, RegistryPackage ss, RegistryPackage fol"); n();
 		a("WHERE"); n();
