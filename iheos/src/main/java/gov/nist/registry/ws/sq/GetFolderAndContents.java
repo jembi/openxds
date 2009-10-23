@@ -55,7 +55,7 @@ public class GetFolderAndContents extends StoredQuery {
 
 		OMElement doc_metadata = get_fol_docs(fol_uuid, format_codes, conf_codes);
 		metadata.addMetadata(doc_metadata);
-		content_ids.addAll(get_ids_from_registry_response(doc_metadata));
+		content_ids.addAll(metadata.getExtrinsicObjectIds());
 
 		ArrayList<String> folder_ids = metadata.getFolderIds();
 

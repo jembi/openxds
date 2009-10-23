@@ -261,6 +261,128 @@ public abstract class XdsTest {
 
 		return folderUniqueId;
 	}	
+	/**
+	 * Submits new document and replaces the document
+	 * 
+	 * @param patientId
+	 * @return Document UUID
+	 * @throws Exception
+	 */
+	
+	public String replaceDocument(String patientId) throws Exception {
+		//First submit a document
+		String doc_uuid = submitOneDocument(patientId);
+
+		//Then add a replacement doc
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_replacement.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
+		//replace document and submission set variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		message = message.replace("$patientId", patientId);
+		//populate the document uuid to be replaced.
+		message = message.replace("$rplc_doc_uuid", doc_uuid);
+		
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a medical summary document
+		request = addOneDocument(request, document1, "doc1");
+
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+		
+		return doc_uuid;
+	}
+	
+	/**
+	 * Submits document to the folder.
+	 * @param patientId
+	 * @return document UUID
+	 * @throws Exception
+	 */
+	protected String submitDocument2Folder(String patientId) throws Exception {
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		String folderUniqueId = "2.16.840.1.113883.3.65.3." + System.currentTimeMillis();
+		message = message.replace("$folder_uniqueid", folderUniqueId);
+		//replace the documentId doc1 with an UUID
+		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
+		message = message.replace("doc1", uuid);
+		//replace the patient id
+		message = message.replace("$patientId", patientId);
+		
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, uuid);
+		
+        System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+
+		return uuid;
+	}	
+	
+	/**
+	 * Submits document to the SubmisstionSet And Folder.
+	 * @param patientId
+	 * @return document UUID
+	 * @throws Exception
+	 */
+	protected String submitDocument2SubmissionSet(String patientId) throws Exception {
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		String subUniqueId =  "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis();
+		message = message.replace("$XDSSubmissionSet.uniqueId", subUniqueId);
+		String folderUniqueId = "2.16.840.1.113883.3.65.3." + System.currentTimeMillis();
+		message = message.replace("$folder_uniqueid", folderUniqueId);
+		//replace the documentId doc1 with an UUID
+		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
+		message = message.replace("doc1", uuid);
+		//replace the patient id
+		message = message.replace("$patientId", patientId);
+		
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, uuid);
+		
+        System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+
+		return subUniqueId;
+	}	
 
 	
 	protected ServiceClient getRepositoryServiceClient() throws AxisFault {
