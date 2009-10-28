@@ -38,9 +38,15 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
-
-     <!--  bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.XdsRegistryPatientServiceImpl"/ -->
-    <bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.MockupXdsRegistryPatientManager"/>
+    <bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.XdsRegistryPatientServiceImpl">
+         <property name="xdsRegistryPatientDao" ref="registryPatientDao" />
+    </bean>
+    <!-- bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.MockupXdsRegistryPatientManager"/-->
+    
+	<bean id="registryPatientDao" class="org.openhealthtools.openxds.dao.xdsRegistryPatientDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+       
     
     <!-- =================================================================== -->
     <!-- XDS Repository Configuration                                        -->
@@ -69,9 +75,7 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:openempi.jdbc.properties</value>
-                <value>classpath:openempi.mail.properties</value>
-                <value>classpath:openxds.properties</value>
+              <value>classpath:openxds.properties</value>
             </list>
         </property>
     </bean>
@@ -113,12 +117,21 @@
 		</property>
 	</bean>
  
+   <bean id="registryPatientTransaction" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="registryPatientService"/>
+		<property name="transactionAttributeSource">
+			<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+ 
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource" />
         <property name="mappingResources">
         	<list>
            		<value>openxds.repository.hbm.xml</value>
                 <value>externalidentifier.hbm.xml</value>
+                <value>personidentifier.hbm.xml</value>
        		</list>
     	</property>
      	<property name="hibernateProperties">

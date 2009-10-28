@@ -49,7 +49,7 @@
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>openxds-registry-patient</artifactId>
+  		<artifactId>openxds-registry-patient-lightweight</artifactId>
   		<version>${project.version}</version>
   	</dependency>
    	<dependency>
