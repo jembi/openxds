@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	 Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd       
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+	   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+	   default-lazy-init="true">
+
+    <!-- =================================================================== -->
+    <!-- XDS Registry Configuration                                          -->
+    <!-- =================================================================== -->   
+	
+    <bean id="registryPatientService" class="org.openhealthtools.openxds.registry.patient.XdsRegistryPatientServiceImpl">
+         <property name="xdsRegistryPatientDao" ref="registryPatientDao" />
+    </bean>
+    
+	  <bean id="registryPatientDao" class="org.openhealthtools.openxds.dao.xdsRegistryPatientDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+    
+    <!-- =================================================================== -->
+    <!-- Property Configuration                                              -->
+    <!-- =================================================================== -->   
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+              <value>classpath:openxds.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- =================================================================== -->
+    <!-- DataSource and Transaction Configuration                            -->
+    <!-- =================================================================== -->   
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${openxds.db.driver}"/>
+		<property name="url" value="${openxds.db.url}"/>
+		<property name="username" value="${openxds.db.username}"/>
+		<property name="password" value="${openxds.db.password}"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+	</bean>       
+    
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+  	    <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+  
+    <!-- Enable @Transactional support -->
+	<tx:annotation-driven/>
+
+   <bean id="registryPatientTransaction" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="registryPatientService" />
+		<property name="transactionAttributeSource">
+			<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+ 
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+        <property name="mappingResources">
+        	<list>
+           		<value>personidentifier.hbm.xml</value>
+       		</list>
+    	</property>
+     	<property name="hibernateProperties">
+        	<props>
+            	<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		    	<prop key="hibernate.show_sql">true</prop>
+        	</props>
+        </property>
+	</bean>  
+   
+</beans>    
