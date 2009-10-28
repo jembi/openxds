@@ -262,9 +262,9 @@
         <module>openxds-api</module>
         <module>openxds-core</module>
         <module>openxds-registry-adapter-omar</module>
-        <module>openxds-registry-patient</module>
         <module>openxds-repository</module>
         <module>openxds-web</module>
+    	<module>openxds-registry-patient-lightweight</module>
   </modules>
 
     <reporting>
