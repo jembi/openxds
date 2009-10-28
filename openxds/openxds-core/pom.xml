@@ -53,6 +53,37 @@
                     </dependency>
                 </dependencies>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<id>ant1</id>
+						<phase>compile</phase>
+						<configuration>
+							<tasks>
+								<ant dir="../" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>ant2</id>
+						<phase>clean</phase>
+						<configuration>
+							<tasks>
+								<ant dir="../" target="clean" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
