@@ -103,7 +103,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		PatientIdentifier survivingId = survivingPatient.getPatientIds().get(0);
 		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(survivingId.getId());
 		for (PatientIdentifier pid : mergePatient.getPatientIds()) {
-		PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(pid.getId());
+		PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getMergedPersonId(pid.getId());
 		if (retiredPersonId == null ||  survivingPersonId == null) {
 			log.error("Unable to locate one of the two patient records that need to be unmerged.");
 			throw new RegistryPatientException("Unable to identify the two patient records that need to be unmerged.");
