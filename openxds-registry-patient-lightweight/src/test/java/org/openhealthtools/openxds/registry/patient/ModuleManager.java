@@ -34,7 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  */
 public class ModuleManager {
-	
+
 	private static final Log log = LogFactory.getLog(ModuleManager.class);
 
 	private static final ModuleManager SINGLETON = new ModuleManager();
@@ -57,20 +57,19 @@ public class ModuleManager {
 
 	private void initializeSpring() {
 		try {
-		this.applicationContext = new ClassPathXmlApplicationContext(getConfigLocations());
-		
-		//add a shutdown hook for the above context... 
-		this.applicationContext.registerShutdownHook();
+			this.applicationContext = new ClassPathXmlApplicationContext(
+					getConfigLocations());
+
+			//add a shutdown hook for the above context... 
+			this.applicationContext.registerShutdownHook();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String[] getConfigLocations() {
-        return new String[] {
-             	"classpath*:/applicationContextTest.xml"	
-            };
-    }
+		return new String[] { "classpath*:/applicationContextTest.xml" };
+	}
 
 	/**
 	 * Gets spring beans object of the given bean name.
@@ -88,10 +87,8 @@ public class ModuleManager {
 	 * @return the singleton {@link XdsRegistryPatientService} instance
 	 */
 	public static XdsRegistryPatientService getXdsRegistryPatientService() {
-		return (XdsRegistryPatientService)getInstance().getBean("registryPatientService");
+		return (XdsRegistryPatientService) getInstance().getBean(
+				"registryPatientService");
 	}
 
-	
-	
-	
 }

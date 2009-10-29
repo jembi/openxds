@@ -276,5 +276,11 @@
             <artifactId>openxds-config</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
     </dependencies>
 </project>
