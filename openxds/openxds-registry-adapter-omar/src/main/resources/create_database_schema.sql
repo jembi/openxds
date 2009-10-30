@@ -559,6 +559,13 @@ CREATE TABLE Person (
 );
 
 DROP TABLE IF EXISTS RepositoryItem CASCADE;
+CREATE TABLE RepositoryItem
+(
+  lid character varying(256) NOT NULL,
+  versionname character varying(16) NOT NULL,
+  "content" bytea, 
+  PRIMARY KEY(lid, versionname)
+);
 
 DROP VIEW IF EXISTS Identifiable CASCADE;
 CREATE VIEW Identifiable (
@@ -1241,7 +1248,8 @@ GRANT  DELETE, INSERT, SELECT, UPDATE ON  TelephoneNumber TO openxds;
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  User_ TO openxds; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  Person TO openxds; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  repository TO openxds; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  personidentifier TO openxds; 
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  personidentifier TO openxds;
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  RepositoryItem TO openxds;
 
 
 --Insert factory defined Users
