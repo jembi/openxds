@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
   <artifactId>apache-axis2</artifactId>
-  <name>apache-axis2</name>
+  <name>OpenXDS - Apache Axis2</name>
   <packaging>pom</packaging>
   
   <dependencies>

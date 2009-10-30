@@ -11,7 +11,7 @@
 
     <artifactId>openxds-registry-adapter-omar</artifactId>
     <packaging>jar</packaging>
-    <name>OpenXDS Module - Registry Adapter Omar 3.1</name>
+    <name>OpenXDS - Registry Omar 3.1 Adapter</name>
 
     <build>
         <defaultGoal>install</defaultGoal>
