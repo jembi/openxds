@@ -6,11 +6,6 @@
 	<property file="./build.properties" />
 	
     <target name="init">
-        <!-->
-        If maven is copying the deps to the build/lib dir, then we don't want to remove it here.
-        <delete dir="${build.dir}"/>
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${openxds.lib.dir}"/>-->
         <mkdir dir="${openxds.conf.dir}"/>
     </target>
 
@@ -19,23 +14,6 @@
     </target>
 	
     <target name="copy_files" depends="init">
-        <!--><copy flatten="true" todir="${openxds.lib.dir}">
-        	<fileset dir="${maven.repository}" >
-        	    <include name="**/*.jar"/>
-        	    <include name="**/*.mar"/>
-        		<exclude name="**/maven*.jar"/>
-        		<exclude name="**/plexus*.jar"/>
-        		<exclude name="**/wagon*.jar"/>
-        		<exclude name="**/doxia*.jar"/>
-        		<exclude name="**/surefire*.jar"/>
-        		<exclude name="**/*sources.jar"/>
-        		<exclude name="**/classworlds*.jar"/>
-        		<exclude name="**/aspectj*1.5.4.jar"/>
-        		<exclude name="**/jaxb*2.1.7.jar"/>
-        		<exclude name="**/jtidy*.jar"/>
-        		<exclude name="**/xws-sec*1.0.jar"/>
-    	    </fileset>
-        </copy>--> 	
         <copy todir="${openxds.conf.dir}">
             <fileset dir="${eclise.openxds.dir}/openxds-core/target/classes/">
 				<include name="actors/**" />
@@ -106,7 +84,12 @@
                 <include name="repository.hbm.xml" />
                 <include name="repository.jdbc.cfg.xml" />
             </fileset>
-            <fileset dir="${eclise.openxds.dir}/openxds-registry-patient/target/classes">
+            <fileset dir="${eclise.openxds.dir}/openxds-registry-patient-lightweight/target/classes">
+            	<include name="org/**" />
+                <include name="personidentifier.hbm.xml" />
+            </fileset>	
+        	<!-- Disabled OpenEMPI adapter for patient registry -->
+            <!--fileset dir="${eclise.openxds.dir}/openxds-registry-patient/target/classes">
             	<include name="org/**" />
                 <include name="META-INF/**" />
                 <include name="applicationContext-resources.xml" />
@@ -114,7 +97,7 @@
                 <include name="openempi.jdbc.properties" />
 				<include name="openempi.mail.properties" />
                 <include name="sql-map-config.xml" />
-            </fileset>	
+            </fileset-->	
             <fileset dir="${eclise.openxds.dir}/openxds-repository/target/classes">
             	<include name="org/**" />
                 <include name="openxds.repository.hbm.xml" />
