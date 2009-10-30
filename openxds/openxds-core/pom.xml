@@ -13,7 +13,7 @@
 
     <artifactId>openxds-core</artifactId>
     <packaging>jar</packaging>
-    <name>OpenXDS Modular Application - Core</name>
+    <name>OpenXDS - Main/Core</name>
 
     <build>
         <plugins>

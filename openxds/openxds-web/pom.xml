@@ -15,7 +15,7 @@
     <artifactId>openxds-web</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>AppFuse Modular Application - Web (Struts 2)</name>
+    <name>OpenXDS - Web Application (Struts 2)</name>
 
 
     <profiles>

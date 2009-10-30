@@ -13,7 +13,7 @@
 
     <artifactId>openxds-registry-patient</artifactId>
     <packaging>jar</packaging>
-    <name>OpenXDS Modular Application - Registry Patient</name>
+    <name>OpenXDS - Registry Patient OpenEMPI Adapter</name>
 
     <build>
         <plugins>

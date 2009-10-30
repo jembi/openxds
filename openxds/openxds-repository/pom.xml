@@ -14,7 +14,7 @@
 
     <artifactId>openxds-repository</artifactId>
     <packaging>jar</packaging>
-    <name>OpenXDS Modular Application - Repository</name>
+    <name>OpenXDS - Repository</name>
 
     <build>
         <plugins>

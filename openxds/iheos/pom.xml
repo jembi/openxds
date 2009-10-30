@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
   <artifactId>iheos</artifactId>
-  <name>NIST iheos</name>
+  <name>OpenXDS - NIST Iheos</name>
   <packaging>jar</packaging>
 
   <dependencies>
