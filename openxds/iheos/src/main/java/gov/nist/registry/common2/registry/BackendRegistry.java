@@ -121,7 +121,7 @@ public class BackendRegistry {
 		try {
 			response_xml = qm.sqlQuery(context);
 		}catch(RegistryQueryException e) {
-			throw new XdsInternalException("Failed to query the Registry. \nQuery was:\n"+ sql, e);
+			throw new XdsInternalException("Registry query exception - " + e.getMessage() + " \nQuery was:\n"+ sql, e);
 		}
 		if (log_message != null)
 			log_message.addOtherParam("ebxmlrr response", response.toString());
@@ -186,7 +186,7 @@ public class BackendRegistry {
 		try {
 			response = qm.storedQuery(context);
 		}catch(RegistryQueryException e) {
-			throw new XdsInternalException("Failed to query the Registry", e);
+			throw new XdsInternalException("Registry query exception - " + e.getMessage(), e);
 		}
 		if (log_message != null)
 			log_message.addOtherParam("ebxmlrr response", response.toString());
