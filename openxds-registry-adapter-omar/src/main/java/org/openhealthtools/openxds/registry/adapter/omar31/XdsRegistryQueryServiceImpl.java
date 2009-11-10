@@ -121,7 +121,7 @@ public class XdsRegistryQueryServiceImpl implements XdsRegistryQueryService {
             }
         }
         catch (javax.xml.bind.JAXBException e) {
-        	throw new RegistryQueryException("Failed to create ResponseOption", e);
+        	throw new RegistryQueryException("Failed to create ResponseOption - " + e.getMessage(), e);
         }
         
     	String contextId = "org:openhealthexchange:openxds:registry:adapter:omar31:XdsRegistryQueryManager:sqlQuery:context";
@@ -136,9 +136,9 @@ public class XdsRegistryQueryServiceImpl implements XdsRegistryQueryService {
         	try {
         		src.rollback();
         	}catch(RegistryException re) {
-            	throw new RegistryQueryException("Failed to rollback", re);        		
+            	throw new RegistryQueryException("Failed to rollback - " + re.getMessage(), re);        		
         	}
-        	throw new RegistryQueryException("Failed to create ResponseOption", e);
+        	throw new RegistryQueryException("Failed to create ResponseOption - " + e.getMessage(), e);
         }
 
         try {
@@ -154,15 +154,15 @@ public class XdsRegistryQueryServiceImpl implements XdsRegistryQueryService {
             }
 	        ret = OMUtil.xmlStringToOM(response);
         }catch (javax.xml.bind.JAXBException e) {
-        	throw new RegistryQueryException("Failed to create AdhocQueryResponse", e);	    	
+        	throw new RegistryQueryException("Failed to create AdhocQueryResponse - " + e.getMessage(), e);	    	
 	    }catch(XMLStreamException e) {
-        	throw new RegistryQueryException("Could not create XMLStream from AdhocQueryResponse", e);	    	
+        	throw new RegistryQueryException("Could not create XMLStream from AdhocQueryResponse - " + e.getMessage(), e);	    	
 	    }
 
         try {
         	src.commit();       
         }catch(RegistryException re) {
-        	throw new RegistryQueryException("Failed to commmit", re);        		        	
+        	throw new RegistryQueryException("Failed to commmit - " + re.getMessage(), re);        		        	
         }
         //Finally return the result
     	return ret;        
