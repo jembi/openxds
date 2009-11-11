@@ -36,6 +36,7 @@ CREATE TABLE Association (
   sourceObject		VARCHAR(256) NOT NULL,
   targetObject  	VARCHAR(256) NOT NULL
 );
+ALTER TABLE Association OWNER TO openxds;
 
 DROP TABLE IF EXISTS AuditableEvent CASCADE;
 CREATE TABLE AuditableEvent (
@@ -57,6 +58,7 @@ CREATE TABLE AuditableEvent (
   timeStamp_        VARCHAR(30) NOT NULL,
   user_				VARCHAR(256) NOT NULL
 );
+ALTER TABLE AuditableEvent OWNER TO openxds;
 
 DROP TABLE IF EXISTS AffectedObject CASCADE;
 CREATE TABLE AffectedObject (
@@ -69,6 +71,7 @@ CREATE TABLE AffectedObject (
 
   PRIMARY KEY (id, eventId)
 );
+ALTER TABLE AffectedObject OWNER TO openxds;
 
 DROP TABLE IF EXISTS repository CASCADE;
 CREATE TABLE repository
@@ -77,6 +80,7 @@ CREATE TABLE repository
   mimetype character varying(255),
   "content" bytea 
 );
+ALTER TABLE repository OWNER TO openxds;
 
 DROP TABLE IF EXISTS personidentifier CASCADE;
 CREATE TABLE personidentifier
@@ -88,6 +92,7 @@ CREATE TABLE personidentifier
   merged boolean,
   surviving_patient_id character varying(255)  
 );
+ALTER TABLE personidentifier OWNER TO openxds;
 
 DROP TABLE IF EXISTS Classification CASCADE;
 CREATE TABLE Classification (
@@ -109,6 +114,7 @@ CREATE TABLE Classification (
   classifiedObject		VARCHAR(256) NOT NULL,
   nodeRepresentation		VARCHAR(256)
 );
+ALTER TABLE Classification OWNER TO openxds;
 
 DROP TABLE IF EXISTS ClassificationNode CASCADE;
 CREATE TABLE ClassificationNode (
@@ -129,6 +135,7 @@ CREATE TABLE ClassificationNode (
   parent				VARCHAR(256),
   path					VARCHAR(1024)
 );
+ALTER TABLE ClassificationNode OWNER TO openxds;
 
 DROP TABLE IF EXISTS ClassScheme CASCADE;
 CREATE TABLE ClassScheme (
@@ -148,6 +155,7 @@ CREATE TABLE ClassScheme (
   isInternal		VARCHAR(1) NOT NULL,
   nodeType		VARCHAR(256) NOT NULL
 );
+ALTER TABLE ClassScheme OWNER TO openxds;
 
 DROP TABLE IF EXISTS ExternalIdentifier CASCADE;
 CREATE TABLE ExternalIdentifier (
@@ -168,6 +176,7 @@ CREATE TABLE ExternalIdentifier (
   identificationScheme		VARCHAR(256) NOT NULL,
   value				VARCHAR(256) NOT NULL
 );
+ALTER TABLE ExternalIdentifier OWNER TO openxds;
 
 DROP TABLE IF EXISTS ExternalLink CASCADE;
 CREATE TABLE ExternalLink (
@@ -185,6 +194,7 @@ CREATE TABLE ExternalLink (
 --ExternalLink attributes
   externalURI		VARCHAR(256) NOT NULL
 );
+ALTER TABLE ExternalLink OWNER TO openxds;
 
 DROP TABLE IF EXISTS ExtrinsicObject CASCADE;
 CREATE TABLE ExtrinsicObject (
@@ -208,6 +218,7 @@ CREATE TABLE ExtrinsicObject (
   contentVersionComment	VARCHAR(256)
 
 );
+ALTER TABLE ExtrinsicObject OWNER TO openxds;
 
 DROP TABLE IF EXISTS Federation CASCADE;
 CREATE TABLE Federation (
@@ -226,6 +237,7 @@ CREATE TABLE Federation (
 --xsd:duration stored in string form since no corresponding SQL type. Is 32 long enough?
   replicationSyncLatency    VARCHAR(32)
 );
+ALTER TABLE Federation OWNER TO openxds;
 
 DROP TABLE IF EXISTS Name_ CASCADE;
 CREATE TABLE Name_ (
@@ -237,6 +249,7 @@ CREATE TABLE Name_ (
   parent			VARCHAR(256) NOT NULL,
   PRIMARY KEY (parent, lang)
 );
+ALTER TABLE Name_ OWNER TO openxds;
 
 DROP TABLE IF EXISTS Description CASCADE;
 CREATE TABLE Description (
@@ -248,6 +261,7 @@ CREATE TABLE Description (
   parent			VARCHAR(256) NOT NULL,
   PRIMARY KEY (parent, lang)
 );
+ALTER TABLE Description OWNER TO openxds;
 
 DROP TABLE IF EXISTS UsageDescription CASCADE;
 CREATE TABLE UsageDescription (
@@ -259,6 +273,7 @@ CREATE TABLE UsageDescription (
   parent			VARCHAR(256) NOT NULL,
   PRIMARY KEY (parent, lang)
 );
+ALTER TABLE UsageDescription OWNER TO openxds;
 
 DROP TABLE IF EXISTS ObjectRef CASCADE;
 CREATE TABLE ObjectRef (
@@ -267,6 +282,7 @@ CREATE TABLE ObjectRef (
   id				VARCHAR(256) NOT NULL PRIMARY KEY,
   home                          VARCHAR(256)
 );
+ALTER TABLE ObjectRef OWNER TO openxds;
 
 DROP TABLE IF EXISTS Organization CASCADE;
 CREATE TABLE Organization (
@@ -288,6 +304,7 @@ CREATE TABLE Organization (
   primaryContact	VARCHAR(256)
 --Organization.telephoneNumbers attribute is in TelephoneNumber table
 );
+ALTER TABLE Organization OWNER TO openxds;
 
 DROP TABLE IF EXISTS RegistryPackage CASCADE;
 CREATE TABLE RegistryPackage (
@@ -304,6 +321,7 @@ CREATE TABLE RegistryPackage (
 
 --RegistryPackage attributes: currently none defined
 );
+ALTER TABLE RegistryPackage OWNER TO openxds;
 
 DROP TABLE IF EXISTS PostalAddress CASCADE;
 CREATE TABLE PostalAddress (
@@ -316,6 +334,7 @@ CREATE TABLE PostalAddress (
 --The parent object that this is an address for
   parent			VARCHAR(256) NOT NULL
 );
+ALTER TABLE PostalAddress OWNER TO openxds;
 
 DROP TABLE IF EXISTS EmailAddress CASCADE;
 CREATE TABLE EmailAddress (
@@ -324,6 +343,7 @@ CREATE TABLE EmailAddress (
 --The parent object that this is an email address for
   parent			VARCHAR(256) NOT NULL
 );
+ALTER TABLE EmailAddress OWNER TO openxds;
 
 DROP TABLE IF EXISTS Registry CASCADE;
 CREATE TABLE Registry (
@@ -348,6 +368,7 @@ CREATE TABLE Registry (
   replicationSyncLatency    VARCHAR(32) DEFAULT 'P1D',
   specificationVersion    VARCHAR(8) NOT NULL
 );
+ALTER TABLE Registry OWNER TO openxds;
 
 DROP TABLE IF EXISTS Service CASCADE;
 CREATE TABLE Service (
@@ -364,6 +385,7 @@ CREATE TABLE Service (
 
 --Service attributes: currently none defined
 );
+ALTER TABLE Service OWNER TO openxds;
 
 DROP TABLE IF EXISTS ServiceBinding CASCADE;
 CREATE TABLE ServiceBinding (
@@ -383,6 +405,7 @@ CREATE TABLE ServiceBinding (
   accessURI			VARCHAR(256),
   targetBinding		VARCHAR(256)
 );
+ALTER TABLE ServiceBinding OWNER TO openxds;
 
 DROP TABLE IF EXISTS Slot CASCADE;
 CREATE TABLE Slot (
@@ -395,6 +418,7 @@ CREATE TABLE Slot (
   parent			VARCHAR(256) NOT NULL,
   PRIMARY KEY (parent, name_, sequenceId)
 );
+ALTER TABLE Slot OWNER TO openxds;
 
 DROP TABLE IF EXISTS SpecificationLink CASCADE;
 CREATE TABLE SpecificationLink (
@@ -413,6 +437,7 @@ CREATE TABLE SpecificationLink (
   serviceBinding	VARCHAR(256) NOT NULL,
   specificationObject VARCHAR(256) NOT NULL
 );
+ALTER TABLE SpecificationLink OWNER TO openxds;
 
 DROP TABLE IF EXISTS Subscription CASCADE;
 CREATE TABLE Subscription (
@@ -435,6 +460,7 @@ CREATE TABLE Subscription (
   notificationInterval  VARCHAR(32) DEFAULT 'P1D',
   startTime             VARCHAR(30)
 );
+ALTER TABLE Subscription OWNER TO openxds;
 
 DROP TABLE IF EXISTS NotifyAction CASCADE;
 CREATE TABLE NotifyAction (
@@ -447,6 +473,7 @@ CREATE TABLE NotifyAction (
 --Parent Subscription reference
   parent			VARCHAR(256) NOT NULL
 );
+ALTER TABLE NotifyAction OWNER TO openxds;
 
 DROP TABLE IF EXISTS Notification CASCADE;
 CREATE TABLE Notification (
@@ -464,6 +491,7 @@ CREATE TABLE Notification (
 --Notification attributes
   subscription        VARCHAR(256) NOT NULL
 );
+ALTER TABLE Notification OWNER TO openxds;
 
 DROP TABLE IF EXISTS NotificationObject CASCADE;
 CREATE TABLE NotificationObject (
@@ -475,6 +503,7 @@ CREATE TABLE NotificationObject (
 
   PRIMARY KEY (notificationId, registryObjectId)
 );
+ALTER TABLE NotificationObject OWNER TO openxds;
 
 DROP TABLE IF EXISTS AdhocQuery CASCADE;
 CREATE TABLE AdhocQuery (
@@ -493,6 +522,7 @@ CREATE TABLE AdhocQuery (
   queryLanguage		VARCHAR(256) NOT NULL,
   query			VARCHAR(4096) NOT NULL
 );
+ALTER TABLE AdhocQuery OWNER TO openxds;
 
 DROP TABLE IF EXISTS UsageParameter CASCADE;
 CREATE TABLE UsageParameter (
@@ -500,6 +530,7 @@ CREATE TABLE UsageParameter (
 --The parent SpecificationLink that this is a usage parameter for
   parent			VARCHAR(256) NOT NULL
 );
+ALTER TABLE UsageParameter OWNER TO openxds;
 
 DROP TABLE IF EXISTS TelephoneNumber CASCADE;
 CREATE TABLE TelephoneNumber (
@@ -511,6 +542,7 @@ CREATE TABLE TelephoneNumber (
   phoneType			VARCHAR(256),
   parent			VARCHAR(256) NOT NULL
 );
+ALTER TABLE TelephoneNumber OWNER TO openxds;
 
 DROP TABLE IF EXISTS User_ CASCADE;
 CREATE TABLE User_ (
@@ -534,6 +566,7 @@ CREATE TABLE User_ (
   personName_lastName	VARCHAR(64)
 --telephoneNumbers is in TelephoneNumber table
 );
+ALTER TABLE User_ OWNER TO openxds;
 
 DROP TABLE IF EXISTS Person CASCADE;
 CREATE TABLE Person (
@@ -557,6 +590,7 @@ CREATE TABLE Person (
   personName_lastName	VARCHAR(64)
 --telephoneNumbers is in TelephoneNumber table
 );
+ALTER TABLE Person OWNER TO openxds;
 
 DROP TABLE IF EXISTS RepositoryItem CASCADE;
 CREATE TABLE RepositoryItem
@@ -566,6 +600,7 @@ CREATE TABLE RepositoryItem
   "content" bytea, 
   PRIMARY KEY(lid, versionname)
 );
+ALTER TABLE RepositoryItem OWNER TO openxds;
 
 DROP VIEW IF EXISTS Identifiable CASCADE;
 CREATE VIEW Identifiable (
@@ -693,6 +728,7 @@ CREATE VIEW Identifiable (
   home
  FROM ObjectRef
 ;
+ALTER VIEW Identifiable OWNER TO openxds;
 
 DROP VIEW IF EXISTS RegistryObject CASCADE;
 CREATE VIEW RegistryObject (
@@ -954,6 +990,7 @@ CREATE VIEW RegistryObject (
   comment_
  FROM Person
 ;
+ALTER VIEW RegistryObject OWNER TO openxds;
 
 
 --All index definitions are non-normative
