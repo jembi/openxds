@@ -133,8 +133,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			response.add_error("XDSRepositoryError", "XDS Configuration Error:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			logger.fatal(logger_exception_details(e));
 		} 
-		catch (MetadataValidationException e) {
-			response.add_error("XDSRepositoryError", "Metadata Validation Errors:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
+		catch (MetadataValidationException e) {			
+			response.add_error(MetadataSupport.XDSRepositoryMetadataError, "Test input incorrect:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
 		} 
 		catch (MetadataException e) {
 			response.add_error("XDSRepositoryError", "Metadata Validation Errors:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
@@ -387,30 +387,49 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	private void store_document_swa_xop(Metadata m, String id, DataHandler dataHandler, String content_type, boolean validate_content_type) 
 	throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException {
 		OMElement extrinsic_object = m.getObjectById(id);
-		
+		String actualDocSize = null;
+		String actualDocHash = null;
 		// content type is not guaranteed by the standard so this validation has been removed
 		validate_content_type = false;
-
+		
 		if (extrinsic_object == null) 
 			throw new MetadataException("Document submitted with id of " + id + " but no ExtrinsicObject exists in metadata with same id");
 
 		String uid = m.getExternalIdentifierValue(id, "urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab");  // doc uniqueid
 		if (uid == null)
 			throw new MetadataException("Document " + id + " does not have a Unique ID");
-
+		
+		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
+		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
+		item.setDocumentUniqueId(uid);
+		item.setDataHandler(dataHandler);
+		
 		String mime_type = extrinsic_object.getAttributeValue(MetadataSupport.mime_type_qname);
-
+        String size = m.getSlotValue(id,"size", 0);
+        String hash = m.getSlotValue(id, "hash" ,0);
+        
+        try{
+        	actualDocSize = Integer.toString(item.getSize());          			
+		}catch (Exception e) {throw new XdsInternalException("Error calculating size on repository file");}
+		
+	    try{
+        	actualDocHash = Long.toString(item.getHash());
+        } catch (Exception e) {	throw new XdsInternalException("Error calculating hash on repository file");}
+    
+        if(size != null && !size.equals(actualDocSize)){  
+        	throw new MetadataValidationException("ExtrinsicObject " + id + " Metadata contains size attribute that does not match attached document");
+        }
+        
+        if(hash != null && !hash.equals(actualDocHash)){  
+           	throw new MetadataValidationException("ExtrinsicObject " + id + " Metadata contains hash attribute that does not match attached document");
+        }			
 		if (mime_type == null || mime_type.equals(""))
 			throw new MetadataException("ExtrinsicObject " + id + " does not have a mimeType");
 
 		if ( validate_content_type && !mime_type.equals(content_type))
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
-					
-		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
-		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
-		item.setDocumentUniqueId(uid);
-		item.setDataHandler(dataHandler); 
+		
 		try {
 			RepositoryRequestContext context = new RepositoryRequestContext();
 			context.setConnection(connection);
@@ -420,19 +439,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}
 		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
+		
 		// set size, hash, URI into metadata
-		try {
-			m.setSlot(extrinsic_object, "size", Integer.toString(item.getSize()));
-		}catch(RepositoryException e) {
-			throw new XdsInternalException("Error calculating size on repository file"); 
-		}
-		try {
-			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
-		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
-        //TODO: either remove URI attribute, or make the uri work. URI is an attribute required by XDS.a
-		//m.setSlot(extrinsic_object, "URI",  document_uri (uid, mime_type));
+		m.setSlot(extrinsic_object, "size", actualDocSize);
+		m.setSlot(extrinsic_object, "hash", actualDocHash);
 		//m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
-
 	}
 
 	private void store_document_mtom(Metadata m, String id, byte[] bytes) 
