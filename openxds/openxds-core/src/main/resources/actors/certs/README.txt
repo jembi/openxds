@@ -13,26 +13,19 @@
  * permissions and limitations under the License. 
  */
 README.txt - This file.
-keystore.key - initial unsigned generated key, saved and never touched.  In case something goes FUBAR.
-EHR_MISYS.key - copy of key, for uniform naming.  Used to generate csr.
-EHR_MISYS.csr - signing request.  Sent to CA.
-EHR_MISYS.cer - signed cert made by CA from .csr.  Recieved from CA.
-EHR_MISYS_KEY.key - Keystore with root certs and signed master key.
-Identrus_Test_Root.cer - Root cert.
-Wells_CA.cer - Intermediate cert.
-EHR_MISYS_TRUST.key - keystore for holding cert that signed all other certs.
+OpenXDS_2010_Keystore.p12 - keystore with root certs and signed master key
+OpenXDS_2010_Truststore.jsk - truststore for holding CA cert that signed all other certs 
 
-EMR_MISYS_08_KEY.p12 - self-signed certificate keystore
-EMR_MISYS_08_TRUST.jsk - truststore 
+Connectathon 2010 (CA signed certificates)
+==========================================
+#generate keystore:
+openssl pkcs12 -export -out OpenXDS_2010_Keystore.p12 -in certs/XDSb_REG_MISYS.ihe.net.pem -inkey requests/XDSb_REG_MISYS.ihe.net.pem
 
-to generate key:
-openssl pkcs12 -export -out keystore.pkcs12 -in test_sys_1.cert.pem -inkey test_sys_1.key.pem
-openssl pkcs12 -export -out OpenPIXPDQ_2009_KEY.pkcs12 -in PAT_IDENTITY_X_REF_MGR_MISYSPLC.cert.pem -inkey PAT_IDENTITY_X_REF_MGR_MISYSPLC.key.pem
+#generate truststore:
+keytool -import -v -trustcacerts -file demoCA\cacert.pem -keystore OpenXDS_2010_Truststore.jks -storepass password -alias mir
 
-to convert p12 key to jks key (need to have a jetty installation):
-java -cp c:\tools\jetty\jetty-6.1.14\lib\jetty-6.1.14.jar org.mortbay.jetty.security.PKCS12Import OpenPIXPDQ_2009_KEY.pkcs12 OpenPIXPDQ_2009_KEY.jks
+# import my cert into truststore
+keytool -importkeystore -srckeystore OpenXDS_2010_Keystore.p12 -destkeystore OpenXDS_2010_Truststore.jks -srcstoretype PKCS12 -deststoretype JKS -srcstorepass password -deststorepass password
 
-to generate truststore:
-keytool -import -alias mesa -file mesa.cert -keystore TrustStore
-keytool -import -alias xxx -file xxx.cert -keystore OpenPIXPDQ_2009_STORE.jks
-
+#list results
+keytool -list -v -keystore OpenXDS_2010_Truststore.jks -storepass password
