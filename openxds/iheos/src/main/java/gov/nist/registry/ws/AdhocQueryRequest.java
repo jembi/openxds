@@ -132,9 +132,9 @@ public class AdhocQueryRequest extends XdsCommon {
 		catch (XdsInternalException e) {
 			response.add_error("XDSRegistryError", "Internal Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 			logger.fatal(logger_exception_details(e));
-		} 
+		}
 		catch (MetadataValidationException e) {
-			response.add_error("XDSRegistryError", "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
+			response.add_error(MetadataSupport.XDSResultNotSinglePatient, "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		}  
 		catch (SqlRepairException e) {
 			response.add_error("XDSRegistryError", "Could not decode SQL: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -272,18 +272,18 @@ public class AdhocQueryRequest extends XdsCommon {
 		
 		ArrayList<OMElement> omlist = new ArrayList<OMElement>();
 		StoredQueryFactory fact = null;
-		try {
+		//try {
 			fact= new StoredQueryFactory(ahqr);
 			fact.setServiceName(service_name);
 			fact.setLogMessage(log_message);
 			fact.setIsSecure(is_secure);
 			fact.setResponse(response);
 			return fact.run();
-			}
-			catch (Exception e) {
+			//}
+			/*catch (Exception e) {
 				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), e.getMessage(), log_message);
 				return null;
-			}
+			}*/
 			
 	 }
 

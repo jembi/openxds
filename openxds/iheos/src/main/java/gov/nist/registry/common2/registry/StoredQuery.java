@@ -170,7 +170,7 @@ public abstract class StoredQuery extends BasicQuery {
 	}
 
 	protected OMElement query() throws XdsException, LoggerException {
-		String q = query.toString();
+		String q = query.toString();		
 		if (log_message != null)
 			log_message.addOtherParam("raw query", q);
 		return br.query(q, true  /* leaf_class */);
@@ -455,47 +455,63 @@ public abstract class StoredQuery extends BasicQuery {
 	public OMElement get_rp_by_uid(String uid, String identification_scheme) throws XdsException,
 	LoggerException {
 		init();
-		a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq"); n();
+		if (this.return_leaf_class)
+			a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");
+		else
+			a("SELECT ss.id FROM RegistryPackage ss, ExternalIdentifier uniq");  
+		n();
 		a("WHERE");  n();
 		a("  uniq.registryObject = ss.id AND");  n();
 		a("  uniq.identificationScheme = '" + identification_scheme + "' AND");  n();
 		a("  uniq.value = '" + uid + "'");
-		return query();
+		return query(this.return_leaf_class);
 	}
 
 	public OMElement get_rp_by_uid(ArrayList<String> uids, String identification_scheme) throws XdsException,
 	LoggerException {
 		init();
-		a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq"); n();
+		if (this.return_leaf_class)
+			a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");
+		else
+			a("SELECT ss.id FROM RegistryPackage ss, ExternalIdentifier uniq");  
+		n();
 		a("WHERE");  n();
 		a("  uniq.registryObject = ss.id AND");  n();
 		a("  uniq.identificationScheme = '" + identification_scheme + "' AND");  n();
 		a("  uniq.value IN "); a(uids);
-		return query();
+		return query(this.return_leaf_class);
 	}
 
 	protected OMElement get_rp_by_uuid(String ss_uuid, String identification_scheme)
 	throws XdsException, LoggerException {
 		init();
-		a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");  n();
+		if (this.return_leaf_class)
+			a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");
+		else
+			a("SELECT ss.id FROM RegistryPackage ss, ExternalIdentifier uniq");  
+		n();
 		a("WHERE ");  n();
 		a("	  ss.id = '" + ss_uuid + "' AND");  n(); 
 		a("   uniq.registryObject = ss.id AND");  n();
 		a("   uniq.identificationScheme = '" + identification_scheme + "' ");  n();
 
-		return query();
+		return query(this.return_leaf_class);
 	}
 
 	protected OMElement get_rp_by_uuid(ArrayList<String> ss_uuid, String identification_scheme)
 	throws XdsException, LoggerException {
 		init();
-		a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");  n();
+		if (this.return_leaf_class)
+			a("SELECT * FROM RegistryPackage ss, ExternalIdentifier uniq");
+		else
+			a("SELECT ss.id FROM RegistryPackage ss, ExternalIdentifier uniq");  
+		n();
 		a("WHERE ");  n();
 		a("	  ss.id IN "); a(ss_uuid); a(" AND");  n(); 
 		a("   uniq.registryObject = ss.id AND");  n();
 		a("   uniq.identificationScheme = '" + identification_scheme + "' ");  n();
 
-		return query();
+		return query(this.return_leaf_class);
 	}
 
 	protected OMElement get_objects_by_uuid(ArrayList<String> uuids) throws XdsException, LoggerException {

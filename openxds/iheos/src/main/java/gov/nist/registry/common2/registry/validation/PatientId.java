@@ -28,7 +28,7 @@ public class PatientId {
 		gather_patient_ids(m, m.getFolderIds(),          MetadataSupport.XDSFolder_patientid_uuid);
 
 		if (patient_ids.size() > 1)
-			rel.add_error(MetadataSupport.XDSPatientIdDoesNotMatch, "Multiple Patient IDs found in submission: " + patient_ids, "registry/validation/PatientId.java", null);
+			rel.add_error(MetadataSupport.XDSResultNotSinglePatient, "Multiple Patient IDs found in submission: " + patient_ids, "registry/validation/PatientId.java", null);
 }
 
 
