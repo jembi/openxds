@@ -57,10 +57,9 @@
         <Includefile name="XdsCodes.xml" />		
 
 		<!-- Trust and Keystore -->
-		<!-- Used by Connectathon 2009 -->
-		<KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -112,19 +111,11 @@
 			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>
 
- 		<!-- Trust and Keystore -->
- 		<!-- Used by Connectathon 2009 --> 
-	    <KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
-	    <KeyPass>password</KeyPass>
-	    <TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
-	    <TrustPass>password</TrustPass>
-	     
- 		<!-- Used by Mesa Tests 
-	    <KeyStore>certs/mesa_keystore1_2009.p12</KeyStore>
-	    <KeyPass>password</KeyPass>
-	    <TrustStore>certs/mesa_truststore_2009.jks</TrustStore>
-	    <TrustPass>password</TrustPass>
-	     -->
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
+		<TrustPass>password</TrustPass>
     </SecureConnection>
 
 </Configuration>

@@ -52,10 +52,9 @@
         <Includefile name="XdsCodes.xml" />		
 
 		<!-- Trust and Keystore -->
-		<!-- Used by Connectathon 2009 -->
-		<KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -77,10 +76,9 @@
 		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 
 		<!-- Trust and Keystore -->
-		<!-- Used by Connectathon 2009 -->
-		<KeyStore>certs/OpenPIXPDQ_2009_KEY.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenPIXPDQ_2009_STORE.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
