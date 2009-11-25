@@ -3,6 +3,7 @@ package gov.nist.registry.common2.registry;
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.registry.validation.PatientId;
 import gov.nist.registry.common2.xml.Util;
 
 import java.io.File;
@@ -24,7 +25,12 @@ public class MetadataParser {
 
 			m.runParser();
 		}
-
+		try {
+			PatientId patientId = new PatientId(m, null, false, false);
+			patientId.run();
+		} catch (Exception sqle) {
+			throw new MetadataValidationException("Stored query XDSResultNotSinglePatient Error" + sqle.getMessage());
+		}
 		return m;
 	}
 
