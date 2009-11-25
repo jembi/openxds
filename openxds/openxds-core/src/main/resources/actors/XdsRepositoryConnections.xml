@@ -54,7 +54,7 @@
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -78,7 +78,7 @@
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.p12</TrustStore>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
