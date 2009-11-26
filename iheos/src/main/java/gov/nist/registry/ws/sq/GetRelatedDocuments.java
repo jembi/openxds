@@ -40,15 +40,15 @@ public class GetRelatedDocuments extends StoredQuery {
 			throw new XdsInternalException("No $AssociationTypes specified in query");
 		}
 		
-		/*// filter HasMember out of assoc_types if it exists
+		// filter HasMember out of assoc_types if it exists
 		ArrayList<String> assoc_types2 = new ArrayList<String>();
 		for (String type : assoc_types) {
 			String v2_type = metadata.v2AssocType(type);
-			if ( !v2_type.equals("urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember"))
+			if ( !v2_type.equals("HasMember"))
 				assoc_types2.add(type);
 		}
 		assoc_types = assoc_types2;
-*/
+
 		// if uuid supplied, add id to doc_ids_to_query_for since metadata not yet fetched
 		// if uid supplied, query to get metadata and add uuid to doc_ids since we do have metadata
 		// already loaded into Metadata metadata (which is the return vessel)

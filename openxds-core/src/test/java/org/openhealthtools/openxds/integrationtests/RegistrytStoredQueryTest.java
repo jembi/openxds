@@ -730,19 +730,19 @@ public class RegistrytStoredQueryTest extends XdsTest {
 						 "     </rim:ValueList>\n" +
 						 "   </rim:Slot>\n";			
 		}
-		if (type != null && type.equalsIgnoreCase("HasMember")) {
+		/*if (type != null && type.equalsIgnoreCase("HasMember")) {
 			request +=   "   <rim:Slot name=\"$AssociationTypes\">\n" +
 						 "     <rim:ValueList>\n" + 
 						 "       <rim:Value>('urn:oasis:names:tc:ebxml-regrep:AssociationType:"+type+"')</rim:Value>\n" +  //Multiple values are allowed
 						 "     </rim:ValueList>\n" +
 						 "   </rim:Slot>\n";			
-		} else {
+		} else {*/
 			request +=   "   <rim:Slot name=\"$AssociationTypes\">\n" +
 						 "     <rim:ValueList>\n" + 
-						 "       <rim:Value>('urn:ihe:iti:2007:AssociationType:"+type+"')</rim:Value>\n" +  //Multiple values are allowed
+						 "       <rim:Value>('urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember','urn:ihe:iti:2007:AssociationType:"+type+"')</rim:Value>\n" +  //Multiple values are allowed
 						 "     </rim:ValueList>\n" +
 						 "   </rim:Slot>\n";	
-		}
+		//}
         request +=       "  </rim:AdhocQuery>\n" +
                          "</query:AdhocQueryRequest>";
 		
