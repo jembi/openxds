@@ -40,11 +40,11 @@
 		<PixRegistry connection="pix-registry" />
 		<!-- AuditTrail consumer="log4j_audittrail" /-->
 	</Actor>
-	<!-- Actor name="xdsreg_secure" type="XdsRegistry">
+	<Actor name="xdsreg_secure" type="XdsRegistry">
 		<Description>Secure XDS Registry</Description>
 		<XdsRegistry connection="secure-xds-registry" />
 		<PixRegistry connection="secure-pix-registry" />
-	</Actor-->
+	</Actor>
 
 	<!--The XDS Repository actor configuration-->
 	<Actor name="xdsrep" type="XdsRepository">
@@ -53,11 +53,11 @@
 		<XdsRegistryClient connection="xds-registry-client" />
 		<!-- AuditTrail consumer="log4j_audittrail" /-->
 	</Actor>
-	<!-- Actor name="xdsrep_secure" type="XdsRepository">
+	<Actor name="xdsrep_secure" type="XdsRepository">
 		<Description>Secure XDS Repository</Description>
 		<XdsRepository connection="secure-xds-repository" />
 		<XdsRegistryClient connection="secure-xds-registry-client" />
-	</Actor-->
+	</Actor>
 
 	
 	<!-- Audit Repository Actor -->
