@@ -28,7 +28,9 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
@@ -82,6 +84,8 @@ public abstract class XdsTest {
 	protected static String hostName;
 	protected static String repositoryUrl;
 	protected static String registryUrl;
+	protected static String xcaRegistryUrl;
+	protected static String xcaRepositoryUrl;
 	protected static int pixRegistryPort;
 	protected static String patientId;
 	protected static String assigningAuthority;
@@ -109,6 +113,8 @@ public abstract class XdsTest {
 		patientId = properties.getProperty("patientId");
 		assigningAuthority = properties.getProperty("assigningAuthority");
 		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
+		xcaRegistryUrl = properties.getProperty("xcaRegistryUrl");
+		xcaRepositoryUrl = properties.getProperty("xcaRepositoryUrl");
 		//Initialize openEMPI 
 //		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
 //		XdsFactory.getInstance().getBean("context");
@@ -227,6 +233,52 @@ public abstract class XdsTest {
 		return uuid;
 	}
 	
+	public String submitMultipleDocuments(String patientId) throws Exception {
+
+		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_multiple_documents.xml"));
+		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
+		//replace document and submission set uniqueId variables with actual uniqueIds. 
+		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
+		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
+		//replace the document uuid.
+		String uuid1 = getUUID();
+		message = message.replace("$doc1", uuid1);
+		String uuid2 = getUUID();
+		message = message.replace("$doc2", uuid2);
+		
+		
+		//replace the patient id
+		if (patientId != null) 
+			message = message.replace("$patientId", patientId);
+		
+		ServiceClient sender = getRepositoryServiceClient();			
+		
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		
+		//Add a referral summary document
+		request = addOneDocument(request, document1, uuid1);
+		//Add a Discharge summary documents
+		request = addOneDocument(request, document2, uuid2);
+
+		System.out.println("Request:\n" +request);
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue());
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+		
+		String uuids = uuid1 +"','"+uuid2;
+		return uuids;
+	}
+	
+	protected String getUUID(){
+		return "urn:uuid:" + UUID.randomUUID().toString();
+	}
 	//return folder unique Id
 	protected String submitOneDocument2Folder(String patientId) throws Exception {
 		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
@@ -412,6 +464,26 @@ public abstract class XdsTest {
 		boolean enableMTOM = true;
 		sender.setOptions(getOptions(action, enableMTOM, repositoryUrl));
 		sender.engageModule("addressing");
+		return sender;
+	}
+	
+	protected ServiceClient getRegistryGateWayClient() throws AxisFault {
+        ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2007:CrossGatewayQuery";
+		boolean enableMTOM = false;
+		sender.setOptions(getOptions(action, enableMTOM, xcaRegistryUrl));
+		sender.engageModule("addressing");				
+		return sender;
+	}
+	
+	protected ServiceClient getRepositoryGateWayClient() throws AxisFault {
+        ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2007:CrossGatewayRetrieve";
+		boolean enableMTOM = true;
+		sender.setOptions(getOptions(action, enableMTOM, xcaRepositoryUrl));
+		sender.engageModule("addressing");				
 		return sender;
 	}
 	private ConfigurationContext getContext() throws AxisFault {
