@@ -55,7 +55,7 @@ public class AdhocQueryRequest extends XdsCommon {
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
 	private final static Log logger = LogFactory.getLog(AdhocQueryRequest.class);
-
+	
 
 	public AdhocQueryRequest(Message log_message, MessageContext messageContext, boolean is_secure, short xds_version) {
 		this.log_message = log_message;
@@ -83,7 +83,7 @@ public class AdhocQueryRequest extends XdsCommon {
 	public void setServiceName(String service_name) {
 		this.service_name = service_name;
 	}
-
+	
 	public OMElement adhocQueryRequest(OMElement ahqr) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Request from the XDS Consumer:");

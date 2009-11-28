@@ -12,6 +12,7 @@ public abstract class Response extends ErrorLogger {
 	public final static short version_2 = 2;
 	public final static short version_3 = 3;
 	short version;
+	boolean isXCA = false;
 	//String status = "Success";
 	protected OMNamespace ebRSns;
 	protected OMNamespace ebRIMns;
@@ -30,6 +31,10 @@ public abstract class Response extends ErrorLogger {
 
 	OMElement content = null;
 	public RegistryErrorList registryErrorList;
+	
+	public void setIsXCA() { 
+		isXCA = true;
+	}
 
 	public Response(short version) throws XdsInternalException {
 		init(version, new RegistryErrorList(version, true /* log */));
