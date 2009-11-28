@@ -19,15 +19,23 @@ public class XdsCommon  {
 	public static final short xds_b = 3;
 	public short xds_version = xds_none;
 	MessageContext messageContext = null;
+	boolean isXCA = false;
 	private final static Log logger = LogFactory.getLog(XdsCommon.class);
-
 
 	public MessageContext getMessageContext() {
 		return messageContext;
 	}
 	
+	public void setIsXCA() {
+		isXCA = true;
+		if (response != null)
+			response.setIsXCA();
+	}
+	 
 	protected void init(Response response, short xds_version, MessageContext messageContext) {
 		this.response = response;
+		if (isXCA)
+			response.setIsXCA();
 		this.xds_version = xds_version;
 		this.messageContext = messageContext;
 

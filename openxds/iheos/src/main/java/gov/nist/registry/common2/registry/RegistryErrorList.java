@@ -10,14 +10,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaxen.JaxenException;
 
 public class RegistryErrorList extends ErrorLogger {
 	public final static short version_2 = 2;
@@ -35,6 +38,9 @@ public class RegistryErrorList extends ErrorLogger {
 	boolean format_for_html = false;
 	private final static Log logger = LogFactory.getLog(RegistryErrorList.class);
 	boolean verbose = true;
+	boolean isXCA = false;
+	
+	public void setIsXCA() { isXCA = true; }
 	
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
@@ -90,6 +96,8 @@ public class RegistryErrorList extends ErrorLogger {
 	OMElement registryErrorList() {
 		if (rel == null)
 			rel = MetadataSupport.om_factory.createOMElement("RegistryErrorList", ebRSns);
+		if (isXCA)
+			setHomeAsLocation();
 		return rel;
 	}
 	
@@ -264,5 +272,16 @@ public class RegistryErrorList extends ErrorLogger {
 		return "Exception thrown: " + e.getClass().getName() + "\n" + e.getMessage() + "\n" + new String(baos.toByteArray());
 	}
 
-
+	void setHomeAsLocation() {
+		String reXPath = "//*[local-name()='RegistryError']";
+		String home = Properties.loader().getString("home_community_id");;
+		try {
+			AXIOMXPath xpathExpression = new AXIOMXPath (reXPath);
+			List<?> nodes = xpathExpression.selectNodes(rel);
+			for (OMElement node : (List<OMElement>) nodes) {
+				node.addAttribute("location", home, null);
+			}
+		} catch (JaxenException e) {
+		}
+	}
 }

@@ -12,6 +12,7 @@ import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.xca.HomeAttribute;
 //import gov.nist.registry.common2.xca.HomeAttribute;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.ContentValidationService;
@@ -19,12 +20,16 @@ import gov.nist.registry.ws.RetrieveDocumentSet;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
 public abstract class RGAbstract extends XdsService implements ContentValidationService {
 	boolean optimize = true;
 	static String homeProperty;
 	String home;
+	
 
 	static {
 		homeProperty = Properties.loader().getString("home_community_id");
@@ -68,9 +73,11 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			validateQueryTransaction(ahqr);
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
+			rel.setIsXCA();
 
 			AdhocQueryRequest a = new AdhocQueryRequest(log_message, getMessageContext(), isSecure(), XdsCommon.xds_b );
 			a.setServiceName(service_name);
+			a.setIsXCA();
 
 			if (a.requiresHomeInXGQ(ahqr)) {
 				String home = a.getHome(ahqr);
@@ -113,6 +120,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 			verifyHomeOnRetrieve(rdsr, rel, home);
 			if (rel.has_errors()) {
+				rel.setIsXCA();
 				OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
 				addOther("Response", response.toString());
 				endTransaction(false);
@@ -121,11 +129,15 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 
 			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
+			s.setIsXCA();
 
 			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
 			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
-
-			setHomeOnRetResponse(result);
+			//OMAttribute status = response.getAttribute(new QName("status"));
+			//if(result.getAttribute(new QName("status") ==""){
+				setHomeOnRetResponse(result);
+			//}
+		
 
 			log_message.addOtherParam("Result", result.toString());
 
@@ -177,7 +189,8 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			}
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-
+			rel.setIsXCA();
+			
 			rel.add_error(MetadataSupport.XDSTooManyResults, 
 					"Too many documents were requested", 
 					"RGAbstract.java", log_message);
@@ -192,9 +205,9 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	}
 
 	void setHomeOnSQResponse(OMElement root, String home) {
-//TODO:
-//		HomeAttribute homeAtt = new HomeAttribute(home);
-//		homeAtt.set(root);
+
+	HomeAttribute homeAtt = new HomeAttribute(home);
+	homeAtt.set(root);
 	}
 
 	void setHomeOnRetResponse(OMElement result) {
