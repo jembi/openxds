@@ -85,7 +85,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
 		message = message.replace("$patientId", patientId);
 		//replace the document uuid.
-		String uuid = "urn:uuid:" + UUID.randomUUID().toString();
+		String uuid = getUUID();
 		message = message.replace("$doc1", uuid);
 		
 		ServiceClient sender = getRepositoryServiceClient();			
@@ -120,15 +120,18 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
 		message = message.replace("$patientId", patientId);
-		
+		String uuid1 = getUUID();
+		String uuid2 = getUUID();
+		message = message.replace("$doc1", uuid1);
+		message = message.replace("$doc2", uuid2);
 		ServiceClient sender = getRepositoryServiceClient();			
 		
 		OMElement request = OMUtil.xmlStringToOM(message);			
 		
 		//Add a referral summary document
-		request = addOneDocument(request, document1, "doc1");
+		request = addOneDocument(request, document1, uuid1);
 		//Add a Discharge summary documents
-		request = addOneDocument(request, document1, "doc2");
+		request = addOneDocument(request, document1, uuid2);
 
 		System.out.println("Request:\n" +request);
 		OMElement response = sender.sendReceive( request );
