@@ -5,10 +5,8 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 
 import java.util.ArrayList;
 
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
-
 
 public class Slot extends RegistryItem {
 	String name;
@@ -26,10 +24,6 @@ public class Slot extends RegistryItem {
 		if (vlist == null)
 			throw new MetadataException("Slot.java: Slot element does not have a 'ValueList' sub-element");
 		values = new ArrayList<OMText>();
-////		for (OMElement vele : vlist.getChildrenWithName(MetadataSupport.value_qname)) {
-////			vlist.getC
-//			
-//		}
 	}
 
 

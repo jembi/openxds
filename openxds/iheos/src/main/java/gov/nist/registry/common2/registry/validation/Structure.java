@@ -4,14 +4,14 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
-import gov.nist.registry.common2.registry.RegistryObjectValidator;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
@@ -21,7 +21,7 @@ public class Structure {
 	Metadata m;
 	RegistryErrorList rel;
 	boolean is_submit;
-	Message log_message;
+	LogMessage log_message;
 	private final static Log logger = LogFactory.getLog(Structure.class);
 
 
@@ -34,7 +34,7 @@ public class Structure {
 		log_message = null;
 	}
 
-	public Structure(Metadata m, boolean is_submit, RegistryErrorList rel, 	Message log_message) throws XdsInternalException {
+	public Structure(Metadata m, boolean is_submit, RegistryErrorList rel, 	LogMessage log_message) throws XdsInternalException {
 		this.m = m;
 		this.is_submit = is_submit;
 		this.rel = rel;
@@ -58,7 +58,7 @@ public class Structure {
 			rplced_doc_not_in_submission();
 			ss_status_relates_to_ss();
 			by_value_assoc_in_submission();
-			folder_assocs();
+			//folder_assocs();
 		}
 		ss_status_single_value();
 		assocs_have_proper_namespace();
@@ -66,7 +66,7 @@ public class Structure {
 
 	void ss_status_relates_to_ss() {
 		String ss_id = m.getSubmissionSetId();
-		ArrayList assocs = m.getAssociations();
+		List assocs = m.getAssociations();
 
 		for (int i=0; i<assocs.size(); i++) {
 			OMElement assoc = (OMElement) assocs.get(i);
@@ -78,7 +78,7 @@ public class Structure {
 
 			if (a_source.equals(ss_id)) {
 				if ( !a_type.equals(assoc_type("HasMember"))) {
-					err("Association referencing Submission Set has type " + a_type + " but only type HasMember is allowed");
+					err("Association referencing Submission Set has type " + a_type + " but only type " + assoc_type("HasMember") + " is allowed");
 				}
 				if (target_is_included_is_doc) {
 					if ( ! m.hasSlot(assoc, "SubmissionSetStatus")) {
@@ -104,8 +104,8 @@ public class Structure {
 	}
 
 	void ss_doc_fol_must_have_ids() {
-		ArrayList docs = m.getExtrinsicObjects();
-		ArrayList rps = m.getRegistryPackages();
+		List docs = m.getExtrinsicObjects();
+		List rps = m.getRegistryPackages();
 
 		for (int i=0; i<docs.size(); i++) {
 			OMElement doc = (OMElement) docs.get(i);
@@ -130,7 +130,7 @@ public class Structure {
 	}
 
 	void by_value_assoc_in_submission() throws MetadataValidationException, MetadataException {
-		ArrayList assocs = m.getAssociations();
+		List assocs = m.getAssociations();
 		String ss_id = m.getSubmissionSetId();
 
 		for (int i=0; i<assocs.size(); i++) {
@@ -169,7 +169,7 @@ public class Structure {
 
 
 	void ss_status_single_value() {
-		ArrayList assocs = m.getAssociations();
+		List assocs = m.getAssociations();
 		String ss_id = m.getSubmissionSetId();
 
 		for (int i=0; i<assocs.size(); i++) {
@@ -199,30 +199,31 @@ public class Structure {
 
 
 	// does this id represent a folder in this metadata or in registry?
+	// ammended to only check current submission since this code is in common
 	public boolean isFolder(String id) throws LoggerException, XdsException {
-		if (m.getFolderIds().contains(id))
-			return true;
-
-		if ( !id.startsWith("urn:uuid:"))
-			return false;
-
-		RegistryObjectValidator rov = new RegistryObjectValidator(rel, log_message);
-
-		ArrayList<String> ids = new ArrayList<String>();
-		ids.add(id);
-
-		ArrayList<String> missing = rov.validateAreFolders(ids);
-		if (missing != null && missing.contains(id))
-			return false;
-
-
-		return true;
+		return m.getFolderIds().contains(id);
+//			return true;
+//
+//		if ( !id.startsWith("urn:uuid:"))
+//			return false;
+//
+//		RegistryObjectValidator rov = new RegistryObjectValidator(new StoredQuerySupport(rel, log_message));
+//
+//		List<String> ids = new ArrayList<String>();
+//		ids.add(id);
+//
+//		List<String> missing = rov.validateAreFolders(ids);
+//		if (missing != null && missing.contains(id))
+//			return false;
+//
+//
+//		return true;
 	}
 
 	// Folder Assocs must be linked to SS by a secondary Assoc
 	void folder_assocs() throws XdsException, LoggerException {
 		String ssId = m.getSubmissionSetId();
-		ArrayList<OMElement> non_ss_assocs = null;
+		List<OMElement> non_ss_assocs = null;
 		for (OMElement a : m.getAssociations()) {
 			String sourceId = m.getAssocSource(a);
 			if (m.getAssocTarget(a) == ssId)
@@ -277,7 +278,7 @@ public class Structure {
 	}
 
 	void docs_in_ss() {
-		ArrayList docs = m.getExtrinsicObjects();
+		List docs = m.getExtrinsicObjects();
 
 		for (int i=0; i<docs.size(); i++) {
 			OMElement doc = (OMElement) docs.get(i);
@@ -289,7 +290,7 @@ public class Structure {
 	}
 
 	void fols_in_ss() {
-		ArrayList fols = m.getExtrinsicObjects();
+		List fols = m.getFolders();
 
 		for (int i=0; i<fols.size(); i++) {
 			OMElement fol = (OMElement) fols.get(i);
@@ -308,7 +309,7 @@ public class Structure {
 	}
 
 	void assocs_have_proper_namespace() {
-		ArrayList<OMElement> assocs = m.getAssociations();
+		List<OMElement> assocs = m.getAssociations();
 
 		for (OMElement a_ele : assocs) {
 			String a_type = a_ele.getAttributeValue(MetadataSupport.association_type_qname);
@@ -329,7 +330,7 @@ public class Structure {
 	}
 
 	void rplced_doc_not_in_submission() throws MetadataException, MetadataValidationException {
-		ArrayList assocs = m.getAssociations();
+		List assocs = m.getAssociations();
 
 		for (int i=0; i<assocs.size(); i++) {
 			OMElement assoc = (OMElement) assocs.get(i);
@@ -337,12 +338,12 @@ public class Structure {
 			String type = assoc.getAttributeValue(MetadataSupport.association_type_qname);
 			if (type.equals(assoc_type("RPLC")) && ! m.isReferencedObject(id))
 				err("Replaced document (RPLC assocation type) cannot be in submission\nThe following objects were found in the submission:" 
-						+ m.idsForObjects(m.getReferencedObjects()).toString());
+						+ m.getIdsOfReferencedObjects().toString());
 		}
 	}
 
 	boolean has_assoc(String source, String type, String target) {
-		ArrayList assocs = m.getAssociations();
+		List assocs = m.getAssociations();
 
 		for (int i=0; i<assocs.size(); i++) {
 			OMElement assoc = (OMElement) assocs.get(i);

@@ -1,25 +1,24 @@
 package gov.nist.registry.ws.sq;
 
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
+import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
+import gov.nist.registry.common2.registry.Metadata;
+import gov.nist.registry.common2.registry.MetadataParser;
+import gov.nist.registry.common2.registry.Response;
+import gov.nist.registry.common2.registry.StoredQuery;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.axiom.om.OMElement;
 
-import gov.nist.registry.common2.exception.MetadataValidationException;
-import gov.nist.registry.common2.exception.NoSubmissionSetException;
-import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
-import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
-
 public class GetAll extends StoredQuery {
 
-	public GetAll(HashMap params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
+	public GetAll(HashMap params, boolean return_objects, Response response, LogMessage log_message, boolean is_secure) {
 		super(params, return_objects, response, log_message,  is_secure);
 
 		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
@@ -81,7 +80,7 @@ public class GetAll extends StoredQuery {
 	private void validateStatus(ArrayList<String> status) throws MetadataValidationException{
 	String status_ns_prefix = "urn:oasis:names:tc:ebxml-regrep:StatusType:";
 
-	ArrayList new_status = new ArrayList();
+//	ArrayList new_status = new ArrayList();
 	for (int i=0; i<status.size(); i++) {
 		String stat = (String) status.get(i);
 

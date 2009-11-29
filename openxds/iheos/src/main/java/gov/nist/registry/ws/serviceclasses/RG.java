@@ -1,5 +1,7 @@
 package gov.nist.registry.ws.serviceclasses;
 
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.registry.Metadata;
@@ -28,7 +30,7 @@ public class RG extends RGAbstract {
 	}
 
 	protected void validateQueryTransaction(OMElement sor)
-			throws XdsValidationException {
+			throws XdsValidationException, MetadataValidationException, XdsInternalException {
 		new RegistryB().validateQueryTransaction(sor);
 	}
 

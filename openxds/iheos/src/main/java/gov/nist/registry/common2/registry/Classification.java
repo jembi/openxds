@@ -41,7 +41,7 @@ public class Classification {
 		return "Classification (classificationScheme=" + classification_scheme + " codingScheme=" + coding_scheme + ") of object " + parent_id(); 
 	}
 	
-	String parent_id() {
+	public String parent_id() {
 		OMElement parent = (OMElement) classification_ele.getParent();
 		if (parent == null) return "Unknown";
 		return parent.getAttributeValue(MetadataSupport.id_qname);

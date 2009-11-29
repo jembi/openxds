@@ -1,72 +1,82 @@
 package gov.nist.registry.ws.sq;
 
-import gov.nist.registry.common2.exception.NoSubmissionSetException;
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+/**
+Generic implementation of GetAssociations Stored Query. This class knows how to parse a 
+ * GetAssociations Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class GetFolderAndContents extends StoredQuery {
+	
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
 
-import org.apache.axiom.om.OMElement;
+	/**
+	 * Basic constructor
+	 * @param sqs
+	 * @throws MetadataValidationException
+	 */
+	public GetFolderAndContents(StoredQuerySupport sqs) {
+		super(sqs);
+	}
+	
+	void validateParameters() throws MetadataValidationException {
+		//                         param name,                             required?, multiple?, is string?,   is code?,  AND/OR ok?,   alternative
+		sqs.validate_parm("$XDSFolderEntryUUID",                         true,      false,     true,         false,     false,       "$XDSFolderUniqueId");
+		sqs.validate_parm("$XDSFolderUniqueId",                          true,      false,     true,         false,     false,       "$XDSFolderEntryUUID");
+		sqs.validate_parm("$XDSDocumentEntryFormatCode",                 false,     true,      true,         true,      false,      (String[])null);
+		sqs.validate_parm("$XDSDocumentEntryConfidentialityCode",        false,     true,      true,         true,      true,      (String[])null);
+		
+		System.out.println("GFAC: validating parms response: " + sqs.response);
 
-public class GetFolderAndContents extends StoredQuery {
+		if (sqs.has_validation_errors) 
+			throw new MetadataValidationException("Metadata Validation error present");
+	}
+	
+	protected String fol_uuid;
+	protected String fol_uid;
 
-	public GetFolderAndContents(HashMap params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
-		super(params, return_objects, response, log_message,  is_secure);
-
-
-		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
-		validate_parm(params, "$XDSFolderEntryUUID",                         true,      false,     true,         null,            "$XDSFolderUniqueId");
-		validate_parm(params, "$XDSFolderUniqueId",                          true,      false,     true,         null,            "$XDSFolderEntryUUID");
-		validate_parm(params, "$XDSDocumentEntryFormatCode",                 false,     true,      true,         null,            null);
-		validate_parm(params, "$XDSDocumentEntryConfidentialityCode",        false,     true,      true,         null,            null);
+	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
+		fol_uuid = sqs.params.getStringParm("$XDSFolderEntryUUID");
+		fol_uid = sqs.params.getStringParm("$XDSFolderUniqueId");
 	}
 
-	public Metadata run_internal() throws XdsException, LoggerException {
-		Metadata metadata;
+	/**
+	 * Implementation of Stored Query specific logic including parsing and validating parameters.
+	 * @throws XdsInternalException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 * @throws XDSRegistryOutOfResourcesException
+	 */
+	public Metadata runSpecific() throws XdsException, LoggerException {
 
-		String fol_uuid = get_string_parm("$XDSFolderEntryUUID");
-		if (fol_uuid != null) {
-			// starting from uuid
-			OMElement x = get_fol_by_uuid(fol_uuid);
-			metadata = MetadataParser.parseNonSubmission(x);
-			if (metadata.getFolders().size() == 0) return metadata;
-		} else {
-			// starting from uniqueid
-			String fol_uid = get_string_parm("$XDSFolderUniqueId");
-			OMElement x = get_fol_by_uid(fol_uid);
-				metadata = MetadataParser.parseNonSubmission(x);
-			if (metadata.getFolders().size() == 0) return metadata;
+		validateParameters();
+		parseParameters();
 
-			fol_uuid = metadata.getFolder(0).getAttributeValue(MetadataSupport.id_qname);
-		}
-
-		// ss_uuid has now been set
-
-		ArrayList<String> content_ids = new ArrayList<String>();
-		ArrayList<String> conf_codes = this.get_arraylist_parm("$XDSDocumentEntryConfidentialityCode");
-		ArrayList<String> format_codes = this.get_arraylist_parm("$XDSDocumentEntryFormatCode");
-
-		OMElement doc_metadata = get_fol_docs(fol_uuid, format_codes, conf_codes);
-		metadata.addMetadata(doc_metadata);
-		content_ids.addAll(metadata.getExtrinsicObjectIds());
-
-		ArrayList<String> folder_ids = metadata.getFolderIds();
-
-		if (content_ids.size() > 0) {
-			OMElement assoc_metadata = get_assocs(folder_ids, content_ids);
-			metadata.addMetadata(assoc_metadata);
-		}
-
-
-		return metadata;
+		if (fol_uuid == null && fol_uid == null) 
+			throw new XdsInternalException("GetFolderAndContents Stored Query");
+	
+		return runImplementation();
 	}
+
 
 
 }

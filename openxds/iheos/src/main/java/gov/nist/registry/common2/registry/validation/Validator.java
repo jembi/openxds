@@ -4,15 +4,15 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RegistryUtility;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -30,20 +30,21 @@ public class Validator {
 	CodeValidation cv;
 	PatientId pid;
 	UniqueId uid;
-	ArrayList<Identifier> assigning_authorities;
-	Message log_message;
+	List<Identifier> assigning_authorities;
+	LogMessage log_message;
+	boolean isPnR = false;
 
-	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, 
-			boolean is_xdsb, Message log_message, IConnectionDescription connection)
+	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, LogMessage log_message, boolean isPnR, IConnectionDescription connection)
 	throws LoggerException, XdsException {
 		this.rel = rel;
 		this.m = m;
 		this.is_submit = is_submit;
 		this.is_xdsb = is_xdsb;
 		this.log_message = log_message;
-
+		this.isPnR = isPnR;
+		
 		s = new Structure(m, is_submit, rel, log_message);
-		a = new Attribute(m, is_submit, is_xdsb, rel);
+		a = new Attribute(m, is_submit, is_xdsb, rel, isPnR);
 		try {
 			cv = new CodeValidation(m, is_submit, is_xdsb, rel, connection);
 		}
@@ -57,14 +58,12 @@ public class Validator {
 		uid = new UniqueId(m, rel, is_xdsb);
 	}
 	
-	public ArrayList<Identifier> getAssigningAuthority() {
+	public List<Identifier> getAssigningAuthority() {
 		return this.assigning_authorities;
 	}
 
 
 	public void run() throws XdsInternalException, MetadataValidationException, LoggerException, XdsException {
-
-		//System.out.println("Metadata Validator");
 
 		try {
 			s.run();

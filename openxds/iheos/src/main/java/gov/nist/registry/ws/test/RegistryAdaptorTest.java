@@ -18,7 +18,7 @@ import org.apache.axiom.om.util.XPathEvaluator;
 public class RegistryAdaptorTest extends TestCase {
 	String metadata_filename = "/Users/bill/IheOs/workspace_prod/xds/testdata/submit_fdd.xml";
 	Metadata m;
-
+ 
 	public void setUp() throws MetadataException, XdsInternalException, MetadataValidationException {
 		m = new Metadata(new File(metadata_filename));
 	}

@@ -1,9 +1,9 @@
 package gov.nist.registry.ws.evs;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.ws.serviceclasses.XdsService;
-import gov.nist.registry.xdslog.LoggerException;
 import gov.nist.registry.xdslog.Message;
 
 import java.util.ArrayList;

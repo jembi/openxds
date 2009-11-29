@@ -554,11 +554,11 @@ public class RetrieveDocumentSetTest extends TestCase {
 				try {  soap_message = Util.parse_xml(body); }
 				catch (Exception e) { fatal("MtomMessage: SOAP message does not parse as XML"); }
 
-				ArrayList<OMElement> soapBodies = MetadataSupport.decendentsWithLocalName(soap_message, "RetrieveDocumentSetResponse");
+				List<OMElement> soapBodies = MetadataSupport.decendentsWithLocalName(soap_message, "RetrieveDocumentSetResponse");
 				if (soapBodies.size() > 0) {
-					ArrayList<OMElement> documents = MetadataSupport.decendentsWithLocalName(soapBodies.get(0), "Document");
+					List<OMElement> documents = MetadataSupport.decendentsWithLocalName(soapBodies.get(0), "Document");
 					for (OMElement document : documents) {
-						ArrayList<OMElement> includes = MetadataSupport.childrenWithLocalName(document, "Include");
+						List<OMElement> includes = MetadataSupport.childrenWithLocalName(document, "Include");
 						if (includes.size() != 0) 
 							error("MtomMessage: should not have Include element inside Document element - looks like MTOM/XOP instead of MTOM");
 					}
@@ -597,11 +597,11 @@ public class RetrieveDocumentSetTest extends TestCase {
 				try {  soap_message = Util.parse_xml(body); }
 				catch (Exception e) { fatal("XopMessage: SOAP message does not parse as XML"); }
 
-				ArrayList<OMElement> soapBodies = MetadataSupport.decendentsWithLocalName(soap_message, "RetrieveDocumentSetResponse");
+				List<OMElement> soapBodies = MetadataSupport.decendentsWithLocalName(soap_message, "RetrieveDocumentSetResponse");
 				if (soapBodies.size() > 0) {
-					ArrayList<OMElement> documents = MetadataSupport.decendentsWithLocalName(soapBodies.get(0), "Document");
+					List<OMElement> documents = MetadataSupport.decendentsWithLocalName(soapBodies.get(0), "Document");
 					for (OMElement document : documents) {
-						ArrayList<OMElement> includes = MetadataSupport.childrenWithLocalName(document, "Include");
+						List<OMElement> includes = MetadataSupport.childrenWithLocalName(document, "Include");
 						if (includes.size() == 0) 
 							fatal("XopMessage: should have Include element inside Document element - looks like MTOM instead of MTOM/XOP");
 						else if (includes.size() > 1)

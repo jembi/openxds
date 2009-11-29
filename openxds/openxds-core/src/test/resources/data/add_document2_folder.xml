@@ -159,6 +159,16 @@
             <rim:Description>
                 <rim:LocalizedString value="Test add document to Folder"/>
             </rim:Description>         
+            <rim:Classification id="fol-c1" classificationScheme="urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5" classifiedObject="Folder" nodeRepresentation="Referrals">
+                <rim:Slot name="codingScheme">
+                    <rim:ValueList>
+                        <rim:Value>Connect-a-thon folderCodeList</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Name>
+                    <rim:LocalizedString value="Referrals"/>
+                </rim:Name>
+            </rim:Classification>
             <rim:ExternalIdentifier id="fol-id" registryObject="Folder" identificationScheme="urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a" value="$folder_uniqueid">
                 <rim:Name>
                     <rim:LocalizedString value="XDSFolder.uniqueId"/>
@@ -232,7 +242,7 @@
             
         <rim:Association  id="sub-fol" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="SubmissionSet"  targetObject="Folder"/>
 
-        <rim:Association id="FolderDocument01Assoc" associationType="HasMember" sourceObject="Folder" targetObject="doc1"/>
+        <rim:Association id="FolderDocument01Assoc" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="Folder" targetObject="doc1"/>
         
         <rim:Association id="sub-fol-doc1" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="SubmissionSet" targetObject="FolderDocument01Assoc"/>        
         

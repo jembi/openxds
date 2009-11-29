@@ -29,7 +29,7 @@ public class RegistryA2doc extends AbstractRegistryA {
 	}
 
 	public OMElement AdhocQueryRequest(OMElement ahqr) {
-		return start_up_error(ahqr, null, registry_actor, "Test does not implement this transaction");
+		return start_up_error(ahqr, null, REGISTRY_ACTOR, "Test does not implement this transaction");
 	}
 
 }

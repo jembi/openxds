@@ -1,5 +1,7 @@
 package gov.nist.registry.xdslog;
 
+import gov.nist.registry.common2.logging.LoggerException;
+
 
 
 public class Test2 {

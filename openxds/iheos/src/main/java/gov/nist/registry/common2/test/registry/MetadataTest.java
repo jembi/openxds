@@ -10,8 +10,8 @@ import gov.nist.registry.common2.xml.Util;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -85,7 +85,7 @@ public class MetadataTest extends TestCase {
 	}
 
 	public void test_count_major() throws XdsInternalException, MetadataException {
-		ArrayList major = m.getMajorObjects();
+		List major = m.getMajorObjects();
 		//System.out.println("test_count_major");
 		for (int i=0; i<major.size(); i++) {
 			OMElement e = (OMElement) major.get(i);
@@ -95,45 +95,40 @@ public class MetadataTest extends TestCase {
 	}
 
 	public void test_find_doc_external_identifier() throws MetadataException, XdsInternalException {
-		ArrayList major_objects = m.getMajorObjects();
-		ArrayList ei = new ArrayList();
+		List major_objects = m.getMajorObjects();
+		List ei = new ArrayList();
 		for (int i=0; i<major_objects.size(); i++) {
 			OMElement major_object = (OMElement) major_objects.get(i);
-			ArrayList results = m.getExternalIdentifiers(major_object, "urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab");
+			List results = m.getExternalIdentifiers(major_object, "urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab");
 			ei.addAll(results);
 		}
 		assertTrue(ei.size() == 2);
 	}
 
 	public void test_find_fol_external_identifier()  throws MetadataException, XdsInternalException {
-		ArrayList major_objects = m.getMajorObjects();
-		ArrayList ei = new ArrayList();
+		List major_objects = m.getMajorObjects();
+		List ei = new ArrayList();
 		for (int i=0; i<major_objects.size(); i++) {
 			OMElement major_object = (OMElement) major_objects.get(i);
-			ArrayList results = m.getExternalIdentifiers(major_object, "urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a");
+			List results = m.getExternalIdentifiers(major_object, "urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a");
 			ei.addAll(results);
 		}
 		assertTrue(ei.size() == 1);
 	}
 
 	public void test_find_ss_external_identifier() throws MetadataException, XdsInternalException {
-		ArrayList major_objects = m.getMajorObjects();
-		ArrayList ei = new ArrayList();
+		List major_objects = m.getMajorObjects();
+		List ei = new ArrayList();
 		for (int i=0; i<major_objects.size(); i++) {
 			OMElement major_object = (OMElement) major_objects.get(i);
-			ArrayList results = m.getExternalIdentifiers(major_object, "urn:uuid:96fdda7c-d067-4183-912e-bf5ee74998a8");
+			List results = m.getExternalIdentifiers(major_object, "urn:uuid:96fdda7c-d067-4183-912e-bf5ee74998a8");
 			ei.addAll(results);
 		}
 		assertTrue(ei.size() == 1);
 	}
 
-	public void test_get_major_objects()  throws XdsInternalException, MetadataException {
-		ArrayList eo = m.getMajorObjects("ExtrinsicObject");
-		assertTrue(eo.size() == 2);
-	}
-
 	public void test_count_ExtrinsicObjects() {
-		ArrayList eo = m.getExtrinsicObjects();
+		List eo = m.getExtrinsicObjects();
 		assertTrue(eo.size() == 2);
 	}
 
@@ -143,7 +138,7 @@ public class MetadataTest extends TestCase {
 	}
 
 	public void test_count_folders() throws MetadataException {
-		ArrayList folders = m.getFolders();
+		List folders = m.getFolders();
 		assertTrue(folders.size() == 1);
 	}
 
@@ -188,7 +183,7 @@ public class MetadataTest extends TestCase {
 		assertTrue(t.getLocalName().equals("SubmitObjectsRequest"));
 		assertTrue(t.getFirstElement().getLocalName().equals("LeafRegistryObjectList"));
 		assertTrue(t.getFirstChildWithName(new QName(MetadataSupport.ebRIMns2_uri,"LeafRegistryObjectList")) != null);
-		ArrayList order = new ArrayList();
+		List order = new ArrayList();
 		OMElement dup = m.dup();
 		System.out.println("test_compile_dup:\n" + dup.toString());
 		this.assertTrue(dup.getLocalName().equals("SubmitObjectsRequest"));

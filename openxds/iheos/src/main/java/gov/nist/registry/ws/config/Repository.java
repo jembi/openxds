@@ -27,8 +27,8 @@ public class Repository {
 	// these need updating each year
 	static public String getRegisterTransactionEndpoint(short xds_version) {
 		if (xds_version == 3)
-			return "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryb";
-		return "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryainternal";
+			return XdsService.registerBEndpoint;
+		return XdsService.registerAEndpoint;
 	}
 
 	

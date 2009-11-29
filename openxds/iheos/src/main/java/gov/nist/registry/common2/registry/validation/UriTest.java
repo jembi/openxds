@@ -2,14 +2,13 @@ package gov.nist.registry.common2.registry.validation;
 
 import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.MetadataException;
-import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.xml.Parse;
-import gov.nist.registry.xdslog.LoggerException;
 
 import javax.xml.parsers.FactoryConfigurationError;
 
@@ -45,8 +44,6 @@ public class UriTest extends TestCase {
 			m = new Metadata(ele);
 		} catch (MetadataException e) {
 			fail("Metadata constructor failed" + ExceptionUtil.exception_details(e));
-		} catch (MetadataValidationException e) {
-			fail("Metadata constructor failed" + ExceptionUtil.exception_details(e));
 		}
 	}
 
@@ -54,7 +51,7 @@ public class UriTest extends TestCase {
 		Validator val;
 		try {
 			m.reParse();
-			val = new Validator(m, rel, true, false, null, null/**IConnectionDescription*/);
+			val = new Validator(m, rel, true, false, null, false, null/**IConnectionDescription*/);
 			val.run();
 		} catch (LoggerException e) {
 			fail("Exception: " + ExceptionUtil.exception_details(e));

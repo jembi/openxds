@@ -22,25 +22,114 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.OperationContext;
 
-public class Soap {
+public class Soap implements SoapInterface {
 	static ServiceClient serviceClient = null;
 	OMElement result = null;
-	boolean async = false;
+	boolean async;
+	String expectedReturnAction;
+	boolean mtom;
+	boolean addressing;
+	boolean soap12;
+	
+	public Soap() {
+		async = false;
+		expectedReturnAction = null;
+		mtom = false;
+		addressing = true;
+		soap12 = true;
+	}
 
 	public void setAsync(boolean async) {
 		this.async = async;
 	}
 
+	public void soapSend(OMElement body, String endpoint, boolean mtom, 
+			boolean addressing, boolean soap12, String action) 
+	throws  XdsException, AxisFault {
+		
+		this.expectedReturnAction = null;
+		this.mtom = mtom;
+		this.addressing = addressing;
+		this.soap12 = soap12;
+		
+		soapSend(body, endpoint, action);
+	}
+	
 	public OMElement soapCall(OMElement body, String endpoint, boolean mtom, 
 			boolean addressing, boolean soap12, String action, String expected_return_action) 
-	throws  XdsException {
+	throws  XdsException, AxisFault {
+		
+		this.expectedReturnAction = expected_return_action;
+		this.mtom = mtom;
+		this.addressing = addressing;
+		this.soap12 = soap12;
+		
+		return soapCall(body, endpoint, action);
+	}
+	
+	public void soapSend(OMElement body, String endpoint,
+			  String action) 
+	throws  XdsException, AxisFault {
+		
+//		if (1 == 1) {
+//			soapCall(body, endpoint, action);
+//			return;
+//		}
 
-		try {
+//		try {
 			if (serviceClient == null)
 				serviceClient = new ServiceClient();
 
 			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
-			serviceClient.getOptions().setFrom(new EndpointReference(InetAddress.getLocalHost().getHostAddress()));
+			try {
+				serviceClient.getOptions().setFrom(new EndpointReference(InetAddress.getLocalHost().getHostAddress()));
+			} catch (UnknownHostException e) {
+				throw new XdsException(ExceptionUtil.exception_details(e));
+			}
+
+			if (System.getenv("XDSHTTP10") != null) {
+				System.out.println("Generating HTTP 1.0");
+
+				serviceClient.getOptions().setProperty
+				(org.apache.axis2.transport.http.HTTPConstants.HTTP_PROTOCOL_VERSION,
+						org.apache.axis2.transport.http.HTTPConstants.HEADER_PROTOCOL_10);
+
+				serviceClient.getOptions().setProperty
+				(org.apache.axis2.transport.http.HTTPConstants.CHUNKED,
+						Boolean.FALSE);
+
+			}
+
+			serviceClient.getOptions().setProperty(Constants.Configuration.ENABLE_MTOM, 
+					((mtom) ? Constants.VALUE_TRUE : Constants.VALUE_FALSE));
+
+			serviceClient.getOptions().setAction(action);
+			if (addressing) {
+				serviceClient.engageModule("addressing");
+			} else {
+				serviceClient.disengageModule("addressing");    // this does not work in Axis2 yet
+			}
+
+			serviceClient.getOptions().setSoapVersionURI(
+					((soap12) ? SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI : SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)
+			);
+//			System.out.println("fire and forget " + endpoint);
+//			serviceClient.fireAndForget(body);
+
+			System.out.println("sendRobust " + endpoint);
+			serviceClient.sendRobust(body);
+
+	}
+
+	public OMElement soapCall(OMElement body, String endpoint,
+			  String action) 
+	throws  XdsException, AxisFault {
+
+//		try {
+			if (serviceClient == null)
+				serviceClient = new ServiceClient();
+
+			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
 
 			if (System.getenv("XDSHTTP10") != null) {
 				System.out.println("Generating HTTP 1.0");
@@ -72,7 +161,7 @@ public class Soap {
 			if ( async && !serviceClient.getOptions().isUseSeparateListener())
 				serviceClient.getOptions().setUseSeparateListener(async);
 
-
+			//System.out.println("call " + endpoint);
 			OMElement result = serviceClient.sendReceive(body);
 
 			if (async)
@@ -94,19 +183,16 @@ public class Soap {
 			this.result = result;
 
 			if (async)
-				verify_returned_action(expected_return_action, "urn:mediateResponse");
+				verify_returned_action(expectedReturnAction, "urn:mediateResponse");
 			else
-				verify_returned_action(expected_return_action, null);
+				verify_returned_action(expectedReturnAction, null);
 
 			return result;
 
-		} catch (AxisFault e) {
-			throw new XdsException(ExceptionUtil.exception_details(e));
-		} catch (UnknownHostException e) {
-			throw new XdsException(ExceptionUtil.exception_details(e));
-		}
+//		} catch (AxisFault e) {
+//			throw new XdsException(ExceptionUtil.exception_details(e));
+//		}
 	}
-
 	public OMElement getResult() { return result; }
 
 	void verify_returned_action(String expected_return_action, String alternate_return_action) throws XdsException {
@@ -159,6 +245,42 @@ public class Soap {
 			return null;
 
 		return Util.deep_copy( out.getEnvelope().getHeader());
+	}
+
+	public String getExpectedReturnAction() {
+		return expectedReturnAction;
+	}
+
+	public void setExpectedReturnAction(String expectedReturnAction) {
+		this.expectedReturnAction = expectedReturnAction;
+	}
+
+	public boolean isMtom() {
+		return mtom;
+	}
+
+	public void setMtom(boolean mtom) {
+		this.mtom = mtom;
+	}
+
+	public boolean isAddressing() {
+		return addressing;
+	}
+
+	public void setAddressing(boolean addressing) {
+		this.addressing = addressing;
+	}
+
+	public boolean isSoap12() {
+		return soap12;
+	}
+
+	public void setSoap12(boolean soap12) {
+		this.soap12 = soap12;
+	}
+
+	public boolean isAsync() {
+		return async;
 	}
 
 

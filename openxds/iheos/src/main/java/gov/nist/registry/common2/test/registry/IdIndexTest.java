@@ -8,7 +8,7 @@ import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -26,7 +26,7 @@ public class IdIndexTest  extends TestCase {
 		assertTrue(ii.getExternalIdentifiers("SubmissionSet01").size() == 3);
 		
 		String uid = ii.getExternalIdentifierValue("SubmissionSet01", MetadataSupport.XDSSubmissionSet_uniqueid_uuid);
-		ArrayList<String> ids = m.getAllDefinedIds();
+		List<String> ids = m.getAllDefinedIds();
 		assertTrue(uid != null);
 		assertTrue(uid.equals("$uniqueId02"));
 		

@@ -3,7 +3,7 @@ package gov.nist.registry.common2.registry;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.xml.Util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 
@@ -64,7 +64,7 @@ public class AdhocQueryResponse extends Response {
 			res.addChild(Util.deep_copy(metadata));
 	}
 
-	public void addQueryResults(ArrayList metadatas)  throws XdsInternalException {
+	public void addQueryResults(List<OMElement> metadatas)  throws XdsInternalException {
 		OMElement res = getQueryResult();  // used for side effect if v3 and error - must
 		// still have empty RegistryObjectList after RegistryErrorList
 		if (metadatas != null)

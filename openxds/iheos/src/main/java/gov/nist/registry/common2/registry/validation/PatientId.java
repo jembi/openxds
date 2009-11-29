@@ -8,9 +8,10 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PatientId {
-	ArrayList<String> patient_ids;
+	List<String> patient_ids;
 	RegistryErrorList rel;
 	Metadata m;
 
@@ -28,11 +29,12 @@ public class PatientId {
 		gather_patient_ids(m, m.getFolderIds(),          MetadataSupport.XDSFolder_patientid_uuid);
 
 		if (patient_ids.size() > 1)
-			rel.add_error(MetadataSupport.XDSResultNotSinglePatient, "Multiple Patient IDs found in submission: " + patient_ids, "registry/validation/PatientId.java", null);
+			rel.add_error(MetadataSupport.XDSPatientIdDoesNotMatch, "Multiple Patient IDs found in submission: " + patient_ids, "registry/validation/PatientId.java", null);
+//			rel.add_error(MetadataSupport.XDSResultNotSinglePatient, "Multiple Patient IDs found in submission: " + patient_ids, "registry/validation/PatientId.java", null);
 }
 
 
-	void gather_patient_ids(Metadata m, ArrayList<String> parts, String uuid) throws MetadataException {
+	void gather_patient_ids(Metadata m, List<String> parts, String uuid) throws MetadataException {
 		String patient_id;
 		for (String id : parts) {		
 			patient_id = m.getExternalIdentifierValue(id, uuid);

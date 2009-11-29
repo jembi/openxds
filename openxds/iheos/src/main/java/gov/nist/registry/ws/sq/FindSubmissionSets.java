@@ -1,125 +1,98 @@
 package gov.nist.registry.ws.sq;
 
+import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.SQCodedTerm;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import org.apache.axiom.om.OMElement;
+/**
+Generic implementation of FindSubmissionSets Stored Query. This class knows how to parse a 
+ * FindSubmissionSets Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class FindSubmissionSets extends StoredQuery {
 
-public class FindSubmissionSets extends StoredQuery {
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
 
-	public FindSubmissionSets(HashMap params, boolean return_objects, Response response, Message log_message, boolean is_secure) throws MetadataValidationException {
-		super(params, return_objects, response, log_message,  is_secure);
-
-
-		//                         param name,                                      required?, multiple?, is string?,   same size as,                                alternative
-		validate_parm(params, "$XDSSubmissionSetPatientId",                         true,      false,     true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetSourceId",                          false,     true,      true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetSubmissionTimeFrom",                false,     false,     true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetSubmissionTimeTo",                  false,     false,     true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetAuthorPerson",                      false,     false,     true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetContentType",                       false,     true,      true,         null,                                          null												);
-		validate_parm(params, "$XDSSubmissionSetStatus",                            true,      true,      true,         null,                                          null												);
+	public FindSubmissionSets(StoredQuerySupport sqs) throws MetadataValidationException {
+		super(sqs);
+	}
+	
+	void validateParameters() throws MetadataValidationException {
 		
-		if (this.has_validation_errors) 
+		//                         param name,                                 required?, multiple?, is string?,   is code?,     support AND/OR                          alternative
+		sqs.validate_parm("$XDSSubmissionSetPatientId",                         true,      false,     true,         false,         false,                                 (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetSourceId",                          false,     true,      true,         false,         false,                                 (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetSubmissionTimeFrom",                false,     false,     true,         false,         false,                                 (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetSubmissionTimeTo",                  false,     false,     true,         false,         false,                                 (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetAuthorPerson",                      false,     false,     true,         false,         false,                                 (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetContentType",                       false,     true,      true,         true,          false,                               (String[])null												);
+		sqs.validate_parm("$XDSSubmissionSetStatus",                            true,      true,      true,         false,         false,                                 (String[])null												);
+		
+		if (sqs.has_validation_errors) 
 			throw new MetadataValidationException("Metadata Validation error present");
 	}
 
-	public Metadata run_internal() throws XdsInternalException, XdsException, LoggerException {
-
-		OMElement results = impl();
-				
-		Metadata m = MetadataParser.parseNonSubmission(results);
+	public Metadata runSpecific() throws XdsInternalException, XdsException, LoggerException {
 		
-		if (log_message != null)
-			log_message.addOtherParam("Results structure", m.structure());
+		sqs.log_message.addOtherParam("SqParams", sqs.params.toString());
+		
+		validateParameters();
 
-		return m;
+		parseParameters();
+
+		return runImplementation();
 	}
 	
-	OMElement impl() throws XdsInternalException, XdsException, LoggerException {
-		
-		String               patient_id                               = this.get_string_parm   ("$XDSSubmissionSetPatientId");
-		ArrayList<String>    source_id                                = this.get_arraylist_parm("$XDSSubmissionSetSourceId");
-		String               submission_time_from                     = this.get_int_parm      ("$XDSSubmissionSetSubmissionTimeFrom");
-		String               submission_time_to                       = this.get_int_parm      ("$XDSSubmissionSetSubmissionTimeTo");
-		String               author_person                            = this.get_string_parm   ("$XDSSubmissionSetAuthorPerson");
-		ArrayList<String>    content_type                             = this.get_arraylist_parm("$XDSSubmissionSetContentType");
-		ArrayList<String>    status                                   = this.get_arraylist_parm("$XDSSubmissionSetStatus");
+	protected String               patient_id;
+	protected List<String>    source_id;
+	protected String               submission_time_from;
+	protected String               submission_time_to;
+	protected String               author_person;
+	protected SQCodedTerm         content_type;
+	protected List<String>    status;
 
-		String status_ns_prefix = "urn:oasis:names:tc:ebxml-regrep:StatusType:";
+	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
 		
-		//ArrayList new_status = new ArrayList();
+		patient_id                               = sqs.params.getStringParm   ("$XDSSubmissionSetPatientId");
+		source_id                                = sqs.params.getListParm("$XDSSubmissionSetSourceId");
+		submission_time_from                     = sqs.params.getIntParm      ("$XDSSubmissionSetSubmissionTimeFrom");
+		submission_time_to                       = sqs.params.getIntParm      ("$XDSSubmissionSetSubmissionTimeTo");
+		author_person                            = sqs.params.getStringParm   ("$XDSSubmissionSetAuthorPerson");
+		content_type                             = sqs.params.getCodedParm("$XDSSubmissionSetContentType");
+		status                                   = sqs.params.getListParm("$XDSSubmissionSetStatus");
+
+		String status_ns_prefix = MetadataSupport.status_type_namespace;
+		
+//		ArrayList new_status = new ArrayList();
 		for (int i=0; i<status.size(); i++) {
 			String stat = (String) status.get(i);
 			
 			if ( ! stat.startsWith(status_ns_prefix)) 
 				throw new MetadataValidationException("Status parameter must have namespace prefix " + status_ns_prefix + " found " + stat);
-		//	new_status.add(stat.replaceFirst(status_ns_prefix, ""));
+//			new_status.add(stat.replaceFirst(status_ns_prefix, ""));
 		}
-		//status = new_status;
-		
-		
-		// add test of ('')
-		
-		
-		init();
-
-		if (this.return_leaf_class) {
-		     a("SELECT *  "); n();
-		} else {
-		     a("SELECT doc.id  "); n();
-		}
-		                                                  a("FROM RegistryPackage doc, ExternalIdentifier patId"); n();
-		if (source_id != null)                            a(", ExternalIdentifier srcId"); n();
-		if (submission_time_from != null)                 a(", Slot sTimef"); n();              
-		if (submission_time_to != null)                   a(", Slot sTimet"); n();              
-		if (author_person != null)                        a(", Classification author"); n();
-		if (author_person != null)                        a(", Slot authorperson"); n();
-		if (content_type != null)                         a(", Classification contentT"); n();
-				
-		
-		                                                  a("WHERE"); n();
-		// patientID
-		                                                  a("(doc.id = patId.registryobject AND	"); n();
-		                                                  a("  patId.identificationScheme='urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446' AND "); n();
-		                                                  a("  patId.value = '"); a(patient_id); a("' ) "); n();
-		                      
-		if (source_id != null) {
-			a("AND"); n();
-            a("(doc.id = srcId.registryobject AND	"); n();
-            a("  srcId.identificationScheme='urn:uuid:554ac39e-e3fe-47fe-b233-965d2a147832' AND "); n();
-            a("  srcId.value IN "); a(source_id); a(" ) "); n();
-		}
-		this.add_times("submissionTime",     "sTimef",       "sTimet",       submission_time_from,      submission_time_to, "doc");
-		
-		if (author_person != null) {
-			a("AND"); n();
-			a("(doc.id = author.classifiedObject AND "); n();
-			a("  author.classificationScheme='urn:uuid:a7058bb9-b4e4-4307-ba5b-e3f0ab85e12d' AND "); n();
-			a("  authorperson.parent = author.id AND"); n();
-			a("  authorperson.name = 'authorPerson' AND"); n();
-			a("  authorperson.value LIKE '" + author_person + "' )"); n();
-		}
-		                                                  
-		this.add_code("contentT", null, "urn:uuid:aa543740-bdda-424e-8c96-df4873be8500", content_type,            null);
-		
-		a("AND doc.status IN "); a(status);
-		
-		
-			return query(this.return_leaf_class);
-		
-
+//		status = new_status;
 	}
-	
+
 	
 }

@@ -7,6 +7,7 @@ import gov.nist.registry.common2.xml.Util;
 import java.util.ArrayList;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNode;
 
 public class OmLogger {
@@ -69,7 +70,12 @@ public class OmLogger {
 				val = Util.deep_copy(value);
 			} catch (Exception e) {}
 		}
-		ele.addChild(val);
+		try {
+			ele.addChild(val);
+		}
+		catch (OMException e) {
+			Util.mkElement("Exception", e.getMessage(), ele);
+		}
 		parent.addChild(ele);
 		return ele;
 	}

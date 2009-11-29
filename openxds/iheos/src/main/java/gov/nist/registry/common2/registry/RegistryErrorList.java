@@ -2,9 +2,9 @@ package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.xml.Util;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 
-public class RegistryErrorList extends ErrorLogger {
+public class RegistryErrorList implements ErrorLogger {
 	public final static short version_2 = 2;
 	public final static short version_3 = 3;
 	String errors_and_warnings = "";
@@ -34,16 +34,21 @@ public class RegistryErrorList extends ErrorLogger {
 	protected OMNamespace ebRSns;
 	protected OMNamespace ebRIMns;
 	protected OMNamespace ebQns;
-	boolean log = true;  // generate log entries?
 	boolean format_for_html = false;
 	private final static Log logger = LogFactory.getLog(RegistryErrorList.class);
 	boolean verbose = true;
+	boolean log;
 	boolean isXCA = false;
 	
 	public void setIsXCA() { isXCA = true; }
 	
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+	
+	public String toString() {
+		if (rel == null) return "Null";
+		return getRegistryErrorList().toString();
 	}
 
 	public RegistryErrorList(short version) throws XdsInternalException {
@@ -118,7 +123,7 @@ public class RegistryErrorList extends ErrorLogger {
 		return buf.toString();
 	}
 
-	public void add_warning(String code, String msg, String location, Message log_message) {
+	public void add_warning(String code, String msg, String location, LogMessage log_message) {
 		errors_and_warnings += "Warning: " + msg + "\n";
 		warning(msg);
 		addWarning(msg, code, location);
@@ -140,7 +145,7 @@ public class RegistryErrorList extends ErrorLogger {
 		);
 	}
 
-	public void add_error(String code, String msg, String location, Message log_message) {
+	public void add_error(String code, String msg, String location, LogMessage log_message) {
 		errors_and_warnings += "Error: " + code + " " + msg + "\n";
 		error(msg);
 		addError(msg, code, location);
@@ -168,7 +173,7 @@ public class RegistryErrorList extends ErrorLogger {
 		return err;
 	}
 
-	public void addRegistryErrorList(OMElement rel, Message log_message) throws XdsInternalException {
+	public void addRegistryErrorList(OMElement rel, LogMessage log_message) throws XdsInternalException {
 		for (Iterator it=rel.getChildElements(); it.hasNext(); ) {
 			OMElement registry_error = (OMElement) it.next();
 
@@ -188,21 +193,17 @@ public class RegistryErrorList extends ErrorLogger {
 
 			if (this.getVersion() == RegistryErrorList.version_3)
 				registry_error_2.setNamespace(MetadataSupport.ebRSns3);
-			registryErrorList().addChild(registry_error_2);			
-			if (registry_error.getAttributeValue(MetadataSupport.severity_qname).equals(normalizedError())) 
+			registryErrorList().addChild(registry_error_2);
+			String severity = registry_error.getAttributeValue(MetadataSupport.severity_qname);
+			severity = new Metadata().stripNamespace(severity);
+			if (severity.equals("Error")) 
 				has_errors = true;
 			else
 				has_warnings = true;
 		}
 	}
 
-	private String normalizedError() {
-		if (this.getVersion() == RegistryErrorList.version_3) 
-			return MetadataSupport.error_severity_type_namespace + "Error";
-		else
-			return "Error";
-	}
-	
+
 	public boolean hasContent() {
 		return this.has_errors || this.has_warnings;
 	}
@@ -217,8 +218,8 @@ public class RegistryErrorList extends ErrorLogger {
 		error.addAttribute("errorCode", code, null);
 		error.addAttribute("location", location, null);
 		String severity;
-  		if (version == version_3)
-  			severity = MetadataSupport.error_severity_type_namespace + "Error";
+		if (version == version_3) 
+			severity = MetadataSupport.error_severity_type_namespace + "Error";
 		else
 			severity = "Error";
 		error.addAttribute("severity", severity, null);
@@ -272,6 +273,7 @@ public class RegistryErrorList extends ErrorLogger {
 		return "Exception thrown: " + e.getClass().getName() + "\n" + e.getMessage() + "\n" + new String(baos.toByteArray());
 	}
 
+	@SuppressWarnings("unchecked")
 	void setHomeAsLocation() {
 		String reXPath = "//*[local-name()='RegistryError']";
 		String home = Properties.loader().getString("home_community_id");;
@@ -284,4 +286,5 @@ public class RegistryErrorList extends ErrorLogger {
 		} catch (JaxenException e) {
 		}
 	}
+
 }

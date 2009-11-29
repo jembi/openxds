@@ -1,5 +1,6 @@
 package gov.nist.registry.ws.serviceclasses;
 
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.EchoV2Metadata;
 import gov.nist.registry.ws.EchoV3Metadata;
 
@@ -78,7 +79,7 @@ public class Xds extends XdsService {
 	}
 
 	public OMElement EchoV2Metadata(OMElement req) {
-		OMElement startup_error = beginTransaction("xds", req, XdsService.registry_actor);
+		OMElement startup_error = beginTransaction("xds", req, AppendixV.REGISTRY_ACTOR);
 		if (startup_error != null)
 			return startup_error;
 		EchoV2Metadata e = new EchoV2Metadata();
@@ -88,7 +89,7 @@ public class Xds extends XdsService {
 	}
 
 	public OMElement EchoV3Metadata(OMElement req) {
-		OMElement startup_error = beginTransaction("xds", req, XdsService.registry_actor);
+		OMElement startup_error = beginTransaction("xds", req, AppendixV.REGISTRY_ACTOR);
 		if (startup_error != null)
 			return startup_error;
 		EchoV3Metadata e = new EchoV3Metadata();

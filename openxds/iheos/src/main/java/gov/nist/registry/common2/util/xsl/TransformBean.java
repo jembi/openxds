@@ -135,6 +135,11 @@ public class TransformBean {
 		tform.setTransform(new File(xsltFile));
 	}
 
+	public void setXsltFile(File xsltFile) throws Exception {
+		this.xsltFile = xsltFile.getAbsolutePath();
+		tform.setTransform(xsltFile);
+	}
+
 	/**
 	 * Getter for property paramName.
 	 * @return Value of property paramName.

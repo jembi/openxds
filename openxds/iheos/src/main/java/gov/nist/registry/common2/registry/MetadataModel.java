@@ -10,6 +10,7 @@ import gov.nist.registry.common2.xml.XmlFormatter;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -25,14 +26,14 @@ public class MetadataModel {
 	String wrapper_name = "LeafRegistryObjectList";
 	OMElement wrapper = null;
 	OMElement me = null;
-	ArrayList me_stack = new ArrayList();
+	List me_stack = new ArrayList();
 	OMFactory factory = MetadataSupport.om_factory;
 	int id_allocation = 0;
 	boolean and_accumulator;
 	boolean or_accumulator;
 	boolean test_result = true;
-	ArrayList errors = new ArrayList();
-	ArrayList object_refs = new ArrayList();
+	List errors = new ArrayList();
+	List object_refs = new ArrayList();
 	boolean grok = false;
 
 	// keywords
@@ -338,7 +339,7 @@ public class MetadataModel {
 
 	public OMElement get() throws Exception {
 		OMElement wrapper = wrapper();
-		ArrayList contents=null;
+		List contents=null;
 		try {
 			contents = (version == 2) ? m.getV2() : m.getV3();
 		} catch (XdsInternalException e) {
@@ -381,7 +382,7 @@ public class MetadataModel {
 	}
 	
 	public MetadataModel removeClassifications(String classificationScheme) {
-		ArrayList cls = m.findClassifications(me, classificationScheme);
+		List cls = m.findClassifications(me, classificationScheme);
 		for (int i=0; i<cls.size(); i++) {
 			OMElement cl = (OMElement) cls.get(i);
 			cl.detach();
@@ -402,7 +403,7 @@ public class MetadataModel {
 
 	public MetadataModel withExternalIdentifier(String identificationScheme) {
 		boolean done = false;
-		ArrayList al = m.findChildElements(me, "ExternalIdentifier");
+		List al = m.findChildElements(me, "ExternalIdentifier");
 		for (int i=0; i<al.size(); i++) {
 			OMElement ei = (OMElement) al.get(i);
 			if (ei.getAttributeValue(MetadataSupport.identificationscheme_qname).equals(identificationScheme)) {

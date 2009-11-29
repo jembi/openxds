@@ -9,7 +9,7 @@ import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 
@@ -23,7 +23,7 @@ public class EchoV2Metadata extends XdsCommon {
 		try {
 			AdhocQueryResponse ahqr = new AdhocQueryResponse(Response.version_2);
 			Metadata m = new Metadata(in);
-			ArrayList parts = m.getV2();
+			List parts = m.getV2();
 			for (int i=0; i<parts.size(); i++) {
 				OMElement ele = (OMElement) parts.get(i);
 				ahqr.addQueryResults(ele);
@@ -31,10 +31,6 @@ public class EchoV2Metadata extends XdsCommon {
 			return ahqr.getResponse();
 		} 
 		catch (MetadataException e) {
-			System.out.println(RegistryUtility.exception_details(e));
-			return null;
-		}
-		catch (MetadataValidationException e) {
 			System.out.println(RegistryUtility.exception_details(e));
 			return null;
 		}

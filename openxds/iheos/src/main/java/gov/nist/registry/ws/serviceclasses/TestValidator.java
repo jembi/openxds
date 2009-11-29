@@ -2,11 +2,11 @@ package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.ws.testvalidator.LogModel;
 import gov.nist.registry.ws.testvalidator.Response;
-import gov.nist.registry.xdslog.LoggerException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class TestValidator extends XdsService {
 
 	public OMElement ValidateTestRequest(OMElement request) {
 
-		this.beginTransaction("TestValidator", request, registry_actor);
+		this.beginTransaction("TestValidator", request, REGISTRY_ACTOR);
 
 		log_message.setTestMessage("TestValidator");
 
@@ -51,7 +51,7 @@ public class TestValidator extends XdsService {
 			return fatal_error("Test number, " + test_str + ", is not an integer");
 		}
 
-		ArrayList<OMElement> logs = MetadataSupport.childrenWithLocalName(request, "Log");
+		List<OMElement> logs = MetadataSupport.childrenWithLocalName(request, "Log");
 
 		LogModel lm = new LogModel(test_str);
 		for (OMElement log : logs) {

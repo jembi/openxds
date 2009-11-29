@@ -1,43 +1,76 @@
 package gov.nist.registry.ws.sq;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.apache.axiom.om.OMElement;
-
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-public class GetAssociations extends StoredQuery {
+import java.util.List;
 
-	public GetAssociations(HashMap<String, Object> params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
-		super(params, return_objects, response, log_message,  is_secure);
+/**
+Generic implementation of GetAssociations Stored Query. This class knows how to parse a 
+ * GetAssociations Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class GetAssociations extends StoredQuery {
 
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
+
+	/**
+	 * Basic constructor
+	 * @param sqs
+	 * @throws MetadataValidationException
+	 */
+	public GetAssociations(StoredQuerySupport sqs) {
+		super(sqs);
+	}
+
+	void validateParameters() throws MetadataValidationException {
 
 		//                    param name,             required?, multiple?, is string?,   same size as,    alternative
-		validate_parm(params, "$uuid",                 true,      true,     true,         null,            null);
+		sqs.validate_parm("$uuid",                 true,      true,     true,         null,            (String[])null);
+
+		if (sqs.has_validation_errors) 
+			throw new MetadataValidationException("Metadata Validation error present");
 	}
 
-	public Metadata run_internal() throws XdsException, LoggerException {
-		Metadata metadata;
+	protected List<String> uuids;
 
-		ArrayList<String> uuids = get_arraylist_parm("$uuid");
-
-		if (uuids!= null) {
-			OMElement ele = get_associations(uuids, null);
-			metadata = MetadataParser.parseNonSubmission(ele);
-		} 
-		else throw new XdsInternalException("GetAssociations Stored Query: $uuid not found as a multi-value parameter");
-
-		return metadata;
+	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
+		uuids = sqs.params.getListParm("$uuid");
 	}
 
+	/**
+	 * Implementation of Stored Query specific logic including parsing and validating parameters.
+	 * @throws XdsInternalException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 * @throws XDSRegistryOutOfResourcesException
+	 */
+	public Metadata runSpecific() throws XdsException, LoggerException {
+
+		validateParameters();
+		parseParameters();
+
+		if (uuids == null) 
+			throw new XdsInternalException("GetAssociations Stored Query");
+		return runImplementation();
+	}
 
 
 }

@@ -3,7 +3,8 @@ package gov.nist.registry.ws.sq.test;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.And;
-import gov.nist.registry.ws.sq.ParamParser;
+import gov.nist.registry.common2.registry.storedquery.ParamParser;
+import gov.nist.registry.common2.registry.storedquery.SqParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,9 +72,9 @@ public class ParamParserTest  extends TestCase {
 	
 	public void test_parse_int()  throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "2");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue(map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList<Object> al = (ArrayList<Object>) value_object;
 		Object val = al.get(0);
@@ -85,9 +86,9 @@ public class ParamParserTest  extends TestCase {
 		
 	public void test_parse_string()  throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "'bar'");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList<Object> al = (ArrayList<Object>) value_object;
 		Object val = al.get(0);
@@ -99,9 +100,9 @@ public class ParamParserTest  extends TestCase {
 	
 	public void test_parse_string_with_single_quote()  throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "'ba''r'");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList<Object> al = (ArrayList<Object>) value_object;
 		Object val = al.get(0);
@@ -112,9 +113,9 @@ public class ParamParserTest  extends TestCase {
 	
 	public void test_parse_int_array()  throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "(2,3)");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList in = (ArrayList) value_object;		
 		assertTrue("size is " + in.size() + "\nvalues are " + in.toString(), in.size() == 2);
@@ -130,9 +131,9 @@ public class ParamParserTest  extends TestCase {
 	
 	public void test_parse_string_array() throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "('2', '3' )");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList in = (ArrayList) value_object;		
 		assertTrue("size is " + in.size() + "\nvalues are " + in.toString(), in.size() == 2);
@@ -148,9 +149,9 @@ public class ParamParserTest  extends TestCase {
 		
 	public void test_multiple_int_slot_values() throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "2", "3");
-		HashMap map = parser.parse(query);
+		SqParams map = parser.parse(query);
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList in = (ArrayList) value_object;		
 		assertTrue("size is " + in.size() + "\nvalues are " + in.toString(), in.size() == 2);
@@ -166,10 +167,10 @@ public class ParamParserTest  extends TestCase {
 
 	public void test_multiple_string_slot_values() throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "('foo','bar')", "('fuz', 'baz')");
-		HashMap map =  parser.parse(query);
+		SqParams map =  parser.parse(query);
 		//System.out.println(map.toString());
 		assertTrue("map size is " + map.size(), map.size() == 1);
-		Object value_object = map.get("foo");
+		Object value_object = map.getParm("foo");
 		assertTrue("class is " + value_object.getClass().getName(), value_object.getClass().getName().equals("java.util.ArrayList"));
 		ArrayList in = (ArrayList) value_object;		
 		assertTrue("size is " + in.size() + "\nvalues are " + in.toString(), in.size() == 4);
@@ -182,9 +183,9 @@ public class ParamParserTest  extends TestCase {
 	public void test_multiple_string_slots() throws MetadataValidationException, XdsInternalException {
 		addSlot("floo", "('foo', 'fax')");
 		addSlot("floo", "('bar')");
-		HashMap map =  parser.parse(query);
+		SqParams map =  parser.parse(query);
 		//System.out.println("and is " + map.toString());
-		Object floo = map.get("floo");
+		Object floo = map.getParm("floo");
 		String flooClass = floo.getClass().getName();
 		assertTrue("Class is " + flooClass, flooClass.endsWith((".And")));
 		And and = (And) floo;
@@ -199,11 +200,11 @@ public class ParamParserTest  extends TestCase {
 	public void test_multiple_param() throws MetadataValidationException, XdsInternalException {
 		addSlot("foo", "2");
 		addSlot("bar", "3");
-		HashMap map1 = parser.parse(query);
+		SqParams map1 = parser.parse(query);
 		//System.out.println("map1 is " + map1.toString());
 		assertTrue(map1.size() == 2);
 		
-		Object value_object1 = map1.get("foo");
+		Object value_object1 = map1.getParm("foo");
 		String class1 = value_object1.getClass().getName();
 		assertTrue("class is " + class1 + " value is " + value_object1.toString(), class1.endsWith(".ArrayList"));
 		ArrayList<Integer> al1 = (ArrayList<Integer>) value_object1;

@@ -1,49 +1,80 @@
 package gov.nist.registry.ws.sq;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.apache.axiom.om.OMElement;
-
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.xdslog.Message;
 
-public class GetFolders extends StoredQuery {
+import java.util.List;
+
+/**
+Generic implementation of GetFolders Stored Query. This class knows how to parse a 
+ * GetFolders Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class GetFolders extends StoredQuery {
+
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
 
 
-	public GetFolders(HashMap params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
-		super(params, return_objects, response, log_message,  is_secure);
-
-
-		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
-		validate_parm(params, "$XDSFolderEntryUUID",                         true,      true,     true,         null,            "$XDSFolderUniqueId");
-		validate_parm(params, "$XDSFolderUniqueId",                          true,      true,     true,         null,            "$XDSFolderEntryUUID");
+	/**
+	 * Basic constructor
+	 * @param sqs
+	 * @throws MetadataValidationException
+	 */
+	public GetFolders(StoredQuerySupport sqs) {
+		super(sqs);
 	}
 
-	public Metadata run_internal() throws XdsException, LoggerException {
-		Metadata metadata;
+	void validateParameters() throws MetadataValidationException {
+		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
+		sqs.validate_parm("$XDSFolderEntryUUID",                         true,      true,     true,         null,            "$XDSFolderUniqueId");
+		sqs.validate_parm("$XDSFolderUniqueId",                          true,      true,     true,         null,            "$XDSFolderEntryUUID");
 
-		ArrayList<String> fol_uuid = get_arraylist_parm("$XDSFolderEntryUUID");
-		if (fol_uuid != null) {
-			// starting from uuid
-			OMElement x = get_fol_by_uuid(fol_uuid);
-			metadata = MetadataParser.parseNonSubmission(x);
-			if (metadata.getFolders().size() == 0) return metadata;
-		} else {
-			// starting from uniqueid
-			ArrayList<String> fol_uid = get_arraylist_parm("$XDSFolderUniqueId");
-			OMElement x = get_fol_by_uid(fol_uid);
-			metadata = MetadataParser.parseNonSubmission(x);
-		}
-		
-		return metadata;
+		if (sqs.has_validation_errors) 
+			throw new MetadataValidationException("Metadata Validation error present");
+	}
 
+	protected List<String> fol_uuid;
+	protected List<String> fol_uid;
+
+	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
+		fol_uuid = sqs.params.getListParm("$XDSFolderEntryUUID");
+		fol_uid = sqs.params.getListParm("$XDSFolderUniqueId");
+	}
+
+	/**
+	 * Implementation of Stored Query specific logic including parsing and validating parameters.
+	 * @throws XdsInternalException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 * @throws XDSRegistryOutOfResourcesException
+	 */
+	public Metadata runSpecific() throws XdsException, LoggerException {
+
+		validateParameters();
+		parseParameters();
+
+		if (fol_uuid == null && fol_uid == null) 
+			throw new XdsInternalException("GetFolders Stored Query");
+		return runImplementation();
 	}
 
 
