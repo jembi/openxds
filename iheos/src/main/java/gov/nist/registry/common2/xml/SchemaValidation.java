@@ -46,6 +46,8 @@ public class SchemaValidation implements MetadataTypes {
 		DOMParser p = null;
 		//Check System property first which takes a priority
 		String localSchema = System.getenv("xds.schema.dir");
+		if (localSchema == null)
+			localSchema = System.getProperty("xds.schema.dir");
 
 		if (localSchema == null) {
 			String SchemaLoc = Properties.loader().getString("xds.schema.dir");
@@ -117,10 +119,32 @@ public class SchemaValidation implements MetadataTypes {
 			throw new XdsInternalException("SchemaValidation: invalid metadata type = " + metadataType);
 		}
 
+		schemaLocation += " urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0 " + 
+		((localSchema == null) ?
+		"/v3/rim.xsd" :
+			localSchema + 	"/v3/rim.xsd");
+
 		schemaLocation += " http://schemas.xmlsoap.org/soap/envelope/ " + 
 		((localSchema == null) ?
 		"/v3/soap.xsd" :
 			localSchema + 	"/v3/soap.xsd");
+
+
+		schemaLocation += " http://docs.oasis-open.org/wsn/b-2 " + 
+		((localSchema == null) ?
+		"/wsn/b-2.xsd" :
+			localSchema + 	"/wsn/b-2.xsd");
+
+		schemaLocation += " http://docs.oasis-open.org/wsn/br-2 " + 
+		((localSchema == null) ?
+		"/wsn/br-2.xsd" :
+			localSchema + 	"/wsn/br-2.xsd");
+
+		schemaLocation += " http://docs.oasis-open.org/wsn/t-1 " + 
+		((localSchema == null) ?
+		"/wsn/t-1.xsd" :
+			localSchema + 	"/wsn/t-1.xsd");
+		
 
 		// build parse to do schema validation
 		try {

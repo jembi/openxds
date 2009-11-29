@@ -18,7 +18,7 @@ public class Test11971 extends RepositoryB {
 	}
 
 	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) {
-		return start_up_error(rdsr, null, repository_actor, "Test does not implement this transaction");
+		return start_up_error(rdsr, null, REPOSITORY_ACTOR, "Test does not implement this transaction");
 	}
 
 	public String getServiceName() {

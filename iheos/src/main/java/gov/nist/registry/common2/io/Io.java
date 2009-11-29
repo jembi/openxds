@@ -7,8 +7,11 @@
 package gov.nist.registry.common2.io;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -82,27 +85,27 @@ public class Io {
 		}
 	}
 
-//	static public byte[] getBytesFromInputStream(InputStream in) throws java.io.IOException {
-//	int count;
-//	int allocation = 4096;
-//	byte[] by = new byte[allocation];
-//	int read_size = allocation;
+	//	static public byte[] getBytesFromInputStream(InputStream in) throws java.io.IOException {
+	//	int count;
+	//	int allocation = 4096;
+	//	byte[] by = new byte[allocation];
+	//	int read_size = allocation;
 
-//	int current_size = allocation;
-//	int offset = 0;
+	//	int current_size = allocation;
+	//	int offset = 0;
 
-//	count = in.read(by, offset, read_size);
-//	while ( true ) {
-//	if (count < read_size)
-//	return resize(by, offset + count, offset+count);
-//	by = resize(by, count, current_size * 2);
+	//	count = in.read(by, offset, read_size);
+	//	while ( true ) {
+	//	if (count < read_size)
+	//	return resize(by, offset + count, offset+count);
+	//	by = resize(by, count, current_size * 2);
 
-//	offset = current_size;
-//	read_size = by.length - offset; 
-//	current_size = by.length;
-//	count = in.read(by, offset, read_size);
-//	}
-//	}
+	//	offset = current_size;
+	//	read_size = by.length - offset; 
+	//	current_size = by.length;
+	//	count = in.read(by, offset, read_size);
+	//	}
+	//	}
 
 	/**
 	 * Given a File, return the contents as a String.
@@ -111,8 +114,18 @@ public class Io {
 	 * @return The contents of the file as a String.
 	 */
 	static public String stringFromFile(File file) throws IOException {
+		if ( !file.exists())
+			throw new FileNotFoundException(file + " cannot be read");
 		FileInputStream is = new FileInputStream(file);
 		return getStringFromInputStream(is);
+
+	}
+
+	static public byte[] bytesFromFile(File file) throws IOException {
+		if ( !file.exists())
+			throw new FileNotFoundException(file + " cannot be read");
+		FileInputStream is = new FileInputStream(file);
+		return getBytesFromInputStream(is);
 
 	}
 
@@ -129,22 +142,28 @@ public class Io {
 			os.write(buf, 0, cnt);
 		}
 	}
-	
+
 	static public String stringFromBufferedReader(BufferedReader in) throws IOException {
 		StringBuffer buf = new StringBuffer();
-		
+
 		char[] chars = new char[2048];
-		
+
 		int count;
-		
+
 		count = in.read(chars, 0, chars.length);
 		while(count > -1) {
 			if (count > 0)
 				buf.append(chars, 0, count);
 			count = in.read(chars, 0, chars.length);
 		}
-		
+
 		return buf.toString();
+	}
+
+	static public void stringToFile(File file, String string) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(file));
+		out.write(string);
+		out.close();	
 	}
 
 

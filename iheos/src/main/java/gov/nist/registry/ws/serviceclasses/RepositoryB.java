@@ -48,6 +48,7 @@ public class RepositoryB extends AbstractRepository  {
 	}
 
 	protected void validatePnRTransaction(OMElement sor) throws XdsValidationException {
+		forceForcedError();
 		OMNamespace ns = sor.getNamespace();
 		String ns_uri =  ns.getNamespaceURI();
 		if (ns_uri == null || ! ns_uri.equals(MetadataSupport.xdsB.getNamespaceURI())) 
@@ -55,6 +56,7 @@ public class RepositoryB extends AbstractRepository  {
 	}
 
 	protected void validateRetTransaction(OMElement rds) throws XdsValidationException {
+		forceForcedError();
 		OMNamespace ns = rds.getNamespace();
 		String ns_uri =  ns.getNamespaceURI();
 		if (ns_uri == null || ! ns_uri.equals(MetadataSupport.xdsB.getNamespaceURI())) 

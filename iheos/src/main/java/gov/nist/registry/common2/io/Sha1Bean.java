@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
+import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 public class Sha1Bean {
@@ -74,6 +75,14 @@ public class Sha1Bean {
 		InputStream is = dataHandler.getInputStream();
 		int file_length = (int) input.length();
 		byte[] inb = new byte[file_length];
+		is.read(inb);
+        setByteStream(inb);
+        return getSha1String();
+    }
+    
+    public String getSha1(DataHandler dataHandler, int size) throws Exception {
+		InputStream is = dataHandler.getInputStream();
+		byte[] inb = new byte[size];
 		is.read(inb);
         setByteStream(inb);
         return getSha1String();

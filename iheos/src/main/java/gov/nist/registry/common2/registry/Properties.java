@@ -23,7 +23,7 @@ public class Properties {
 	
 	void init() {
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("openxds.properties");
-		if (is == null) { logger.fatal("Cannot load xds.properties" ); return; }
+		if (is == null) { logger.fatal("Cannot load openxds.properties" ); return; }
 		properties = new java.util.Properties();
 		try {
 			properties.load(is);

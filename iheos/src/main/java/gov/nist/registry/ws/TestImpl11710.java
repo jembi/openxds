@@ -1,12 +1,12 @@
 package gov.nist.registry.ws;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 import javax.xml.namespace.QName;
 
@@ -16,10 +16,11 @@ import org.apache.axis2.context.MessageContext;
 public class TestImpl11710  extends XdsCommon {
 	MessageContext messageContext;
 
-	public TestImpl11710(Message log_message, short xds_version, MessageContext messageContext) {
+	public TestImpl11710(LogMessage log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
 		this.xds_version = xds_version;
 		this.messageContext = messageContext;
+		transaction_type = OTHER_transaction;
 		try {
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 		} catch (XdsInternalException e) {

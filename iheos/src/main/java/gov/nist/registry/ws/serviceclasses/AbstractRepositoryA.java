@@ -4,6 +4,7 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 
@@ -17,7 +18,7 @@ abstract public class AbstractRepositoryA extends XdsService implements ContentV
 
 	public OMElement SubmitObjectsRequest(OMElement sor) {
 		try {
-			OMElement startup_error = beginTransaction("PnR.a", sor, XdsService.repository_actor);
+			OMElement startup_error = beginTransaction("PnR.a", sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			

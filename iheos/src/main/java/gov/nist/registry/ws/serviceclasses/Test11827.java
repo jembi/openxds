@@ -11,7 +11,7 @@ import org.apache.axiom.om.OMElement;
 public class Test11827 extends AbstractRegistryA {
 
 	public OMElement AdhocQueryRequest(OMElement ahqr) {
-		return start_up_error(ahqr, null, registry_actor, "Test does not implement this transaction");
+		return start_up_error(ahqr, null, REGISTRY_ACTOR, "Test does not implement this transaction");
 	}
 
 	public String getServiceName() {

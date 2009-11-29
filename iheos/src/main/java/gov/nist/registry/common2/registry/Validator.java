@@ -8,6 +8,7 @@ import gov.nist.registry.common2.xml.Util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -38,11 +39,11 @@ public class Validator {
 
 	// return is ArrayList of ArrayLists.  Each internal ArrayList has two elements, The first is testname, the second is status, third
 	// is errors
-	public ArrayList<ArrayList> getPatterns() throws MetadataException {
-		ArrayList<ArrayList> patterns = new ArrayList<ArrayList>();
+	public List<List> getPatterns() throws MetadataException {
+		List<List> patterns = new ArrayList<List>();
 
 		clearError();
-		ArrayList<String> stat = buildStatus("hasSubmissionSet",hasSubmissionSet());
+		List<String> stat = buildStatus("hasSubmissionSet",hasSubmissionSet());
 		if (stat != null) patterns.add(stat);
 
 		clearError();
@@ -76,16 +77,16 @@ public class Validator {
 		return patterns;
 	}
 
-	ArrayList<String> mkArrayList(String s1, String s2, String s3) {
-		ArrayList<String> al = new ArrayList<String> ();
+	List<String> mkList(String s1, String s2, String s3) {
+		List<String> al = new ArrayList<String> ();
 		al.add(s1);
 		al.add(s2);
 		al.add(s3);
 		return al;
 	}
 
-	ArrayList<String> buildStatus(String testname, boolean status) {
-		if (status) return mkArrayList(testname, "true", null);
+	List<String> buildStatus(String testname, boolean status) {
+		if (status) return mkList(testname, "true", null);
 		return null;
 //		String errs = getErrors();
 //		if (errs == null || errs.equals("")) return mkArrayList(testname, "false", null);
@@ -93,7 +94,7 @@ public class Validator {
 	}
 
 	void err(String msg) {
-		errs.append("Validator: ");
+		errs.append("\nValidator: ");
 		errs.append(msg);
 		errs.append('\n');
 		error = true;
@@ -180,7 +181,7 @@ public class Validator {
 		String target_id = att_val(target, MetadataSupport.id_qname);
 		String type1 = (m.isVersion2()) ? type : MetadataSupport.association_type_namespace + type;
 
-		ArrayList asss = m.getAssociations();
+		List asss = m.getAssociations();
 		for (int i=0; i<asss.size(); i++) {
 			OMElement a = (OMElement) asss.get(i);
 			if (  !att_val(a, MetadataSupport.source_object_qname).equals(source_id) )
@@ -199,16 +200,16 @@ public class Validator {
 		return null;
 	}
 
-	public OMElement hasAssociationWithOneTarget(OMElement source, ArrayList<OMElement> targets, String type) throws MetadataException {
+	public OMElement hasAssociationWithOneTarget(OMElement source, List<OMElement> targets, String type) throws MetadataException {
 		String source_id = att_val(source, MetadataSupport.id_qname);
-		ArrayList<String> target_ids = new ArrayList<String>();
+		List<String> target_ids = new ArrayList<String>();
 		for (OMElement tgt : targets) {
 			String id = att_val(tgt, MetadataSupport.id_qname);
 			target_ids.add(id);
 		}
 		String type1 = (m.isVersion2()) ? type : MetadataSupport.association_type_namespace + type;
 
-		ArrayList asss = m.getAssociations();
+		List asss = m.getAssociations();
 		for (int i=0; i<asss.size(); i++) {
 			OMElement a = (OMElement) asss.get(i);
 			if (  !att_val(a, MetadataSupport.source_object_qname).equals(source_id) )
@@ -234,8 +235,8 @@ public class Validator {
 		return null;
 	}
 
-	ArrayList<String> getIdentifyingStrings(ArrayList<String> target_ids) throws MetadataException {
-		ArrayList<String> idents = new ArrayList<String>();
+	List<String> getIdentifyingStrings(List<String> target_ids) throws MetadataException {
+		List<String> idents = new ArrayList<String>();
 		for (String id : target_ids) {
 			idents.add(m.getIdentifyingString(id));
 		}
@@ -466,6 +467,15 @@ public class Validator {
 		}
 		return !hasError();
 	}
+	
+	protected List<?> clone(List<?> lst) {
+		List<Object> lst2 = new ArrayList<Object>();
+		
+		for (int i=0; i<lst.size(); i++)
+			lst2.add(lst.get(i));
+		
+		return lst2;
+	}
 
 	public boolean addDocToExistingFolder() throws MetadataException {
 		hasSubmissionSet();
@@ -476,7 +486,7 @@ public class Validator {
 			OMElement ssA = hasAssociation(m.getSubmissionSet(), m.getExtrinsicObject(0), "HasMember");
 			String ssId = m.getId(m.getSubmissionSet());
 
-			ArrayList<OMElement> otherA = (ArrayList<OMElement>) m.getAssociations().clone();
+			List<OMElement> otherA = (List<OMElement>) clone(m.getAssociations());
 			otherA.remove(ssA);
 
 			OMElement doc = m.getExtrinsicObject(0);
@@ -524,7 +534,7 @@ public class Validator {
 
 			String ssId = m.getId(m.getSubmissionSet());
 
-			ArrayList<OMElement> otherA = (ArrayList<OMElement>) m.getAssociations();
+			List<OMElement> otherA = (List<OMElement>) m.getAssociations();
 
 			OMElement assocA = otherA.get(0);
 			OMElement assocB = otherA.get(1);
@@ -558,7 +568,7 @@ public class Validator {
 		}
 		return !hasError();
 	}
-
+	
 	public boolean replaceDocument() throws MetadataException {
 		hasSubmissionSet();
 		hasDocuments(1);
@@ -569,7 +579,7 @@ public class Validator {
 			String ssId = m.getId(m.getSubmissionSet());
 			String docId = m.getId(m.getExtrinsicObject(0));
 
-			ArrayList<OMElement> otherA = (ArrayList<OMElement>) m.getAssociations();
+			List<OMElement> otherA = (List<OMElement>) m.getAssociations();
 
 			OMElement assocA = otherA.get(0);
 			OMElement assocB = otherA.get(1);
@@ -605,14 +615,60 @@ public class Validator {
 		return !hasError();
 	}
 
+	public boolean xfrmDocument() throws MetadataException {
+		hasSubmissionSet();
+		hasDocuments(1);
+		hasFolders(0);
+		if ( !hasError()) {
+			hasAssociations(2);
+
+			String ssId = m.getId(m.getSubmissionSet());
+			String docId = m.getId(m.getExtrinsicObject(0));
+
+			List<OMElement> otherA = (List<OMElement>) m.getAssociations();
+
+			OMElement assocA = otherA.get(0);
+			OMElement assocB = otherA.get(1);
+
+			OMElement ssDocAssoc = null;
+			OMElement rplcAssoc = null;
+
+			if (m.getSourceObject(assocA).equals(ssId)) {
+				ssDocAssoc = assocA;
+				rplcAssoc = assocB;
+			} else {
+				ssDocAssoc = assocB;
+				rplcAssoc = assocA;
+			}
+
+			if ( 	!m.getSimpleAssocType(ssDocAssoc).equals("HasMember") ||
+					!m.getSourceObject(ssDocAssoc).equals(ssId) ||
+					!m.getTargetObject(ssDocAssoc).equals(docId)
+			) {
+				String msg = "";
+				if (!m.getSimpleAssocType(ssDocAssoc).equals("HasMember")) msg = "association type";
+				if (!m.getSourceObject(ssDocAssoc).equals(ssId)) msg = msg + ", sourceObject";
+				if (!m.getTargetObject(ssDocAssoc).equals(docId)) msg = msg + ", targetObject is not the submitted document";
+				err("A HasMember association must link the SubmissionSet and the new Document (" + msg + ")");
+			}
+
+			if (	!m.getSimpleAssocType(rplcAssoc).equals("XFRM") ||
+					!m.getSourceObject(rplcAssoc).equals(docId)
+			)
+				err("A XFRM association must link the submitted Document and the existing Document");
+
+		}
+		return !hasError();
+	}
+
 	public boolean sswithOneDocOneFol() throws MetadataException {
 		hasSubmissionSet();
 		hasDocuments(1);
 		hasFolders(1);
 		if ( !hasError()) {
 			hasAssociations(4);
-			ArrayList<OMElement> unknownAssocs = m.getAssociations();
-			ArrayList<OMElement> folderDocAssocs = new ArrayList<OMElement>();
+			List<OMElement> unknownAssocs = m.getAssociations();
+			List<OMElement> folderDocAssocs = new ArrayList<OMElement>();
 			OMElement a;
 
 			a = hasAssociation(m.getSubmissionSet(), m.getExtrinsicObject(0), "HasMember");
@@ -642,8 +698,8 @@ public class Validator {
 		hasFolders(1);
 		if ( !hasError()) {
 			hasAssociations(7);
-			ArrayList<OMElement> unknownAssocs = m.getAssociations();
-			ArrayList<OMElement> folderDocAssocs = new ArrayList<OMElement>();
+			List<OMElement> unknownAssocs = m.getAssociations();
+			List<OMElement> folderDocAssocs = new ArrayList<OMElement>();
 			OMElement a;
 
 			a = hasAssociation(m.getSubmissionSet(), m.getExtrinsicObject(0), "HasMember");
@@ -689,8 +745,8 @@ public class Validator {
 		hasFolders(1);
 		if ( !hasError()) {
 			hasAssociations(5);
-			ArrayList<OMElement> unknownAssocs = m.getAssociations();
-			ArrayList<OMElement> folderDocAssocs = new ArrayList<OMElement>();
+			List<OMElement> unknownAssocs = m.getAssociations();
+			List<OMElement> folderDocAssocs = new ArrayList<OMElement>();
 			OMElement a;
 
 			a = hasAssociation(m.getSubmissionSet(), m.getExtrinsicObject(0), "HasMember");
@@ -781,7 +837,7 @@ public class Validator {
 			v = new Validator(new File(assertion_filename), assertion_set_name);
 			OMElement input = Util.parse_xml(new File(filename));
 			if (test_step == null) {
-				ArrayList<String> path = new ArrayList<String>();
+				List<String> path = new ArrayList<String>();
 				path.add("TestStep");
 				path.add("StoredQueryTransaction");
 				path.add("Result");
@@ -804,7 +860,7 @@ public class Validator {
 
 	}
 
-	OMElement find_nested_element(OMElement top_element, ArrayList<String> path) throws Exception {
+	OMElement find_nested_element(OMElement top_element, List<String> path) throws Exception {
 		OMElement current_ele = top_element;
 
 		for (String name : path) {

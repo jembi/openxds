@@ -1,5 +1,7 @@
 package gov.nist.registry.xdslog;
 
+import gov.nist.registry.common2.logging.LoggerException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

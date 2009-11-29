@@ -2,96 +2,80 @@ package gov.nist.registry.ws.sq;
 
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.registry.SQCodedTerm;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import org.apache.axiom.om.OMElement;
+/**
+Generic implementation of FindFolders Stored Query. This class knows how to parse a 
+ * FindFolders Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class FindFolders extends StoredQuery {
 
-public class FindFolders extends StoredQuery {
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
 
-	public FindFolders(HashMap<String, Object> params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
-		super(params, return_objects, response, log_message,  is_secure);
 
-
-		//                    param name,                      required?, multiple?, is string?,   same size as,                        alternative
-		validate_parm(params, "$XDSFolderPatientId",             true,      false,     true,         null,                                  null);
-		validate_parm(params, "$XDSFolderLastUpdateTimeFrom",    false,     false,     false,        null,                                  null);
-		validate_parm(params, "$XDSFolderLastUpdateTimeTo",      false,     false,     false,        null,                                  null);
-		validate_parm(params, "$XDSFolderCodeList",              false,     true,      true,         "$XDSFolderCodeListScheme",            null);
-		validate_parm(params, "$XDSFolderCodeListScheme",        false,     true,      true,         "$XDSFolderCodeList",                  null);
-		validate_parm(params, "$XDSFolderStatus",                true,      true,      true,         null,                                  null);
+	public FindFolders(StoredQuerySupport sqs) {
+		super(sqs);
 	}
 
-	public Metadata run_internal() throws XdsException, LoggerException {
-		OMElement results = impl();
-		
-		Metadata m = MetadataParser.parseNonSubmission(results);
-		
-		if (log_message != null)
-			log_message.addOtherParam("Results structure", m.structure());
+	/**
+	 * Implementation of Stored Query specific logic including parsing and validating parameters.
+	 * @throws XdsInternalException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 * @throws XDSRegistryOutOfResourcesException
+	 */
+	public Metadata runSpecific() throws XdsException, LoggerException {
+		validateParameters();
 
-		return m;
+		parseParameters();
+
+		return runImplementation();
 	}
-	
-	
-	OMElement impl() throws XdsInternalException, MetadataException, XdsException, LoggerException {
-		String patient_id              = get_string_parm("$XDSFolderPatientId");
-		String update_time_from        = get_int_parm("$XDSFolderLastUpdateTimeFrom");
-		String update_time_to          = get_int_parm("$XDSFolderLastUpdateTimeTo");
-		ArrayList<String> codes        = get_arraylist_parm("$XDSFolderCodeList");
-		ArrayList<String> code_schemes = get_arraylist_parm("$XDSFolderCodeListScheme");
-		ArrayList<String> status       = get_arraylist_parm("$XDSFolderStatus");
 
-		if (patient_id == null || patient_id.length() == 0) throw new XdsException("Patient ID parameter empty");
-		if (status.size() == 0) throw new XdsException("Status parameter empty");
+	void validateParameters() throws MetadataValidationException {
+		//                    param name,                      required?, multiple?, is string?,   is code?,       support AND/OR                 alternative
+		sqs.validate_parm("$XDSFolderPatientId",             true,      false,     true,         false,            false,                      (String[])null);
+		sqs.validate_parm("$XDSFolderLastUpdateTimeFrom",    false,     false,     false,        false,            false,                      (String[])null);
+		sqs.validate_parm("$XDSFolderLastUpdateTimeTo",      false,     false,     false,        false,            false,                      (String[])null);
+		sqs.validate_parm("$XDSFolderCodeList",              false,     true,      true,         true,             true,                     (String[])null);
+		sqs.validate_parm("$XDSFolderStatus",                true,      true,      true,         false,            false,                      (String[])null);
 
-		String status_ns_prefix = "urn:oasis:names:tc:ebxml-regrep:StatusType:";
-		
-		//ArrayList<String> new_status = new ArrayList<String>();
-		for (int i=0; i<status.size(); i++) {
-			String stat = (String) status.get(i);
-			
-			if ( ! stat.startsWith(status_ns_prefix)) 
-				throw new MetadataValidationException("Status parameter must have namespace prefix " + status_ns_prefix + " found " + stat);
-			//new_status.add(stat.replaceFirst(status_ns_prefix, ""));
-		}
-		//status = new_status;
+		if (sqs.has_validation_errors) 
+			throw new MetadataValidationException("Metadata Validation error present");
+	}
 
+	protected String patient_id;
+	protected String update_time_from;
+	protected String update_time_to;
+	protected SQCodedTerm codes;
+	protected List<String> status;
 
-		init();
-		
-		if (this.return_leaf_class) {
-		     a("SELECT *  "); n();
-		} else {
-		     a("SELECT fol.id  "); n();
-		}
-        
-		a("FROM RegistryPackage fol, ExternalIdentifier patId"); n();
-        if (update_time_from != null)         a(", Slot updateTimef"); n();
-        if (update_time_to != null)         a(", Slot updateTimet"); n();
-        if (codes != null)                  a(", Classification code"); n();
-        if (code_schemes != null)           a(", Slot codescheme"); n();           
-                                 a("WHERE"); n();
-
-                         		// patientID
-        a("(fol.id = patId.registryobject AND	"); n();
-        a("  patId.identificationScheme='urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a' AND "); n();
-        a("  patId.value = '"); a(patient_id); a("' ) AND"); n();
-        a("  fol.status IN "); a(status); n();
-		add_times("lastUpdateTime",     "updateTimef",       "updateTimet",       update_time_from,      update_time_to, "fol");
-        
-        System.out.println(query.toString());
-
-		return query(this.return_leaf_class);
+	void parseParameters() throws XdsInternalException, MetadataException, XdsException, LoggerException {
+		patient_id              = sqs.params.getStringParm("$XDSFolderPatientId");
+		update_time_from        = sqs.params.getIntParm("$XDSFolderLastUpdateTimeFrom");
+		update_time_to          = sqs.params.getIntParm("$XDSFolderLastUpdateTimeTo");
+		codes        			= sqs.params.getCodedParm("$XDSFolderCodeList");
+		status       			= sqs.params.getListParm("$XDSFolderStatus");
 
 	}
 }

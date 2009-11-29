@@ -29,6 +29,7 @@ import gov.nist.registry.common2.xml.XmlFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
@@ -326,7 +327,7 @@ public class QueryControl {
 		}
 			
 		// remember returned homeCommunityId for later if it is present
-		ArrayList<OMElement> objects = m.getMajorObjects();
+		List<OMElement> objects = m.getMajorObjects();
 
 		return queryContents;
 	}

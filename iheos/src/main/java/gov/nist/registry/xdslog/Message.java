@@ -1,6 +1,9 @@
 package gov.nist.registry.xdslog;
 
 
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -22,7 +25,7 @@ import java.util.Map.Entry;
  * @author jbmeyer
  *
  */
-public class Message {
+public class Message implements LogMessage {
 	
 	private String messageID      ; 
 
@@ -92,12 +95,12 @@ public class Message {
 	}
 	public void setIP ( String ip ) throws LoggerException
 	{
+		String ipStr = ip;
 		try 
 		{
-			mainMessage.setIpAddress(InetAddress.getByName(ip)) ;
-		} catch (UnknownHostException e) {
-			 throw new LoggerException("IP : setIP... : " + e.getMessage() ) ;
-		}
+			ipStr = InetAddress.getByName(ip).getHostAddress() ;
+		} catch (UnknownHostException e) { }
+		mainMessage.setIpAddress(ipStr) ;
 	}
 	
 	/***
@@ -114,7 +117,7 @@ public class Message {
 		{
 			IpCompanyTable ip = new IpCompanyTable( connection ) ;
 
-			ip.updateIp( mainMessage.getIpAddress().getHostAddress() , companyName ) ;
+			ip.updateIp( mainMessage.getIpAddress() , companyName ) ;
 			
 			this.companyName = companyName ;
 			

@@ -4,6 +4,7 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.SubmitObjectsRequest;
 
@@ -15,7 +16,7 @@ abstract public class AbstractRegistryA extends XdsService implements
 	//RegisterDocumentSetRequest
 	public OMElement SubmitObjectsRequest(OMElement sor) {
 		try {
-			OMElement startup_error = beginTransaction("SOR.a", sor, XdsService.registry_actor);
+			OMElement startup_error = beginTransaction("SOR.a", sor, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			
@@ -24,7 +25,8 @@ abstract public class AbstractRegistryA extends XdsService implements
 			
 			SubmitObjectsRequest s = new SubmitObjectsRequest(log_message, XdsCommon.xds_a, getMessageContext());
 			
-			OMElement result = s.submitObjectsRequest(sor, this);
+			s.setContentValidationService(this);
+			OMElement result = s.submitObjectsRequest(sor);
 			
 			endTransaction(s.getStatus());
 			return result;

@@ -1,14 +1,14 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.logging.LogMessage;
 
 import java.util.ArrayList;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 
-public abstract class Response extends ErrorLogger {
+public abstract class Response implements ErrorLogger {
 	public final static short version_2 = 2;
 	public final static short version_3 = 3;
 	short version;
@@ -34,6 +34,17 @@ public abstract class Response extends ErrorLogger {
 	
 	public void setIsXCA() { 
 		isXCA = true;
+	}
+	
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		
+		buf.append("Response:\n");
+		buf.append("\tversion is ").append(version).append("\n");
+		buf.append("\tquery_results is ").append(query_results).append("\n");
+		buf.append("\tregistryErrorList is ").append(registryErrorList).append("\n");
+		
+		return buf.toString();
 	}
 
 	public Response(short version) throws XdsInternalException {
@@ -91,6 +102,8 @@ public abstract class Response extends ErrorLogger {
 			
 			response.addAttribute("status", MetadataSupport.response_status_type_namespace + registryErrorList.getStatus(), null);
 			
+			setLocationForXCA();
+			
 			if (this instanceof RetrieveMultipleResponse) {
 				return ((RetrieveMultipleResponse) this).rdsr;
 			} 
@@ -110,16 +123,22 @@ public abstract class Response extends ErrorLogger {
 		}
 		return response;
 	}
+	
+	void setLocationForXCA() {
+		if (isXCA && registryErrorList != null)
+			registryErrorList.setIsXCA();
+		
+	}
 
-	public void add_error(String code, String msg, String location, Message log_message) {
+	public void add_error(String code, String msg, String location, LogMessage log_message) {
 		registryErrorList.add_error(code, msg, location, log_message);
 	}
 
-	public void addRegistryErrorList(OMElement rel, Message log_message) throws XdsInternalException {
+	public void addRegistryErrorList(OMElement rel, LogMessage log_message) throws XdsInternalException {
 		registryErrorList.addRegistryErrorList(rel, log_message);
 	}
 
-	public void add_warning(String code, String msg, String location, Message log_message) {
+	public void add_warning(String code, String msg, String location, LogMessage log_message) {
 		registryErrorList.add_warning(code, msg, location, log_message);
 	}
 

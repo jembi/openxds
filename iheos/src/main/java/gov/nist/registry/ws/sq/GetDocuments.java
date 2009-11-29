@@ -1,47 +1,82 @@
 package gov.nist.registry.ws.sq;
 
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.registry.StoredQuery;
-import gov.nist.registry.xdslog.LoggerException;
+import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.xdslog.Message;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import org.apache.axiom.om.OMElement;
+/**
+Generic implementation of GetDocuments Stored Query. This class knows how to parse a 
+ * GetDocuments Stored Query request producing a collection of instance variables describing
+ * the request.  A sub-class must provide the runImplementation() method that uses the pre-parsed
+ * information about the stored query and queries a metadata database.
+ * @author bill
+ *
+ */
+abstract public class GetDocuments extends StoredQuery {
 
-public class GetDocuments extends StoredQuery {
+	/**
+	 * Method required in subclasses (implementation specific class) to define specific
+	 * linkage to local database
+	 * @return matching metadata
+	 * @throws MetadataException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 */
+	abstract protected Metadata runImplementation() throws MetadataException, XdsException, LoggerException;
 
-	public GetDocuments(HashMap<String, Object> params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
-		super(params, return_objects, response, log_message,  is_secure);
-
-
-		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
-		validate_parm(params, "$XDSDocumentEntryUniqueId",                 true,      true,     true,         null,            "$XDSDocumentEntryEntryUUID");
-		validate_parm(params, "$XDSDocumentEntryEntryUUID",                true,      true,     true,         null,            "$XDSDocumentEntryUniqueId");
+	/**
+	 * Basic constructor
+	 * @param sqs
+	 * @throws MetadataValidationException
+	 */
+	public GetDocuments(StoredQuerySupport sqs) {
+		super(sqs);
 	}
 
-	public Metadata run_internal() throws XdsException, LoggerException {
-		Metadata metadata;
+	void validateParameters() throws MetadataValidationException {
 
-		ArrayList<String> uids = get_arraylist_parm("$XDSDocumentEntryUniqueId");
-		ArrayList<String> uuids = get_arraylist_parm("$XDSDocumentEntryEntryUUID");
+		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative
+		sqs.validate_parm("$XDSDocumentEntryUniqueId",                 true,      true,     true,         null,            "$XDSDocumentEntryEntryUUID");
+		sqs.validate_parm("$XDSDocumentEntryEntryUUID",                true,      true,     true,         null,            "$XDSDocumentEntryUniqueId");
 
-		if (uids != null) {
-			OMElement ele = get_doc_by_uid(uids);
-			metadata = MetadataParser.parseNonSubmission(ele);
-		} else
-			if ( uuids != null ) {
-				OMElement ele = get_doc_by_uuid(uuids);
-				metadata = MetadataParser.parseNonSubmission(ele);
-			}
-			else throw new XdsInternalException("GetDocuments Stored Query: uuid not found, uid not found");
+		if (sqs.has_validation_errors) 
+			throw new MetadataValidationException("Metadata Validation error present");
+	}
 
-		return metadata;
+	protected List<String> uids;
+	protected List<String> uuids;
+	
+	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
+		uids = sqs.params.getListParm("$XDSDocumentEntryUniqueId");
+		uuids = sqs.params.getListParm("$XDSDocumentEntryEntryUUID");
+	}
+
+	
+	/**
+	 * Implementation of Stored Query specific logic including parsing and validating parameters.
+	 * @throws XdsInternalException
+	 * @throws XdsException
+	 * @throws LoggerException
+	 * @throws XDSRegistryOutOfResourcesException
+	 */
+	public Metadata runSpecific() throws XdsException, LoggerException {
+
+		validateParameters();
+		parseParameters();
+		
+		if (uids == null && uuids == null)
+			throw new XdsInternalException("GetDocuments Stored Query: uuid not found, uid not found");
+
+		return runImplementation();
 	}
 
 

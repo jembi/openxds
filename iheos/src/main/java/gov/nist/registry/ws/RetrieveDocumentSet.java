@@ -29,10 +29,11 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.config.Repository;
 import gov.nist.registry.ws.serviceclasses.XdsService;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 public class RetrieveDocumentSet extends XdsCommon {
     ContentValidationService validater;
@@ -44,10 +45,11 @@ public class RetrieveDocumentSet extends XdsCommon {
     private IheAuditTrail auditLog = null;
     private final static Log logger = LogFactory.getLog(RetrieveDocumentSet.class);
 
-    public RetrieveDocumentSet(Message log_message, short xds_version, MessageContext messageContext) {
+	public RetrieveDocumentSet(LogMessage log_message, short xds_version, MessageContext messageContext) {
         this.log_message = log_message;
         this.messageContext = messageContext;
-        IheHTTPServer httpServer = (IheHTTPServer) messageContext.getTransportIn().getReceiver();
+		transaction_type = RET_transaction;
+		IheHTTPServer httpServer = (IheHTTPServer) messageContext.getTransportIn().getReceiver();
         try {
             IheActor actor = httpServer.getIheActor();
             if (actor == null) {
@@ -74,23 +76,19 @@ public class RetrieveDocumentSet extends XdsCommon {
         OMNamespace ns = rds.getNamespace();
         String ns_uri = ns.getNamespaceURI();
         if (ns_uri == null || !ns_uri.equals(MetadataSupport.xdsB.getNamespaceURI())) {
-            return service.start_up_error(rds, "RetrieveDocumentSet.java", XdsService.repository_actor, "Invalid namespace on RetrieveDocumentSetRequest (" + ns_uri + ")", true);
+			return service.start_up_error(rds, "RetrieveDocumentSet.java", AppendixV.REPOSITORY_ACTOR, "Invalid namespace on RetrieveDocumentSetRequest (" + ns_uri + ")", true);
         }
 
         try {
             RegistryUtility.schema_validate_local(rds, MetadataTypes.METADATA_TYPE_RET);
         } catch (Exception e) {
-            return service.start_up_error(rds, "RetrieveDocumentSet.java", XdsService.repository_actor, "Schema validation errors:\n" + e.getMessage(), true);
+			return service.start_up_error(rds, "RetrieveDocumentSet.java", AppendixV.REPOSITORY_ACTOR, "Schema validation errors:\n" + e.getMessage(), true);
         }
 
         ArrayList<OMElement> retrieve_documents = null;
 
         try {
-
-            mustBeMTOM();
-
             retrieve_documents = retrieve_documents(rds);
-
         }
         catch (XdsFormatException e) {
             response.add_error("XDSRepositoryError", "SOAP Format Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -174,7 +172,6 @@ public class RetrieveDocumentSet extends XdsCommon {
     }
 
     OMElement retrieve_document(String rep_id, String doc_id, String home) throws XdsException {
-
         XdsRepositoryItem repositoryItem;
         XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
         try {

@@ -2,20 +2,17 @@ package gov.nist.registry.ws.test;
 
 import gov.nist.registry.common2.MetadataTypes;
 import gov.nist.registry.common2.exception.XdsInternalException;
-//import gov.nist.registry.common2.httpclient.HttpClientInfo;
+import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.Response;
-//import gov.nist.registry.common2.util.submit.HttpClientBean;
 import gov.nist.registry.common2.xml.SchemaValidation;
 import gov.nist.registry.ws.serviceclasses.Xds;
-import gov.nist.registry.xdslog.Message;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -35,7 +32,7 @@ public class XdsTest extends TestCase {
 		} catch (XdsInternalException e) {
 			System.out.println("Internal Error: " + e.getMessage());
 		}
-		response.add_warning("testing", "in my nose", "everywhere", (Message)null);
+		response.add_warning("testing", "in my nose", "everywhere", (LogMessage)null);
 		OMElement response_ele = response.getResponse();
 
 		String schema_messages = null;

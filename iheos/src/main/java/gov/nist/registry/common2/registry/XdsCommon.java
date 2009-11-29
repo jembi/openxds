@@ -1,10 +1,9 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.ExceptionUtil;
-import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
@@ -13,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 public class XdsCommon  {
 
 	public Response response = null;
-	public Message log_message = null;
+	public LogMessage log_message = null;
 	public static final short xds_none = 0;
 	public static final short xds_a = 2;
 	public static final short xds_b = 3;
@@ -21,6 +20,14 @@ public class XdsCommon  {
 	MessageContext messageContext = null;
 	boolean isXCA = false;
 	private final static Log logger = LogFactory.getLog(XdsCommon.class);
+	
+	public static final short UNKNOWN_transaction = 0;
+	public static final short PR_transaction = 1;
+	public static final short R_transaction = 2;
+	public static final short SQ_transaction = 3;
+	public static final short RET_transaction = 4;
+	public static final short OTHER_transaction = 5;
+	public short transaction_type = UNKNOWN_transaction;
 
 	public MessageContext getMessageContext() {
 		return messageContext;
@@ -31,8 +38,10 @@ public class XdsCommon  {
 		if (response != null)
 			response.setIsXCA();
 	}
-	 
-	protected void init(Response response, short xds_version, MessageContext messageContext) {
+	
+	protected void init(Response response, short xds_version, MessageContext messageContext) throws XdsInternalException {
+		if (transaction_type == UNKNOWN_transaction)
+			throw new XdsInternalException("transaction_type is UNKNOWN");
 		this.response = response;
 		if (isXCA)
 			response.setIsXCA();
@@ -91,16 +100,6 @@ public class XdsCommon  {
 		}
 	}
 	
-	protected void mustBeSimpleSoap() throws XdsFormatException {
-		if (getMessageContext().isDoingMTOM())
-			throw new XdsFormatException("This transaction must use SIMPLE SOAP, MTOM found");
-	}
-
-	protected void mustBeMTOM() throws XdsFormatException {
-		if ( !getMessageContext().isDoingMTOM())
-			throw new XdsFormatException("This transaction must use MTOM, SIMPLE SOAP found");
-	}
-
 	protected void generateAuditLog(Response response)  {
 
 	}

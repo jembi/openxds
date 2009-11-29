@@ -6,8 +6,10 @@ import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
+import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.ws.StoredQueryFactory;
+import gov.nist.registry.ws.config.Registry;
+import gov.nist.registry.ws.sq.StoredQueryFactory;
 import gov.nist.registry.xdslog.Message;
 
 import org.apache.axiom.om.OMElement;
@@ -20,7 +22,7 @@ public class Test12307  extends RG {
 
 	public boolean runRequestValidation(OMElement request, RegistryErrorList rel, Message log_message) {
 		try {
-			StoredQueryFactory fact = new StoredQueryFactory(request);
+			StoredQueryFactory fact = Registry.getStoredQueryFactory(request, new RegistryResponse(Response.version_3),log_message);
 			if ( !fact.isLeafClassReturnType()) {
 				rel.add_error(MetadataSupport.XDSRegistryMetadataError, "This test requires returnType=\"LeafClass\"", "RG.java", log_message);
 				return false;

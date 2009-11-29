@@ -1,24 +1,21 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.validation.Structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import javax.xml.namespace.QName;
+import java.util.List;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
 
 public class IdParser {
 	Metadata m;
 	// symbolic compiler
-	ArrayList referencingAttributes = null;
-	ArrayList identifyingAttributes = null;
-	ArrayList symbolicIdReplacements = null;
+	List referencingAttributes = null;
+	List identifyingAttributes = null;
+	List symbolicIdReplacements = null;
 	HashMap assignedUuids = null;
 
 	public IdParser(Metadata m) {
@@ -28,8 +25,8 @@ public class IdParser {
 		parse();
 	}
 
-	public ArrayList getDefinedIds() {
-		ArrayList defined = new ArrayList();
+	public List getDefinedIds() {
+		List defined = new ArrayList();
 
 		for (Iterator it=this.identifyingAttributes.iterator(); it.hasNext(); ) {
 			OMAttribute attr = (OMAttribute) it.next();
@@ -42,8 +39,8 @@ public class IdParser {
 		return defined;
 	}
 
-	public ArrayList getReferencedIds() {
-		ArrayList refer = new ArrayList();
+	public List getReferencedIds() {
+		List refer = new ArrayList();
 		for (Iterator it=this.referencingAttributes.iterator(); it.hasNext(); ) {
 			OMAttribute attr = (OMAttribute) it.next();
 			String id = attr.getAttributeValue();
@@ -55,10 +52,10 @@ public class IdParser {
 		return refer;
 	}
 
-	public ArrayList getUndefinedIds() {
-		ArrayList referenced = this.getReferencedIds();
-		ArrayList defined = this.getDefinedIds();
-		ArrayList undefined = new ArrayList();
+	public List getUndefinedIds() {
+		List referenced = this.getReferencedIds();
+		List defined = this.getDefinedIds();
+		List undefined = new ArrayList();
 
 		for (Iterator it=referenced.iterator(); it.hasNext(); ) {
 			String id = (String) it.next();
@@ -72,7 +69,7 @@ public class IdParser {
 	}
 
 	void parse() {
-		ArrayList<OMElement> allObjects = m.getAllObjects();
+		List<OMElement> allObjects = m.getAllObjects();
 
 		for (int i=0; i<allObjects.size(); i++) {
 			OMElement obj = allObjects.get(i);
@@ -130,8 +127,8 @@ public class IdParser {
 		// make list of all symbolic names used in metadata
 		// allocate UUID for these names
 		// update attributes that define these symbolic names with UUIDs
-		ArrayList symbolicNames = new ArrayList();
-		ArrayList uuids = new ArrayList();
+		List symbolicNames = new ArrayList();
+		List uuids = new ArrayList();
 		assignedUuids = new HashMap();
 		for (int i=0; i<identifyingAttributes.size(); i++) {
 			OMAttribute att = (OMAttribute) identifyingAttributes.get(i);
@@ -163,7 +160,7 @@ public class IdParser {
 		return assignedUuids;
 	}
 
-	public OMElement getApproveObjectsRequest(ArrayList uuids) {
+	public OMElement getApproveObjectsRequest(List uuids) {
 		OMElement req = MetadataSupport.om_factory.createOMElement("ApproveObjectsRequest", MetadataSupport.ebLcm3);
 		req.declareNamespace(MetadataSupport.ebRSns3);
 		req.declareNamespace(MetadataSupport.ebRIMns3);
@@ -173,14 +170,14 @@ public class IdParser {
 		return req;
 	}
 
-	public OMElement getDeprecateObjectsRequest(ArrayList uuids) {
+	public OMElement getDeprecateObjectsRequest(List uuids) {
 		OMElement req = MetadataSupport.om_factory.createOMElement("DeprecateObjectsRequest", MetadataSupport.ebLcm3);
 		req.addChild(mk_object_ref_list(uuids));
 		return req;
 
 	}
 
-	private OMElement mk_object_ref_list(ArrayList uuids) {
+	private OMElement mk_object_ref_list(List uuids) {
 		OMElement object_ref_list = MetadataSupport.om_factory.createOMElement("ObjectRefList", MetadataSupport.ebRIMns3);
 		for (Iterator it=uuids.iterator(); it.hasNext(); ) {
 			String uuid = (String) it.next();
@@ -196,14 +193,14 @@ public class IdParser {
 	 * Registry adaptor - approve objects
 	 */
 
-	ArrayList approveable_objects(Metadata m) {
-		ArrayList o = new ArrayList();
+	List<OMElement> approveable_objects(Metadata m) {
+		List<OMElement> o = new ArrayList<OMElement>();
 		o.addAll(m.getExtrinsicObjects());
 		o.addAll(m.getRegistryPackages());
 		return o;
 	}
 
-	public ArrayList approvable_object_ids(Metadata m) {
+	public List<String> approvable_object_ids(Metadata m) {
 		return m.getObjectIds(approveable_objects(m));
 	}
 

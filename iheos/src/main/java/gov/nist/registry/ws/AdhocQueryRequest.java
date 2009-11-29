@@ -10,7 +10,10 @@ import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.exception.XdsResultNotSinglePatientException;
 import gov.nist.registry.common2.exception.XdsValidationException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.BackendRegistry;
 import gov.nist.registry.common2.registry.BasicQuery;
@@ -21,8 +24,10 @@ import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.ws.sq.ParamParser;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.ws.config.Registry;
+import gov.nist.registry.ws.sq.StoredQuery;
+import gov.nist.registry.ws.sq.StoredQueryFactory;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,7 +62,7 @@ public class AdhocQueryRequest extends XdsCommon {
 	private final static Log logger = LogFactory.getLog(AdhocQueryRequest.class);
 	
 
-	public AdhocQueryRequest(Message log_message, MessageContext messageContext, boolean is_secure, short xds_version) {
+	public AdhocQueryRequest(LogMessage log_message, MessageContext messageContext, boolean is_secure, short xds_version) {
 		this.log_message = log_message;
 		this.messageContext = messageContext;
 		this.is_secure = is_secure;
@@ -95,6 +100,8 @@ public class AdhocQueryRequest extends XdsCommon {
 		OMNamespace ns = ahqr.getNamespace();
 		String ns_uri = ns.getNamespaceURI();
 
+		transaction_type = SQ_transaction;
+		
 		try {
 			if (ns_uri.equals(MetadataSupport.ebQns3.getNamespaceURI())) {
 				init(new AdhocQueryResponse(Response.version_3), xds_version, messageContext);
@@ -111,10 +118,10 @@ public class AdhocQueryRequest extends XdsCommon {
 		}
 
 		try {
-			mustBeSimpleSoap();
-
 			AdhocQueryRequestInternal(ahqr);
-
+		} 
+		catch (XdsResultNotSinglePatientException e) {
+			response.add_error("XDSResultNotSinglePatient", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		} 
 		catch (XdsValidationException e) {
 			response.add_error("XDSRegistryError", "Validation Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -219,12 +226,12 @@ public class AdhocQueryRequest extends XdsCommon {
 				RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_SQ);
 				found_query = true;
 
-				ArrayList<OMElement> results =  stored_query(ahqr);
+				Metadata results =  stored_query(ahqr);
 
 
 				//response.query_results = results;
 				if (results != null)
-					((AdhocQueryResponse)response).addQueryResults(results);
+					((AdhocQueryResponse)response).addQueryResults(results.getAllObjects());
 			} 
 
 		}
@@ -267,23 +274,25 @@ public class AdhocQueryRequest extends XdsCommon {
 	}
 
 	@SuppressWarnings("unchecked")
-	ArrayList<OMElement> stored_query(OMElement ahqr) 
+	Metadata stored_query(OMElement ahqr) 
 	throws XdsException, LoggerException, XDSRegistryOutOfResourcesException, XdsValidationException {
-		
-		ArrayList<OMElement> omlist = new ArrayList<OMElement>();
-		StoredQueryFactory fact = null;
-		//try {
-			fact= new StoredQueryFactory(ahqr);
-			fact.setServiceName(service_name);
-			fact.setLogMessage(log_message);
-			fact.setIsSecure(is_secure);
-			fact.setResponse(response);
-			return fact.run();
-			//}
-			/*catch (Exception e) {
-				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), e.getMessage(), log_message);
-				return null;
-			}*/
+	  //try {
+				// Registry holds the configuration for this implementation and selected
+				// the correct Stored Query implementation by returning a factory object
+				StoredQueryFactory fact = Registry.getStoredQueryFactory(ahqr, response, log_message); 
+				fact.setServiceName(service_name);
+				fact.setIsSecure(is_secure);
+				StoredQuery sq = fact.getImpl();
+				Metadata m = sq.run();
+				if ( !m.isPatientIdConsistent() )
+					throw new XdsResultNotSinglePatientException("More than one Patient ID in Stored Query result");
+				return m;
+//			}
+//			catch (Exception e) {
+//				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
+//				return null;
+//			}
+			
 			
 	 }
 

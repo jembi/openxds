@@ -12,7 +12,7 @@ public class AttributeTest extends TestSupport {
 		try {
 			System.out.println(root.toString());
 			m = MetadataParser.parseNonSubmission(root);
-			mv = new Attribute(m, true /* is submission */, false /* xds_b */);
+			mv = new Attribute(m, true /* is submission */, false /* xds_b */, true);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -24,7 +24,7 @@ public class AttributeTest extends TestSupport {
 		try {
 			System.out.println(root.toString());
 			m = MetadataParser.parseNonSubmission(root);
-			mv = new Attribute(m, true /* is submission */, true /* xds_b */);
+			mv = new Attribute(m, true /* is submission */, true /* xds_b */, true);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

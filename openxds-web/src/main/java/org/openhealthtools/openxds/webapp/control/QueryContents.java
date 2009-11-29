@@ -298,6 +298,7 @@ public abstract class QueryContents {
 					false /* issubmit */, 
 					true /* xds.b */,
 					null /* logger */,
+					false /*isPnR*/,
 					null/* connection */);
 			val.run();
 			String errors_and_warnings = registryErrorList.getErrorsAndWarnings();

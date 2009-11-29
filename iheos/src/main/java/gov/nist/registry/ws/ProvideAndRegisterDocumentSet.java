@@ -6,28 +6,35 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XDSMissingDocumentException;
 import gov.nist.registry.common2.exception.XDSMissingDocumentMetadataException;
+import gov.nist.registry.common2.exception.XDSRepositoryMetadataException;
 import gov.nist.registry.common2.exception.XdsConfigurationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsIOException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.io.ByteBuffer;
+import gov.nist.registry.common2.io.Sha1Bean;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.common2.soap.Soap;
 import gov.nist.registry.ws.config.Repository;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
@@ -67,10 +74,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		BasicConfigurator.configure();
 	}
 
-	public ProvideAndRegisterDocumentSet(Message log_message, short xds_version, MessageContext messageContext) {
+	public ProvideAndRegisterDocumentSet(LogMessage log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
 		this.messageContext = messageContext;
 		this.xds_version = xds_version;
+		transaction_type = PR_transaction;
 		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
 
 		try {
@@ -99,16 +107,12 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		//System.out.println("PnR started -- version = " + xds_version);
 
 		try {
-
 			pnr.build();
 			
-			if (xds_version == xds_b) {
-				mustBeMTOM();
-			}
-			
 			provide_and_register(pnr);
-
-
+		} 
+		catch (XDSRepositoryMetadataException e) {
+			response.add_error("XDSRepositoryMetadataError", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		} 
 		catch (XdsFormatException e) {
 			response.add_error("XDSRepositoryError", "SOAP Format Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -179,8 +183,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	}
 
 	void validate_docs_and_metadata_b(OMElement pnr, Metadata m) throws XDSMissingDocumentException, XDSMissingDocumentMetadataException {
-		ArrayList<OMElement> docs = MetadataSupport.childrenWithLocalName(pnr, "Document");
-		ArrayList<String> doc_ids = new ArrayList<String>();
+		List<OMElement> docs = MetadataSupport.childrenWithLocalName(pnr, "Document");
+		List<String> doc_ids = new ArrayList<String>();
 
 		for (OMElement doc : docs) {
 			String id = doc.getAttributeValue(MetadataSupport.id_qname);
@@ -188,7 +192,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			doc_ids.add(id);
 		}
 
-		ArrayList<String> eo_ids = m.getExtrinsicObjectIds();
+		List<String> eo_ids = m.getExtrinsicObjectIds();
 
 		for (String id : eo_ids) {
 			if ( ! doc_ids.contains(id))
@@ -205,7 +209,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	void provide_and_register(OMElement pnr) 
 	throws MetadataValidationException, SchemaValidationException, 
 	XdsInternalException, MetadataException, XdsConfigurationException,
-	XdsIOException, LoggerException, XdsException, IOException {
+	XdsIOException, LoggerException, XdsException, IOException, XDSRepositoryMetadataException {
 
 		RegistryUtility.schema_validate_local(	
 				pnr, 
@@ -228,13 +232,16 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if (xds_version == xds_b)
 			this.validate_docs_and_metadata_b(pnr, m);
 
+//		Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, true, connection);
+//		val.run();
+
 		if (this.validater != null && !this.validater.runContentValidationService(m, response))
 			return;
 
 		int eo_count = m.getExtrinsicObjectIds().size();
 
 		int doc_count = 0;
-		if (this.xds_version == this.xds_b) {
+		if (this.xds_version == xds_b) {
 			for (OMElement document : MetadataSupport.childrenWithLocalName(pnr, "Document")) {
 				doc_count++;
 				String id = document.getAttributeValue(MetadataSupport.id_qname);
@@ -263,7 +270,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				}
 
 				if (optimized) {
-					this.store_document_swa_xop(m, id, datahandler, datahandler.getContentType(), false /* validate_mime_type */);
+					store_document_swa_xop(m, id, datahandler, datahandler.getContentType(), false /* validate_mime_type */);
 				} else {
 					String base64 = binaryNode.getText();
 					BASE64Decoder d  = new BASE64Decoder();
@@ -312,7 +319,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			OMElement result;
 			try {
 				if (this.xds_version == XdsCommon.xds_b) {
-					soap.soapCall(register_transaction, epr, false, true, true, "urn:ihe:iti:2007:RegisterDocumentSet-b","urn:ihe:iti:2007:RegisterDocumentSet-bResponse");
+					soap.soapCall(register_transaction, epr, false, true, true, "urn:ihe:iti:2007:RegisterDocumentSet-b", null);
 				} else {
 					soap.soapCall(register_transaction, epr, false, true, false, "urn:anonOutInOp" ,null);				
 				}
@@ -321,6 +328,17 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			}
 			result = soap.getResult();
+			if (result != null) {
+				QName testlogid = new QName("testLogId");
+				String registryTestLogId = result.getAttributeValue(testlogid);
+				if (registryTestLogId != null) {
+					log_message.addOtherParam("Registry Test Log ID", registryTestLogId);
+					// remove attribute - just private communitication
+					OMAttribute tlidA = result.getAttribute(testlogid);
+					if (tlidA != null)
+						result.removeAttribute(tlidA);
+				}
+			}
 			log_headers(soap);
 
 			if (result == null) {
@@ -367,7 +385,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 
 	private OMElement find_sor(OMElement pnr) throws MetadataValidationException {
-		OMElement first = pnr.getFirstElement();
+		//		OMElement first = pnr.getFirstElement();
 		OMElement sor;
 		if (pnr.getLocalName().equals("SubmitObjectsRequest"))
 			sor = pnr;  // xds.a
@@ -385,7 +403,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	}
 
 	private void store_document_swa_xop(Metadata m, String id, DataHandler dataHandler, String content_type, boolean validate_content_type) 
-	throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException {
+    throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException, XDSRepositoryMetadataException {
 		OMElement extrinsic_object = m.getObjectById(id);
 		String actualDocSize = null;
 		String actualDocHash = null;
@@ -405,24 +423,19 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		item.setDataHandler(dataHandler);
 		
 		String mime_type = extrinsic_object.getAttributeValue(MetadataSupport.mime_type_qname);
-        String size = m.getSlotValue(id,"size", 0);
-        String hash = m.getSlotValue(id, "hash" ,0);
-        
+
+		int isize = -1; 
         try{
-        	actualDocSize = Integer.toString(item.getSize());          			
+            isize = item.getSize(); 
+        	actualDocSize = Integer.toString(isize);          			
 		}catch (Exception e) {throw new XdsInternalException("Error calculating size on repository file");}
 		
 	    try{
-        	actualDocHash = Long.toString(item.getHash());
+	    	actualDocHash = (new Sha1Bean()).getSha1(item.getDataHandler(), isize );
         } catch (Exception e) {	throw new XdsInternalException("Error calculating hash on repository file");}
-    
-        if(size != null && !size.equals(actualDocSize)){  
-        	throw new MetadataValidationException("ExtrinsicObject " + id + " Metadata contains size attribute that does not match attached document");
-        }
-        
-        if(hash != null && !hash.equals(actualDocHash)){  
-           	throw new MetadataValidationException("ExtrinsicObject " + id + " Metadata contains hash attribute that does not match attached document");
-        }			
+            
+		validate_size_and_hash(m, extrinsic_object, actualDocSize, actualDocHash);
+
 		if (mime_type == null || mime_type.equals(""))
 			throw new MetadataException("ExtrinsicObject " + id + " does not have a mimeType");
 
@@ -439,15 +452,35 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}
 		if(auditLog != null)
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
-		
+
 		// set size, hash, URI into metadata
 		m.setSlot(extrinsic_object, "size", actualDocSize);
 		m.setSlot(extrinsic_object, "hash", actualDocHash);
 		//m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
 	}
 
+	private void validate_size_and_hash(Metadata m, OMElement extrinsic_object,
+			String size_str, String hash_value)
+	throws XDSRepositoryMetadataException {
+		// if size already in metadata, must match data or error
+		String pnr_size = m.getSlotValue(extrinsic_object, "size", 0);
+		if (pnr_size != null) {
+			if (!pnr_size.equals(size_str)) {
+				throw new XDSRepositoryMetadataException("Size attribute in Provide and Register metadata does not match supplied document: Metadata has " + pnr_size +" and contents has " + size_str);
+			}
+		}
+
+		// if hash already in metadata, must match data or error
+		String pnr_hash = m.getSlotValue(extrinsic_object, "hash", 0);
+		if (pnr_hash != null) {
+			if (!pnr_hash.equalsIgnoreCase(hash_value)) {
+				throw new XDSRepositoryMetadataException("Hash attribute in Provide and Register metadata does not match supplied document: Metadata has " + pnr_hash +" and contents has " + hash_value);
+			}
+		}
+	}
+
 	private void store_document_mtom(Metadata m, String id, byte[] bytes) 
-	throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException {
+	throws MetadataException, XdsIOException, XdsInternalException, XdsConfigurationException, XdsException, XDSRepositoryMetadataException {
 		OMElement extrinsic_object = m.getObjectById(id);
 
 		if (extrinsic_object == null) 
@@ -464,6 +497,16 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
         DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
 
+		String size_str = Integer.toString(bytes.length);
+		String hash_value = null;
+		try {
+			hash_value = (new Sha1Bean()).getSha1(dataHandler, bytes.length);
+		} catch (Exception e) {
+			throw new XdsInternalException("Error calculating hash on repository file");
+		}
+
+		validate_size_and_hash(m, extrinsic_object, size_str, hash_value);
+
 		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
 		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
@@ -476,14 +519,10 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
 		if(auditLog != null)
-		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
-		ByteBuffer bb = new ByteBuffer();
-		bb.append(bytes, 0, bytes.length);
-		// set size, hash, URI into metadata
-		m.setSlot(extrinsic_object, "size", Integer.toString(bytes.length));
-		try {
-			m.setSlot(extrinsic_object, "hash", Long.toString(item.getHash()));
-		} catch (Exception e) { throw new XdsInternalException("Error calculating hash on repository file"); }
+			auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);		
+
+		m.setSlot(extrinsic_object, "size", size_str);
+		m.setSlot(extrinsic_object, "hash", hash_value);
 		//m.setURIAttribute(extrinsic_object, document_uri (uid, mime_type));
 	}
 

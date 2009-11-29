@@ -48,6 +48,28 @@ public class RegistryResponseParser {
 		return result;
 	}
 
+	public ArrayList<String> get_error_codes() {
+		ArrayList<String> result = new ArrayList<String>();
+		
+		OMElement registry_error_list = null;
+		if (response_element.getLocalName().equals("RegistryErrorList"))
+			registry_error_list = response_element;
+		else 
+			registry_error_list = MetadataSupport.firstChildWithLocalName(response_element, "RegistryErrorList") ;
+		
+		if (registry_error_list == null)
+			return result;
+		for (OMElement registry_error : MetadataSupport.childrenWithLocalName(registry_error_list, "RegistryError")) {
+			String errorCode = get_att(registry_error, "errorCode");
+			if (errorCode == null)
+				continue;
+			if (errorCode != null)
+				result.add(errorCode);
+		}
+
+		return result;
+	}
+
 	public String get_regrep_error_msg() {
 		if (response_element == null)
 			return "No Message";

@@ -1,11 +1,12 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.MetadataException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.logging.LogMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -14,10 +15,10 @@ import org.apache.axiom.om.OMNode;
 public class IdIndex {
 	Metadata m;
 	HashMap<String, OMElement> _object_by_id = null;   // id => OMElement
-	HashMap<String, HashMap<String, ArrayList<OMElement>>> _object_parts_by_id = null;  // id => HashMap(type => ArrayList(OMElement))   type is Slot, Description, ...
-	Message log_message = null;
+	HashMap<String, HashMap<String, List<OMElement>>> _object_parts_by_id = null;  // id => HashMap(type => List(OMElement))   type is Slot, Description, ...
+	LogMessage log_message = null;
 
-	void set_log_message(Message log_message) {
+	void set_log_message(LogMessage log_message) {
 		this.log_message = log_message;
 	}
 
@@ -27,7 +28,6 @@ public class IdIndex {
 
 	public void setMetadata(Metadata m)  throws MetadataException {
 		this.m = m;
-//		object_parts_by_id = new HashMap<String, HashMap<String,ArrayList<OMElement>>>();
 
 		this.parse_objects_by_id(m.getNonObjectRefs());
 
@@ -37,36 +37,72 @@ public class IdIndex {
 		this.setMetadata(m);
 	}
 
+//	public String getExternalIdentifierValue(String id, String identifier_scheme) {
+//		HashMap<String,List<OMElement>> part_map = object_parts_by_id().get(id);
+//		if (part_map == null)
+//			return null;
+//		
+//		try {  // huh?
+//			@SuppressWarnings("unused")
+//			OMElement obj = m.getObjectById(id);
+//		} catch (Exception e) {}
+//		
+//		List<OMElement> external_identifiers = part_map.get("ExternalIdentifier");
+//		
+//		for (int i=0; i<external_identifiers.size(); i++ ) {
+//			OMElement ei = (OMElement) external_identifiers.get(i);
+//			OMAttribute id_scheme_att = ei.getAttribute(MetadataSupport.identificationscheme_qname);
+//			//String scheme = id_scheme_att.getAttributeValue();
+//			if (id_scheme_att != null && id_scheme_att.getAttributeValue().equals(identifier_scheme)) {
+//				OMAttribute value_att = ei.getAttribute(MetadataSupport.value_qname);
+//				if (value_att != null)
+//					return value_att.getAttributeValue();
+//			}
+//		}
+//		return null;
+//	}
+
 	public String getExternalIdentifierValue(String id, String identifier_scheme) {
-		HashMap<String,ArrayList<OMElement>> part_map = object_parts_by_id().get(id);
+		OMAttribute att = getExternalIdentifierAttribute(id, identifier_scheme);
+		if (att == null)
+			return null;
+		return att.getAttributeValue();
+	}
+	
+	public OMAttribute getExternalIdentifierAttribute(String id, String identifier_scheme) {
+		HashMap<String,List<OMElement>> part_map = object_parts_by_id().get(id);
 		if (part_map == null)
 			return null;
-		try {
+		
+		try {  // huh?
+			@SuppressWarnings("unused")
 			OMElement obj = m.getObjectById(id);
 		} catch (Exception e) {}
-		ArrayList<OMElement> external_identifiers = part_map.get("ExternalIdentifier");
+		
+		List<OMElement> external_identifiers = part_map.get("ExternalIdentifier");
+		
 		for (int i=0; i<external_identifiers.size(); i++ ) {
 			OMElement ei = (OMElement) external_identifiers.get(i);
 			OMAttribute id_scheme_att = ei.getAttribute(MetadataSupport.identificationscheme_qname);
-			String scheme = id_scheme_att.getAttributeValue();
+			//String scheme = id_scheme_att.getAttributeValue();
 			if (id_scheme_att != null && id_scheme_att.getAttributeValue().equals(identifier_scheme)) {
 				OMAttribute value_att = ei.getAttribute(MetadataSupport.value_qname);
 				if (value_att != null)
-					return value_att.getAttributeValue();
+					return value_att;
 			}
 		}
 		return null;
 	}
 
-	public ArrayList<OMElement> getSlots(String id) {
+	public List<OMElement> getSlots(String id) {
 		HashMap part_map = (HashMap) object_parts_by_id().get(id);
 		if (part_map == null)
 			return new ArrayList();
-		return (ArrayList) part_map.get("Slot");
+		return (List) part_map.get("Slot");
 	}
 
 	public OMElement getSlot(String id, String name) {
-		ArrayList<OMElement> slots = getSlots(id);
+		List<OMElement> slots = getSlots(id);
 		for (OMElement ele : slots) {
 			if (ele.getAttributeValue(MetadataSupport.slot_name_qname).equals(name))
 				return ele;
@@ -74,18 +110,18 @@ public class IdIndex {
 		return null;
 	}
 
-	public ArrayList getClassifications(String id) {
+	public List getClassifications(String id) {
 		HashMap part_map = (HashMap) object_parts_by_id().get(id);
 		if (part_map == null)
 			return new ArrayList();
-		return (ArrayList) part_map.get("Classification");
+		return (List) part_map.get("Classification");
 	}
 
 	public OMElement getName(String id) {
 		HashMap part_map = (HashMap) object_parts_by_id().get(id);
 		if (part_map == null)
 			return null;
-		ArrayList name_list = (ArrayList) part_map.get("Name");
+		List name_list = (List) part_map.get("Name");
 		if (name_list.size() == 0)
 			return null;
 		return (OMElement) name_list.get(0);
@@ -95,7 +131,7 @@ public class IdIndex {
 		HashMap part_map = (HashMap) object_parts_by_id().get(id);
 		if (part_map == null)
 			return null;
-		ArrayList name_list = (ArrayList) part_map.get("Description");
+		List name_list = (List) part_map.get("Description");
 		if (name_list.size() == 0)
 			return null;
 		return (OMElement) name_list.get(0);
@@ -121,11 +157,12 @@ public class IdIndex {
 		return loc_st.getAttributeValue(MetadataSupport.value_qname);
 	}
 
-	public ArrayList getExternalIdentifiers(String id) {
-		HashMap part_map = (HashMap) object_parts_by_id().get(id);
+	public List<OMElement> getExternalIdentifiers(String id) {
+		// String is type (Slot, Description etc)
+		HashMap<String,List<OMElement>> part_map =  object_parts_by_id().get(id);
 		if (part_map == null)
-			return new ArrayList();
-		return (ArrayList) part_map.get("ExternalIdentifier");
+			return new ArrayList<OMElement>();
+		return part_map.get("ExternalIdentifier");
 	}
 
 	public String getSubmissionSetUniqueId() {
@@ -136,7 +173,11 @@ public class IdIndex {
 
 	public String getSubmissionSetPatientId() {
 		OMElement ss = m.getSubmissionSet();
+		if (ss == null)
+			return null;
 		String ss_id = ss.getAttributeValue(MetadataSupport.id_qname);
+		if (ss_id == null)
+			return null;
 		return getExternalIdentifierValue(ss_id, "urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446");
 	}
 
@@ -144,12 +185,12 @@ public class IdIndex {
 		OMElement ss = m.getSubmissionSet();
 		String ss_id = ss.getAttributeValue(MetadataSupport.id_qname);
 		HashMap by_att_type = (HashMap) object_parts_by_id().get(ss_id);
-		ArrayList slots = (ArrayList) by_att_type.get("Slot");
+		List slots = (List) by_att_type.get("Slot");
 		String source_id = get_slot_value(slots, "sourceId");
 		return source_id;
 	}
 
-	String get_slot_value(ArrayList slots, String slot_name) {
+	String get_slot_value(List slots, String slot_name) {
 		for (int i=0; i<slots.size(); i++) {
 			OMElement slot = (OMElement) slots.get(i);
 			String name = slot.getAttributeValue(MetadataSupport.name_qname);
@@ -200,7 +241,7 @@ public class IdIndex {
 		return name;
 	}
 
-	void parse_objects_by_id(ArrayList objects) throws MetadataException {
+	void parse_objects_by_id(List objects) throws MetadataException {
 		for (int i=0; i<objects.size(); i++) {
 			OMElement obj = (OMElement) objects.get(i);
 			parse_object_by_id(obj);
@@ -222,9 +263,9 @@ public class IdIndex {
 		return _object_by_id;
 	}
 	
-	private HashMap<String, HashMap<String,ArrayList<OMElement>>> object_parts_by_id() {
+	private HashMap<String, HashMap<String,List<OMElement>>> object_parts_by_id() {
 		if (_object_parts_by_id == null)
-			_object_parts_by_id = new HashMap<String, HashMap<String,ArrayList<OMElement>>>();   // id => HashMap(type => ArrayList(OMElement))   type is Slot, Description, ...
+			_object_parts_by_id = new HashMap<String, HashMap<String,List<OMElement>>>();   // id => HashMap(type => List(OMElement))   type is Slot, Description, ...
 		return _object_parts_by_id;
 	}
 
@@ -249,12 +290,12 @@ public class IdIndex {
 			} else
 				object_by_id().put(id, obj);
 
-			HashMap<String, ArrayList<OMElement>> parts = new HashMap<String, ArrayList<OMElement>>();
-			ArrayList<OMElement> name = new ArrayList<OMElement>();
-			ArrayList<OMElement> description = new ArrayList<OMElement>();
-			ArrayList<OMElement> slots = new ArrayList<OMElement>();
-			ArrayList<OMElement> external_identifiers = new ArrayList<OMElement>();
-			ArrayList<OMElement> classifications = new ArrayList<OMElement>();
+			HashMap<String, List<OMElement>> parts = new HashMap<String, List<OMElement>>();
+			List<OMElement> name = new ArrayList<OMElement>();
+			List<OMElement> description = new ArrayList<OMElement>();
+			List<OMElement> slots = new ArrayList<OMElement>();
+			List<OMElement> external_identifiers = new ArrayList<OMElement>();
+			List<OMElement> classifications = new ArrayList<OMElement>();
 
 
 
@@ -306,10 +347,10 @@ public class IdIndex {
 				obj = m.getObjectById(id);
 			} catch(Exception e) {break;}
 			buf.append(id + "(" + obj.getLocalName() + ")\n");
-			HashMap<String, ArrayList<OMElement>> type_map = object_parts_by_id().get(id);
+			HashMap<String, List<OMElement>> type_map = object_parts_by_id().get(id);
 			for (String type : type_map.keySet()) {
 				buf.append("\t" + type + "\n");
-				ArrayList<OMElement> elements = type_map.get(type);
+				List<OMElement> elements = type_map.get(type);
 				for (OMElement element : elements) {
 					buf.append("\t\t" + element.getLocalName());
 					if (element.getLocalName().equals("ExternalIdentifier")) {
@@ -324,8 +365,8 @@ public class IdIndex {
 		return buf.toString();
 	}
 	
-	ArrayList<OMElement> singleton(OMElement o) {
-		ArrayList<OMElement> al = new ArrayList<OMElement>();
+	List<OMElement> singleton(OMElement o) {
+		List<OMElement> al = new ArrayList<OMElement>();
 		al.add(o);
 		return al;
 	}

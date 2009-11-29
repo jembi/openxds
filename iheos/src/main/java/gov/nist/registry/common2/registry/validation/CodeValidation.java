@@ -10,6 +10,7 @@ import gov.nist.registry.common2.registry.RegistryErrorList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
@@ -29,7 +30,7 @@ public class CodeValidation {
 	boolean xds_b;
 	IConnectionDescription connection;
 
-	ArrayList<Identifier> assigning_authorities;
+	List<Identifier> assigning_authorities;
 	HashMap<String, String> mime_map;  // mime => ext
 	HashMap<String, String> ext_map;   // ext => mime
 
@@ -91,20 +92,22 @@ public class CodeValidation {
 		}
 	}
 
-	public ArrayList<Identifier> getAssigningAuthorities() {
+	public List<Identifier> getAssigningAuthorities() {
 		return assigning_authorities;
 	}
 
 	public void run() throws MetadataException, XdsInternalException {
-		ArrayList<String> all_object_ids = m.getObjectIds(m.getAllObjects());
+		List<String> all_object_ids = m.getObjectIds(m.getAllObjects());
 		for (String obj_id : all_object_ids) {
-			ArrayList<OMElement> classifications = m.getClassifications(obj_id);
+			List<OMElement> classifications = m.getClassifications(obj_id);
 
 			for (OMElement cl_ele : classifications) {
 
 				
 				Classification cl = new Classification(cl_ele);
 				validate(cl);
+
+				validateAssocClassifications(cl);
 			}
 		}
 
@@ -117,15 +120,55 @@ public class CodeValidation {
 			}
 
 			String objectType = doc_ele.getAttributeValue(MetadataSupport.object_type_qname);
-			if ( !objectType.equals(MetadataSupport.XDSDocumentEntry_objectType_uuid)) {
+			if (objectType == null) {
+				err("XDSDocumentEntry has no objectType attribute");
+			}
+			else if ( !objectType.equals(MetadataSupport.XDSDocumentEntry_objectType_uuid)) {
 				err("XDSDocumentEntry has incorrect objectType, found " + objectType + ", must be " + MetadataSupport.XDSDocumentEntry_objectType_uuid);
 			} else {
 				val("XDSDocumentEntry.objectType", null);
 			}
+
 		}
 	}
 
+	
+	private String[] assocClassifications = { 
+			"XFRM", "APND", "RPLC", "XFRM_RPLC"
+	};
+	
+	// if classified object is an Association, only some types of Associations can
+	// accept an associationDocumenation classification
+	private void validateAssocClassifications(Classification cl)
+	throws MetadataException {
 
+		String classification_type = cl.getClassificationScheme();
+		
+		if (classification_type == null || !classification_type.equals(MetadataSupport.XDSAssociationDocumentation_uuid))
+			return;  // not associationDocumenation classification
+		
+		String classified_object_id = cl.parent_id();
+		String classified_object_type = m.getObjectTypeById(classified_object_id);
+		if (classified_object_type == null)
+			return;
+		
+		if ( !classified_object_type.equals("Association")) {
+			err("associationDocumentation Classification (" + MetadataSupport.XDSAssociationDocumentation_uuid + ") can only be used on Associations");
+			return;
+		}
+		
+		String assoc_id = classified_object_id;
+		OMElement assoc_ele = m.getObjectById(assoc_id);
+		if (assoc_ele == null) 
+			return;
+		String assoc_type = m.getSimpleAssocType(assoc_ele);
+		for (int i=0; i<assocClassifications.length; i++) {
+			String a = assocClassifications[i];
+			if (a.equals(assoc_type))
+				return;
+		}
+		err("Association Type " + assoc_type + " cannot have an associationDocumentation classification");
+	}
 
 	void validate(Classification cl) {
 		String classification_scheme = cl.getClassificationScheme();

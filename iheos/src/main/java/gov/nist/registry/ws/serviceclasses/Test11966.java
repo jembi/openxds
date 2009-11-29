@@ -32,7 +32,7 @@ public class Test11966 extends RegistryB {
 		String expected_hash = "e543712c0e10501972de13a5bfcbe826c49feb75";
 		if (size == null || Integer.parseInt(size) != 36) 
 			errs = errs + "Size is wrong for this test, must be 36 (found " + size + ")\n";
-		if ( hash == null|| !hash.equals(expected_hash)) 
+		if ( hash == null|| !hash.equalsIgnoreCase(expected_hash)) 
 			errs = errs + "Hash is wrong for this test, must be " + expected_hash + " (found " + hash + ")\n";
 		if (errs.length() > 0) {
 			response.add_error(MetadataSupport.XDSRegistryMetadataError, errs, "Test input incorrect", log_message);

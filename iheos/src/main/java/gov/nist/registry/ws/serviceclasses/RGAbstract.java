@@ -1,6 +1,7 @@
 package gov.nist.registry.ws.serviceclasses;
 
-import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
@@ -12,24 +13,20 @@ import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.common2.xca.HomeAttribute;
-//import gov.nist.registry.common2.xca.HomeAttribute;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
 public abstract class RGAbstract extends XdsService implements ContentValidationService {
 	boolean optimize = true;
 	static String homeProperty;
 	String home;
-	
 
 	static {
 		homeProperty = Properties.loader().getString("home_community_id");
@@ -38,7 +35,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	abstract public boolean runContentValidationService(Metadata request, Response response);
 	abstract public OMElement AdhocQueryRequest(OMElement ahqr);
 	abstract protected void validateWS() throws XdsWSException;
-	abstract protected void validateQueryTransaction(OMElement sor) throws XdsValidationException;
+	abstract protected void validateQueryTransaction(OMElement sor) throws XdsValidationException, MetadataValidationException, XdsInternalException;
 	abstract protected void validateRetrieveTransaction(OMElement sor) throws XdsValidationException;
 	abstract protected String getQueryTransactionName();
 	abstract protected String getRetTransactionName();
@@ -58,14 +55,14 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 	public OMElement AdhocQueryRequest(OMElement ahqr, String profile_name, String service_name) {
 		try {
-			OMElement startup_error = beginTransaction(getQueryTransactionName(), ahqr, XdsService.registry_actor);
+			OMElement startup_error = beginTransaction(getQueryTransactionName(), ahqr, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			log_message.setTestMessage(getQueryTransactionName());
 			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
 			if (ahq == null) {
 				endTransaction(false);
-				return this.start_up_error(ahqr, null, registry_actor, profile_name + " only accepts Stored Query - AdhocQuery element not found");
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " only accepts Stored Query - AdhocQuery element not found");
 			}
 
 			validateWS();
@@ -101,13 +98,13 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return result;
 		} 
 		catch (Exception e) {
-			return endTransaction(ahqr, e, XdsService.repository_actor, "");
+			return endTransaction(ahqr, e, AppendixV.REPOSITORY_ACTOR, "");
 		}
 	}
 
 	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) {
 		try {
-			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, XdsService.repository_actor);
+			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			log_message.setTestMessage(getRetTransactionName());
@@ -133,23 +130,20 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
 			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
-			//OMAttribute status = response.getAttribute(new QName("status"));
-			//if(result.getAttribute(new QName("status") ==""){
-				setHomeOnRetResponse(result);
-			//}
-		
+
+			setHomeOnRetResponse(result);
 
 			log_message.addOtherParam("Result", result.toString());
 
 			endTransaction(s.getStatus());
 			return result;
 		} catch (Exception e) {
-			return endTransaction(rdsr, e, XdsService.repository_actor, "");
+			return endTransaction(rdsr, e, AppendixV.REPOSITORY_ACTOR, "");
 		}
 
 	}
 	protected void verifyHomeOnRetrieve(OMElement rdsr, RegistryErrorList rel, String home) {
-		ArrayList<OMElement> doc_requests = MetadataSupport.decendentsWithLocalName(rdsr, "DocumentRequest");
+		List<OMElement> doc_requests = MetadataSupport.decendentsWithLocalName(rdsr, "DocumentRequest");
 		for (OMElement doc_request : doc_requests) {
 			OMElement home_att_ele = MetadataSupport.firstChildWithLocalName(doc_request, "HomeCommunityId");
 			if (home_att_ele == null) {
@@ -166,31 +160,31 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 	public OMElement AdhocQueryRequestTooManyDocs(OMElement ahqr, String profile_name, String service_name) {
 		try {
-			OMElement startup_error = beginTransaction(service_name, ahqr, XdsService.registry_actor);
+			OMElement startup_error = beginTransaction(service_name, ahqr, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			log_message.setTestMessage(service_name);
 			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
 			if (ahq == null) {
 				endTransaction(false);
-				return this.start_up_error(ahqr, null, registry_actor, profile_name + " only accepts Stored Query - AdhocQuery element not found");
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " only accepts Stored Query - AdhocQuery element not found");
 			}
 
 			OMElement respOption = MetadataSupport.firstChildWithLocalName(ahqr, "ResponseOption");
 			if (respOption == null) {
 				endTransaction(false);
-				return this.start_up_error(ahqr, null, registry_actor, profile_name + " ResponseOption element missing");
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " ResponseOption element missing");
 			}
 
 			String returnType = respOption.getAttributeValue(MetadataSupport.return_type_qname);
 			if ( !returnType.equals("LeafClass")) {
 				endTransaction(false);
-				return this.start_up_error(ahqr, null, registry_actor, profile_name + " This endpoint only accepts LeafClass returnType requests");
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " This endpoint only accepts LeafClass returnType requests");
 			}
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
 			rel.setIsXCA();
-			
+
 			rel.add_error(MetadataSupport.XDSTooManyResults, 
 					"Too many documents were requested", 
 					"RGAbstract.java", log_message);
@@ -200,18 +194,17 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return response;
 		} 
 		catch (Exception e) {
-			return endTransaction(ahqr, e, XdsService.repository_actor, "");
+			return endTransaction(ahqr, e, AppendixV.REPOSITORY_ACTOR, "");
 		}
 	}
 
 	void setHomeOnSQResponse(OMElement root, String home) {
-
-	HomeAttribute homeAtt = new HomeAttribute(home);
-	homeAtt.set(root);
+		HomeAttribute homeAtt = new HomeAttribute(home);
+		homeAtt.set(root);
 	}
 
 	void setHomeOnRetResponse(OMElement result) {
-		ArrayList<OMElement> doc_responses = MetadataSupport.decendentsWithLocalName(result, "DocumentResponse");
+		List<OMElement> doc_responses = MetadataSupport.decendentsWithLocalName(result, "DocumentResponse");
 		for (OMElement doc_response : doc_responses) {
 			if (MetadataSupport.firstChildWithLocalName(doc_response, MetadataSupport.home_community_id_qname.getLocalPart()) == null) {
 				OMElement hci = MetadataSupport.om_factory.createOMElement(MetadataSupport.home_community_id_qname);

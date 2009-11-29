@@ -3,6 +3,7 @@ package gov.nist.registry.ws.serviceclasses;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.SubmitObjectsRequest;
 
@@ -25,12 +26,13 @@ ContentValidationService
 	}
 	
 	public OMElement SubmitObjectsRequest(OMElement sor) {
-		OMElement start_error = beginTransaction("xdsraw", sor, XdsService.registry_actor);
+		OMElement start_error = beginTransaction("xdsraw", sor, AppendixV.REGISTRY_ACTOR);
 		if (start_error != null)
 			return start_error;
 		SubmitObjectsRequest s = new SubmitObjectsRequest(log_message, XdsCommon.xds_b, getMessageContext());
 		s.setSubmitRaw(true);
-		OMElement result = s.submitObjectsRequest(sor, this);
+		s.setContentValidationService(this);
+		OMElement result = s.submitObjectsRequest(sor);
 		endTransaction(s.getStatus());
 		return result;
 	}

@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
-import gov.nist.registry.xdslog.LoggerException ;
+
+import gov.nist.registry.common2.logging.LoggerException;
 
 /**
  * Class allowing to do several tasks on a database such as : <br/>
@@ -56,7 +57,7 @@ public abstract class AbstractLogTable
 				database.createStatement().execute( sqlCommand ) ;
 		} catch (SQLException e) 
 		{
-			throw new LoggerException( "AbstractLogTable::createTable()::" + e.getMessage() ) ;
+			throw new LoggerException( "AbstractLogTable::createTable()::" + e.getMessage() , e) ;
 		}
 		
 	}

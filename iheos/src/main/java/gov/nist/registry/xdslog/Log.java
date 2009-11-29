@@ -1,8 +1,9 @@
 package gov.nist.registry.xdslog;
 
 
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.xds.log.BaseEntry;
-
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -217,11 +218,11 @@ public class Log {
 	 * @param m
 	 * @throws LoggerException
 	 */
-    public void writeMessage( Message m ) throws LoggerException
+    public void writeMessage( LogMessage m ) throws LoggerException
     {
 
         if ( m != null )	
-    		m.writeMessage() ;
+    		((Message)m).writeMessage() ;
     }
 
 	public void deleteMessage ( Message m ) throws LoggerException

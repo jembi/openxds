@@ -1,17 +1,17 @@
 package gov.nist.registry.ws.serviceclasses;
 
+import gov.nist.registry.common2.exception.XdsErrorCodeException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.exception.XdsWSException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.log.Fields;
 import gov.nist.registry.xdslog.Log;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -21,50 +21,48 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.LogFactory;
 
-public class XdsService {
+public class XdsService extends AppendixV {
 	protected Log log = null;
-	Message log_message;
-	public static short registry_actor = 1;
-	public static short repository_actor = 2;
 	private final static org.apache.commons.logging.Log logger = LogFactory.getLog(XdsService.class);
 	String service_name;
 	static Properties properties = null;
 	boolean is_secure;
-	MessageContext return_message_context = null;
 	static public String technicalFramework = null;
-	
+	static public String registerAEndpoint = null;
+	static public String registerBEndpoint = null;
+	String incoming_ip_address;
+
 	static {
 //		BasicConfigurator.configure();
 		properties = Properties.loader();
 		technicalFramework = properties.getString("tf");
+		registerAEndpoint = properties.getString("registerAEndpoint");
+		registerBEndpoint = properties.getString("registerBEndpoint");
+		if (registerAEndpoint == null)
+			registerAEndpoint = "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryainternal";
+		if (registerBEndpoint == null)
+			registerBEndpoint = "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryb";
 	}
 
 	protected boolean isSecure() { return is_secure; }
-
-	MessageContext getMessageContext() {
-		return MessageContext.getCurrentMessageContext();
-	}
-
-	public void setReturnMessageContext(MessageContext return_context) {
-		this.return_message_context = return_context;
-	}
 
 	public void useXop() {
 		this.return_message_context = MessageContext.getCurrentMessageContext();
 		if (return_message_context != null)
 			return_message_context.getOptions().setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+	}
+
+	protected String getClientIPAddress() {
+		return incoming_ip_address;
 	}
 
 	protected OMElement beginTransaction(String service_name, OMElement request, short actor) {
@@ -83,7 +81,7 @@ public class XdsService {
 			incoming_ip_address = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
 		}
 
-//		String incoming_ip_address = getMessageContext().getFrom().getAddress();
+//		incoming_ip_address = getMessageContext().getFrom().getAddress();
 //		for (int i=1; i<100; i++) {
 //			String entry = this.properties.getString("BlockIp" + i);
 //			if (entry == null || entry.equals(""))
@@ -91,6 +89,7 @@ public class XdsService {
 //			if (entry.equals(incoming_ip_address))
 //				return start_up_error(request, null, actor, "Continuous jamming from IP " + incoming_ip_address + " - access blocked");
 //		}
+
 
 		logger.info("Start " + service_name + " : " + incoming_ip_address  + " : " + getMessageContext().getTo().toString());
 		try {
@@ -119,6 +118,7 @@ public class XdsService {
 				if (logger.isDebugEnabled()) {
 					logger.debug("request header=" + key +", value=" + value );
 				}
+
 				Vector<String> thdrs = new Vector<String>();
 				thdrs.add(key + " : " + value);
 				addHttp( "HTTP Header", thdrs ) ;
@@ -161,21 +161,33 @@ public class XdsService {
 
 		stopTestLog();
 	}
+	
+	void generateLogMessage(OMElement response) {
+		try {
+			log_message.addOtherParam("Response", response.toString());
+		} catch (Exception e) {
+			
+		}
+	}
 
 	protected OMElement endTransaction(OMElement request, Exception e, short actor, String message) {
 		if (message == null || message.equals(""))
 			message = e.getMessage();
 		System.out.println("Exception: " + exception_details(e));
+		OMElement response = start_up_error(request, e, actor, message);
+		generateLogMessage(response);
 		endTransaction(false);
-		return start_up_error(request, e, actor, message);
+		return response;
 	}
 
 	protected OMElement endTransaction(OMElement request, Exception e, short actor, String message, String error_type) {
 		if (message == null || message.equals(""))
 			message = e.getMessage();
 		System.out.println("Exception: " + exception_details(e));
+		OMElement response = start_up_error(request, e, actor, message, false, error_type);
+		generateLogMessage(response);
 		endTransaction(false);
-		return start_up_error(request, e, actor, message, false, error_type);
+		return response;
 	}
 
 	protected OMElement start_up_error(OMElement request, Exception e, short actor,String message) {
@@ -183,12 +195,19 @@ public class XdsService {
 	}
 
 	public OMElement start_up_error(OMElement request, Object e, short actor,String message, boolean log) {
-		String error_type = (actor == registry_actor) ? MetadataSupport.XDSRegistryError : MetadataSupport.XDSRepositoryError;
+		String error_type = (actor == REGISTRY_ACTOR) ? MetadataSupport.XDSRegistryError : MetadataSupport.XDSRepositoryError;
+
+		if (e instanceof XdsErrorCodeException) {
+			XdsErrorCodeException ec = (XdsErrorCodeException) e;
+			error_type = ec.getErrorCode();
+			message = "Forced Error";
+		}
+
 		return start_up_error(request, e, actor, message, log, error_type);
 	}
-	
-	
-		public OMElement start_up_error(OMElement request, Object e, short actor,String message, boolean log, String error_type) {
+
+
+	public OMElement start_up_error(OMElement request, Object e, short actor,String message, boolean log, String error_type) {
 		try {
 			String request_type = (request != null) ? request.getLocalName() : "None";
 			OMNamespace ns = (request != null) ? request.getNamespace() : MetadataSupport.ebRSns2;
@@ -335,74 +354,28 @@ public class XdsService {
 		} catch (LoggerException e) {}
 	}
 
-	public void setMessageContextIn ( MessageContext inMessage )
-	{
-		//currentMessageContext = inMessage ;
-	}
-
 	private String getDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
 
-	protected void checkSOAP12() throws XdsWSException {
-
-		if (MessageContext.getCurrentMessageContext().isSOAP11()) {
-			throwFault("SOAP 1.1 not supported");
-		}
-		SOAPEnvelope env = MessageContext.getCurrentMessageContext().getEnvelope();
-		if (env == null)
-			throwFault("No SOAP envelope found");
-		SOAPHeader hdr = env.getHeader();
-		if (hdr == null)
-			throwFault("No SOAP header found");
-		if ( !hdr.getChildrenWithName(new QName("http://www.w3.org/2005/08/addressing","Action")).hasNext()) {
-			throwFault("WS-Action required in header");
-		}
-
-	}
-
-	protected void checkSOAP11() throws XdsWSException {
-
-		if ( !MessageContext.getCurrentMessageContext().isSOAP11()) {
-			throwFault("SOAP 1.2 not supported");
-		}
-		SOAPEnvelope env = MessageContext.getCurrentMessageContext().getEnvelope();
-		if (env == null)
-			throwFault("No SOAP envelope found");
-	}
-	
-	protected void checkSOAPAny() throws XdsWSException {
-		if ( MessageContext.getCurrentMessageContext().isSOAP11())
-			checkSOAP11();
-		else
-			checkSOAP12();
-	}
-
-	private void throwFault(String msg) throws XdsWSException {
+	protected String getForcedErrorCode() {
+		String code = null;
 		try {
-			if (log_message != null) {
-				log_message.addErrorParam("SOAPError", msg);
-				log_message.addOtherParam("Response", "SOAPFault: " + msg);
-				endTransaction(false);
-			}
-		} catch (LoggerException e) {}
-		throw new XdsWSException(msg);
+			code = getMessageContext().getParameter("ForceErrorCode").getValue().toString();
+		} catch (Exception e) {
+
+		}
+		if (code == null) return null;
+		if ("".equals(code)) return null;
+		return code;
 	}
 
-	protected boolean isAsync() {
-		MessageContext mc = getMessageContext();
-		return 
-		mc.getMessageID() != null && 
-		!mc.getMessageID().equals("") &&
-		mc.getReplyTo() != null &&
-		!mc.getReplyTo().hasAnonymousAddress();
+	protected void forceForcedError() throws XdsErrorCodeException {
+		String code = getForcedErrorCode();
+		if (code == null) return;
+		throw new XdsErrorCodeException("Forced Error", code);
 	}
-
-	boolean isSync() {
-		return !isAsync();
-	}
-
 
 }

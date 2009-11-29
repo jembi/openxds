@@ -6,21 +6,21 @@ import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.And;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 
 public abstract class StoredQuery extends BasicQuery {
 
 	protected ErrorLogger response;
-	protected Message log_message;
+	protected LogMessage log_message;
 	protected HashMap<String, Object> params;
 	protected StringBuffer query;
 	protected BackendRegistry br;
@@ -30,14 +30,14 @@ public abstract class StoredQuery extends BasicQuery {
 
 	abstract public Metadata run_internal() throws XdsException, LoggerException, XDSRegistryOutOfResourcesException;
 
-	public StoredQuery(ErrorLogger response, Message log_message) {
+	public StoredQuery(ErrorLogger response, LogMessage log_message) {
 		this.response = response;
 		this.log_message = log_message;
 		br = new BackendRegistry(response, log_message);
 
 	}
 
-	public StoredQuery(HashMap<String, Object> params, boolean return_objects, Response response, Message log_message, boolean is_secure) {
+	public StoredQuery(HashMap<String, Object> params, boolean return_objects, Response response, LogMessage log_message, boolean is_secure) {
 		this.response = response;
 		this.log_message = log_message;
 		this.params = params;
@@ -50,7 +50,7 @@ public abstract class StoredQuery extends BasicQuery {
 		this.params = params;
 	}
 
-	public ArrayList<OMElement> run() throws XdsException, LoggerException, XDSRegistryOutOfResourcesException {
+	public List<OMElement> run() throws XdsException, LoggerException, XDSRegistryOutOfResourcesException {
 		Metadata metadata = run_internal();
 		if (metadata == null)
 			return null;
@@ -165,7 +165,7 @@ public abstract class StoredQuery extends BasicQuery {
 		return buf.toString();
 	}
 
-	ArrayList<String> query_for_object_refs() throws XMLParserException, LoggerException, XdsException {
+	List<String> query_for_object_refs() throws XMLParserException, LoggerException, XdsException {
 		return br.queryForObjectRefs(query.toString());
 	}
 
@@ -358,7 +358,7 @@ public abstract class StoredQuery extends BasicQuery {
 		this.return_leaf_class = false;
 		OMElement result = get_doc_by_uid(uid);
 		Metadata metadata = MetadataParser.parseNonSubmission(result);
-		ArrayList<OMElement> obj_refs = metadata.getObjectRefs();
+		List<OMElement> obj_refs = metadata.getObjectRefs();
 		if (obj_refs.size() == 0)
 			return null;
 

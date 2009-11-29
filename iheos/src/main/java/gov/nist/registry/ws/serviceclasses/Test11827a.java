@@ -6,6 +6,7 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.Validator;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 
 import org.apache.axiom.om.OMElement;
@@ -13,7 +14,7 @@ import org.apache.axiom.om.OMElement;
 public class Test11827a extends AbstractRepositoryA {
 
 	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) {
-		return start_up_error(rdsr, null, repository_actor, "Test does not implement this transaction");
+		return start_up_error(rdsr, null, REPOSITORY_ACTOR, "Test does not implement this transaction");
 	}
 
 	public String getServiceName() {
@@ -22,7 +23,7 @@ public class Test11827a extends AbstractRepositoryA {
 
 	public OMElement SubmitObjectsRequest(OMElement sor) {
 		try {
-			OMElement startup_error = beginTransaction("11827a", sor, XdsService.repository_actor);
+			OMElement startup_error = beginTransaction("11827a", sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
 			

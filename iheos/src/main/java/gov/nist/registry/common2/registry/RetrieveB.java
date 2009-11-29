@@ -95,7 +95,7 @@ public class RetrieveB extends OmLogger {
 	public OMElement run()
 	throws XdsInternalException, FactoryConfigurationError,
 	XdsException, XdsIOException, MetadataException,
-	XdsConfigurationException, MetadataValidationException, XdsWSException {
+	XdsConfigurationException, MetadataValidationException, XdsWSException, AxisFault {
 
 		OMElement result = null;
 		OMElement request = r_ctx.getRequest();
@@ -154,8 +154,7 @@ public class RetrieveB extends OmLogger {
 	}
 
 	private OMElement call(OMElement metadata_ele, String endpoint)
-	throws XdsWSException, XdsException {
-		try {
+	throws XdsWSException, XdsException, AxisFault {
 			Options options = new Options();
 			options.setTo(new EndpointReference(endpoint)); // this sets the location of MyService service
 			ServiceClient serviceClient = new ServiceClient();
@@ -171,10 +170,6 @@ public class RetrieveB extends OmLogger {
 					getResponseAction());
 			result = soap.getResult();
 			return result;
-		}
-		catch (AxisFault e) {
-			throw new XdsWSException(RegistryUtility.exception_details(e));
-		}
 	}
 	
 	protected String getResponseAction() {
@@ -184,9 +179,9 @@ public class RetrieveB extends OmLogger {
 	protected String getRequestAction() {
 		if (async) {
 			if (is_xca) {
-				return "urn:ihe:iti:2007:CrossGatewayRetrieveAsync"; 
+				return "urn:ihe:iti:2007:CrossGatewayRetrieve"; 
 			} else {
-				return "urn:ihe:iti:2007:RetrieveDocumentSetAsync";
+				return "urn:ihe:iti:2007:RetrieveDocumentSet";
 			}
 		} else {
 			if (is_xca) {
@@ -226,6 +221,9 @@ public class RetrieveB extends OmLogger {
 			boolean isOptimized = mtom.isOptimized();
 			if (this.log_parent != null) 
 				this.add_simple_element_with_id(log_parent, "IsOptimized", (isOptimized) ? "true" : "false");
+			
+			// MTOM encoding does not require correct/accurate content type.  If MTOM package punted 
+			// and used application/octet-stream then take mime type from retrieve response metadata
 			if (mtom_mime != null && mtom_mime.equals("application/octet-stream") && isOptimized)
 				mtom_mime = rr.getContent_type();
 			else if (mtom_mime != null && rr.getContent_type() != null && !rr.getContent_type().equals(mtom_mime))
@@ -298,10 +296,10 @@ public class RetrieveB extends OmLogger {
 
 			if (rsp.getContents() == null || req.getContents() == null) {
 				boolean err = false;
-				if (req.getContents() == null) {
-					errors.append("Reference document not accessible\n");
-					err = true;
-				}
+//				if (req.getContents() == null) {
+//					errors.append("Reference document not accessible\n");
+//					err = true;
+//				}
 				if (rsp.getContents() == null) {
 					errors.append("No document data\n");
 					err = true;

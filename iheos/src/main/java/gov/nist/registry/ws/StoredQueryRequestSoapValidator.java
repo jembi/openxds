@@ -28,32 +28,34 @@ public class StoredQueryRequestSoapValidator extends ValidationEngine {
 	}
 	
 	public void run() {
-		SOAPEnvelope env = messageContext.getEnvelope();
-		OMNamespace ns = env.getNamespace();
-		boolean isSOAP12 = ns.getNamespaceURI().contains("http://www.w3.org/2003/05/soap-envelope");
-		boolean isSOAP11 = ns.getNamespaceURI().contains("http://schemas.xmlsoap.org/soap/envelope/");
+		SoapHeader h = new SoapHeader(messageContext);
+		
+//		SOAPEnvelope env = messageContext.getEnvelope();
+//		OMNamespace ns = env.getNamespace();
+//		boolean isSOAP12 = ns.getNamespaceURI().contains("http://www.w3.org/2003/05/soap-envelope");
+//		boolean isSOAP11 = ns.getNamespaceURI().contains("http://schemas.xmlsoap.org/soap/envelope/");
 
 		if (xds_version == XdsCommon.xds_a) {
-			if ( isSOAP12) 
+			if ( h.isSOAP12()) 
 				newError("A SOAP 1.1 endpoint (XDS.a SQ) was used but message was in SOAP 1.2 format. SOAP Namespace is ")
-				.appendError(ns.getNamespaceURI());
-			else if ( isSOAP11 )
+				.appendError(h.getNs().getNamespaceURI());
+			else if ( h.isSOAP11() )
 				;
 			else 
 				newError("A SOAP 1.1 endpoint (XDS.a SQ) was used but message was in unknown SOAP format. SOAP Namespace is ")
-				.appendError(ns.getNamespaceURI());
+				.appendError(h.getNs().getNamespaceURI());
 				
 		} else if (xds_version == XdsCommon.xds_b) {
-			if ( isSOAP11 ) 
+			if ( h.isSOAP11() ) 
 				newError("A SOAP 1.2 endpoint (XDS.b SQ) was used but message was in SOAP 1.1 format. SOAP Namespace is ")
-				.appendError(ns.getNamespaceURI());
-			else if ( isSOAP12 )
+				.appendError(h.getNs().getNamespaceURI());
+			else if ( h.isSOAP12() )
 				;
 			else
 				newError("A SOAP 1.2 endpoint (XDS.b SQ) was used but message was in unknown SOAP format. SOAP Namespace is ")
-				.appendError(ns.getNamespaceURI());
+				.appendError(h.getNs().getNamespaceURI());
 			
-			OMElement hdr = MetadataSupport.firstChildWithLocalName(env, "Header");
+			OMElement hdr = MetadataSupport.firstChildWithLocalName(h.getEnv(), "Header");
 			if (hdr == null) {
 				newError("A SOAP 1.2 endpoint (XDS.b SQ) was used but no SOAP Header was found.");
 			}

@@ -9,6 +9,7 @@ import gov.nist.registry.common2.registry.RegistryErrorList;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 
@@ -17,28 +18,31 @@ public class Attribute {
 	RegistryErrorList rel;
 	boolean is_submit;
 	boolean xds_b;
+	boolean isPnR;
 
-	ArrayList<String> ss_slots;
-	ArrayList<String> doc_slots;
-	ArrayList<String> fol_slots;
+	List<String> ss_slots;
+	List<String> doc_slots;
+	List<String> fol_slots;
 
-	public Attribute(Metadata m, boolean is_submit, boolean xds_b) throws XdsInternalException {
+	public Attribute(Metadata m, boolean is_submit, boolean xds_b, boolean isPnR) throws XdsInternalException {
 		this.m = m;
 		rel = new RegistryErrorList( 
 				(m.isVersion2()) ? RegistryErrorList.version_2 : RegistryErrorList.version_3, 
 						false /* log */);
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
+		this.isPnR = isPnR;
 
 		init();
 
 	}
 
-	public Attribute(Metadata m, boolean is_submit, boolean xds_b, RegistryErrorList rel) throws XdsInternalException {
+	public Attribute(Metadata m, boolean is_submit, boolean xds_b, RegistryErrorList rel, boolean isPnR) throws XdsInternalException {
 		this.m = m;
 		this.rel = rel;
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
+		this.isPnR = isPnR;
 
 		init();
 
@@ -46,27 +50,24 @@ public class Attribute {
 
 	private void init() {
 		ss_slots = new ArrayList<String>();
-		// required
 		ss_slots.add( "submissionTime");
+		ss_slots.add( "intendedRecipient");
 
 		doc_slots = new ArrayList<String>();
-		// required 
 		doc_slots.add("creationTime");
 		doc_slots.add("languageCode");
-		doc_slots.add("hash");
-		doc_slots.add("size");
 		doc_slots.add("sourcePatientId");
 		doc_slots.add("sourcePatientInfo");
-		// optional
 		doc_slots.add("intendedRecipient");
 		doc_slots.add("legalAuthenticator");
 		doc_slots.add("serviceStartTime");
 		doc_slots.add("serviceStopTime");
+		doc_slots.add("hash");
+		doc_slots.add("size");
 		doc_slots.add("URI");
 		doc_slots.add("repositoryUniqueId");
 
 		fol_slots = new ArrayList<String>();
-		// optional
 		fol_slots.add("lastUpdateTime");
 	}
 
@@ -118,9 +119,65 @@ public class Attribute {
 		// validate special structure in some classifications and slots and associations and externalids
 	}
 
+	List<String> validate_XON(String value) {
+		List<String> errs = new ArrayList<String>();
+		String[] parts = value.split("\\^");
+		if (parts.length < 1) {
+			errs.add("No value");
+			return errs;
+		}
+		String xon_1 = parts[0];
+		if (xon_1.length() == 0)
+			errs.add("XON.1 missing");
+
+		String xon_6 = (parts.length < 6) ? "" : parts[5];
+		xon_6 = xon_6.replaceAll("\\&amp;", "&");
+		String xon_10 = (parts.length < 10) ? "" : parts[9];
+		String[] xon_6_parts = xon_6.split("\\&");
+		String xon_6_2 = (xon_6_parts.length < 2) ? "" : xon_6_parts[1];
+		String xon_6_3 = (xon_6_parts.length < 3) ? "" : xon_6_parts[2];
+
+		if (xon_10.length() > 0 && !is_oid(xon_10, true)) {
+			if (xon_6_2.length() == 0)
+				errs.add("XON.10 is valued and not an OID so XON.6.2 is required");
+			else if (!is_oid(xon_6_2,true))
+				errs.add("XON.6.2 must be an OID");
+
+			if (!xon_6_3.equals("ISO"))
+				errs.add("XON.10 is valued and not an OID so XON.6.3 is required to have the value ISO");
+		}
+
+		for (int i=1; i<=10; i++) {
+			if (i == 1 || i == 6 || i == 10)
+				continue;
+			if (parts.length < i)
+				continue;
+			if (parts[i-1].length() > 0)
+				errs.add("Only XON.1, XON.6, XON.10 are allowed to have values: found value in XON." + i);
+		}
+
+		return errs;
+	}
+
+	void validate_author_institution(OMElement ai_slot) {
+		OMElement value_list_ele = MetadataSupport.firstChildWithLocalName(ai_slot, "ValueList");
+		if (value_list_ele == null) {
+			err("authorInstitution Slot has no ValueList");
+			return;
+		}
+		List<OMElement> values = MetadataSupport.childrenWithLocalName(value_list_ele, "Value");
+		for (OMElement value_ele : values) {
+			String value = value_ele.getText();
+			List<String> errs = validate_XON(value);
+			for (String err : errs) {
+				err("authorInstituion: " + err);
+			}
+		}
+	}
+
 
 	void validate_special_class_structure() throws MetadataException {
-		ArrayList<OMElement> classs = m.getClassifications();
+		List<OMElement> classs = m.getClassifications();
 
 		for (int i=0; i<classs.size(); i++) {
 			OMElement class_ele = (OMElement) classs.get(i);
@@ -158,10 +215,10 @@ public class Attribute {
 					String slot_name = slot.getAttributeValue(MetadataSupport.slot_name_qname);
 					if ( 	slot_name != null &&
 							(slot_name.equals("authorPerson") ||
-									slot_name.equals("authorInstitution") ||
 									slot_name.equals("authorRole") ||
 									slot_name.equals("authorSpecialty") )){
-
+					} else if (slot_name.equals("authorInstitution")) {
+						validate_author_institution(slot);
 					} else {
 						err(classified_object_type + " " + classified_object_id + " has a author type classification (classificationScheme=" +
 								class_scheme + ") with an unknown type of slot with name " + slot_name + ".  Only XDS prescribed slots are allowed inside this classification"	);
@@ -197,12 +254,69 @@ public class Attribute {
 		// this is none
 	}
 
+	String validate_CX_datatype(String pid) {
+		if (pid == null)
+			return "No Patient ID found";
+		String[] parts = pid.split("\\^\\^\\^");
+		if (parts.length != 2)
+			return "Not Patient ID format: ^^^ not found:";
+		String part2 = parts[1];
+		part2 = part2.replaceAll("&amp;", "&");
+		String[] partsa = part2.split("&");
+		if (partsa.length != 3) 
+			return "Expected &OID&ISO after ^^^ in CX data type";
+		if (partsa[0].length() != 0)
+			return "Expected &OID&ISO after ^^^ in CX data type";
+		if ( !partsa[2].equals("ISO"))
+			return "Expected &OID&ISO after ^^^ in CX data type";
+		if ( !is_oid(partsa[1], false))
+			return "Expected &OID&ISO after ^^^ in CX data type: OID part does not parse as an OID";
+		return null;
+	}
+
+	void validate_source_patient_id(OMElement spi_slot) {
+		OMElement value_list = MetadataSupport.firstChildWithLocalName(spi_slot, "ValueList");
+		List<OMElement> valueEles = MetadataSupport.childrenWithLocalName(value_list, "Value");
+		if (valueEles.size() != 1) {
+			err("sourcePatientId must have exactly one value");
+			return;
+		}
+		String msg = validate_CX_datatype(valueEles.get(0).getText());
+		if (msg != null)
+			err("Slot sourcePatientId format error: " + msg);
+	}
+
+	void validate_source_patient_info(OMElement spi_slot) {
+		OMElement value_list = MetadataSupport.firstChildWithLocalName(spi_slot, "ValueList");
+		for (OMElement value : MetadataSupport.childrenWithLocalName(value_list, "Value")) {
+			String content = value.getText();
+			if (content == null || content.equals("")) {
+				err("Slot sourcePatientInfo has empty Slot value");
+				continue;
+			}
+			String[] parts = content.split("\\|");
+			if (parts.length != 2) {
+				err("Slot sourcePatientInfo Value must have two parts separated by | ");
+				continue;
+			}
+			if ( !parts[0].startsWith("PID-")) {
+				err("Slot sourcePatientInfo Values must start with PID- ");
+				continue;
+			}
+			if (parts[0].startsWith("PID-3")) {
+				String msg = validate_CX_datatype(parts[1]);
+				if (msg != null)
+					err("Slot sourcePatientInfo#PID-3 must be valid Patient ID: " + msg);
+			}
+		}
+	}
+
 	void validate_special_doc_slot_structure() throws MetadataException {
-		ArrayList doc_ids = m.getExtrinsicObjectIds();
+		List doc_ids = m.getExtrinsicObjectIds();
 
 		for (int i=0; i<doc_ids.size(); i++) {
 			String id = (String) doc_ids.get(i);
-			ArrayList slots = m.getSlots(id);
+			List slots = m.getSlots(id);
 
 
 
@@ -217,10 +331,10 @@ public class Attribute {
 
 				} 
 				else if (slot_name.equals("sourcePatientId")) {
-
+					validate_source_patient_id(slot);
 				}
 				else if (slot_name.equals("sourcePatientInfo")) {
-
+					validate_source_patient_info(slot);
 				}
 				else if (slot_name.equals("intendedRecipient")) {
 
@@ -233,7 +347,7 @@ public class Attribute {
 	}
 
 	void validate_package_class() throws MetadataException {
-		ArrayList rp_ids = m.getRegistryPackageIds();
+		List rp_ids = m.getRegistryPackageIds();
 
 		for (int i=0; i<rp_ids.size(); i++) {
 			String id = (String) rp_ids.get(i);
@@ -241,7 +355,7 @@ public class Attribute {
 			int ss_class_count = 0;
 			int fol_class_count = 0;
 
-			//			ArrayList classs = m.getClassifications(id);
+			//			List classs = m.getClassifications(id);
 			//			for (int c=0; c<classs.size(); c++) {
 			//			OMElement class_ele = (OMElement) classs.get(c);
 			//			String classification_node = class_ele.getAttributeValue(MetadataSupport.classificationnode_qname);
@@ -254,7 +368,7 @@ public class Attribute {
 			//			}
 			//			}
 
-			ArrayList ext_classs = m.getClassifications();
+			List ext_classs = m.getClassifications();
 			for (int c=0; c<ext_classs.size(); c++) {
 				OMElement class_ele = (OMElement) ext_classs.get(c);
 				String classified_id = class_ele.getAttributeValue(MetadataSupport.classified_object_qname);
@@ -282,11 +396,11 @@ public class Attribute {
 	}
 
 	void validate_doc_class() throws MetadataException {
-		ArrayList doc_ids = m.getExtrinsicObjectIds();
+		List doc_ids = m.getExtrinsicObjectIds();
 
 		for (int i=0; i<doc_ids.size(); i++) {
 			String id = (String) doc_ids.get(i);
-			ArrayList classs = m.getClassifications(id);
+			List classs = m.getClassifications(id);
 
 			//                                               classificationScheme								name							required	multiple
 			this.validate_class("Document", id, classs, "urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" , 	"classCode",						true, 		false);
@@ -300,26 +414,26 @@ public class Attribute {
 	}
 
 	void validate_fol_class() throws MetadataException {
-		ArrayList fol_ids = m.getFolderIds();
+		List fol_ids = m.getFolderIds();
 
 		for (int i=0; i<fol_ids.size(); i++) {
 			String id = (String) fol_ids.get(i);
-			ArrayList classs = m.getClassifications(id);
+			List classs = m.getClassifications(id);
 
 			//                                               classificationScheme								name							required	multiple
 			if (this.is_submit)
-				this.validate_class("Folder", id, classs, "urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5" , 	"codeList",						false, 		false);
+				this.validate_class("Folder", id, classs, "urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5" , 	"codeList",						true, 		true);
 			else
-				this.validate_class("Folder", id, classs, "urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5" , 	"codeList",						false, 		true);
+				this.validate_class("Folder", id, classs, "urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5" , 	"codeList",						true, 		true);
 		}
 	}
 
 	void validate_ss_class() throws MetadataException {
-		ArrayList ss_ids = m.getSubmissionSetIds();
+		List ss_ids = m.getSubmissionSetIds();
 
 		for (int i=0; i<ss_ids.size(); i++) {
 			String id = (String) ss_ids.get(i);
-			ArrayList classs = m.getClassifications(id);
+			List classs = m.getClassifications(id);
 
 			//                                               classificatinScheme								name							required	multiple
 			this.validate_class("SubmissionSet", id, classs, "urn:uuid:aa543740-bdda-424e-8c96-df4873be8500" , 	"contentTypeCode",		true, 		 false);
@@ -327,12 +441,12 @@ public class Attribute {
 	}
 
 	void validate_ss_extids() throws MetadataException {
-		ArrayList ss_ids = m.getSubmissionSetIds();
+		List ss_ids = m.getSubmissionSetIds();
 
 		for (int i=0; i<ss_ids.size(); i++) {
 			String id = (String) ss_ids.get(i);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 			//													name							identificationScheme                          OID required
 			this.validate_ext_id("Submission Set", id, ext_ids, "XDSSubmissionSet.patientId", "urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446", false);
@@ -343,12 +457,12 @@ public class Attribute {
 	}
 
 	void validate_ss_slots() throws MetadataException {
-		ArrayList ss_ids = m.getSubmissionSetIds();
+		List ss_ids = m.getSubmissionSetIds();
 
 		for (int i=0; i<ss_ids.size(); i++) {
 			String id = (String) ss_ids.get(i);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 			//                      					name						multi	required	number
 			validate_slot("Submission Set", id, slots, 	"submissionTime", 			false, 	true, 		true);
@@ -357,12 +471,12 @@ public class Attribute {
 	}
 
 	void validate_doc_extids() throws MetadataException {
-		ArrayList doc_ids = m.getExtrinsicObjectIds();
+		List doc_ids = m.getExtrinsicObjectIds();
 
 		for (int i=0; i<doc_ids.size(); i++) {
 			String id = (String) doc_ids.get(i);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 
 			//													name							identificationScheme                    OID required
@@ -375,36 +489,37 @@ public class Attribute {
 
 
 	void validate_doc_slots() throws MetadataException {
-		ArrayList doc_ids = m.getExtrinsicObjectIds();
-
+		List doc_ids = m.getExtrinsicObjectIds();
+		
 		for (int i=0; i<doc_ids.size(); i++) {
 			String id = (String) doc_ids.get(i);
 			OMElement docEle = m.getObjectById(id);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 			//                      				name						multi	required	number
 			validate_slot("Document", id, slots, 	"creationTime", 			false, 	true, 		true);
-			validate_slot("Document", id, slots, 	"hash",			 			false, 	true, 		false);
 			validate_slot("Document", id, slots, 	"intendedRecipient",		true, 	false, 		false);
 			validate_slot("Document", id, slots, 	"languageCode",				false, 	true, 		false);
 			validate_slot("Document", id, slots, 	"legalAuthenticator",		false, 	false, 		false);
 			validate_slot("Document", id, slots, 	"serviceStartTime",			false, 	false, 		true);
 			validate_slot("Document", id, slots, 	"serviceStopTime",			false, 	false, 		true);
-			validate_slot("Document", id, slots, 	"size",						false, 	true, 		true);
-			validate_slot("Document", id, slots, 	"sourcePatientInfo",		true, 	true, 		false);
+			validate_slot("Document", id, slots, 	"sourcePatientInfo",		true, 	false, 		false);
+
+			validate_slot("Document", id, slots, 	"hash",			 			false, 	!isPnR, 		false);
+			validate_slot("Document", id, slots, 	"size",						false, 	!isPnR, 		true);
 
 			// These are tricky since the validation is based on the metadata format (xds.a or xds.b) instead of
 			// on the transaction. All Stored Queries are encoded in ebRIM 3.0 (xds.b format) but they could
 			// represent an xds.a registry.  The use of is_submit below is an adequate stop-gap measure
 			if (xds_b) {
 				validate_slot("Document", id, slots, 	"URI",					true, 	false, 		false);
-				validate_slot("Document", id, slots, 	"repositoryUniqueId",	false, 	is_submit, 		false);
+				validate_slot("Document", id, slots, 	"repositoryUniqueId",	false, 	is_submit && !isPnR, 		false);
 				if (m.getSlot(id, "URI") != null)
 					m.getURIAttribute(docEle);
 			}
 			else {
-				validate_slot("Document", id, slots, 	"URI",					true, 	is_submit, 		false);
+				validate_slot("Document", id, slots, 	"URI",					true, 	is_submit && !isPnR, 		false);
 				m.getURIAttribute(docEle);
 			}
 
@@ -412,11 +527,11 @@ public class Attribute {
 	}
 
 	void validate_folder_extids()  throws MetadataException {
-		ArrayList fol_ids = m.getFolderIds();
+		List fol_ids = m.getFolderIds();
 		for (int i=0; i<fol_ids.size(); i++) {
 			String id = (String) fol_ids.get(i);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 			//													name							identificationScheme            OID required
 			this.validate_ext_id("Folder", id, ext_ids, "XDSFolder.patientId", "urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a", false);
@@ -427,11 +542,11 @@ public class Attribute {
 	}
 
 	void validate_folder_slots() throws MetadataException {
-		ArrayList fol_ids = m.getFolderIds();
+		List fol_ids = m.getFolderIds();
 		for (int i=0; i<fol_ids.size(); i++) {
 			String id = (String) fol_ids.get(i);
-			ArrayList slots = m.getSlots(id);
-			ArrayList ext_ids = m.getExternalIdentifiers(id);
+			List slots = m.getSlots(id);
+			List ext_ids = m.getExternalIdentifiers(id);
 
 			//                      					name						multi	required	number
 			// query only
@@ -444,7 +559,7 @@ public class Attribute {
 
 	}
 
-	void validate_class(String type, String id, ArrayList classs, String classification_scheme, String class_name, boolean required, boolean multiple) {
+	void validate_class(String type, String id, List classs, String classification_scheme, String class_name, boolean required, boolean multiple) {
 		int count = 0;
 		for (int i=0; i<classs.size(); i++ ) {
 			OMElement classif = (OMElement) classs.get(i);
@@ -473,7 +588,7 @@ public class Attribute {
 			err(type + " " + id + " : Classification of type " + classification_scheme + " ( " + class_name + " ) is duplicated");
 	}
 
-	void validate_ext_id(String type, String id, ArrayList e_ids, String name, String id_scheme, boolean is_oid) {
+	void validate_ext_id(String type, String id, List e_ids, String name, String id_scheme, boolean is_oid) {
 		int count = 0;
 		for (int i=0; i<e_ids.size(); i++) {
 			OMElement e_id = (OMElement) e_ids.get(i);
@@ -517,7 +632,7 @@ public class Attribute {
 		return value.matches("\\d(?=\\d*\\.)(?:\\.(?=\\d)|\\d){0,63}");
 	}
 
-	void validate_slot(String type, String id, ArrayList slots, String name, boolean multivalue, boolean required, boolean number) {
+	void validate_slot(String type, String id, List slots, String name, boolean multivalue, boolean required, boolean number) {
 		boolean found = false;
 		for (int i=0; i<slots.size(); i++) {
 			OMElement slot = (OMElement) slots.get(i);
@@ -574,7 +689,7 @@ public class Attribute {
 	void validate_ss_slots_are_legal() throws MetadataException {
 		String ss_id = m.getSubmissionSetId();
 
-		ArrayList slots = m.getSlots(ss_id);
+		List slots = m.getSlots(ss_id);
 		for (int j=0; j<slots.size(); j++) {
 			OMElement slot = (OMElement) slots.get(j);
 
@@ -586,12 +701,12 @@ public class Attribute {
 	}
 
 	void validate_fol_slots_are_legal() throws MetadataException {
-		ArrayList fol_ids = m.getFolderIds();
+		List fol_ids = m.getFolderIds();
 
 		for (int i=0; i<fol_ids.size(); i++) {
 			String id = (String) fol_ids.get(i);
 
-			ArrayList slots = m.getSlots(id);
+			List slots = m.getSlots(id);
 			for (int j=0; j<slots.size(); j++) {
 				OMElement slot = (OMElement) slots.get(j);
 
@@ -604,12 +719,12 @@ public class Attribute {
 	}
 
 	void validate_document_slots_are_legal() throws MetadataException {
-		ArrayList doc_ids = m.getExtrinsicObjectIds();
+		List doc_ids = m.getExtrinsicObjectIds();
 
 		for (int i=0; i<doc_ids.size(); i++) {
 			String id = (String) doc_ids.get(i);
 
-			ArrayList slots = m.getSlots(id);
+			List slots = m.getSlots(id);
 			for (int j=0; j<slots.size(); j++) {
 				OMElement slot = (OMElement) slots.get(j);
 

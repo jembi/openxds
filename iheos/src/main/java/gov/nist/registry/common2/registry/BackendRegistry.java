@@ -6,40 +6,43 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.xml.Parse;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.XdsFactory;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
+import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
 public class BackendRegistry {
 	ErrorLogger response;
-	Message log_message;
+	LogMessage log_message;
 	String reason = "";
 	static Properties properties = null;
+	private final static Log logger = LogFactory.getLog(BackendRegistry.class);
 
 	static {
 		properties = Properties.loader();
 	}
 
-	public BackendRegistry(ErrorLogger response, Message log_message) {
+	public BackendRegistry(ErrorLogger response, LogMessage logMessage) {
 		this.response = response;
-		this.log_message = log_message;
+		this.log_message = logMessage;
 	}
 
-	public BackendRegistry(ErrorLogger response, Message log_message, String reason) {
+	public BackendRegistry(ErrorLogger response, LogMessage log_message, String reason) {
 		this.response = response;
 		this.log_message = log_message;
 		this.reason = reason;
@@ -52,10 +55,18 @@ public class BackendRegistry {
 	static QName object_ref_qname = new QName("ObjectRef");
 	static QName id_qname = new QName("id");
 
-	public ArrayList<String> queryForObjectRefs(String sql) throws XMLParserException, LoggerException, XdsException {
+	/**
+	 * Submits an SQL query to the backend registry expecting ObjectRefs to be returned.
+	 * @param sql SQL text
+	 * @return    list of UUIDs
+	 * @throws XMLParserException error parsing XML response from back end registry
+	 * @throws LoggerException error writing to test log facility
+	 * @throws XdsException all other errors 
+	 */
+	public List<String> queryForObjectRefs(String sql) throws XMLParserException, LoggerException, XdsException {
 		OMElement result = query(sql, false /* leaf_class */);
 
-		ArrayList<String> ors = new ArrayList<String>();
+		List<String> ors = new ArrayList<String>();
 
 		if (result == null)  // error occured
 			return ors;
@@ -82,11 +93,26 @@ public class BackendRegistry {
 		"xmlns=\"urn:oasis:names:tc:ebxml-regrep:query:xsd:2.1\"\n" +
 		">\n";
 
+	/**
+	 * Build and execute an AdhocQuery request. This is different from basic_query which it calls
+	 * because it repairs buggy metadata sometimes returned from current back end registry.
+	 * @param sql         query SQL
+	 * @param leaf_class  return is to be LeafClass (full metadata). Alternative is ObjectRefs.
+	 * @return            RegistryResponse
+	 * @throws LoggerException error writing to test log facility
+	 * @throws XMLParserException error XML parsing back end registry response
+	 * @throws MetadataException error interpreting registry metadata
+	 * @throws MetadataValidationException error interpreting registry metadata 
+	 * @throws XdsInternalException other error
+	 */
 	public OMElement query(String sql, boolean leaf_class) throws LoggerException, XMLParserException, MetadataException, MetadataValidationException, XdsInternalException {
 		OMElement result = basic_query(sql, leaf_class);
 
 		// add in homeCommunityId to all major
-		Metadata m = MetadataParser.parseNonSubmission(result);
+		//Metadata m = MetadataParser.parseNonSubmission(result);
+		// above constructor will remove duplicates and therefore not fix all metadata
+		Metadata m = new Metadata();
+		m.addMetadata(result, true); // it seems this parm should be false, but this works?????
 		
 		m.fixClassifications();
 		
@@ -102,13 +128,15 @@ public class BackendRegistry {
 		return result;
 	}
 		
-	public ArrayList<String> objectRefQuery(String sql) 
-	throws MetadataValidationException, XMLParserException, LoggerException, XdsException {
-		OMElement response = basic_query(sql, true);
-		Metadata m = MetadataParser.parseNonSubmission(response);
-		return m.getObjectIds(m.getObjectRefs());
-	}
-
+	/**
+	 * Build and execute an AdhocQuery request.
+	 * @param sql         query SQL
+	 * @param leaf_class  return is to be LeafClass (full metadata). Alternative is ObjectRefs.
+	 * @return
+	 * @throws XMLParserException error XML parsing back end registry response
+	 * @throws LoggerException error writing to test log facility
+	 * @throws XdsInternalException other error
+	 */
 	public OMElement basic_query(String sql, boolean leaf_class)
 	throws XMLParserException, LoggerException, XdsInternalException {
 		if (log_message != null)
@@ -170,7 +198,13 @@ public class BackendRegistry {
 		parent.addChild(vi);
 	}
 
-
+	/**
+	 * Issue pre-formatted query to back end registry
+	 * @param ahqr the query
+	 * @return RegistryResponse
+	 * @throws LoggerException error writing to test log facility
+	 * @throws XdsInternalException all other errors
+	 */
 	public OMElement query(OMElement ahqr) throws LoggerException, XdsInternalException {
 
 		if (log_message != null)
@@ -194,12 +228,7 @@ public class BackendRegistry {
 		OMElement response_xml = null;
 
 		if (! response.getLocalName().equals("RegistryResponse")) {
-//			try {
 			throw new XdsInternalException("Return from ebxmlrr is '" + response_xml.getLocalName() + "' but should be 'RegistryResponse'");
-//			} catch (Exception e) {
-//			response.add_error("XDSRegistryError", "Return from ebxmlrr is '" + response_xml.getLocalName() + "' but should be 'RegistryResponse'", RegistryUtility.exception_details(e), log_message);
-//			}
-//			return null;
 		}
 
 		if (! response_xml.getAttributeValue(new QName("status")).equals("Success")) {

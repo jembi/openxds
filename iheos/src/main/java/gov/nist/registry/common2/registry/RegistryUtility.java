@@ -4,10 +4,10 @@ import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.common2.xml.SchemaValidation;
-import gov.nist.registry.xdslog.LoggerException;
-import gov.nist.registry.xdslog.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -31,10 +31,10 @@ public class RegistryUtility {
 			throw new SchemaValidationException("Input did not validate against schema:" + schema_messages);
 	}
 
-	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit, IConnectionDescription connection) throws XdsException {
+ 	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit, boolean isPnR, IConnectionDescription connection) throws XdsException {
 		RegistryErrorList rel = new RegistryErrorList((m.isVersion2() ? RegistryErrorList.version_2 : RegistryErrorList.version_3));
 		try {
-			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (Message)null, connection);
+			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (LogMessage)null, isPnR, connection);
 			v.run();
 			return rel;
 		} catch (LoggerException e) {

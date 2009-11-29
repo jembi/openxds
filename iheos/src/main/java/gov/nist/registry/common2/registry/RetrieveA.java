@@ -1,11 +1,10 @@
 package gov.nist.registry.common2.registry;
 
-import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.io.Sha1Bean;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.axiom.om.OMElement;
 
@@ -34,6 +33,8 @@ public class RetrieveA {
 	}
 	
 	String parseContentType(String content_type) {
+		if (content_type == null)
+			return "";
 		String[] parts = content_type.split(";");
 		if (parts.length == 0 || parts.length == 1 || parts.length == -1)
 			return content_type.trim();
@@ -43,14 +44,14 @@ public class RetrieveA {
 	public byte[] retrieve() {
 		if (this.uri != null) {
 			try {
-//TODO: retrieve the document content
+				//TODO: retrieve the document content
 //				HttpClient hc = new HttpClient();
 //				this.data = hc.httpGetBytes(this.uri);
 //				this.content_type = parseContentType(hc.getContentType());
 //				this.header_fields = hc.getHeaderFields();
 			} 
 			catch (Exception e) {
-				errors().append("Failed to read document from URI: " + this.uri + " - " + e.getMessage() + "\n");
+				errors().append(ExceptionUtil.exception_details(e, "Failed to read document from URI: " + this.uri));
 			}
 			return this.data;
 		}

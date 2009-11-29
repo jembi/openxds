@@ -1,5 +1,7 @@
 package gov.nist.registry.xdslog;
 
+import gov.nist.registry.common2.logging.LoggerException;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -40,7 +42,7 @@ public class MainTable extends AbstractLogTable {
     private  PreparedStatement deletePreparedStatement ;
 
     private String      messageId =null  ;
-    private InetAddress ipAddress ;
+    private String ipAddress ;
     private Timestamp   timestamp ;
     private String      test      ;
     private boolean     pass      ;
@@ -96,10 +98,10 @@ public class MainTable extends AbstractLogTable {
 	    }
 
     /*************GETTERS AND SETTERS*********************/
-    public InetAddress getIpAddress() {
+    public String getIpAddress() {
 	return ipAddress;
     }
-    public void setIpAddress(InetAddress ipAddress) {
+    public void setIpAddress(String ipAddress) {
 	this.ipAddress = ipAddress;
     }
     public String getMessageId() {
@@ -148,11 +150,11 @@ public class MainTable extends AbstractLogTable {
 			result.next() ;
 			messageId = result.getString( 1 ) ;
 			isSecure  = result.getBoolean( 2 ) ;
-			try 
-			{
-			    ipAddress = InetAddress.getByName(result.getString( 3 )) ;
-			}
-			catch ( UnknownHostException e) {}
+//			try 
+//			{
+			    ipAddress = result.getString( 3 ) ;
+//			}
+//			catch ( UnknownHostException e) {}
 
 			timestamp = result.getTimestamp( 4 ) ;
 			test      = result.getString   ( 5 ) ;
@@ -212,10 +214,10 @@ public class MainTable extends AbstractLogTable {
 		    }
 		    if ( parameterName.equals(MainTableFields.ip))
 		    {
-			try {
-			    ipAddress = InetAddress.getByName(parameterValue) ;
+//			try {
+			    ipAddress = parameterValue; //InetAddress.getByName(parameterValue) ;
 			    s.execute( "UPDATE "+ TABLE_NAME +" SET " + IP +"  = '"+ parameterValue +"' WHERE " + MESSAGE_ID +" = '"+ messageId +"';"  ) ;
-			} catch (UnknownHostException e) {}
+//			} catch (UnknownHostException e) {}
 		    }
 		    else if ( parameterName.equals( MainTableFields.is_secure ))
 		    {
@@ -283,19 +285,20 @@ public class MainTable extends AbstractLogTable {
 	    // Test Ip
 	    if ( ipAddress== null )
 	    {
-		try 
-		{
-		    ipAddress = InetAddress.getByName("localhost") ;
-		} catch (UnknownHostException e) 
-		{}
+//		try 
+//		{
+//		    ipAddress = InetAddress.getByName("localhost") ;
+//		} catch (UnknownHostException e) 
+//		{}
+	    	ipAddress = "1.1.1.1";
 	    }
-	    writePreparedStatement.setString( 3 , ipAddress.getHostAddress() )  ;
+	    writePreparedStatement.setString( 3 , ipAddress )  ;
             // Added 11/14/2007
-	    if (!IpCompanyTable.IpExist( this.database , ipAddress.getHostAddress() ) ) 
+	    if (!IpCompanyTable.IpExist( this.database , ipAddress ) ) 
 	    {
 		IpCompanyTable ipCompanyTable = new IpCompanyTable( this.database ) ;
 		{
-		    ipCompanyTable.writeToDB(  ipAddress.getHostAddress()  ) ;
+		    ipCompanyTable.writeToDB(  ipAddress  ) ;
 		}
 	    }
 
@@ -323,7 +326,7 @@ public class MainTable extends AbstractLogTable {
     public String toString()
     {
 	return "MessageId:"+messageId +
-	"\nIP :" + ipAddress.getHostAddress() + 
+	"\nIP :" + ipAddress + 
 	"\nTimestamp:" + timestamp.toString() + 
 	"\nPass :" + pass +  
 	"\nTest :" + test +"\n" ;
@@ -334,7 +337,7 @@ public class MainTable extends AbstractLogTable {
 	StringBuffer stringBuff = new StringBuffer() ;
 	stringBuff.append("<mainMessage>") ;
 	stringBuff.append("	<node name=\"MessageId\" value=\""+ messageId + "\" />"  ) ;
-	stringBuff.append("	<node name=\"IP\" value=\""+ ipAddress.getHostAddress()  + "\" />"  ) ;
+	stringBuff.append("	<node name=\"IP\" value=\""+ ipAddress  + "\" />"  ) ;
 	stringBuff.append("	<node name=\"Timestamp\" value=\""+ timestamp.toString()  + "\" />"  ) ;
 	stringBuff.append("	<node name=\"Pass\" value=\""+  pass + "\" />"  ) ;
 	stringBuff.append("	<node name=\"Test\" value=\""+ test + "\" />"  ) ;
@@ -347,7 +350,7 @@ public class MainTable extends AbstractLogTable {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	map.put("MessageId", messageId);
-    	map.put("IP", ipAddress.getHostAddress());
+    	map.put("IP", ipAddress);
     	map.put("Timestamp", timestamp.toString());
     	map.put("Pass", (pass) ? "Pass" : "Fail");
     	map.put("Test", test);
@@ -364,7 +367,7 @@ public class MainTable extends AbstractLogTable {
 	stringBuff.append("  \"values\" : [\n " ) ;        	
 	
 	stringBuff.append(" [ \"MessageId\" , \""+ messageId  + "\"],\n "  ) ;
-	if ( ipAddress!= null )  stringBuff.append("[ \"IP\"        , \""+ ipAddress.getHostAddress() + "\"] ,\n "  ) ;
+	if ( ipAddress!= null )  stringBuff.append("[ \"IP\"        , \""+ ipAddress + "\"] ,\n "  ) ;
 	if ( timestamp != null ) stringBuff.append("[ \"Timestamp\" , \""+ timestamp.toString() + "\"],\n "  ) ;
 	stringBuff.append("[ \"Pass\"      , \""+ pass + "\" ], \n "  ) ;
 	stringBuff.append("[ \"Test\"      , \""+ test + "\" ]\n]} "  ) ;
