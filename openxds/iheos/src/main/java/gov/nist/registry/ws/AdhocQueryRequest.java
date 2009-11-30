@@ -1,7 +1,6 @@
 package gov.nist.registry.ws;
 
 import gov.nist.registry.common2.MetadataTypes;
-import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.SchemaValidationException;
@@ -23,15 +22,13 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
-import gov.nist.registry.ws.sq.ParamParser;
+import gov.nist.registry.common2.registry.storedquery.ParamParser;
+import gov.nist.registry.common2.registry.storedquery.SqParams;
 import gov.nist.registry.ws.config.Registry;
 import gov.nist.registry.ws.sq.StoredQuery;
 import gov.nist.registry.ws.sq.StoredQueryFactory;
 
-
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.axiom.om.OMElement;
@@ -44,9 +41,6 @@ import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openxds.XdsFactory;
-import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;
-import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.net.IConnectionDescription;
@@ -372,8 +366,8 @@ public class AdhocQueryRequest extends XdsCommon {
 			//Query Info
 			if (isStoredQuery) {
 				ParamParser parser = new ParamParser();
-				HashMap params = parser.parse(aqr);
-				String patientId = (String)params.get("$XDSDocumentEntryPatientId");				
+				SqParams params = parser.parse(aqr);
+				String patientId = params.getStringParm("$XDSDocumentEntryPatientId");				
 				if(patientId != null) patientObj = new ParticipantObject("PatientIdentifier", patientId);
 			}  
 			
