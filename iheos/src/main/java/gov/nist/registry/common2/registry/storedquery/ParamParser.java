@@ -205,8 +205,8 @@ public class ParamParser {
 
 			// Strings
 
-			if (value_string.charAt(0) == '\'' || value_string.charAt(0) =='‘' &&
-					value_string.charAt(value_string.length()-1) == '\'' || value_string.charAt(value_string.length()-1) == '’') {
+			if (value_string.charAt(0) == '\'' &&
+					value_string.charAt(value_string.length()-1) == '\'') {
 				String val = value_string.substring(1, value_string.length()-1);
 				slotValues.add(val);
 				continue;
