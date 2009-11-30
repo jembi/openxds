@@ -16,14 +16,15 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ParamParser {
 	String queryid;
 	OMElement query;
 	SqParams params;
 	
-	private final static Logger logger = Logger.getLogger(ParamParser.class);
+	private final static Log logger = LogFactory.getLog(ParamParser.class);
 
 	QName name_qname = new QName("name");
 	QName valuelist_qname = new QName("ValueList");
@@ -184,7 +185,7 @@ public class ParamParser {
 				continue;
 
 			// Integers
-			String value_string = value_element.getText();
+			String value_string = value_element.getText().trim();
 			try {
 				Integer value_int = Integer.decode(value_string);
 				slotValues.add(value_int);
@@ -204,8 +205,8 @@ public class ParamParser {
 
 			// Strings
 
-			if (value_string.charAt(0) == '\'' &&
-					value_string.charAt(value_string.length()-1) == '\'') {
+			if (value_string.charAt(0) == '\'' || value_string.charAt(0) =='‘' &&
+					value_string.charAt(value_string.length()-1) == '\'' || value_string.charAt(value_string.length()-1) == '’') {
 				String val = value_string.substring(1, value_string.length()-1);
 				slotValues.add(val);
 				continue;
