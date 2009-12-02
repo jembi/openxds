@@ -505,12 +505,12 @@ public abstract class XdsTest {
 	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
 	    options.setTo( new EndpointReference(url) );
 		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
-		try {
-			String from = InetAddress.getLocalHost().getHostAddress();	
-			options.setFrom(new EndpointReference(from));
-		}catch(UnknownHostException e) {
-			//ignore From
-		}
+//		try {
+//			String from = InetAddress.getLocalHost().getHostAddress();	
+//			options.setFrom(new EndpointReference(from));
+//		}catch(UnknownHostException e) {
+//			//ignore From
+//		}
 		if (enableMTOM)
 			options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
 		else
