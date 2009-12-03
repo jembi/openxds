@@ -30,13 +30,13 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements XdsRegistryPatientDao{
 	private static final Log log = LogFactory.getLog(xdsRegistryPatientDaoImpl.class);
 	
-	@Override
+
 	public PersonIdentifier getPersonById(String personId) throws RegistryPatientException{
 		List list = new ArrayList();
 		PersonIdentifier personIdentifier = null;
 		try{
 		list = this.getHibernateTemplate().find(
-				"from PersonIdentifier where registry_patient_id = '"+ personId +"' and deleted = 'FALSE' and merged = 'FALSE'");
+				"from PersonIdentifier where patient_id = '"+ personId +"' and deleted = 'FALSE' and merged = 'FALSE'");
 		}catch (Exception e) {
 			log.error("Failed to retrieve person identifier from registry patient service",e);
 			throw new RegistryPatientException(e);
@@ -53,7 +53,7 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		PersonIdentifier personIdentifier = null;
 		try{
 		list = this.getHibernateTemplate().find(
-				"from PersonIdentifier where registry_patient_id = '"+ personId +"' and deleted = 'FALSE' and merged = 'TRUE'");
+				"from PersonIdentifier where patient_id = '"+ personId +"' and deleted = 'FALSE' and merged = 'TRUE'");
 		}catch (Exception e) {
 			log.error("Failed to retrieve person identifier from registry patient service",e);
 			throw new RegistryPatientException(e);
@@ -64,7 +64,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		return personIdentifier;
 	
 	}
-	@Override
 	public void mergePersonIdentifier(PersonIdentifier mergePersonIdentifier) throws RegistryPatientException{
 		try {
 			 this.getHibernateTemplate().update(mergePersonIdentifier);
@@ -73,7 +72,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		}		
 	}
 
-	@Override
 	public void savePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			  this.getHibernateTemplate().save(identifier);
@@ -83,7 +81,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		
 	}
 
-	@Override
 	public void updatePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			 this.getHibernateTemplate().update(identifier);

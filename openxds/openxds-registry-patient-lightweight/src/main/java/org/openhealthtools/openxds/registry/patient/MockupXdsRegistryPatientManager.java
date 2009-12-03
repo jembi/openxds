@@ -27,14 +27,12 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 public class MockupXdsRegistryPatientManager implements
 		XdsRegistryPatientService {
 
-	@Override
 	public void createPatient(Patient patient, RegistryPatientContext context)
 			throws RegistryPatientException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public boolean isValidPatient(
 			org.openhealthexchange.openpixpdq.data.PatientIdentifier pid,
 			RegistryPatientContext context) throws RegistryPatientException {
@@ -42,27 +40,22 @@ public class MockupXdsRegistryPatientManager implements
 		return false;
 	}
 
-	@Override
 	public void mergePatients(Patient survivingPatient, Patient mergePatient,
 			RegistryPatientContext context) throws RegistryPatientException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void unmergePatients(Patient survivingPatient, Patient mergePatient,
 			RegistryPatientContext context) throws RegistryPatientException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void updatePatient(Patient patient, RegistryPatientContext context)
 			throws RegistryPatientException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
-	
 }
