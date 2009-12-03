@@ -57,7 +57,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void createPatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
 		for (PatientIdentifier pid : patient.getPatientIds()) {
-			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());
+			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());			
 		try {
 			xdsRegistryPatientDao.savePersonIdentifier(identifier);
 		} catch (Exception e) {
@@ -69,7 +69,8 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updatePatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
 		for (PatientIdentifier pid : patient.getPatientIds()) {
-			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());
+			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(pid.getId());
+			PersonIdentifier identifier = getPersonIdentifier(personIdentifier,pid,patient.isDeathIndicator());			
 		try {
 			xdsRegistryPatientDao.updatePersonIdentifier(identifier);
 		} catch (Exception e) {
@@ -138,7 +139,14 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		pi.setAssigningAuthority(assignAuth);
 		pi.setDeleted(deleted ? true : false);
 		pi.setMerged(false);
-		pi.setRegistryPatientId(patientIdentifier.getId());
+		return pi;
+	}
+	
+	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,boolean deleted) {
+		pi.setPatientId(patientIdentifier.getId());
+		String assignAuth = getAssigningAuthority(patientIdentifier);
+		pi.setAssigningAuthority(assignAuth);
+		pi.setDeleted(deleted ? true : false);
 		return pi;
 	}
 	private static String getAssigningAuthority(PatientIdentifier patientIdentifier){

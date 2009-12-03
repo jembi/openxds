@@ -4,9 +4,11 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="org.openhealthtools.openxds.registry.PersonIdentifier" table="personidentifier">
-        <id name="patientId" column="patient_id" type="string"/>
+        <id name="registryPatientId" column="registry_patient_id" type="string">
+          <generator class="uuid"/>
+        </id>
         <property name="assigningAuthority" column="assigning_authority" type="string"/>
-        <property name="registryPatientId" column="registry_patient_id" type="string"/>
+        <property name="patientId" column="patient_id" type="string"/>
         <property name="deleted" column="deleted" type="boolean"/>
         <property name="merged" column="merged" type="boolean"/>
         <property name="survivingPatientId" column="surviving_patient_id" type="string"/>        

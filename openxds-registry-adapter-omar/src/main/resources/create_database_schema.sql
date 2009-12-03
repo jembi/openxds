@@ -85,9 +85,9 @@ ALTER TABLE repository OWNER TO openxds;
 DROP TABLE IF EXISTS personidentifier CASCADE;
 CREATE TABLE personidentifier
 (
-  patient_id character varying(255) NOT NULL PRIMARY KEY,
+  registry_patient_id character varying(255) NOT NULL PRIMARY KEY,
   assigning_authority character varying(255) NOT NULL,
-  registry_patient_id character varying(255) NOT NULL, 
+  patient_id character varying(255) NOT NULL, 
   deleted boolean,
   merged boolean,
   surviving_patient_id character varying(255)  
