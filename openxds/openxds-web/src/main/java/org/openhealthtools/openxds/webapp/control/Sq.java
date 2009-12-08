@@ -102,7 +102,7 @@ public abstract class Sq {
 		OMElement query = build(ids);
 		logger.info("QUERY: " + query_details());
 		Soap soap = new Soap();
-		soap.soapCall(query, endpoint, false, true, true, queryAction, queryResultAction);
+		soap.soapCall(query, null /*Protocol*/, endpoint, false, true, true, queryAction, queryResultAction);
 		OMElement result = soap.getResult();
 		return result;
 	}

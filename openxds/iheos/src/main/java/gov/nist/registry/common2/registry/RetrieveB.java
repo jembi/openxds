@@ -162,7 +162,9 @@ public class RetrieveB extends OmLogger {
 			OMElement result;
 			Soap soap = new Soap();
 			soap.setAsync(async);
-			soap.soapCall(metadata_ele, endpoint, 
+			soap.soapCall(metadata_ele, 
+					null,   //Protocol 
+					endpoint, 
 					true,    // mtom
 					true,     // addressing
 					soap12,     // soap12

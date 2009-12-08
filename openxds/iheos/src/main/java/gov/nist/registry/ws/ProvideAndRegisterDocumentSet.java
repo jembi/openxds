@@ -38,12 +38,14 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
@@ -58,6 +60,8 @@ import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
 import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.net.SecureConnectionDescription;
+import com.misyshealthcare.connect.net.SecureSocketFactory;
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	ContentValidationService validater;
@@ -310,6 +314,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 		String epr = registry_endpoint();
 
+		Protocol protocol = ConnectionUtil.getProtocol(registryClientConnection);
+
 		log_message.addOtherParam("Register transaction endpoint", epr);
 
 		log_message.addOtherParam("Register transaction", register_transaction.toString());
@@ -319,9 +325,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			OMElement result;
 			try {
 				if (this.xds_version == XdsCommon.xds_b) {
-					soap.soapCall(register_transaction, epr, false, true, true, "urn:ihe:iti:2007:RegisterDocumentSet-b", null);
+					soap.soapCall(register_transaction, protocol, epr, false, true, true, "urn:ihe:iti:2007:RegisterDocumentSet-b", null);
 				} else {
-					soap.soapCall(register_transaction, epr, false, true, false, "urn:anonOutInOp" ,null);				
+					soap.soapCall(register_transaction, protocol, epr, false, true, false, "urn:anonOutInOp" ,null);				
 				}
 			}
 			catch (XdsException e) {
@@ -373,7 +379,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	}
 
 	String registry_endpoint() {
-		return (registry_endpoint == null) ? Repository.getRegisterTransactionEndpoint(registryClientConnection) : registry_endpoint;
+		return (registry_endpoint == null) ? ConnectionUtil.getTransactionEndpoint(registryClientConnection) : registry_endpoint;
 	}
 
 	void log_headers(Soap soap) throws LoggerException, XdsInternalException {

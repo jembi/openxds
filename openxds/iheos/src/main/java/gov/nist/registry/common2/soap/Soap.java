@@ -21,6 +21,8 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.OperationContext;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.protocol.Protocol;
 
 public class Soap implements SoapInterface {
 	static ServiceClient serviceClient = null;
@@ -43,7 +45,7 @@ public class Soap implements SoapInterface {
 		this.async = async;
 	}
 
-	public void soapSend(OMElement body, String endpoint, boolean mtom, 
+	public void soapSend(OMElement body, Protocol protocol, String endpoint, boolean mtom, 
 			boolean addressing, boolean soap12, String action) 
 	throws  XdsException, AxisFault {
 		
@@ -52,10 +54,10 @@ public class Soap implements SoapInterface {
 		this.addressing = addressing;
 		this.soap12 = soap12;
 		
-		soapSend(body, endpoint, action);
+		soapSend(body, protocol, endpoint, action);
 	}
 	
-	public OMElement soapCall(OMElement body, String endpoint, boolean mtom, 
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint, boolean mtom, 
 			boolean addressing, boolean soap12, String action, String expected_return_action) 
 	throws  XdsException, AxisFault {
 		
@@ -64,10 +66,10 @@ public class Soap implements SoapInterface {
 		this.addressing = addressing;
 		this.soap12 = soap12;
 		
-		return soapCall(body, endpoint, action);
+		return soapCall(body, protocol, endpoint, action);
 	}
 	
-	public void soapSend(OMElement body, String endpoint,
+	public void soapSend(OMElement body, Protocol protocol, String endpoint,
 			  String action) 
 	throws  XdsException, AxisFault {
 		
@@ -121,7 +123,7 @@ public class Soap implements SoapInterface {
 
 	}
 
-	public OMElement soapCall(OMElement body, String endpoint,
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint,
 			  String action) 
 	throws  XdsException, AxisFault {
 
@@ -143,9 +145,10 @@ public class Soap implements SoapInterface {
 						Boolean.FALSE);
 
 			}
-
 			serviceClient.getOptions().setProperty(Constants.Configuration.ENABLE_MTOM, 
 					((mtom) ? Constants.VALUE_TRUE : Constants.VALUE_FALSE));
+
+			serviceClient.getOptions().setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, protocol);
 
 			serviceClient.getOptions().setAction(action);
 			if (addressing) {

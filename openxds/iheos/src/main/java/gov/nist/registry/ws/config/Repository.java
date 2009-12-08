@@ -32,26 +32,23 @@ public class Repository {
 	}
 
 	
-	/**
-	 * Get the Endpoint of this SOAP message.
-	 * 
-	 * @return the URL string of the web service
-	 */
-	static public String getRegisterTransactionEndpoint(IConnectionDescription connection) {
-		String host = connection.getHostname();
-		int port = connection.getPort();
-		boolean isSecure = connection.isSecure();
-		String url = "http://";
-		if(isSecure) {
-			url="https://";
-			//TODO: need to use local rather than global setting
-			Protocol.registerProtocol("https", new Protocol("https", 
-			  new SecureSocketFactory((SecureConnectionDescription)connection), port));
-		}
-		 
-		url+= host + ":" + port + connection.getUrlPath();
-		return url;
-	}
+//	/**
+//	 * Get the Endpoint of this SOAP message.
+//	 * 
+//	 * @return the URL string of the web service
+//	 */
+//	static public String getRegisterTransactionEndpoint(IConnectionDescription connection) {
+//		String host = connection.getHostname();
+//		int port = connection.getPort();
+//		boolean isSecure = connection.isSecure();
+//		String url = "http://";
+//		if(isSecure) {
+//			url="https://";
+//		}
+//		 
+//		url+= host + ":" + port + connection.getUrlPath();
+//		return url;
+//	}
 	
 	static public String getRepositoryUniqueId() {
 		XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();

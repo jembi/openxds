@@ -11,6 +11,7 @@ import gov.nist.registry.common2.soap.SoapInterface;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.apache.commons.httpclient.protocol.Protocol;
 
 public class SoapBypass implements SoapInterface {
 	OMElement result = null;
@@ -62,14 +63,14 @@ public class SoapBypass implements SoapInterface {
 	public void setSoap12(boolean soap12) {
 	}
 
-	public OMElement soapCall(OMElement body, String endpoint, boolean mtom,
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint, boolean mtom,
 			boolean addressing, boolean soap12, String action,
 			String expected_return_action) throws XdsException {
-		result = soapCall(body, endpoint, action);
+		result = soapCall(body, protocol, endpoint, action);
 		return result;
 	}
 
-	public OMElement soapCall(OMElement body, String endpoint, String action)
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint, String action)
 			throws XdsException {
 		try {
 			return new ServiceFinder(endpoint, action).invoke(body);
@@ -80,7 +81,7 @@ public class SoapBypass implements SoapInterface {
 		}
 	}
 
-	public void soapSend(OMElement metadata_element, String endpoint,
+	public void soapSend(OMElement metadata_element, Protocol protocol, String endpoint,
 			boolean useMtom, boolean useAddressing, boolean soap_1_2,
 			String requestAction) throws XdsException, AxisFault {
 		// TODO Auto-generated method stub
