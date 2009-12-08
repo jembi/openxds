@@ -5,14 +5,15 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.apache.commons.httpclient.protocol.Protocol;
 
 public interface SoapInterface {
 	public void setAsync(boolean async);
 	public boolean isAsync();
-	public OMElement soapCall(OMElement body, String endpoint, boolean mtom, 
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint, boolean mtom, 
 			boolean addressing, boolean soap12, String action, String expected_return_action) 
 	throws  XdsException, AxisFault;
-	public OMElement soapCall(OMElement body, String endpoint,
+	public OMElement soapCall(OMElement body, Protocol protocol, String endpoint,
 			  String action) 
 	throws  XdsException, AxisFault;
 	public OMElement getResult();
@@ -26,7 +27,7 @@ public interface SoapInterface {
 	public void setAddressing(boolean addressing);
 	public boolean isSoap12();
 	public void setSoap12(boolean soap12);
-	public void soapSend(OMElement metadata_element, String endpoint,
+	public void soapSend(OMElement metadata_element, Protocol protocol, String endpoint,
 			boolean useMtom, boolean useAddressing, boolean soap_1_2,
 			String requestAction) throws  XdsException, AxisFault;
 }
