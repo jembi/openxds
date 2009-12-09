@@ -38,7 +38,6 @@
 		<Description>XDS Registry</Description>
 		<XdsRegistry connection="xds-registry" />
 		<PixRegistry connection="pix-registry" />
-		<!-- AuditTrail consumer="log4j_audittrail" /-->
 	</Actor>
 	<Actor name="xdsreg_secure" type="XdsRegistry">
 		<Description>Secure XDS Registry</Description>
@@ -50,8 +49,9 @@
 	<Actor name="xdsrep" type="XdsRepository">
 		<Description>XDS Repository</Description>
 		<XdsRepository connection="xds-repository" />
-		<XdsRegistryClient connection="xds-registry-client" />
-		<!-- AuditTrail consumer="log4j_audittrail" /-->
+		<XdsRegistryClient connection="secure-xds-registry-client" />
+		<AuditTrail consumer="log4j_audittrail" />
+		<AuditTrail consumer="mesa_arr_udp" />		
 	</Actor>
 	<Actor name="xdsrep_secure" type="XdsRepository">
 		<Description>Secure XDS Repository</Description>
@@ -64,7 +64,7 @@
 	<!-- 
 		<Actor name="auditmesa" type="SecureNode">
 		<Description>MESA AUDIT TRAILS</Description>
-		<AuditTrail consumer="mesa_arr_bsd" />
+		<AuditTrail consumer="mesa_arr_udp" />
 		<AuditTrail consumer="log4j_audittrail" />
 		</Actor>
 		<Actor name="auditnist" type="SecureNode">

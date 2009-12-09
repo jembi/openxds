@@ -29,13 +29,13 @@
 		<Port>8087</Port>
 		<Property name="TYPE" value="BSD SYSLOG" />
 		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="allscripts4" />
-			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
 			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="ALLSCRIPTS" />
-			<Entry name="SOURCE" value="ALLSCRIPTS" />
-			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
-			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
 			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
@@ -49,13 +49,13 @@
 		<Port>15500</Port>
 		<Property name="TYPE" value="BSD SYSLOG" />
 		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="allscripts4" />
-			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
 			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="ALLSCRIPTS" />
-			<Entry name="SOURCE" value="ALLSCRIPTS" />
-			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
-			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
 			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
@@ -67,13 +67,13 @@
 	<StandardConnection name="log4j_audittrail">
 		<Property name="TYPE" value="LOG4J LOGGER" />
 		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="allscripts4" />
-			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
 			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="ALLSCRIPTS" />
-			<Entry name="SOURCE" value="ALLSCRIPTS" />
-			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
-			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
 			<Entry name="PatientNameEncoding" value="HL7" />
@@ -81,18 +81,18 @@
 		</PropertySet>
 	</StandardConnection>
 
-	<StandardConnection name="mesa_arr_bsd">
-		<HostName>localhost</HostName>
-		<Port>4000</Port>
-		<Property name="TYPE" value="BSD SYSLOG" />
+	<StandardConnection name="mesa_arr_udp">
+		<HostName>ihe-kudu.wustl.edu</HostName>
+		<Port>4001</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="allscripts4" />
-			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
 			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="ALLSCRIPTS" />
-			<Entry name="SOURCE" value="ALLSCRIPTS" />
-			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
-			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
 			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
@@ -107,13 +107,13 @@
 		<Property name="NAME" value="mesa-test" />
 		<Property name="URLPATH" value="./index" />
 		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="allscripts4" />
-			<Entry name="HOSTNAME" value="allscripts4" />
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
 			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="ALLSCRIPTS" />
-			<Entry name="SOURCE" value="ALLSCRIPTS" />
-			<Entry name="APPNAME" value="PAT_IDENTITY_X_REF_MGR_MISYS" />
-			<Entry name="FACILITY" value="ALLSCRIPTS" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
 			<Entry name="PatientNameEncoding" value="HL7" />

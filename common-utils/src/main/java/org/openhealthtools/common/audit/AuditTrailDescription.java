@@ -31,6 +31,8 @@ import com.misyshealthcare.connect.net.PropertySet;
  * @version 1.0 - Dec 9, 2005
  */
 public class AuditTrailDescription {
+	public static final String TLS5425 = "TLS SYSLOG";
+	public static final String UDP5426 = "UDP SYSLOG";
 	public static final String BSD = "BSD SYSLOG";
 	public static final String RELIABLE = "RELIABLE SYSLOG";
 	public static final String LOG4J = "LOG4J LOGGER";

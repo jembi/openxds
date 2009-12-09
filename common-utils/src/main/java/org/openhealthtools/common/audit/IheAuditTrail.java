@@ -111,7 +111,12 @@ public class IheAuditTrail implements IAuditTrail {
 		for (IConnectionDescription repository: repositories) {
 			AuditTrailDescription description = new AuditTrailDescription(repository);
 			String type = description.getType();
-			if (type.equalsIgnoreCase(AuditTrailDescription.BSD)) {
+			if (type.equalsIgnoreCase(AuditTrailDescription.TLS5425)) {
+				//TODO: implement TLS RFC5425.
+				//messengers.add(new Syslog5425Messenger(description));
+			} else if (type.equalsIgnoreCase(AuditTrailDescription.UDP5426)) {
+				messengers.add(new SyslogUdp5426Messenger(description));
+			} else if (type.equalsIgnoreCase(AuditTrailDescription.BSD)) {
 				messengers.add(new BsdMessenger(description));
                 //messengers.add(new Log4JMessenger(description));
             } else if (type.equalsIgnoreCase(AuditTrailDescription.LOG4J)) {
