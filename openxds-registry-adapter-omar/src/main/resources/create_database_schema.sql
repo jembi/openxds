@@ -728,7 +728,7 @@ CREATE VIEW Identifiable (
   home
  FROM ObjectRef
 ;
-ALTER VIEW Identifiable OWNER TO openxds;
+ALTER TABLE Identifiable OWNER TO openxds;
 
 DROP VIEW IF EXISTS RegistryObject CASCADE;
 CREATE VIEW RegistryObject (
@@ -990,7 +990,7 @@ CREATE VIEW RegistryObject (
   comment_
  FROM Person
 ;
-ALTER VIEW RegistryObject OWNER TO openxds;
+ALTER TABLE RegistryObject OWNER TO openxds;
 
 
 --All index definitions are non-normative
