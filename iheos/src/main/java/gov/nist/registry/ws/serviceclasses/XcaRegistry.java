@@ -26,7 +26,7 @@ public class XcaRegistry extends RegistryB {
 	protected void decorateQueryOutput(OMElement sor, AdhocQueryRequest a, OMElement result) throws XdsValidationException {
 		home = getHomeParameter(sor, a);
 		if (home == null || home.equals(""))
-			home = properties.getString("home_community_id");
+			home = properties.getString("home.community.id");
 			new RG().setHomeOnSQResponse(result, home);
 	}
 

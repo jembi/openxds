@@ -276,7 +276,7 @@ public class RegistryErrorList implements ErrorLogger {
 	@SuppressWarnings("unchecked")
 	void setHomeAsLocation() {
 		String reXPath = "//*[local-name()='RegistryError']";
-		String home = Properties.loader().getString("home_community_id");;
+		String home = Properties.loader().getString("home.community.id");;
 		try {
 			AXIOMXPath xpathExpression = new AXIOMXPath (reXPath);
 			List<?> nodes = xpathExpression.selectNodes(rel);
