@@ -176,6 +176,7 @@ public abstract class XdsTest {
 		String responseString = pipeParser.encode(response);	        
 		System.out.println("Received response:\n" + responseString);
  		MSA msa = (MSA)response.get("MSA");
+		assertEquals("AA", msa.getAcknowledgementCode().getValue());
 	}
 	
 	//patientId format example: 12321^^^&1.3.6.1.4.1.21367.2009.1.2.300&ISO
