@@ -29,7 +29,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	String home;
 
 	static {
-		homeProperty = Properties.loader().getString("home_community_id");
+		homeProperty = Properties.loader().getString("home.community.id");
 	}
 
 	abstract public boolean runContentValidationService(Metadata request, Response response);
