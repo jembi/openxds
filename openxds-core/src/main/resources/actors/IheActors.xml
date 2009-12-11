@@ -49,7 +49,7 @@
 	<Actor name="xdsrep" type="XdsRepository">
 		<Description>XDS Repository</Description>
 		<XdsRepository connection="xds-repository" />
-		<XdsRegistryClient connection="secure-xds-registry-client" />
+		<XdsRegistryClient connection="xds-registry-client" />
 		<AuditTrail consumer="log4j_audittrail" />
 		<AuditTrail consumer="mesa_arr_udp" />		
 	</Actor>
