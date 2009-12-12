@@ -81,7 +81,7 @@
         <!--The host name of the PIX Manager Server-->
         <HostName>localhost</HostName>
         <!--The port for PIX TLS transaction-->
-        <Port>3611</Port>
+        <Port>3612</Port>
         <Identifier name="ReceivingApplication">
             <NamespaceId>PAT_IDENTITY_X_REF_MGR_MISYS_TLS</NamespaceId>
         </Identifier>
