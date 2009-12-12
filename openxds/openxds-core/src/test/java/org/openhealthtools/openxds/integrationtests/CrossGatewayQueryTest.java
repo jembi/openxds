@@ -51,7 +51,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 	}
 	
 	static {
-		homeProperty = Properties.loader().getString("home_community_id");
+		homeProperty = Properties.loader().getString("home.community.id");
 	}
 
 	/**

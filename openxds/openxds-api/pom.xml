@@ -44,7 +44,7 @@
                           <goal>copy-dependencies</goal>
                       </goals>
                       <configuration>
-                          <outputDirectory>../../build/lib</outputDirectory>
+                          <outputDirectory>${build.lib.dir}</outputDirectory>
                           <overWriteIfNewer>true</overWriteIfNewer>
                       </configuration>
                   </execution>

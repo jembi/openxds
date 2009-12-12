@@ -184,11 +184,11 @@ public class XdsRegistryImpl extends IheActor implements XdsRegistry {
         return isSuccess;
     }
     
-	private void initializeOpenEMPI() {
-		XdsFactory.getInstance().getBean("context");
-		org.openhie.openempi.context.Context.startup();
-		org.openhie.openempi.context.Context.authenticate("admin", "admin");
-	}	
+//	private void initializeOpenEMPI() {
+//		XdsFactory.getInstance().getBean("context");
+//		org.openhie.openempi.context.Context.startup();
+//		org.openhie.openempi.context.Context.authenticate("admin", "admin");
+//	}	
    
     @Override
     public void stop() {
