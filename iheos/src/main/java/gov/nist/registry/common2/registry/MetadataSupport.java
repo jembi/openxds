@@ -60,7 +60,7 @@ public class MetadataSupport {
 	static public String response_status_type_namespace = "urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:";
 	static public String error_severity_type_namespace = "urn:oasis:names:tc:ebxml-regrep:ErrorSeverityType:";
 	static public String association_type_namespace = "urn:oasis:names:tc:ebxml-regrep:AssociationType:";
-													
+
 	public static QName name_qname = new QName("Name");
 
 	public static QName object_type_qname = new QName("objectType");
@@ -195,6 +195,11 @@ public class MetadataSupport {
 	public static String XDSDocumentEntry_hcftCode_uuid="urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1";
 	public static String XDSDocumentEntry_eventCode_uuid="urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4";
 	public static String XDSDocumentEntry_confCode_uuid="urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f";
+	public static String XDSDocumentEntry_typeCode_uuid="urn:uuid:f0306f51-975f-434e-a61c-c59651d33983";
+	
+	public static String XDSSubmissionSet_contentTypeCode_uuid = "urn:uuid:aa543740-bdda-424e-8c96-df4873be8500";
+	
+	public static String XDSFolder_codeList_uuid="urn:uuid:1ba97051-7806-41a8-a48b-8fce7af683c5";
 	
 	public static String XDSAssociationDocumentation_uuid = "urn:uuid:abd807a3-4432-4053-87b4-fd82c643d1f3";
 
@@ -219,7 +224,6 @@ public class MetadataSupport {
 	public static String XDSExtraMetadataNotSaved = "XDSExtraMetadataNotSaved";
 	public static String XDSUnknownPatientId = "XDSUnknownPatientId";
 	public static String XDSPatientIdDoesNotMatch = "XDSPatientIdDoesNotMatch";
-	public static String XDSResultNotSinglePatient = "XDSResultNotSinglePatient";
 	public static String XDSUnknownStoredQuery = "XDSUnknownStoredQuery";
 	public static String XDSStoredQueryMissingParam = "XDSStoredQueryMissingParam";
 	public static String XDSStoredQueryParamNumber = "XDSStoredQueryParamNumber";
@@ -301,6 +305,12 @@ public class MetadataSupport {
 		return null;
 	}
 
+	public static OMElement firstDecendentWithLocalName(OMElement ele, String localName) {
+		List<OMElement> decendents = decendentsWithLocalName(ele, localName);
+		if (decendents.size() == 0) return null;
+		return decendents.get(0);
+	}
+	
 	public static List<OMElement> decendentsWithLocalName(OMElement ele, String localName) {
 		return decendentsWithLocalName(ele, localName, -1);
 	}

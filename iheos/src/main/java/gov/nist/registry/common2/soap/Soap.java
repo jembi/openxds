@@ -10,7 +10,9 @@ import gov.nist.registry.common2.xml.Util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAP11Constants;
@@ -32,6 +34,7 @@ public class Soap implements SoapInterface {
 	boolean mtom;
 	boolean addressing;
 	boolean soap12;
+	List<OMElement> additionalHeaders = null;
 	
 	public Soap() {
 		async = false;
@@ -39,6 +42,16 @@ public class Soap implements SoapInterface {
 		mtom = false;
 		addressing = true;
 		soap12 = true;
+	}
+	
+	public void addHeader(OMElement header) {
+		if (additionalHeaders == null)
+			additionalHeaders = new ArrayList<OMElement>();
+		additionalHeaders.add(header);
+	}
+	
+	public void clearHeaders() {
+		additionalHeaders = null;
 	}
 
 	public void setAsync(boolean async) {
@@ -156,6 +169,12 @@ public class Soap implements SoapInterface {
 			} else {
 				serviceClient.disengageModule("addressing");    // this does not work in Axis2 yet
 			}
+			
+			if (additionalHeaders != null) {
+				for (OMElement hdr : additionalHeaders) {
+					serviceClient.addHeader(hdr);
+				}
+			}			
 
 			serviceClient.getOptions().setSoapVersionURI(
 					((soap12) ? SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI : SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI)

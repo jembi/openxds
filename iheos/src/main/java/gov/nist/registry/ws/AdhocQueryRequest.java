@@ -135,7 +135,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			logger.fatal(logger_exception_details(e));
 		}
 		catch (MetadataValidationException e) {
-			response.add_error(MetadataSupport.XDSResultNotSinglePatient, "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
+			response.add_error("XDSRegistryError", "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		}  
 		catch (SqlRepairException e) {
 			response.add_error("XDSRegistryError", "Could not decode SQL: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -266,29 +266,42 @@ public class AdhocQueryRequest extends XdsCommon {
 		logger.info("query " + query_id + " requires home = " + requires);
 		return requires;
 	}
+	
+	public boolean isMPQ(OMElement ahqr) {
+		String query_id = getStoredQueryId(ahqr);
+		if (query_id == null) return false;
+		if ("urn:uuid:3d1bdb10-39a2-11de-89c2-2f44d94eaa9f".equals(query_id)) return true;
+		if ("urn:uuid:50d3f5ac-39a2-11de-a1ca-b366239e58df".equals(query_id)) return true;
+		return false;
+	}
 
 	@SuppressWarnings("unchecked")
 	Metadata stored_query(OMElement ahqr) 
 	throws XdsException, LoggerException, XDSRegistryOutOfResourcesException, XdsValidationException {
-	  //try {
-				// Registry holds the configuration for this implementation and selected
-				// the correct Stored Query implementation by returning a factory object
-				StoredQueryFactory fact = Registry.getStoredQueryFactory(ahqr, response, log_message); 
-				fact.setServiceName(service_name);
-				fact.setIsSecure(is_secure);
-				StoredQuery sq = fact.getImpl();
-				Metadata m = sq.run();
-				if ( !m.isPatientIdConsistent() )
-					throw new XdsResultNotSinglePatientException("More than one Patient ID in Stored Query result");
-				return m;
-//			}
-//			catch (Exception e) {
-//				response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
-//				return null;
-//			}
-			
-			
-	 }
+
+		//		new StoredQueryRequestSoapValidator(xds_version, messageContext).runWithException();
+
+		//try {
+		// Registry holds the configuration for this implementation and selected
+		// the correct Stored Query implementation by returning a factory object
+		StoredQueryFactory fact = Registry.getStoredQueryFactory(ahqr, response, log_message); 
+		fact.setServiceName(service_name);
+		fact.setIsSecure(is_secure);
+		StoredQuery sq = fact.getImpl();
+		Metadata m = sq.run();
+		if (!isMPQ(ahqr)) {
+			if ( !m.isPatientIdConsistent() )
+				throw new XdsResultNotSinglePatientException("More than one Patient ID in Stored Query result");
+		}
+		return m;
+		//		}
+		//		catch (Exception e) {
+		//			response.add_error("XDSRegistryError", ExceptionUtil.exception_details(e), "StoredQueryFactory.java", log_message);
+		//			return null;
+		//
+		//		}
+
+	}
 
 	private OMElement sql_query(OMElement ahqr) 
 	throws XdsInternalException, SchemaValidationException, LoggerException, SqlRepairException, MetadataException, MetadataValidationException, XMLParserException {
