@@ -32,6 +32,8 @@
 	<ConnectionFile file="XdsRegistryConnections.xml" />
 	<!--Defines the configuration of XDS Repository-->
 	<ConnectionFile file="XdsRepositoryConnections.xml" />
+	<!--Defines the configuration of XCA Responding Gateway-->
+	<ConnectionFile file="XcaRespondingGatewayConnections.xml" />
 
 	<!--The XDS Registry actor configuration-->
 	<Actor name="xdsreg" type="XdsRegistry">
@@ -50,8 +52,8 @@
 		<Description>XDS Repository</Description>
 		<XdsRepository connection="xds-repository" />
 		<XdsRegistryClient connection="xds-registry-client" />
-		<AuditTrail consumer="log4j_audittrail" />
-		<AuditTrail consumer="mesa_arr_udp" />		
+		<!-- AuditTrail consumer="log4j_audittrail" /-->
+		<!-- AuditTrail consumer="mesa_arr_udp" /-->		
 	</Actor>
 	<Actor name="xdsrep_secure" type="XdsRepository">
 		<Description>Secure XDS Repository</Description>
@@ -59,6 +61,13 @@
 		<XdsRegistryClient connection="secure-xds-registry-client" />
 	</Actor>
 
+	<!--The XCA Responding Gateway actor configuration-->
+	<Actor name="xcarg" type="XcaRG">
+		<Description>XCA Responding Gateway</Description>
+		<XcaRG connection="xca-rg" />
+		<XdsRegistryClient connection="xds-registry-client" />
+		<XdsRepositoryClient connection="xds-repository-client" />
+	</Actor>
 	
 	<!-- Audit Repository Actor -->
 	<!-- 

@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openxds.xca.api.XcaRG;
 
 import com.misyshealthcare.connect.base.IBrokerController;
 
@@ -48,6 +49,8 @@ public class XdsBroker   {
     private Vector<XdsRegistry> xdsRegistries = new Vector<XdsRegistry>();
     /** A list of all known xds repositories */
     private Vector<XdsRepository> xdsRepositories = new Vector<XdsRepository>();
+    /** A list of all known xca responding gateway */
+    private Vector<XcaRG> xcaRGs = new Vector<XcaRG>();
 
 	/**
 	 * A private constructor for creating the singleton instance.
@@ -156,4 +159,47 @@ public class XdsBroker   {
  		return true;
  	}
 	
+     /**
+ 	 * Registers a new XCA Responding Gateway.  This method
+ 	 * is typically called when an XCA Gateway server is started.
+ 	 *
+ 	 * @param xcaRG an XCA Responding Gateway
+ 	 * @return <code>true</code> if this XCA Responding Gateway was successfully added
+ 	 */
+     public synchronized boolean registerXcaRG(XcaRG xcaRG) {
+ 		// If the xcaRG is new, add it to the list
+ 		if ((xcaRG != null) && (!xcaRGs.contains(xcaRG))) {
+ 			xcaRG.start();
+ 			xcaRGs.add(xcaRG);
+ 			return true;
+ 		} else {
+ 			return false;
+ 		}
+ 	}
+
+    /**
+  	 * Unregisters the active XCA Responding Gateway specified by the controller.  If the
+  	 * controller is null unregister all XCA Responding Gateway.  An XCA Responding Gateway is stopped 
+  	 * when it is unregistered.
+  	 *
+  	 * @param controller the controller specifying which XCA Responding Gatway to unregister. All XDS
+  	 * Responding Gateways will be unregistered if it is null. 
+  	 * @return <code>true</code> if all Responding Gateways were actually unregistered
+  	 */
+      public synchronized boolean unregisterXcaRG(IBrokerController controller) {
+  		ArrayList<XcaRG> removed = new ArrayList<XcaRG>();
+  		// Find all the sources to remove
+  		for (XcaRG actor: xcaRGs) {
+  			if ((controller == null) || controller.shouldUnregister(actor)) {
+  				removed.add(actor);
+  			}
+  		}
+  		if (removed.isEmpty()) return false;
+  		// Remove them
+  		xcaRGs.removeAll(removed);
+  		// Stop them all too
+  		for (XcaRG actor: removed) actor.stop();
+  		return true;
+  	}
+     
 }

@@ -4,6 +4,7 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
@@ -14,16 +15,28 @@ import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.service.AppendixV;
+import gov.nist.registry.common2.soap.Soap;
 import gov.nist.registry.common2.xca.HomeAttribute;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.ContentValidationService;
+import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.common.utils.ConnectionUtil;
+import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.xca.api.XcaRG;
+
+import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public abstract class RGAbstract extends XdsService implements ContentValidationService {
+	private final static Log logger = LogFactory.getLog(RGAbstract.class);
 	boolean optimize = true;
 	static String homeProperty;
 	String home;
@@ -31,6 +44,9 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	static {
 		homeProperty = Properties.loader().getString("home.community.id");
 	}
+    IConnectionDescription connection = null;
+    IConnectionDescription registryClientConnection = null;
+    IConnectionDescription repositoryClientConnection = null;
 
 	abstract public boolean runContentValidationService(Metadata request, Response response);
 	abstract public OMElement AdhocQueryRequest(OMElement ahqr);
@@ -42,6 +58,27 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 	public RGAbstract() {
 		home = homeProperty;  // allows sub-classes to override
+		IheHTTPServer httpServer = (IheHTTPServer)getMessageContext().getTransportIn().getReceiver();
+		try {
+			IheActor actor = httpServer.getIheActor();
+			if (actor == null) {
+				throw new XdsInternalException("Cannot find XcaRG actor configuration.");			
+			}
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XcaRG connection configuration.");			
+			}
+			registryClientConnection = ((XcaRG)actor).getRegistryClientConnection();
+			if (registryClientConnection == null) {
+				throw new XdsInternalException("Cannot find XcaRG XdsRegistryClient connection configuration.");			
+			}
+			repositoryClientConnection = ((XcaRG)actor).getRepositoryClientConnection();
+			if (repositoryClientConnection == null) {
+				throw new XdsInternalException("Cannot find XcaRG XdsRepositoryClient connection configuration.");			
+			}
+		} catch (XdsInternalException e) {
+			logger.fatal("Internal Error creating RegistryResponse: " + e.getMessage());
+		}
 	}
 
 	protected void setHome(String home) {
@@ -124,24 +161,72 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 				return response;
 			}
 
+//			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
+//			s.setIsXCA();
+//			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
+//			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
+//			setHomeOnRetResponse(result);
+//			log_message.addOtherParam("Result", result.toString());			
+//			endTransaction(s.getStatus());
 
-			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
-			s.setIsXCA();
-
-			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
-			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
-
-			setHomeOnRetResponse(result);
-
-			log_message.addOtherParam("Result", result.toString());
-
-			endTransaction(s.getStatus());
-			return result;
+			Protocol protocol = ConnectionUtil.getProtocol(repositoryClientConnection);
+			String epr = ConnectionUtil.getTransactionEndpoint(repositoryClientConnection);
+			Soap soap = new Soap();
+			soap.soapCall(rdsr, protocol, epr, true, true, true, "urn:ihe:iti:2007:RetrieveDocumentSet", null);
+			
+			OMElement result = soap.getResult();
+			
+			return processResult(result);
 		} catch (Exception e) {
 			return endTransaction(rdsr, e, AppendixV.REPOSITORY_ACTOR, "");
 		}
 
 	}
+	private OMElement processResult(OMElement result) throws XdsInternalException, LoggerException {
+		RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
+		rel.setIsXCA();
+		
+		if (result == null) {
+			rel.add_error(MetadataSupport.XDSRepositoryError, "Null response message from Repository", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;
+		}
+		
+		OMElement rr = MetadataSupport.firstChildWithLocalName(result, "RegistryResponse");
+		if (rr == null) {
+			rel.add_error(MetadataSupport.XDSRepositoryError, "Null RegistryResponse from Repository", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;				
+		}
+		String status = rr.getAttributeValue(MetadataSupport.status_qname);
+		if (rr == null) {
+			rel.add_error(MetadataSupport.XDSRepositoryError, "Null status from Repository", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;				
+		}
+
+		if ( !status.equals(MetadataSupport.response_status_type_namespace + "Success")) {
+			OMElement registry_error_list = MetadataSupport.firstChildWithLocalName(result, "RegistryErrorList"); 
+			rel.addRegistryErrorList(registry_error_list, log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;
+		} else {
+			setHomeOnRetResponse(result);
+			log_message.addOtherParam("Result", result.toString());
+			log_message.setPass(true);
+			endTransaction(true);
+			return result;
+		}		
+	}
+	
 	protected void verifyHomeOnRetrieve(OMElement rdsr, RegistryErrorList rel, String home) {
 		List<OMElement> doc_requests = MetadataSupport.decendentsWithLocalName(rdsr, "DocumentRequest");
 		for (OMElement doc_request : doc_requests) {

@@ -44,10 +44,11 @@ import org.openhealthexchange.openpixpdq.ihe.log.IMesaLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.XdsBroker;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+import org.openhealthtools.openxds.repository.XcaRGImpl;
 import org.openhealthtools.openxds.repository.XdsRepositoryImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -445,30 +446,34 @@ public class XdsConfigurationLoader {
 				if (sourceConnection == null) sourceConnection = source;
 			}
 			
-			ArrayList<IConnectionDescription> xdsAuditConnection = null;
 			if(actor.actorType.equalsIgnoreCase("SecureNode")) {
 				// Build a new audit trail if there are any connections to audit repositories.
-				xdsAuditConnection = ((XdsAuditActorDescription)actor).getXdsAuditConnection();
+				ArrayList<IConnectionDescription> xdsAuditConnection = ((XdsAuditActorDescription)actor).getXdsAuditConnection();
 				if (!createXdsAuditActor(actor.id, xdsAuditConnection, log, null))
 					okay = false;
 			}
-			IConnectionDescription xdsRegistryConnection = null;
-			IConnectionDescription pixRegistryConnection = null;
+			//XDS Registry
 			if(actor.actorType.equalsIgnoreCase("XdsRegistry")) {
-				xdsRegistryConnection = ((XdsRegistryActorDescription)actor).getXdsRegistryConnection();
-				pixRegistryConnection = ((XdsRegistryActorDescription)actor).getPixRegistryConnection();
+				IConnectionDescription xdsRegistryConnection = ((XdsRegistryActorDescription)actor).getXdsRegistryConnection();
+				IConnectionDescription pixRegistryConnection = ((XdsRegistryActorDescription)actor).getPixRegistryConnection();
 				if (!createXdsRegistryActor(actor.id, xdsRegistryConnection, pixRegistryConnection, 
 						actorAudit, log, null))
 					okay = false;
 			}
-			//TODO: Add xds repository
-			IConnectionDescription xdsRepositoryServerConnection = null;
-			IConnectionDescription xdsRegistryClientConnection = null;
+			//XDS Repository
 			if(actor.actorType.equalsIgnoreCase("XdsRepository")) {
-				xdsRepositoryServerConnection = ((XdsRepositoryActorDescription)actor).getXdsRepositoryServerConnection();
-				xdsRegistryClientConnection = ((XdsRepositoryActorDescription)actor).getXdsRegistryClientConnection();
+				IConnectionDescription xdsRepositoryServerConnection = ((XdsRepositoryActorDescription)actor).getXdsRepositoryServerConnection();
+				IConnectionDescription xdsRegistryClientConnection = ((XdsRepositoryActorDescription)actor).getXdsRegistryClientConnection();
 				if (!createXdsRepositoryActor(actor.id, xdsRepositoryServerConnection, xdsRegistryClientConnection, 
 						actorAudit, log, null))
+					okay = false;
+			}
+			//XCA Responding Gateway
+			if(actor.actorType.equalsIgnoreCase("XcaRG")) {
+				IConnectionDescription xcaRGServerConnection = ((XcaRGActorDescription)actor).getXcaRGServerConnection();
+				IConnectionDescription xdsRegistryClientConnection = ((XcaRGActorDescription)actor).getXdsRegistryClientConnection();
+				IConnectionDescription xdsRepositoryClientConnection = ((XcaRGActorDescription)actor).getXdsRepositoryClientConnection();
+				if (!createXcaRGActor(actor.id, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, actorAudit, log, null))
 					okay = false;
 			}
 			
@@ -607,8 +612,12 @@ public class XdsConfigurationLoader {
 		IConnectionDescription xdsRegistryServerConnection = null;
 		//Define a XDSRepository server side connection so that ITI-41 and ITI-43  messages can be forwarded to the XDS Repository server
 		IConnectionDescription xdsRepositoryServerConnection = null;
-		//Define a XDSRegistry client side connection so that ITI-42 messages can be forwarded to the XDS Registry server
+		//Define a XDSRegistry client side connection so that ITI-42 and ITI-38 messages can be forwarded to the XDS Registry server
 		IConnectionDescription xdsRegistryClientConnection = null;
+		//Define a XCARG server side connection so that ITI-38 & ITI-39 messages can be forwarded to the XCA Responding Gateway server
+		IConnectionDescription xcaRGServerConnection = null;
+		//Define a XDSRepository client side connection so that ITI-39 messages can be forwarded to the XDS Repository server
+		IConnectionDescription xdsRepositoryClientConnection = null;
 		
 		// Look at each child node in turn
 		NodeList elements = definition.getChildNodes();
@@ -691,14 +700,34 @@ public class XdsConfigurationLoader {
 						throwIheConfigurationException("XdsRepository connection '" + xdsRepositoryName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
 				} else if (kind.equalsIgnoreCase("XDSREGISTRYCLIENT")) {
-					// For XDS Repository, define a XDSRegistry client side connection for transaction ITI-42.
+					// For XDS Repository or XCA Responding Gateway, define a XDSRegistry client side connection for transaction ITI-42.
 					String xdsRegistryClientName = getAttributeValue(element, "connection");
 					if (xdsRegistryClientName == null) {
 						throwIheConfigurationException("XdsRegistryClient element with no 'connection' attribute", configFile);
 					}
 					xdsRegistryClientConnection = ConnectionFactory.getConnectionDescription(xdsRegistryClientName);
 					if (xdsRegistryClientConnection == null) {
-						throwIheConfigurationException("XdsRepository connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+						throwIheConfigurationException("XdsRegistryClient connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+					}
+				} else if (kind.equalsIgnoreCase("XDSREPOSITORYCLIENT")) {
+					// For XCA Gateway, define a XDSRepository client side connection for transaction ITI-39.
+					String xdsRepositoryClientName = getAttributeValue(element, "connection");
+					if (xdsRepositoryClientName == null) {
+						throwIheConfigurationException("XdsRepositoryClient element with no 'connection' attribute", configFile);
+					}
+					xdsRepositoryClientConnection = ConnectionFactory.getConnectionDescription(xdsRepositoryClientName);
+					if (xdsRepositoryClientConnection == null) {
+						throwIheConfigurationException("XdsRepositoryClient connection '" + xdsRepositoryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+					}
+				} else if (kind.equalsIgnoreCase("XCARG")) {
+					// For XCA Responding Gateway, define a XCA RG server connection for transactions ITI-38 & 39
+					String xcaRGName = getAttributeValue(element, "connection");
+					if (xcaRGName == null) {
+						throwIheConfigurationException("XcdRG element with no 'connection' attribute", configFile);
+					}
+					xcaRGServerConnection = ConnectionFactory.getConnectionDescription(xcaRGName);
+					if (xcaRGServerConnection == null) {
+						throwIheConfigurationException("XcaRG connection '" + xcaRGName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
 				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
 					// A description of this actor for GUI presentation
@@ -726,11 +755,24 @@ public class XdsConfigurationLoader {
 				log.warn("Actor '" + actorName + "' specifies a connection instead of an auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		}
 		// Make sure we got out a valid definition
-		if (actorType.equalsIgnoreCase("XdsRegistry") && pixRegistryServerConnection==null)
-			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		if (actorType.equalsIgnoreCase("XdsRegistry") && xdsRegistryServerConnection==null)
-			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		//TODO: validate XDS Repository
+		if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
+			if (pixRegistryServerConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRegistryServerConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
+			if (xdsRepositoryServerConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepository in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRegistryClientConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		} else if (actorType.equalsIgnoreCase("XCARG")) {
+			if (xcaRGServerConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XcaRG in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRegistryClientConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRepositoryClientConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepositoryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		}			
 		if (actorType.equalsIgnoreCase("SecureNode") && logConnections.isEmpty())
 			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			// Actually create the actor
@@ -739,6 +781,8 @@ public class XdsConfigurationLoader {
 				return createXdsRegistryActor(actorName,xdsRegistryServerConnection, pixRegistryServerConnection, logConnections, null, configFile);
 			} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
 				return createXdsRepositoryActor(actorName,xdsRepositoryServerConnection, xdsRegistryClientConnection, logConnections, null, configFile);
+			} else if (actorType.equalsIgnoreCase("XCARG")) {
+				return createXcaRGActor(actorName, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);
 			} else 
 				return true;
 		} else {			
@@ -753,6 +797,8 @@ public class XdsConfigurationLoader {
 				actor.description = getHumanConnectionDescription(description, xdsRegistryServerConnection);
 			} else if (xdsRepositoryServerConnection != null) {
 				actor.description = getHumanConnectionDescription(description, xdsRepositoryServerConnection);
+			} else if (xcaRGServerConnection != null) {
+				actor.description = getHumanConnectionDescription(description, xcaRGServerConnection);
 			} else if (actorType.equalsIgnoreCase("SecureNode") && !logConnections.isEmpty()) {
 				actor.description = getHumanConnectionDescription(description, logConnections.get(0));
 			} else {
@@ -770,6 +816,10 @@ public class XdsConfigurationLoader {
 			}else if (actor instanceof XdsRepositoryActorDescription) {
 				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = xdsRepositoryServerConnection;
 				((XdsRepositoryActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
+			}else if (actor instanceof XcaRGActorDescription) {
+				((XcaRGActorDescription)actor).xcaRGServerConnection = xcaRGServerConnection;
+				((XcaRGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
+				((XcaRGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
 			}else if (actor instanceof XdsAuditActorDescription){
 				((XdsAuditActorDescription)actor).xdsAuditConnection = logConnections;
 			}
@@ -794,7 +844,9 @@ public class XdsConfigurationLoader {
             return "OpenXDS XDS Registry";
         } else if (type.equals("XdsRepository")) {
             return "OpenXDS XDS Repository";
-        }
+	    } else if (type.equals("XcaRG")) {
+	        return "OpenXDS XCA Responding Gateway";
+	    }
 		else {
 			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
 			return null;
@@ -837,71 +889,6 @@ public class XdsConfigurationLoader {
 		return sb.toString();
 	}
 	
-//	/**
-//	 * Creates an IHE actor and install it into the XdsBroker or DocumentBroker.
-//	 * 
-//	 * @param type the type of actor to create
-//	 * @param name the name of the actor to create (used in audit messages)
-//	 * @param sourceConnection the connection it should use to get information
-//	 * @param consumerConnection the connection it should use to send information
-//	 * @param auditConnections the audit trail connections this actor should log to
-//	 * @param xdsRegistryConnection The description of the connection of the XDS
-//     * 			Registry in the affinity domain
-//	 * @param pixConsumerConnections the connections of PIX consumers subscribing to PIX update notification
-//	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-//	 * @return <code>true</code> if the actor is created successfully
-//	 * @throws IheConfigurationException When there is a problem with the configuration
-//	 */
-//	private boolean createIheActor(String type, String name, IConnectionDescription sourceConnection, 
-//			IConnectionDescription consumerConnection, Collection<IConnectionDescription> auditConnections,
-//			IConnectionDescription xdsRegistryConnection, Collection<IConnectionDescription> pixConsumerConnections,
-//			IMesaLogger logger, File configFile) throws IheConfigurationException {
-//		boolean okay = false;
-//		//TODO: revisit Audit
-////		IheAuditTrail auditTrail = null;
-////		// Build a new audit trail if there are any connections to audit repositories.
-////		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-////		// Create the actor
-////		if (type.equalsIgnoreCase("SecureNode")) {
-////			// TODO: add error message if there is no audit trail.
-////			if (auditTrail != null) {
-////				AuditBroker broker = AuditBroker.getInstance();
-////				broker.registerAuditSource(auditTrail);
-////				okay = true;
-////			}
-////		} else 
-//		if (type.equalsIgnoreCase("XdsRegistry")) {
-//            IConnectionDescription connection = sourceConnection;
-//            if (connection == null) connection = consumerConnection;
-//            XdsRegistry xdsRegistry = new XdsRegistry(connection, auditTrail, xdsRegistryConnection, pixConsumerConnections);
-//            String pixManagerAdapterClass = Configuration.getPropertyValue(connection, "pixManagerAdapter", true);
-//            IPixManagerAdapter pixAdapter = null;
-//            try {
-//                Class c = Class.forName(pixManagerAdapterClass);
-//                pixAdapter = (IPixManagerAdapter)getObjectInstance( c );
-//            } catch (Exception e) {
-//                String message = "Could not load PixManagerAdapter in actor type '"+ type +"' in config file " + configFile;
-//                log.error(message, e);
-//                throw new IheConfigurationException(message);
-//            }
-//            if (pixMan != null) {
-//                pixMan.registerPixManagerAdapter( pixAdapter );
-//                pixMan.setStoreLogger(getMessageStore(connection, type, configFile));
-//                pixMan.setMesaLogger(logger);
-//                XdsBroker broker = XdsBroker.getInstance();
-//                broker.registerPixManager(pixMan);
-//                okay = true;
-//            }
-//        }  else if (type.equalsIgnoreCase("XdsRepository")) {
-//        	//TODO:
-//        }
-//		else {
-//			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
-//		}
-//		// Record this installation, if it succeeded
-//		if (okay) actorsInstalled.add(name);
-//		return okay;
-//	}
 	
 	/**
 	 * Creates an IHE XDS AuditTrail actor and install it into the AuditBroker.
@@ -967,10 +954,10 @@ public class XdsConfigurationLoader {
 	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
 	 * 
 	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xdsRegistryConnection The description of the connection of the XDS
-     * 			Registry in the affinity domain
-	 * @param pixRegistryConnection The description of the connection of the PIX
-	 * 			Registry in the affinity domain
+	 * @param xdsRepositoryServerConnection The description of the connection of the XDS
+     * 			Repository in the affinity domain
+	 * @param xdsRegistryClientConnection The description of the client side connection of
+	 * 			the XDS Registry in the affinity domain
 	 * @param auditConnections the audit trail connections this actor should log to
 	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
 	 * @return <code>true</code> if the actor is created successfully
@@ -995,7 +982,41 @@ public class XdsConfigurationLoader {
 		return okay;
 	}
 	
-    /**
+	/**
+	 * Creates an IHE XCA Responding Gateway actor and install it into the DocumentBroker.
+	 * 
+	 * @param name the name of the actor to create (used in audit messages)
+	 * @param xcaRGServerConnection The description of the connection of the XCA
+     * 			Gateway in the affinity domain
+	 * @param xdsRegistryClientConnection The description of the client side connection of
+	 * 			the XDS Registry in the affinity domain
+	 * @param xdsRepositoryClientConnection The description of the client side connection of
+	 * 			the XDS Repository in the affinity domain
+	 * @param auditConnections the audit trail connections this actor should log to
+	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
+	 * @return <code>true</code> if the actor is created successfully
+	 * @throws IheConfigurationException When there is a problem with the configuration
+	 */
+	private boolean createXcaRGActor(String name, IConnectionDescription xcaRGServerConnection, IConnectionDescription xdsRegistryClientConnection, 
+			IConnectionDescription xdsRepositoryClientConnection, Collection<IConnectionDescription> auditConnections,			
+			IMesaLogger logger, File configFile) throws IheConfigurationException {
+		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		// Build a new audit trail if there are any connections to audit repositories.
+		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+
+		XcaRGImpl xcaRG = new XcaRGImpl(xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, auditTrail);
+        if (xcaRGServerConnection != null) {
+            XdsBroker broker = XdsBroker.getInstance();
+            broker.registerXcaRG(xcaRG);
+            okay = true;
+        }
+		// Record this installation, if it succeeded
+		if (okay) actorsInstalled.add(name);
+		return okay;
+	}
+
+	/**
      * Gets an instance of a Class. This method try to instantiate by newInstance first. If it
      * does not exist, it will try to invoke getInstance();
      *
@@ -1016,32 +1037,6 @@ public class XdsConfigurationLoader {
         return ret;
     }
  
-    /**
-     * Gets the {@link IMessageStoreLogger} from the storeLogger XML configuration.
-     * 
-     * @param connection the connection description of this actor
-     * @param type the type of this actor
-     * @param configFile the configuration file
-     * @return the {@link IMessageStoreLogger} as in the configuration. Otherwise, return
-     *         null if storeLogger is not configured.
-     */
-    private IMessageStoreLogger getMessageStore(IConnectionDescription connection, String type, 
-    		File configFile) throws IheConfigurationException {
-        String storeLogClass = Configuration.getPropertyValue(connection, "storeLogger", false);
-        IMessageStoreLogger storeLogger = null;
-        if (storeLogClass != null) {
-            try {
-                Class c = Class.forName(storeLogClass);
-                storeLogger = (IMessageStoreLogger)getObjectInstance( c );
-            } catch (Exception e) {
-                String message = "Could not load StoreLogger in actor type '"+ type +"' in config file " + configFile;
-                log.error(message, e);
-                throw new IheConfigurationException(message);
-            }
-        }
-    	return storeLogger;
-    }
-   
     /**
 	 * Logs a configuration file warning.
 	 * 
@@ -1248,6 +1243,50 @@ public class XdsConfigurationLoader {
 	}
 	
 	/**
+	 * An implementation of the IheActorDescription class to be used by 
+	 * XCA Responding Gateway Actor
+	 * 
+	 * @author Wenzhi Li
+	 */
+	public class XcaRGActorDescription extends ActorDescription {
+		/** Defines the server side of XCA Responding Gateway Connection */
+		private IConnectionDescription xcaRGServerConnection = null;
+		
+		/** Defines the client side of XDS Registry Connection */
+		private IConnectionDescription xdsRegistryClientConnection = null;
+
+		/** Defines the client side of XDS Repository Connection */
+		private IConnectionDescription xdsRepositoryClientConnection = null;
+		
+		/**
+		 * Gets the connection for the XCA Responding Gateway server. 
+		 * 
+		 * @return the connection of XCA Responding Gateway  
+		 */
+		public IConnectionDescription getXcaRGServerConnection() {
+			return xcaRGServerConnection;
+		}
+		
+		/**
+		 * Gets the connection for the XDS Registry client.  
+		 * 
+		 * @return the connection for XDS Registry client
+		 */
+		public IConnectionDescription getXdsRegistryClientConnection() {
+			return xdsRegistryClientConnection;
+		}
+		
+		/**
+		 * Gets the connection for the XDS Repository client.  
+		 * 
+		 * @return the connection for XDS Repository client
+		 */
+		public IConnectionDescription getXdsRepositoryClientConnection() {
+			return xdsRepositoryClientConnection;
+		}
+	}
+
+	/**
 	 * Initiates this actor.
 	 * 
 	 * @param actorType the type of the actor to be initiated
@@ -1260,6 +1299,8 @@ public class XdsConfigurationLoader {
     		return new XdsRegistryActorDescription();
     	if (actorType.equalsIgnoreCase("XdsRepository")) 
     		return new XdsRepositoryActorDescription();
+    	if (actorType.equalsIgnoreCase("XcaRG")) 
+    		return new XcaRGActorDescription();
     	else 
     	    return new ActorDescription();  
     }
@@ -1278,6 +1319,7 @@ public class XdsConfigurationLoader {
 			if (actor instanceof IheAuditTrail) return true;
             if (actor instanceof XdsRegistryImpl) return true;
             if (actor instanceof XdsRepositoryImpl) return true;
+            if (actor instanceof XcaRGImpl) return true;
 
             return false;
 		}
