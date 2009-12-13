@@ -161,24 +161,28 @@ public class IdParser {
 	}
 
 	public OMElement getApproveObjectsRequest(List uuids) {
-		OMElement req = MetadataSupport.om_factory.createOMElement("ApproveObjectsRequest", null);
+		OMElement req = MetadataSupport.om_factory.createOMElement("ApproveObjectsRequest", MetadataSupport.ebLcm3);
+		req.declareNamespace(MetadataSupport.ebRSns3);
+		req.declareNamespace(MetadataSupport.ebRIMns3);
+		req.declareNamespace(MetadataSupport.ebLcm3);
+		req.declareNamespace(MetadataSupport.xdsB);
 		req.addChild(mk_object_ref_list(uuids));
 		return req;
 	}
 
 	public OMElement getDeprecateObjectsRequest(List uuids) {
-		OMElement req = MetadataSupport.om_factory.createOMElement("DeprecateObjectsRequest", null);
+		OMElement req = MetadataSupport.om_factory.createOMElement("DeprecateObjectsRequest", MetadataSupport.ebLcm3);
 		req.addChild(mk_object_ref_list(uuids));
 		return req;
 
 	}
 
 	private OMElement mk_object_ref_list(List uuids) {
-		OMElement object_ref_list = MetadataSupport.om_factory.createOMElement("ObjectRefList", null);
+		OMElement object_ref_list = MetadataSupport.om_factory.createOMElement("ObjectRefList", MetadataSupport.ebRIMns3);
 		for (Iterator it=uuids.iterator(); it.hasNext(); ) {
 			String uuid = (String) it.next();
 			OMAttribute att = MetadataSupport.om_factory.createOMAttribute("id", null, uuid);
-			OMElement object_ref = MetadataSupport.om_factory.createOMElement("ObjectRef", null);
+			OMElement object_ref = MetadataSupport.om_factory.createOMElement("ObjectRef", MetadataSupport.ebRIMns3);
 			object_ref.addAttribute(att);
 			object_ref_list.addChild(object_ref);
 		}
