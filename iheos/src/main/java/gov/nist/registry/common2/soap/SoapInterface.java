@@ -30,4 +30,6 @@ public interface SoapInterface {
 	public void soapSend(OMElement metadata_element, Protocol protocol, String endpoint,
 			boolean useMtom, boolean useAddressing, boolean soap_1_2,
 			String requestAction) throws  XdsException, AxisFault;
+	public void addHeader(OMElement header);
+	public void clearHeaders();
 }

@@ -181,15 +181,6 @@ public class IdIndex {
 		return getExternalIdentifierValue(ss_id, "urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446");
 	}
 
-	public String getSubmissionSetSourceId() {
-		OMElement ss = m.getSubmissionSet();
-		String ss_id = ss.getAttributeValue(MetadataSupport.id_qname);
-		HashMap by_att_type = (HashMap) object_parts_by_id().get(ss_id);
-		List slots = (List) by_att_type.get("Slot");
-		String source_id = get_slot_value(slots, "sourceId");
-		return source_id;
-	}
-
 	String get_slot_value(List slots, String slot_name) {
 		for (int i=0; i<slots.size(); i++) {
 			OMElement slot = (OMElement) slots.get(i);
