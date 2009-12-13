@@ -174,13 +174,6 @@ public class RetrieveDocumentSet extends XdsCommon {
     OMElement retrieve_document(String rep_id, String doc_id, String home) throws XdsException {
         XdsRepositoryItem repositoryItem;
         XdsRepositoryService rm = XdsFactory.getXdsRepositoryService();
-        try {
-            RepositoryRequestContext context = new RepositoryRequestContext();
-            context.setConnection(connection);
-            repositoryItem = rm.getRepositoryItem(doc_id, context);
-        } catch (RepositoryException e) {
-            throw new XdsException("Cannot find repository item for document id, " + doc_id);
-        }
         if (!rep_id.equals(rm.getRepositoryUniqueId())) {
             response.add_error(MetadataSupport.XDSRepositoryWrongRepositoryUniqueId, "Repository Unique ID in request " +
                     rep_id +
@@ -189,8 +182,16 @@ public class RetrieveDocumentSet extends XdsCommon {
                     RegistryUtility.exception_details(null), log_message);
             return null;
         }
-        CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");
-        if (repositoryItem.getDataHandler() == null)
+        
+        try {
+            RepositoryRequestContext context = new RepositoryRequestContext();
+            context.setConnection(connection);
+            repositoryItem = rm.getRepositoryItem(doc_id, context);
+        } catch (RepositoryException e) {
+            throw new XdsException("Cannot find repository item for document id, " + doc_id);
+        }
+        
+        if (repositoryItem == null || repositoryItem.getDataHandler() == null)
             throw new XdsException("Document is not found in Repository");
 
         OMText t = MetadataSupport.om_factory.createOMText(repositoryItem.getDataHandler(), optimize);
