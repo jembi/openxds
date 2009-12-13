@@ -1,9 +1,9 @@
 package gov.nist.registry.common2.errormgr;
 
 public class AssertionResult {
-	String assertion;
-	boolean status;
-	String info;
+	public String assertion;
+	public boolean status;
+	public String info;
 	
 	/**
 	 * Use for assertions that fail
@@ -24,7 +24,7 @@ public class AssertionResult {
 	 */
 	public AssertionResult(String assertion) {
 		this.assertion = assertion;
-		this.info = null;
+		this.info = "";
 		this.status = true;
 	}
 	
@@ -37,6 +37,12 @@ public class AssertionResult {
 	public AssertionResult(String assertion, String info, boolean status) {
 		this.assertion = assertion;
 		this.info = info;
+		this.status = status;
+	}
+
+	public AssertionResult(String assertion, boolean status) {
+		this.assertion = assertion;
+		this.info = "";
 		this.status = status;
 	}
 }

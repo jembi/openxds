@@ -283,6 +283,92 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 		}
 	}
 
+	public OMElement AdhocQueryRequestForceError(OMElement ahqr, String profile_name, String service_name, String errorCode, String errorMessage) {
+		try {
+			OMElement startup_error = beginTransaction(service_name, ahqr, AppendixV.REGISTRY_ACTOR);
+			if (startup_error != null)
+				return startup_error;
+			log_message.setTestMessage(service_name);
+			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
+			if (ahq == null) {
+				endTransaction(false);
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " only accepts Stored Query - AdhocQuery element not found");
+			}
+
+			OMElement respOption = MetadataSupport.firstChildWithLocalName(ahqr, "ResponseOption");
+			if (respOption == null) {
+				endTransaction(false);
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " ResponseOption element missing");
+			}
+
+			String returnType = respOption.getAttributeValue(MetadataSupport.return_type_qname);
+			if ( !returnType.equals("LeafClass")) {
+				endTransaction(false);
+				return this.start_up_error(ahqr, null, REGISTRY_ACTOR, profile_name + " This endpoint only accepts LeafClass returnType requests");
+			}
+
+			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
+			rel.setIsXCA();
+
+			rel.add_error(errorCode, 
+					errorMessage, 
+					"RGAbstract.java", log_message);
+			OMElement response = new AdhocQueryResponse(Response.version_3, rel).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;
+		} 
+		catch (Exception e) {
+			return endTransaction(ahqr, e, AppendixV.REPOSITORY_ACTOR, "");
+		}
+	}
+	
+	public OMElement RetrieveDocumentForceError(OMElement rdsr, String errorCode, String errorMessage) {
+		try {
+			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
+			if (startup_error != null)
+				return startup_error;
+			log_message.setTestMessage(getRetTransactionName());
+
+			validateWS();
+
+//			validateRetrieveTransaction(rdsr);
+
+			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
+
+//			verifyHomeOnRetrieve(rdsr, rel, home);
+			
+			rel.add_error(errorCode, 
+					errorMessage, 
+					"RGAbstract.java", log_message);
+			
+			if (rel.has_errors()) {
+				rel.setIsXCA();
+				OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+				addOther("Response", response.toString());
+				endTransaction(false);
+				return response;
+			}
+
+
+			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
+			s.setIsXCA();
+
+			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
+			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
+
+			setHomeOnRetResponse(result);
+
+			log_message.addOtherParam("Result", result.toString());
+
+			endTransaction(s.getStatus());
+			return result;
+		} catch (Exception e) {
+			return endTransaction(rdsr, e, AppendixV.REPOSITORY_ACTOR, "");
+		}
+
+	}
+	
 	void setHomeOnSQResponse(OMElement root, String home) {
 		HomeAttribute homeAtt = new HomeAttribute(home);
 		homeAtt.set(root);

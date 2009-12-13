@@ -1,6 +1,7 @@
 package gov.nist.registry.common2.testkit;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.xml.Util;
 
@@ -19,6 +20,11 @@ public class LogFile {
 	List<TestStepLog> steps;
 	String test;
 
+	public List<TestStepLog> getStepLogs() throws Exception {
+		parseTestSteps();
+		return steps;
+	}
+
 	public LogFile(File logfile) throws FactoryConfigurationError, Exception {
 		log = Util.parse_xml(logfile);
 		init();
@@ -28,11 +34,24 @@ public class LogFile {
 		log = testresults;
 		init();
 	}
-	
+
 	public OMElement getLog() { 
 		return log;
 	}
-	
+
+	public Metadata getAllMetadata()  {
+		Metadata m = new Metadata();
+
+		for (TestStepLog step : steps) {
+			try {
+				Metadata m1 = step.getMetadata();
+				m.addMetadata(m1);
+			} catch (Exception e) {}
+		}
+
+		return m;
+	}
+
 	String firstNChars(String s, int n) {
 		if (s.length() > n) 
 			return s.substring(0, n);
@@ -56,6 +75,10 @@ public class LogFile {
 		if (ele == null)
 			return null;
 		return ele.getText();
+	}
+
+	public boolean hasFatalError() {
+		return getFatalError() != null;
 	}
 
 	public boolean isSuccess() {
@@ -91,6 +114,7 @@ public class LogFile {
 	}
 
 	void parseTestSteps() throws Exception {
+		steps = new ArrayList<TestStepLog>();
 		List<OMElement> stepEles = MetadataSupport.childrenWithLocalName(log, "TestStep");
 		for (OMElement step : stepEles) {
 			steps.add(new TestStepLog(step));

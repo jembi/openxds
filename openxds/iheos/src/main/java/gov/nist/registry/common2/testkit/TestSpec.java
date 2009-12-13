@@ -11,23 +11,46 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.axiom.om.OMElement;
+
 public class TestSpec implements Iterator<File> {
 
 	File testkit;
+	File logdir;
 	String section;  // examples, tests etc
 	String testNum;
 	List<File> testPlans;
+	List<LogFile> testPlanLogs;
 	Iterator<File> testPlansIterator;
 	String[] sections;
 	
 	public static final String[] defaultSections = new String [] { "tests", "testdata", "examples", "internal", "play",
-		"selftest", "development"};
+		"selftest", "development", "testkit"};
 	static final String testPlanFileName = "testplan.xml";
 
 	public String toString() { return "[TestSpec: testkit=" + testkit + " section=" + section +
 		" testnum=" + testNum +
 		" subtests= " + testPlansToString() +
 		"]";
+	}
+	
+	public void addTestPlanLog(LogFile lf) {
+		if (testPlanLogs == null)
+			testPlanLogs = new ArrayList<LogFile>();
+		testPlanLogs.add(lf);
+	}
+	
+	public void resetLogs() {
+		testPlanLogs = new ArrayList<LogFile>();
+	}
+	
+	public List<LogFile> getTestPlanLogs() {
+		return testPlanLogs;
+	}
+	
+	public void setLogDir(File logdir) {
+		System.out.println("TestSpec#setLogDir " + logdir.toString());
+		this.logdir = logdir;
 	}
 
 	String testPlansToString() {
@@ -210,6 +233,10 @@ public class TestSpec implements Iterator<File> {
 		return new File(testkit + File.separator + section + File.separatorChar + testNum);
 	}
 
+	public File getTestLogDir() {
+		return new File(logdir + File.separator + section + File.separatorChar + testNum);
+	}
+
 	public boolean exists() {
 		return getTestDir().isDirectory();
 	}
@@ -222,6 +249,17 @@ public class TestSpec implements Iterator<File> {
 		else 
 			return getTestPlanFromDir(getTestDir());
 
+	}
+	
+	public List<File> getTestLogs() throws Exception {
+		List<File> logfiles = new ArrayList<File>();
+		File index = new File(getTestDir() + File.separator + "index.idx");
+		if (index.exists()) 
+			return getTestLogsFromIndex(index);
+		else 
+			logfiles.add(new File(getTestLogDir().toString() + File.separatorChar + "log.xml"));
+		
+		return logfiles;
 	}
 
 	List<File> getTestPlansFromIndex(File index) throws Exception {
@@ -239,6 +277,22 @@ public class TestSpec implements Iterator<File> {
 			plans.add(path);
 		}
 		return plans;
+	}
+
+	List<File> getTestLogsFromIndex(File index) throws Exception {
+		List<File> logs = new ArrayList<File>();
+
+		for (LinesOfFile lof = new LinesOfFile(index); lof.hasNext(); ) {
+			String dir = lof.next().trim();
+			if (dir.length() ==0)
+				continue;
+			File path = new File(logdir + File.separator + dir + File.separatorChar + "log.xml");
+			if ( ! path.exists() )
+				throw new Exception("TestSpec " + toString() + " references the section " + dir + 
+						" - no log file exists ( file " + path.toString() + " does not exist");
+			logs.add(path);
+		}
+		return logs;
 	}
 
 	public void selectSections(List<String> sectionNames) throws Exception {

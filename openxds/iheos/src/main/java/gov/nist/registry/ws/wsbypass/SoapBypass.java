@@ -87,5 +87,15 @@ public class SoapBypass implements SoapInterface {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void addHeader(OMElement header) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void clearHeaders() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

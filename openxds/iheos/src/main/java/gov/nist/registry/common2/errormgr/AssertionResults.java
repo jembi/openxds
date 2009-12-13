@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AssertionResults {
 
-	List<AssertionResult> assertions;
+	public List<AssertionResult> assertions;
 	
 	public AssertionResults() {
 		assertions = new ArrayList<AssertionResult>();
@@ -36,5 +36,10 @@ public class AssertionResults {
 	 */
 	public void add(String assertion, String info, boolean status) {
 		assertions.add(new AssertionResult(assertion, info, status));
+	}
+
+	public void add(String assertion, boolean status) {
+		assertions.add(new AssertionResult(assertion, status));
+		
 	}
 }
