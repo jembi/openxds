@@ -227,6 +227,73 @@ public class CrossGatewayQueryTest extends XdsTest{
 		System.out.println("Result:\n" +result);
 	}
 	
+	/**
+	 * This test initiate a FindDocuments Cross-Gateway Query (XGQ) to the XDS
+	 * 	Registry server's Initiating Gateway for a pre-determined Patient ID.
+	 * 	Request LeafClass (full metadata) be returned.
+	 * @throws Exception
+	 */
+	@Test
+	public void testIGFindDocsLeafClass() throws Exception {
+		//1. Submit a document first for a random patientId
+		String patientId = generateAPatientId();
+		String uuids = submitMultipleDocuments(patientId);
+		
+		//2. Generate StoredQuery request message
+		String message = findDocumentsQuery(patientId, "Approved", "LeafClass");
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		System.out.println("Request:\n" +request);
+
+		//3. Send a StoredQuery
+		ServiceClient sender = getIGServiceClient();															 
+		OMElement response = sender.sendReceive( request );		
+		assertNotNull(response); 
+
+		//4. Verify the response is correct
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
+		
+		//5. Verify that the 2 Documents found from the StoredQuery response. 
+		NodeList count = getNodeCount(response, "ExtrinsicObject");
+		assertTrue(count.getLength() == 2); 
+
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+	}
+	
+	/**
+	 * Tis test initiate a GetDocuments Cross-Gateway Query (XGQ) to the XDS
+	 * Registry server's Initiating Gateway for documents discovered in
+	 * test 12306. Request LeafClass be returned.
+	 * @throws Exception
+	 */
+	@Test
+	public void testIGGetDocuments() throws Exception {
+		//1. Submit a document first for a random patientId
+		String patientId = generateAPatientId();
+		String uuids = submitMultipleDocuments(patientId);
+		
+		//2. Generate StoredQuery request message
+		String message = GetDocumentsQuery(uuids, false, homeProperty);
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		System.out.println("Request:\n" +request);
+
+		//3. Send a StoredQuery
+		ServiceClient sender = getIGServiceClient();															 
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		//4. Verify the response is correct
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
+		
+		//5. Verify that the 2 Documents found from the StoredQuery response. 
+		NodeList count = getNodeCount(response, "ExtrinsicObject");
+		assertTrue(count.getLength() == 2); 
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+	}
 	public String findDocumentsQuery(String patientId, String status, String retType){
 		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
 		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\""+retType+"\"/>\n"+

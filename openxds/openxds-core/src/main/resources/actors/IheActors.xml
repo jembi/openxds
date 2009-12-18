@@ -34,6 +34,8 @@
 	<ConnectionFile file="XdsRepositoryConnections.xml" />
 	<!--Defines the configuration of XCA Responding Gateway-->
 	<ConnectionFile file="XcaRespondingGatewayConnections.xml" />
+	<!--Defines the configuration of XCA Initiating Gateway-->
+	<ConnectionFile file="XcaInitiatingGatewayConnections.xml" />
 
 	<!--The XDS Registry actor configuration-->
 	<Actor name="xdsreg" type="XdsRegistry">
@@ -65,6 +67,14 @@
 	<Actor name="xcarg" type="XcaRG">
 		<Description>XCA Responding Gateway</Description>
 		<XcaRG connection="xca-rg" />
+		<XdsRegistryClient connection="xds-registry-client" />
+		<XdsRepositoryClient connection="xds-repository-client" />
+	</Actor>
+	
+	<!--The XCA Initiating Gateway actor configuration-->
+	<Actor name="xcaig" type="XcaIG">
+		<Description>XCA Initiating Gateway</Description>
+		<XcaIG connection="xca-ig" />
 		<XdsRegistryClient connection="xds-registry-client" />
 		<XdsRepositoryClient connection="xds-repository-client" />
 	</Actor>

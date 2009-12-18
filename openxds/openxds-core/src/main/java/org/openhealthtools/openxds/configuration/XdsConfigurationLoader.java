@@ -37,19 +37,18 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.openhealthexchange.openpixpdq.ihe.configuration.Configuration;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
 import org.openhealthexchange.openpixpdq.ihe.log.IMesaLogger;
-import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
 import org.openhealthtools.common.audit.IheAuditTrail;
 import org.openhealthtools.openxds.XdsBroker;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
-import org.openhealthtools.openxds.repository.XcaRGImpl;
 import org.openhealthtools.openxds.repository.XdsRepositoryImpl;
+import org.openhealthtools.openxds.xca.XcaIGImpl;
+import org.openhealthtools.openxds.xca.XcaRGImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -476,6 +475,14 @@ public class XdsConfigurationLoader {
 				if (!createXcaRGActor(actor.id, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, actorAudit, log, null))
 					okay = false;
 			}
+			//XCA Initiating Gateway
+			if(actor.actorType.equalsIgnoreCase("XcaIG")) {
+				IConnectionDescription xcaIGServerConnection = ((XcaIGActorDescription)actor).getXcaIGServerConnection();
+				IConnectionDescription xdsRegistryClientConnection = ((XcaIGActorDescription)actor).getXdsRegistryClientConnection();
+				IConnectionDescription xdsRepositoryClientConnection = ((XcaIGActorDescription)actor).getXdsRepositoryClientConnection();
+				if (!createXcaIGActor(actor.id, xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, actorAudit, log, null))
+					okay = false;
+			}
 			
 		}
 		// Done
@@ -619,6 +626,8 @@ public class XdsConfigurationLoader {
 		//Define a XDSRepository client side connection so that ITI-39 messages can be forwarded to the XDS Repository server
 		IConnectionDescription xdsRepositoryClientConnection = null;
 		
+		IConnectionDescription xcaIGServerConnection = null;
+		
 		// Look at each child node in turn
 		NodeList elements = definition.getChildNodes();
 		for (int elementIndex = 0; elementIndex < elements.getLength(); elementIndex++) {
@@ -729,6 +738,16 @@ public class XdsConfigurationLoader {
 					if (xcaRGServerConnection == null) {
 						throwIheConfigurationException("XcaRG connection '" + xcaRGName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
+				} else if (kind.equalsIgnoreCase("XCAIG")) {
+					// For XCA Responding Gateway, define a XCA RG server connection for transactions ITI-38 & 39
+					String xcaIGName = getAttributeValue(element, "connection");
+					if (xcaIGName == null) {
+						throwIheConfigurationException("XcdIG element with no 'connection' attribute", configFile);
+					}
+					xcaIGServerConnection = ConnectionFactory.getConnectionDescription(xcaIGName);
+					if (xcaIGServerConnection == null) {
+						throwIheConfigurationException("XcaIG connection '" + xcaIGName + "' in actor '" + actorName + "' is not defined", configFile);
+					}
 				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
 					// A description of this actor for GUI presentation
 					description = getAttributeValue(element, "value");
@@ -772,7 +791,15 @@ public class XdsConfigurationLoader {
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			if (xdsRepositoryClientConnection==null)
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepositoryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		}			
+		}else if (actorType.equalsIgnoreCase("XCAIG")) {
+			if (xcaIGServerConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XcaIG in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRegistryClientConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (xdsRepositoryClientConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepositoryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		}
+		
 		if (actorType.equalsIgnoreCase("SecureNode") && logConnections.isEmpty())
 			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			// Actually create the actor
@@ -783,6 +810,8 @@ public class XdsConfigurationLoader {
 				return createXdsRepositoryActor(actorName,xdsRepositoryServerConnection, xdsRegistryClientConnection, logConnections, null, configFile);
 			} else if (actorType.equalsIgnoreCase("XCARG")) {
 				return createXcaRGActor(actorName, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);
+			} else if (actorType.equalsIgnoreCase("XCAIG")) {
+				return createXcaIGActor(actorName, xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);	
 			} else 
 				return true;
 		} else {			
@@ -799,6 +828,8 @@ public class XdsConfigurationLoader {
 				actor.description = getHumanConnectionDescription(description, xdsRepositoryServerConnection);
 			} else if (xcaRGServerConnection != null) {
 				actor.description = getHumanConnectionDescription(description, xcaRGServerConnection);
+			} else if (xcaIGServerConnection != null) {
+				actor.description = getHumanConnectionDescription(description, xcaIGServerConnection);
 			} else if (actorType.equalsIgnoreCase("SecureNode") && !logConnections.isEmpty()) {
 				actor.description = getHumanConnectionDescription(description, logConnections.get(0));
 			} else {
@@ -820,6 +851,10 @@ public class XdsConfigurationLoader {
 				((XcaRGActorDescription)actor).xcaRGServerConnection = xcaRGServerConnection;
 				((XcaRGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
 				((XcaRGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
+			}else if (actor instanceof XcaIGActorDescription) {
+				((XcaIGActorDescription)actor).xcaIGServerConnection = xcaIGServerConnection;
+				((XcaIGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
+				((XcaIGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
 			}else if (actor instanceof XdsAuditActorDescription){
 				((XdsAuditActorDescription)actor).xdsAuditConnection = logConnections;
 			}
@@ -846,6 +881,8 @@ public class XdsConfigurationLoader {
             return "OpenXDS XDS Repository";
 	    } else if (type.equals("XcaRG")) {
 	        return "OpenXDS XCA Responding Gateway";
+	    }else if (type.equals("XcaIG")) {
+	        return "OpenXDS XCA Initiating Gateway";
 	    }
 		else {
 			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
@@ -1009,6 +1046,40 @@ public class XdsConfigurationLoader {
         if (xcaRGServerConnection != null) {
             XdsBroker broker = XdsBroker.getInstance();
             broker.registerXcaRG(xcaRG);
+            okay = true;
+        }
+		// Record this installation, if it succeeded
+		if (okay) actorsInstalled.add(name);
+		return okay;
+	}
+	
+	/**
+	 * Creates an IHE XCA Initiating Gateway actor and install it into the DocumentBroker.
+	 * 
+	 * @param name the name of the actor to create (used in audit messages)
+	 * @param xcaIGServerConnection The description of the connection of the XCA
+     * 			Gateway in the affinity domain
+	 * @param xdsRegistryClientConnection The description of the client side connection of
+	 * 			the XDS Registry in the affinity domain
+	 * @param xdsRepositoryClientConnection The description of the client side connection of
+	 * 			the XDS Repository in the affinity domain
+	 * @param auditConnections the audit trail connections this actor should log to
+	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
+	 * @return <code>true</code> if the actor is created successfully
+	 * @throws IheConfigurationException When there is a problem with the configuration
+	 */
+	private boolean createXcaIGActor(String name, IConnectionDescription xcaIGServerConnection, IConnectionDescription xdsRegistryClientConnection, 
+			IConnectionDescription xdsRepositoryClientConnection, Collection<IConnectionDescription> auditConnections,			
+			IMesaLogger logger, File configFile) throws IheConfigurationException {
+		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		// Build a new audit trail if there are any connections to audit repositories.
+		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+
+		XcaIGImpl xcaIG = new XcaIGImpl(xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, auditTrail);
+        if (xcaIGServerConnection != null) {
+            XdsBroker broker = XdsBroker.getInstance();
+            broker.registerXcaIG(xcaIG);
             okay = true;
         }
 		// Record this installation, if it succeeded
@@ -1285,6 +1356,51 @@ public class XdsConfigurationLoader {
 			return xdsRepositoryClientConnection;
 		}
 	}
+	
+	/**
+	 * An implementation of the IheActorDescription class to be used by 
+	 * XCA Initiating Gateway Actor
+	 * 
+	 * @author Anil Kumar
+	 */
+	public class XcaIGActorDescription extends ActorDescription {
+		/** Defines the server side of XCA Responding Gateway Connection */
+		private IConnectionDescription xcaIGServerConnection = null;
+		
+		/** Defines the client side of XDS Registry Connection */
+		private IConnectionDescription xdsRegistryClientConnection = null;
+
+		/** Defines the client side of XDS Repository Connection */
+		private IConnectionDescription xdsRepositoryClientConnection = null;
+		
+		/**
+		 * Gets the connection for the XCA Initiating Gateway server. 
+		 * 
+		 * @return the connection of XCA Initiating Gateway  
+		 */
+		public IConnectionDescription getXcaIGServerConnection() {
+			return xcaIGServerConnection;
+		}
+		
+		/**
+		 * Gets the connection for the XDS Registry client.  
+		 * 
+		 * @return the connection for XDS Registry client
+		 */
+		public IConnectionDescription getXdsRegistryClientConnection() {
+			return xdsRegistryClientConnection;
+		}
+		
+		/**
+		 * Gets the connection for the XDS Repository client.  
+		 * 
+		 * @return the connection for XDS Repository client
+		 */
+		public IConnectionDescription getXdsRepositoryClientConnection() {
+			return xdsRepositoryClientConnection;
+		}
+	}
+
 
 	/**
 	 * Initiates this actor.
@@ -1301,6 +1417,8 @@ public class XdsConfigurationLoader {
     		return new XdsRepositoryActorDescription();
     	if (actorType.equalsIgnoreCase("XcaRG")) 
     		return new XcaRGActorDescription();
+    	if (actorType.equalsIgnoreCase("XcaIG")) 
+    		return new XcaIGActorDescription();
     	else 
     	    return new ActorDescription();  
     }

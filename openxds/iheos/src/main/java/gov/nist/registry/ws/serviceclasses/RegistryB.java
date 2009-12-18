@@ -10,6 +10,7 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.registry.storedquery.ParamParser;
+import gov.nist.registry.common2.xca.HomeAttribute;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.SoapHeader;
 import gov.nist.registry.ws.StoredQueryRequestSoapValidator;
@@ -95,7 +96,12 @@ public class RegistryB  extends AbstractRegistry  {
 	protected void decorateQueryOutput(OMElement sor, AdhocQueryRequest a, OMElement result) throws XdsValidationException {
 		String home = getHomeParameter(sor, a);
 		if (home != null && !home.equals(""))
-			new RG().setHomeOnSQResponse(result, home);
+			setHomeOnSQResponse(result, home);
+	}
+	
+	void setHomeOnSQResponse(OMElement root, String home) {
+		HomeAttribute homeAtt = new HomeAttribute(home);
+		homeAtt.set(root);
 	}
 
 	protected String getHomeParameter(OMElement sor, AdhocQueryRequest a)

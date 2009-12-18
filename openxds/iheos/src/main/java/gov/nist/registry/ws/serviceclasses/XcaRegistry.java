@@ -1,10 +1,6 @@
 package gov.nist.registry.ws.serviceclasses;
 
-import gov.nist.registry.common2.exception.MetadataException;
-import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.ws.AdhocQueryRequest;
 
 import org.apache.axiom.om.OMElement;
@@ -27,7 +23,7 @@ public class XcaRegistry extends RegistryB {
 		home = getHomeParameter(sor, a);
 		if (home == null || home.equals(""))
 			home = properties.getString("home.community.id");
-			new RG().setHomeOnSQResponse(result, home);
+			setHomeOnSQResponse(result, home);
 	}
 
 
