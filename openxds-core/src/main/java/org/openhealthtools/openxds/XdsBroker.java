@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openxds.xca.api.XcaIG;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 import com.misyshealthcare.connect.base.IBrokerController;
@@ -51,6 +52,8 @@ public class XdsBroker   {
     private Vector<XdsRepository> xdsRepositories = new Vector<XdsRepository>();
     /** A list of all known xca responding gateway */
     private Vector<XcaRG> xcaRGs = new Vector<XcaRG>();
+    /** A list of all known xca Initiating gateway */
+    private Vector<XcaIG> xcaIGs = new Vector<XcaIG>();
 
 	/**
 	 * A private constructor for creating the singleton instance.
@@ -201,5 +204,48 @@ public class XdsBroker   {
   		for (XcaRG actor: removed) actor.stop();
   		return true;
   	}
+      
+      /**
+   	 * Registers a new XCA Initiating Gateway.  This method
+   	 * is typically called when an XCA Gateway server is started.
+   	 *
+   	 * @param xcaRG an XCA Initiating Gateway
+   	 * @return <code>true</code> if this XCA Initiating Gateway was successfully added
+   	 */
+       public synchronized boolean registerXcaIG(XcaIG xcaIG) {
+   		// If the xcaRG is new, add it to the list
+   		if ((xcaIG != null) && (!xcaIGs.contains(xcaIG))) {
+   			xcaIG.start();
+   			xcaIGs.add(xcaIG);
+   			return true;
+   		} else {
+   			return false;
+   		}
+   	}
+
+      /**
+    	 * Unregisters the active XCA Initiating Gateway specified by the controller.  If the
+    	 * controller is null unregister all XCA Initiating Gateway.  An XCA Initiating Gateway is stopped 
+    	 * when it is unregistered.
+    	 *
+    	 * @param controller the controller specifying which XCA Initiating Gatway to unregister. All XDS
+    	 * Initiating Gateways will be unregistered if it is null. 
+    	 * @return <code>true</code> if all Initiating Gateways were actually unregistered
+    	 */
+        public synchronized boolean unregisterXcaIG(IBrokerController controller) {
+    		ArrayList<XcaIG> removed = new ArrayList<XcaIG>();
+    		// Find all the sources to remove
+    		for (XcaIG actor: xcaIGs) {
+    			if ((controller == null) || controller.shouldUnregister(actor)) {
+    				removed.add(actor);
+    			}
+    		}
+    		if (removed.isEmpty()) return false;
+    		// Remove them
+    		xcaIGs.removeAll(removed);
+    		// Stop them all too
+    		for (XcaIG actor: removed) actor.stop();
+    		return true;
+    	}
      
 }

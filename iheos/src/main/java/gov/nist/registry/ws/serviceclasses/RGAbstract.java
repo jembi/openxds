@@ -127,12 +127,20 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			}
 
 
-			OMElement result = a.adhocQueryRequest(ahqr);
+			/*OMElement result = a.adhocQueryRequest(ahqr);
 
 
 			setHomeOnSQResponse(result, home);
 			endTransaction(a.getStatus());
-			return result;
+			return result;*/
+			Protocol protocol = ConnectionUtil.getProtocol(registryClientConnection);
+			String epr = ConnectionUtil.getTransactionEndpoint(registryClientConnection);
+			Soap soap = new Soap();
+			soap.soapCall(ahqr, protocol, epr, false, true, true, "urn:ihe:iti:2007:RegistryStoredQuery", null);
+			
+			OMElement result = soap.getResult();
+			
+			return processRegResult(result);
 		} 
 		catch (Exception e) {
 			return endTransaction(ahqr, e, AppendixV.REPOSITORY_ACTOR, "");
@@ -203,7 +211,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return response;				
 		}
 		String status = rr.getAttributeValue(MetadataSupport.status_qname);
-		if (rr == null) {
+		if (status == null) {
 			rel.add_error(MetadataSupport.XDSRepositoryError, "Null status from Repository", "RGAbstract.java", log_message);
 			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
 			addOther("Response", response.toString());
@@ -220,6 +228,52 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return response;
 		} else {
 			setHomeOnRetResponse(result);
+			log_message.addOtherParam("Result", result.toString());
+			log_message.setPass(true);
+			endTransaction(true);
+			return result;
+		}		
+	}
+	
+	private OMElement processRegResult(OMElement result) throws XdsInternalException, LoggerException {
+		RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
+		rel.setIsXCA();
+		
+		if (result == null) {
+			rel.add_error(MetadataSupport.XDSRegistryError, "Null response message from Registry", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;
+		}
+		
+		OMElement rol = MetadataSupport.firstChildWithLocalName(result, "RegistryObjectList");
+		if (rol == null) {
+			rel.add_error(MetadataSupport.XDSRegistryError, "Null RegistryObjectList from Registry", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			result.getFirstElement();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;				
+		}
+		String status = result.getAttributeValue(MetadataSupport.status_qname);
+		if (status == null) {
+			rel.add_error(MetadataSupport.XDSRegistryError, "Null status from Registry", "RGAbstract.java", log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;				
+		}
+
+		if ( !status.equals(MetadataSupport.response_status_type_namespace + "Success")) {
+			OMElement registry_error_list = MetadataSupport.firstChildWithLocalName(result, "RegistryErrorList"); 
+			rel.addRegistryErrorList(registry_error_list, log_message);
+			OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
+			addOther("Response", response.toString());
+			endTransaction(false);
+			return response;
+		} else {
+			setHomeOnSQResponse(result, home);
 			log_message.addOtherParam("Result", result.toString());
 			log_message.setPass(true);
 			endTransaction(true);

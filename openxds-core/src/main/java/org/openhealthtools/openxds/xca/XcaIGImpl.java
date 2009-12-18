@@ -17,7 +17,7 @@
  *    Misys Open Source Solutions - initial API and implementation
  *
  */
-package org.openhealthtools.openxds.repository;
+package org.openhealthtools.openxds.xca;
 
 import gov.nist.registry.common2.registry.Properties;
 
@@ -37,18 +37,18 @@ import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
-import org.openhealthtools.openxds.xca.api.XcaRG;
+import org.openhealthtools.openxds.xca.api.XcaIG;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
- * This class represents an XCA Responding Gateway actor.
+ * This class represents an XCA Initiating Gateway actor.
  * 
- * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
+ * @author <a href="mailto:Anilkumar.reddy@misys.com">Anil kumar</a>
  */
-public class XcaRGImpl extends IheActor implements XcaRG {
+public class  XcaIGImpl extends IheActor implements XcaIG {
     /** Logger for problems during SOAP exchanges */
-    private static Log log = LogFactory.getLog(XcaRGImpl.class);
+    private static Log log = LogFactory.getLog(XcaIGImpl.class);
 
     /**The client side of XDS Registry connection*/
 	private IConnectionDescription registryClientConnection = null;
@@ -56,13 +56,13 @@ public class XcaRGImpl extends IheActor implements XcaRG {
 	private IConnectionDescription repositoryClientConnection = null;
 
     /** The XCA Responding Gateway Server */    
-    IheHTTPServer rgServer = null;
+    IheHTTPServer igServer = null;
 
     /**
      * Creates a new XCA Responding Gateway actor.
      *
      */
-     public XcaRGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, IConnectionDescription repositoryClientConnection, IheAuditTrail auditTrail) {
+     public XcaIGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, IConnectionDescription repositoryClientConnection, IheAuditTrail auditTrail) {
     	 super(rgServerConnection, auditTrail);
          this.connection = rgServerConnection;
          this.registryClientConnection = registryClientConnection;
@@ -76,13 +76,13 @@ public class XcaRGImpl extends IheActor implements XcaRG {
         super.start();
 
         //start the Responding Gateway server
-        if (initXcaRG()) 
-            log.info("XCA Responding Gateway started: " + connection.getDescription() );        	
+        if (initXcaIG()) 
+            log.info("XCA Initiating Gateway started: " + connection.getDescription() );        	
         else
-            log.fatal("XCA Responding Gateway initialization failed: " + connection.getDescription() );        	
+            log.fatal("XCA Initiating Gateway initialization failed: " + connection.getDescription() );        	
     }
     
-    private boolean initXcaRG() {
+    private boolean initXcaIG() {
 		boolean isSuccess = false;
         try {
 	        String axis2repopath = null;
@@ -105,13 +105,13 @@ public class XcaRGImpl extends IheActor implements XcaRG {
 	        }
 	        ConfigurationContext configctx = ConfigurationContextFactory
 	        .createConfigurationContextFromFileSystem(axis2repopath, axis2xmlpath);
-	        rgServer = new IheHTTPServer(configctx, this); 		
+	        igServer = new IheHTTPServer(configctx, this); 		
 	
-	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(rgServer));
-	        rgServer.start();
+	        Runtime.getRuntime().addShutdownHook(new IheHTTPServer.ShutdownThread(igServer));
+	        igServer.start();
 	        ListenerManager listenerManager = configctx .getListenerManager();
 	        TransportInDescription trsIn = new TransportInDescription(Constants.TRANSPORT_HTTP);
-	        trsIn.setReceiver(rgServer); 
+	        trsIn.setReceiver(igServer); 
 	        if (listenerManager == null) {
 	            listenerManager = new ListenerManager();
 	            listenerManager.init(configctx);
@@ -119,7 +119,7 @@ public class XcaRGImpl extends IheActor implements XcaRG {
 	        listenerManager.addListener(trsIn, true);
 	        isSuccess = true;
         }catch(AxisFault e) {
-        	log.fatal("Failed to start the XCA Responding Gateway server", e);			
+        	log.fatal("Failed to start the XCA Initiating Gateway server", e);			
         }
 
         return isSuccess;
@@ -128,8 +128,8 @@ public class XcaRGImpl extends IheActor implements XcaRG {
     @Override
     public void stop() {
         //stop the Repository Server
-        rgServer.stop();
-        log.info("XCA Respodning Gateway stopped: " + connection.getDescription() );
+        igServer.stop();
+        log.info("XCA Initiating Gateway stopped: " + connection.getDescription() );
 
         //call the super one to initiate standard stop process
         super.stop();

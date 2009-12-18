@@ -86,6 +86,7 @@ public abstract class XdsTest {
 	protected static String registryUrl;
 	protected static String xcaRegistryUrl;
 	protected static String xcaRepositoryUrl;
+	protected static String igRegistryUrl;
 	protected static int pixRegistryPort;
 	protected static String patientId;
 	protected static String assigningAuthority;
@@ -115,6 +116,7 @@ public abstract class XdsTest {
 		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
 		xcaRegistryUrl = properties.getProperty("xcaRegistryUrl");
 		xcaRepositoryUrl = properties.getProperty("xcaRepositoryUrl");
+		igRegistryUrl = properties.getProperty("igRegistryUrl");
 		//Initialize openEMPI 
 //		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
 //		XdsFactory.getInstance().getBean("context");
@@ -484,6 +486,16 @@ public abstract class XdsTest {
 		String action = "urn:ihe:iti:2007:CrossGatewayRetrieve";
 		boolean enableMTOM = true;
 		sender.setOptions(getOptions(action, enableMTOM, xcaRepositoryUrl));
+		sender.engageModule("addressing");				
+		return sender;
+	}
+	
+	protected ServiceClient getIGServiceClient() throws AxisFault {
+        ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2007:RegistryStoredQuery";
+		boolean enableMTOM = false;
+		sender.setOptions(getOptions(action, enableMTOM, igRegistryUrl));
 		sender.engageModule("addressing");				
 		return sender;
 	}
