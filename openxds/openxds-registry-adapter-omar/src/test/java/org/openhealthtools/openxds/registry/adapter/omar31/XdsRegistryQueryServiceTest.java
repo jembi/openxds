@@ -398,7 +398,7 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			addRimSlotElement(query, "$XDSDocumentEntryStatus",	"urn:oasis:names:tc:ebxml-regrep:StatusType:Submitted", helper.nsRim);
 			//addRimSlotElement(query, "$XDSDocumentEntryCreationTimeFrom", "200412252300", helper.nsRim);
 			//addRimSlotElement(query, "$XDSDocumentEntryCreationTimeTo",	"200501010800", helper.nsRim);
-			addRimSlotElement(query, "$XDSDocumentEntryHealthcareFacilityTypeCode",	"(‘Outpatient’)", helper.nsRim);
+			addRimSlotElement(query, "$XDSDocumentEntryHealthcareFacilityTypeCode",	"('Outpatient')", helper.nsRim);
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 		}
