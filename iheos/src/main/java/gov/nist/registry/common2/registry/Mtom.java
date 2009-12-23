@@ -9,7 +9,7 @@ import java.io.InputStream;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
 
-import sun.misc.BASE64Decoder;
+import org.apache.commons.codec.binary.Base64;
 
 public class Mtom {
 	private OMElement document;
@@ -39,8 +39,7 @@ public class Mtom {
 			this.content_type = datahandler.getContentType();
 		} else {
 			String base64 = binaryNode.getText();
-			BASE64Decoder d  = new BASE64Decoder();
-			contents = d.decodeBuffer(base64);
+			contents = Base64.decodeBase64(base64.getBytes());
 			this.content_type = null;
 		}
 

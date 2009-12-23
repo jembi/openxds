@@ -38,6 +38,7 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,8 +54,6 @@ import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-
-import sun.misc.BASE64Decoder;
 
 import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
@@ -277,8 +276,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 					store_document_swa_xop(m, id, datahandler, datahandler.getContentType(), false /* validate_mime_type */);
 				} else {
 					String base64 = binaryNode.getText();
-					BASE64Decoder d  = new BASE64Decoder();
-					byte[] ba = d.decodeBuffer(base64);
+					byte[] ba = Base64.decodeBase64(base64.getBytes());
 					store_document_mtom(m, id, ba);
 				}
 
