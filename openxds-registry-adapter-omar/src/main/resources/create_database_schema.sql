@@ -77,7 +77,9 @@ DROP TABLE IF EXISTS repository CASCADE;
 CREATE TABLE repository
 (
   documentuniqueid character varying(255) NOT NULL PRIMARY KEY,
-  mimetype character varying(255),
+  mimetype character varying(255) NOT NULL,
+  size INT NOT NULL,
+  hash character varying(255) NOT NULL,
   "content" bytea 
 );
 ALTER TABLE repository OWNER TO openxds;
