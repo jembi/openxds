@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Properties;
 
 import javax.xml.namespace.QName;
@@ -195,8 +196,130 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 		System.out.println("Result:\n" +result);
 	}
 	
+
+   /**
+    * XGR Retrieve multiple document, Generate request for the retrieval of multiple documents.
+    * Some from the local community, and some from a remote community. 
+    * Based on the XDSDocument.uniqueId, repositoryUniqueId, and homeCommunityId returned in metadata, 
+    * issue a RetrieveDocumentSet transaction to retrieve two documents.
+    * <p>
+    * Note:
+    * This test submits the RetrieveDocumentSet request to the initiating gateway instead of the responding gateway.
+    * 
+    * @throws Exception
+    */	
+	@Test
+	public void testIGMultipleDocuments() throws Exception {
+		//1. Load one or more documents for the default patient: patientId
+		
+		//2. Generate StoredQuery request message
+		String message = new CrossGatewayQueryTest().findDocumentsQuery(patientId, "Approved", "LeafClass");
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		System.out.println("Request:\n" +request);
+
+		//3. Send a StoredQuery
+		ServiceClient sender = getRegistryGateWayClient();															 
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+		
+		//4. Get DocumentUniqueId from the response.
+		List extrinsicObjects = getExtrinsicObjects(response);
+		List<String> docIds = getDocumentId(extrinsicObjects);
+		
+		//5. Get RepositoryUniqueId from the response.
+		XdsRepositoryService xdsService = (XdsRepositoryService) XdsFactory.getInstance().getBean("repositoryService");
+		String reposiotryUniqueId = xdsService.getRepositoryUniqueId();
+
+		//6. Generate Retrieve document request message
+		List<String> ids = new ArrayList<String>();
+		//Add the documents from the local community repository
+		for (String docId : docIds) {
+			ids.add(homeProperty);
+			ids.add(reposiotryUniqueId);
+			ids.add(docId);
+		}		
+//String 	reposiotryUniqueId = "1.3.6.1.4.1.21367.2010.1.2.1125";
+//ids.add("urn:oid:1.3.6.1.4.1.21367.2010.1.2.2045"); 
+////use the same repository as in the local community. In the real world, it should not be the same.
+//ids.add(reposiotryUniqueId);
+//// docId - hard coded for now
+//ids.add("2.16.840.1.113883.3.65.2.1262392348530");
+		
+		//Add the documents from a remote community (in the 198.160.211.53 server)
+		//remote home id
+		String remoteHomeId = "urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800";
+		ids.add(remoteHomeId); 
+		//use the same repository as in the local community. In the real world, it should not be the same.
+		ids.add(reposiotryUniqueId);
+		// docId - hard coded for now
+		ids.add("2.16.840.1.113883.3.65.2.1262451539643");
+		
+		String retrieveDoc = retrieveDocuments(ids);
+		OMElement retrieveDocRequest = OMUtil.xmlStringToOM(retrieveDoc);
+		System.out.println("Request:\n" +retrieveDoc);
+		
+		//7. Send a Retrieve document set request
+		ServiceClient retrieveDocSender = getIGRetrieveServiceClient();
+		OMElement retrieveDocResponse = retrieveDocSender.sendReceive(retrieveDocRequest);
+
+		assertNotNull(retrieveDocResponse);
+
+		String responseStatus;
+		//8. Verify the response is correct
+		List registryResponse = new ArrayList();
+		for (Iterator it = retrieveDocResponse.getChildElements(); it.hasNext();) {
+			OMElement obj = (OMElement) it.next();
+			String type = obj.getLocalName();
+			if (type.equals("RegistryResponse")) {
+				registryResponse.add(obj);
+			}
+		}
+		responseStatus = getRetrieveDocumentStatus(registryResponse);
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", responseStatus);
+		
+		//9. Verify the response returning more than 1 Document and each has a valid HomeCommunityId
+		List<OMElement> docRequests = MetadataSupport.childrenWithLocalName(retrieveDocResponse, "DocumentResponse");
+		assertNotNull (docRequests);
+
+		for (OMElement documentRequest : docRequests) {
+			OMElement homeElem = MetadataSupport.firstChildWithLocalName(documentRequest, "HomeCommunityId");
+			assertNotNull (homeElem);
+			String home = homeElem.getText();
+			assertNotNull (home);
+			assertTrue(home.equals(homeProperty) || home.equals(remoteHomeId));
+		}
+		assertTrue(docRequests.size() >= 1); 
+		
+		String result = retrieveDocResponse.toString();
+		System.out.println("Result:\n" +result);
+	}
 	
-	
+	/**
+	 * 
+	 * @param ids A list of triplets ordered by homeId, repositoryUniqueId and documentUniqueId 
+	 * @return
+	 */
+	private String retrieveDocuments(List<String> ids) {
+
+		String request = "<xdsb:RetrieveDocumentSetRequest xmlns:xdsb=\"urn:ihe:iti:xds-b:2007\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd\">\n";
+			for(int i=0; i<ids.size(); i=i+3) {
+				request+= "  <xdsb:DocumentRequest>\n"
+				+ "    <xdsb:HomeCommunityId>"
+				+ ids.get(i)
+				+ "</xdsb:HomeCommunityId>\n"
+				+ "    <xdsb:RepositoryUniqueId>"
+				+ ids.get(i+1)
+				+ "</xdsb:RepositoryUniqueId>\n"
+				+ "    <xdsb:DocumentUniqueId>"
+				+ ids.get(i+2)
+				+ "</xdsb:DocumentUniqueId>\n"
+				+ "  </xdsb:DocumentRequest>\n";
+			}
+			request	+= "</xdsb:RetrieveDocumentSetRequest>\n";
+		return request;
+	}
+		
+
 	private String retrieveDocuments(String repoId, List<String> docIds, String home) {
 
 		String request = "<xdsb:RetrieveDocumentSetRequest xmlns:xdsb=\"urn:ihe:iti:xds-b:2007\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd\">\n";

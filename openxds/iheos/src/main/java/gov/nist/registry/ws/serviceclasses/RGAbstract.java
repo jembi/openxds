@@ -19,7 +19,6 @@ import gov.nist.registry.common2.soap.Soap;
 import gov.nist.registry.common2.xca.HomeAttribute;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.ContentValidationService;
-import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
 import java.util.List;
@@ -77,7 +76,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 				throw new XdsInternalException("Cannot find XcaRG XdsRepositoryClient connection configuration.");			
 			}
 		} catch (XdsInternalException e) {
-			logger.fatal("Internal Error creating RegistryResponse: " + e.getMessage());
+			logger.fatal("Internal Error getting XcaRG actor configuration: " + e.getMessage());
 		}
 	}
 

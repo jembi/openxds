@@ -70,4 +70,27 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
+	<StandardConnection name="ibm-xds-registry-client">
+		<!--The host name of the XDS Registry Server-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<!--The port-->
+		<Port>9080</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+	</StandardConnection>
+
+	<SecureConnection name="ibm-secure-xds-registry-client">
+		<!--The host name of the XDS Registry Server-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<!--The port-->
+		<Port>9443</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 </Configuration>

@@ -39,7 +39,7 @@ public class XdsCommon  {
 			response.setIsXCA();
 	}
 	
-	protected void init(Response response, short xds_version, MessageContext messageContext) throws XdsInternalException {
+	public void init(Response response, short xds_version, MessageContext messageContext) throws XdsInternalException {
 		if (transaction_type == UNKNOWN_transaction)
 			throw new XdsInternalException("transaction_type is UNKNOWN");
 		this.response = response;

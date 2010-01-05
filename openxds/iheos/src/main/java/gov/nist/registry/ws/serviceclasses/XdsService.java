@@ -162,7 +162,7 @@ public class XdsService extends AppendixV {
 		stopTestLog();
 	}
 	
-	void generateLogMessage(OMElement response) {
+	public void generateLogMessage(OMElement response) {
 		try {
 			log_message.addOtherParam("Response", response.toString());
 		} catch (Exception e) {
@@ -190,7 +190,7 @@ public class XdsService extends AppendixV {
 		return response;
 	}
 
-	protected OMElement start_up_error(OMElement request, Exception e, short actor,String message) {
+	public OMElement start_up_error(OMElement request, Exception e, short actor,String message) {
 		return start_up_error(request, e, actor, message, false);
 	}
 

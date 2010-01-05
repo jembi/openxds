@@ -19,31 +19,14 @@
  */
 package org.openhealthtools.openxds.registry.api;
 
+import org.openhealthtools.common.ihe.IheActor;
+
+
 /**
  * This interface defines the operations of an XDS Registry actor.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public interface XdsRegistry {
-    /**
-	 * Starts this XDS Registry actor.  Do any initialization and logging that
-	 * might be needed.
-	 */
-	public void start();
-
-	/**
-	 * Stops this XDS Registry actor.  Do any de-initialization and logging that
-	 * might be needed.
-	 *
-	 */
-	public void stop();
-
-    /**
-	 * Gets an informative name for this XDS Registry actor for use in error
-	 * and log messages.
-	 *
-	 * @return An informative name of this XDS Registry actor
-	 */
-	public String getName();
+public interface XdsRegistry extends IheActor {
 
 }

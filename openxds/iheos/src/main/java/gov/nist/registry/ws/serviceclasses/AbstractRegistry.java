@@ -2,9 +2,11 @@ package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
+import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
@@ -96,19 +98,19 @@ ContentValidationService {
 
 			validateQueryInputDecoration(ahqr, a);
 
-			OMElement result = a.adhocQueryRequest(ahqr);
+			OMElement result = processAdhocQueryRequest(a, ahqr);
 			
 			decorateQueryOutput(ahqr, a, result);
-			
+
 			endTransaction(a.getStatus());
 
 			return result;
 		} catch (Exception e) {
 			return endTransaction(ahqr, e, AppendixV.REGISTRY_ACTOR, "");
-		}
-		
+		}		
 	}
 
-
-
+	protected OMElement processAdhocQueryRequest(AdhocQueryRequest a, OMElement ahqr) throws AxisFault, XdsException, XdsValidationException, LoggerException {
+		return a.adhocQueryRequest(ahqr);
+	}	
 }

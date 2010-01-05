@@ -33,9 +33,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Server;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
@@ -51,7 +51,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsRegistryImpl extends IheActor implements XdsRegistry {
+public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
     /** Logger for problems */
     private static Log log = LogFactory.getLog(XdsRegistryImpl.class);
     /** The connection description of this PIX Registry server */
