@@ -27,7 +27,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.protocol.Protocol;
 
 public class Soap implements SoapInterface {
-	static ServiceClient serviceClient = null;
+    ServiceClient serviceClient = null;
 	OMElement result = null;
 	boolean async;
 	String expectedReturnAction;
@@ -162,7 +162,7 @@ public class Soap implements SoapInterface {
 					((mtom) ? Constants.VALUE_TRUE : Constants.VALUE_FALSE));
 
 			serviceClient.getOptions().setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, protocol);
-
+			
 			serviceClient.getOptions().setAction(action);
 			if (addressing) {
 				serviceClient.engageModule("addressing");

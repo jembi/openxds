@@ -19,6 +19,8 @@
  */
 package org.openhealthtools.openxds.xca.api;
 
+import org.openhealthtools.common.ihe.IheActor;
+
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 
@@ -28,28 +30,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  *
  */
-public interface XcaRG {
-    /**
-	 * Starts this XCA Responding Gateway actor.  Do any initialization and logging that
-	 * might be needed.
-	 */
-	public void start();
-
-	/**
-	 * Stops this XCA Responding Gateway actor.  Do any de-initialization and logging that
-	 * might be needed.
-	 *
-	 */
-	public void stop();
-
-    /**
-	 * Gets an informative name for this XCA Responding Gateway actor for use in error
-	 * and log messages.
-	 *
-	 * @return An informative name of this XDS Repository actor
-	 */
-	public String getName();
-
+public interface XcaRG extends IheActor {
 	/**
 	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.
 	 * 

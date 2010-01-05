@@ -23,6 +23,7 @@ import gov.nist.registry.common2.registry.Properties;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -33,9 +34,9 @@ import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.xca.api.XcaIG;
 
@@ -46,7 +47,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:Anilkumar.reddy@misys.com">Anil kumar</a>
  */
-public class  XcaIGImpl extends IheActor implements XcaIG {
+public class  XcaIGImpl extends BaseIheActor implements XcaIG {
     /** Logger for problems during SOAP exchanges */
     private static Log log = LogFactory.getLog(XcaIGImpl.class);
 
@@ -54,6 +55,8 @@ public class  XcaIGImpl extends IheActor implements XcaIG {
 	private IConnectionDescription registryClientConnection = null;
     /**The client side of XDS Repository connection*/
 	private IConnectionDescription repositoryClientConnection = null;
+    /**The client side of XCA Responding Gateway connections*/
+	private List<IConnectionDescription> rgClientConnections = null;
 
     /** The XCA Responding Gateway Server */    
     IheHTTPServer igServer = null;
@@ -62,11 +65,14 @@ public class  XcaIGImpl extends IheActor implements XcaIG {
      * Creates a new XCA Responding Gateway actor.
      *
      */
-     public XcaIGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, IConnectionDescription repositoryClientConnection, IheAuditTrail auditTrail) {
+     public XcaIGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, 
+    		 IConnectionDescription repositoryClientConnection, List<IConnectionDescription> rgClientConnections, 
+    		 IheAuditTrail auditTrail) {
     	 super(rgServerConnection, auditTrail);
          this.connection = rgServerConnection;
          this.registryClientConnection = registryClientConnection;
          this.repositoryClientConnection = repositoryClientConnection;
+         this.rgClientConnections = rgClientConnections;
     }
 
     
@@ -135,20 +141,17 @@ public class  XcaIGImpl extends IheActor implements XcaIG {
         super.stop();
     }
 
-	/**
-	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.
-	 * 
-	 * @return the client side Registry connection
-	 */
+    @Override
+	public List<IConnectionDescription> getRGClientConnections() {
+    	return rgClientConnections;
+    }
+
+    @Override
 	public IConnectionDescription getRegistryClientConnection() {
 		return registryClientConnection;
 	}
 
-	/**
-	 * Gets the client side Repository <code>IConnectionDescription</code> of this actor.
-	 * 
-	 * @return the client side Repository connection
-	 */
+    @Override
 	public IConnectionDescription getRepositoryClientConnection() {
 		return repositoryClientConnection;
 	}

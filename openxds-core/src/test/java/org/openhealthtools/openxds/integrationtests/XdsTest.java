@@ -84,9 +84,8 @@ public abstract class XdsTest {
 	protected static String hostName;
 	protected static String repositoryUrl;
 	protected static String registryUrl;
-	protected static String xcaRegistryUrl;
-	protected static String xcaRepositoryUrl;
-	protected static String igRegistryUrl;
+	protected static String rgUrl;
+	protected static String igUrl;
 	protected static int pixRegistryPort;
 	protected static String patientId;
 	protected static String assigningAuthority;
@@ -114,9 +113,8 @@ public abstract class XdsTest {
 		patientId = properties.getProperty("patientId");
 		assigningAuthority = properties.getProperty("assigningAuthority");
 		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
-		xcaRegistryUrl = properties.getProperty("xcaRegistryUrl");
-		xcaRepositoryUrl = properties.getProperty("xcaRepositoryUrl");
-		igRegistryUrl = properties.getProperty("igRegistryUrl");
+		rgUrl = properties.getProperty("rgUrl");
+		igUrl = properties.getProperty("igUrl");
 		//Initialize openEMPI 
 //		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
 //		XdsFactory.getInstance().getBean("context");
@@ -475,7 +473,7 @@ public abstract class XdsTest {
 		ServiceClient sender = new ServiceClient(configctx,null);
 		String action = "urn:ihe:iti:2007:CrossGatewayQuery";
 		boolean enableMTOM = false;
-		sender.setOptions(getOptions(action, enableMTOM, xcaRegistryUrl));
+		sender.setOptions(getOptions(action, enableMTOM, rgUrl));
 		sender.engageModule("addressing");				
 		return sender;
 	}
@@ -485,20 +483,30 @@ public abstract class XdsTest {
 		ServiceClient sender = new ServiceClient(configctx,null);
 		String action = "urn:ihe:iti:2007:CrossGatewayRetrieve";
 		boolean enableMTOM = true;
-		sender.setOptions(getOptions(action, enableMTOM, xcaRepositoryUrl));
+		sender.setOptions(getOptions(action, enableMTOM, rgUrl));
 		sender.engageModule("addressing");				
 		return sender;
 	}
 	
-	protected ServiceClient getIGServiceClient() throws AxisFault {
+	protected ServiceClient getIGQueryServiceClient() throws AxisFault {
         ConfigurationContext configctx = getContext();
 		ServiceClient sender = new ServiceClient(configctx,null);
 		String action = "urn:ihe:iti:2007:RegistryStoredQuery";
 		boolean enableMTOM = false;
-		sender.setOptions(getOptions(action, enableMTOM, igRegistryUrl));
+		sender.setOptions(getOptions(action, enableMTOM, igUrl));
 		sender.engageModule("addressing");				
 		return sender;
 	}
+	protected ServiceClient getIGRetrieveServiceClient() throws AxisFault{
+		ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2007:RetrieveDocumentSet";
+		boolean enableMTOM = true;
+		sender.setOptions(getOptions(action, enableMTOM, igUrl));
+		sender.engageModule("addressing");
+		return sender;
+	}
+	
 	private ConfigurationContext getContext() throws AxisFault {
 		//String repository = "c:\\tools\\axis2-1.5\\repository\\modules\\addressing-1.5.mar";        
 //		String repository = "c:\\tools\\axis2-1.5\\repository";        

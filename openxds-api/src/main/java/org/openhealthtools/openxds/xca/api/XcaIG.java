@@ -19,6 +19,10 @@
  */
 package org.openhealthtools.openxds.xca.api;
 
+import java.util.List;
+
+import org.openhealthtools.common.ihe.IheActor;
+
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
@@ -27,28 +31,15 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * @author <a href="mailto:Anilkumar.reddy@misys.com">Anil Kumar</a>
  *
  */
-public interface XcaIG {
-	 /**
-	 * Starts this XCA Initiating Gateway actor.  Do any initialization and logging that
-	 * might be needed.
-	 */
-	public void start();
+public interface XcaIG extends IheActor {
 
 	/**
-	 * Stops this XCA Initiating Gateway actor.  Do any de-initialization and logging that
-	 * might be needed.
-	 *
+	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s of this actor.
+	 * 
+	 * @return the list of client side Responding Gateway connections
 	 */
-	public void stop();
-
-    /**
-	 * Gets an informative name for this XCA Initiating Gateway actor for use in error
-	 * and log messages.
-	 *
-	 * @return An informative name of this XDS Repository actor
-	 */
-	public String getName();
-
+	public List<IConnectionDescription> getRGClientConnections();	
+	
 	/**
 	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.
 	 * 

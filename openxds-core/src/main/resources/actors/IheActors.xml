@@ -75,6 +75,7 @@
 	<Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
 		<XcaIG connection="xca-ig" />
+		<XcaRGClient connection="xca-rg-client" />
 		<XdsRegistryClient connection="xds-registry-client" />
 		<XdsRepositoryClient connection="xds-repository-client" />
 	</Actor>

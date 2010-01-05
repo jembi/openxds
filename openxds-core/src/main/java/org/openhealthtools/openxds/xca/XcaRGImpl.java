@@ -33,9 +33,9 @@ import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
@@ -46,7 +46,7 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XcaRGImpl extends IheActor implements XcaRG {
+public class XcaRGImpl extends BaseIheActor implements XcaRG {
     /** Logger for problems during SOAP exchanges */
     private static Log log = LogFactory.getLog(XcaRGImpl.class);
 

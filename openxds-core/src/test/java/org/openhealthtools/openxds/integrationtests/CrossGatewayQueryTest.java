@@ -3,11 +3,11 @@ package org.openhealthtools.openxds.integrationtests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
+import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Properties;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -235,9 +235,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 	 */
 	@Test
 	public void testIGFindDocsLeafClass() throws Exception {
-		//1. Submit a document first for a random patientId
-		String patientId = generateAPatientId();
-		String uuids = submitMultipleDocuments(patientId);
+		//1. Submit one or more document first for the default patientId
 		
 		//2. Generate StoredQuery request message
 		String message = findDocumentsQuery(patientId, "Approved", "LeafClass");
@@ -245,7 +243,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 		System.out.println("Request:\n" +request);
 
 		//3. Send a StoredQuery
-		ServiceClient sender = getIGServiceClient();															 
+		ServiceClient sender = getIGQueryServiceClient();															 
 		OMElement response = sender.sendReceive( request );		
 		assertNotNull(response); 
 
@@ -253,12 +251,24 @@ public class CrossGatewayQueryTest extends XdsTest{
 		OMAttribute status = response.getAttribute(new QName("status"));
 		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 		
-		//5. Verify that the 2 Documents found from the StoredQuery response. 
+		//5. Verify document count
 		NodeList count = getNodeCount(response, "ExtrinsicObject");
-		assertTrue(count.getLength() == 2); 
-
 		String result = response.toString();
 		System.out.println("Result:\n" +result);
+
+		assertTrue(count.getLength() >= 1); 
+
+		System.out.println("Result:\n" +result);
+		
+		//6. Verify all ExtrinsicObject have a home attribute from the XGQ response
+		OMElement registry_object_list = MetadataSupport.firstChildWithLocalName(response, "RegistryObjectList"); 
+		for (Iterator it=registry_object_list.getChildElements(); it.hasNext(); ) {
+			OMElement registry_object = (OMElement) it.next();
+
+			String objectHome = registry_object.getAttributeValue(MetadataSupport.home_qname);
+			assertTrue("homeId is NULL", objectHome!=null && !objectHome.equals("")); 
+		}    	
+
 	}
 	
 	/**
@@ -279,7 +289,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 		System.out.println("Request:\n" +request);
 
 		//3. Send a StoredQuery
-		ServiceClient sender = getIGServiceClient();															 
+		ServiceClient sender = getIGQueryServiceClient();															 
 		OMElement response = sender.sendReceive( request );
 		assertNotNull(response); 
 

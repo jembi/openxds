@@ -1,8 +1,10 @@
 package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
+import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
@@ -116,7 +118,8 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 
 			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
 			
-			OMElement result = s.retrieveDocumentSet(rdsr, this, true /* optimize */, this);
+			OMElement result = processRetrieveDocumentSet(s, rdsr);
+			
 			endTransaction(s.getStatus());
 			return result;
 		} catch (Exception e) {
@@ -124,6 +127,8 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 		}
 	}
 
-
+	protected OMElement processRetrieveDocumentSet(RetrieveDocumentSet s, OMElement rdsr) throws XdsException, LoggerException {
+		return s.retrieveDocumentSet(rdsr, this, true /* optimize */, this);
+	}
 
 }

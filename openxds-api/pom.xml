@@ -20,6 +20,11 @@
   		<type>pom</type>
   	</dependency>
   	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>common-utils</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
   		<groupId>org.openhealthexchange.openpixpdq</groupId>
   		<artifactId>openpixpdq</artifactId>
   		<version>${openpixpdq.version}</version>
