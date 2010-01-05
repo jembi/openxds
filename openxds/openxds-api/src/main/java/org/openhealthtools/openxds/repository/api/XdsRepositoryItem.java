@@ -52,12 +52,12 @@ public interface XdsRepositoryItem {
     public int getSize() throws RepositoryException;
 
     /**
-     * Gets the hash code of this repository item.
+     * Gets the Sha1 hash code of this repository item.
      * 
-     * @return the hash code
+     * @return the Sha1 hash code
      * @throw RepositoryException if there is any problem to calculate the hashcode
      */
-    public long getHash() throws RepositoryException;
+    public String getHash() throws RepositoryException;
 
     /**
      * Gets the mimeType of this repository item.

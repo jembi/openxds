@@ -22,6 +22,7 @@ package org.openhealthtools.openxds.repository;
 
 
 import java.io.InputStream;
+import java.security.MessageDigest;
 
 import javax.activation.DataHandler;
 
@@ -78,17 +79,45 @@ public class XdsRepositoryItemImpl implements XdsRepositoryItem {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryItem#getHash()
+	 * @see org.openhealthtools.openxds.repository.api.XdsRepositoryItem#getHash()
 	 */
-	public long getHash() throws RepositoryException {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((handler == null) ? 0 : handler.hashCode());
-		return result;
+	public String getHash() throws RepositoryException {
+		try {
+			return getSha1String();
+		}catch(Exception e) {
+			throw new RepositoryException( "Fail to get hash - " + e.getMessage(), e);
+		}
 	}
 
+    /**
+     * Getter for property sha1.
+     * @return Value of property sha1.
+     */
+    private byte[] getSha1() throws Exception {
+		InputStream is = this.getDataHandler().getInputStream();
+		byte[] inb = new byte[this.getSize()];
+		is.read(inb);
+		
+        MessageDigest md = MessageDigest.getInstance("SHA1"); 
+        byte[] result = md.digest(inb);
+        return result;
+    }
+    
+    /**
+     * Getter for property sha1String.
+     * @return Value of property sha1String.
+     */
+    private String getSha1String() throws Exception {
+        byte[] sha1 = getSha1();
+        StringBuffer buf = new StringBuffer();
+        for(int i=0; i<sha1.length; i++) {
+            String h = Integer.toHexString(sha1[i] & 0xff);
+            if(h.length() == 1) h = "0" + h;
+            buf.append(h);
+        }
+        return new String(buf);
+    }
+    
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.repository.api.IXdsRepositoryItem#getRepositoryUniqueID()
 	 */

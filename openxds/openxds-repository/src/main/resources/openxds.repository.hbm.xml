@@ -5,7 +5,9 @@
 <hibernate-mapping>
     <class name="org.openhealthtools.openxds.repository.Repository" table="repository">
         <id name="documentUniqueId" column="documentuniqueid" type="string"/>
-         <property name="mimeType" column="mimetype" type="string"/>
+        <property name="mimeType" column="mimetype" type="string"/>
+        <property name="size" column="size" type="int"/>
+        <property name="hash" column="hash" type="string"/>
         <property name="binaryContent" column="content" type="binary"/>
     </class>
 </hibernate-mapping>

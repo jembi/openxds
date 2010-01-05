@@ -12,7 +12,6 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsIOException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.io.ByteBuffer;
 import gov.nist.registry.common2.io.Sha1Bean;
 import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.logging.LoggerException;
@@ -22,11 +21,9 @@ import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
-import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.common2.soap.Soap;
 import gov.nist.registry.ws.config.Repository;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +56,6 @@ import com.misyshealthcare.connect.base.audit.ActiveParticipant;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
 import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
 import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.SecureConnectionDescription;
-import com.misyshealthcare.connect.net.SecureSocketFactory;
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	ContentValidationService validater;
@@ -318,6 +313,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 		log_message.addOtherParam("Register transaction", register_transaction.toString());
 
+		boolean success = false;
 		Soap soap = new Soap();
 		try {
 			OMElement result;
@@ -331,6 +327,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			catch (XdsException e) {
 				response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			}
+			
 			result = soap.getResult();
 			if (result != null) {
 				QName testlogid = new QName("testLogId");
@@ -348,7 +345,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			if (result == null) {
 				response.add_error(MetadataSupport.XDSRepositoryError, "Null response message from Registry", "ProvideAndRegistryDocumentSet.java", log_message);
 				log_message.addOtherParam("Register transaction response", "null");
-
 			} else {
 				log_message.addOtherParam("Register transaction response", result.toString());
 
@@ -363,19 +359,47 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 							response.addRegistryErrorList(registry_error_list, log_message);
 						else
 							response.add_error(MetadataSupport.XDSRepositoryError, "Registry returned Failure but no error list", "ProvideAndRegistryDocumentSet.java", log_message);
+					} else {
+						success = true;
 					}
-					//ITI-42 Succeed, log a success message
-					if(auditLog != null)
-					auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
 				}
 			}
 		}
 		catch (Exception e) {
 			response.add_error(MetadataSupport.XDSRepositoryError, e.getMessage(), "ProvideAndRegistryDocumentSet.java", log_message);
 		}
+		
+		if (success) {
+			//ITI-42 Succeed, log a success message
+			if(auditLog != null)
+				auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
+		} else {		
+			List<String> rollbackDocs = new ArrayList<String>();
+			
+			for (OMElement document : MetadataSupport.childrenWithLocalName(pnr, "Document")) {
+				doc_count++;
+				String id = document.getAttributeValue(MetadataSupport.id_qname);
+				String uid = m.getExternalIdentifierValue(id, "urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab");  // doc uniqueid
+				if (uid != null) {
+					rollbackDocs.add( uid );
+				}
+			}
 
+			rollbackDocument( rollbackDocs );
+		}
 	}
 
+	private void rollbackDocument(List<String> docs) {
+		try {
+			XdsRepositoryService rs = XdsFactory.getXdsRepositoryService();
+			
+			rs.delete(docs, new RepositoryRequestContext());
+			
+		}catch(RepositoryException e) {
+			logger.error("Error rolling back document from the repository - " + e.getMessage(), e);
+		}
+	}
+	
 	String registry_endpoint() {
 		return (registry_endpoint == null) ? ConnectionUtil.getTransactionEndpoint(registryClientConnection) : registry_endpoint;
 	}

@@ -140,8 +140,14 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
         String id = Utility.getInstance().stripId(item.getDocumentUniqueId());
         
 		//check whether document unique id is already exists in repository or not
-		bean = xdsRepositoryManagerDao.getXdsRepositoryBean(id);
+		bean = xdsRepositoryManagerDao.getXdsRepositoryBean(id); 
 		if(bean != null){
+		    
+			String newHash = item.getHash();
+			if (bean.getHash().equals(newHash)) {
+				//The same document is saved previously. Allow it to proceed.
+				return ;
+			}
 			log.debug("document unique id already exist");
 			throw new RepositoryException("document unique id already exist in repository");
 		}
@@ -155,6 +161,8 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
         bean.setDocumentUniqueId(id);
         bean.setBinaryContent(contentBytes);
         bean.setMimeType(mimeTypeCode);
+        bean.setSize(item.getSize());
+        bean.setHash(item.getHash());
 		xdsRepositoryManagerDao.insert(bean);		
 	}
 	

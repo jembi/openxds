@@ -33,6 +33,8 @@ public class Repository implements Serializable{
     private byte binaryContent[];
     private String documentUniqueId;
     private String mimeType;
+    private int size;
+    private String hash;
     
     /** Creates a new instance of RepositoryItemBean */
     public Repository() {
@@ -77,4 +79,21 @@ public class Repository implements Serializable{
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}        
+	
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}        
+
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}        
+
 }
