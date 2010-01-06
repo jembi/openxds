@@ -7,14 +7,16 @@ package gov.nist.registry.common2.xml;
 import gov.nist.registry.common2.MetadataTypes;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.Properties;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.StringReader;
+
 import org.apache.axiom.om.OMElement;
+import org.apache.xerces.parsers.DOMParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 public class SchemaValidation implements MetadataTypes {
 
