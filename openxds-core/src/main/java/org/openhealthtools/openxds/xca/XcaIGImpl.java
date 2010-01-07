@@ -141,17 +141,14 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
         super.stop();
     }
 
-    @Override
 	public List<IConnectionDescription> getRGClientConnections() {
     	return rgClientConnections;
     }
 
-    @Override
 	public IConnectionDescription getRegistryClientConnection() {
 		return registryClientConnection;
 	}
 
-    @Override
 	public IConnectionDescription getRepositoryClientConnection() {
 		return repositoryClientConnection;
 	}
