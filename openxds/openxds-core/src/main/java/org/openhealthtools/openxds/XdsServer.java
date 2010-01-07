@@ -78,9 +78,10 @@ public class XdsServer {
 	 */
 	private static void printUsage() {
 		System.out.println("*********************************************************");
-		System.out.println("WRONG USAGE: The XDS server expects 2 arguments.");
-		System.out.println("To start up the server: ");
-	    System.out.println("   java XdsServer startup <full path of IheActors.xml>");
+		System.out.println("To start up the XDS server:");		
+		System.out.println("  Either configure a valid ihe.actors.dir property");		
+		System.out.println("Or run ");
+	    System.out.println("  java XdsServer startup <full path of IheActors.xml>");
 		System.out.println("*********************************************************");		
 	}
 }
