@@ -80,13 +80,9 @@ public class XdsRepositoryManagerDaoImpl extends HibernateDaoSupport implements 
 	public void delete(final String documentUniqueId) throws RepositoryException{
 		
 		try {
-			this.getHibernateTemplate().execute(new HibernateCallback(){
-				public Object doInHibernate(Session session) throws HibernateException, SQLException {
-					Query query = session.createQuery("delete from Repository where documentuniqueid = ?");
-					query.setString(0, documentUniqueId);
-					return null;
-				}
-			});					
+			Repository repository = getXdsRepositoryBean(documentUniqueId);
+			if(repository != null)
+			this.getHibernateTemplate().delete(repository);			
 		} catch (Exception e) {
 			log.error("Failed to delete Repository bean in repository",e);
 			throw new RepositoryException(e);
