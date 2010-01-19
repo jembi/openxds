@@ -97,11 +97,10 @@ class SyslogUdp5426Messenger implements IMessageTransmitter {
 		String SyslogVersion = "1";
 		String bom = "\uFEFF";
 		String completeMessage = "<" + PRI + ">"+ SyslogVersion +" " + formatter.format(now) + " " + localHostName + " OpenXDS - - - " + bom + message;
-        int length = completeMessage.length();
         
         try {
 			byte[] messageBytes = completeMessage.getBytes("UTF-8");
-			DatagramPacket packet = new DatagramPacket(messageBytes, length, address, port);
+			DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length, address, port);
 			DatagramSocket socket = new DatagramSocket();
 			socket.send(packet);
 			socket.close();
