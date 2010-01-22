@@ -1,5 +1,5 @@
 --
---  Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+--  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
 --  you may not use this file except in compliance with the License.
@@ -15,11 +15,9 @@
 --
 --  Contributors:
 --    Misys Open Source Solutions - initial API and implementation
+--    -
 --
---
-DROP TABLE IF EXISTS Association CASCADE;
-CREATE TABLE Association (
---Identifiable Attributes
+
   id				VARCHAR(256) NOT NULL PRIMARY KEY,
   home                      VARCHAR(256),
 --RegistryObject Attributes

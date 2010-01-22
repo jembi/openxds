@@ -1,6 +1,6 @@
 <%--
 
-     Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
      Contributors:
        Misys Open Source Solutions - initial API and implementation
-
+       -
 
 --%>
+
 <%@ include file="/common/taglibs.jsp"%>
 
 <c:redirect url="home.action"/>

@@ -1,6 +1,6 @@
 <%--
 
-     Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
      Contributors:
        Misys Open Source Solutions - initial API and implementation
-
+       -
 
 --%>
-
 
 <%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

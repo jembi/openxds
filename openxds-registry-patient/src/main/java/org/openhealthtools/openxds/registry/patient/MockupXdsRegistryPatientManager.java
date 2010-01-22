@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009 Sysnet International and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  *  permissions and limitations under the License.
  *
  *  Contributors:
- *    Sysnet International   - initial API and implementation
- *    Misys Open Source Solutions - modification and bug fixes
+ *    Misys Open Source Solutions - initial API and implementation
+ *    -
  */
+
 package org.openhealthtools.openxds.registry.patient;
 
 import org.openhealthexchange.openpixpdq.data.Patient;
