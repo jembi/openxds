@@ -1,6 +1,6 @@
 <!--
 
-     Copyright (c) 2009 Misys Open Source Solutions (MOSS) and others
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@
                 </rim:Slot>
                 <rim:Slot name="legalAuthenticator">
                     <rim:ValueList>
-                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.</rim:Value>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
                     </rim:ValueList>
                 </rim:Slot>
                 <rim:Slot name="serviceStartTime">
@@ -66,7 +66,7 @@
                 <rim:Classification id="cl-doc1-1" classificationScheme="urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d" classifiedObject="doc1" nodeRepresentation="">
                     <rim:Slot name="authorPerson">
                         <rim:ValueList>
-                            <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.</rim:Value>
+                       		<rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
                         </rim:ValueList>
                     </rim:Slot>
                     <rim:Slot name="authorInstitution">
@@ -166,7 +166,7 @@
                 <rim:Classification id="cl-ss1" classificationScheme="urn:uuid:a7058bb9-b4e4-4307-ba5b-e3f0ab85e12d" classifiedObject="SubmissionSet" nodeRepresentation="">
                     <rim:Slot name="authorPerson">
                         <rim:ValueList>
-                            <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.</rim:Value>
+                      		<rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
                         </rim:ValueList>
                     </rim:Slot>
                     <rim:Slot name="authorInstitution">
