@@ -470,7 +470,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if ( validate_content_type && !mime_type.equals(content_type))
 			throw new MetadataException("ExtrinsicObject " + id + " metadata has mimeType is " + mime_type +
 					" but document content type is " + content_type);
-		
+
+		item.setMimeType(mime_type);
+
 		try {
 			RepositoryRequestContext context = new RepositoryRequestContext();
 			context.setConnection(connection);
@@ -539,6 +541,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
+		item.setMimeType(mime_type);
 		try {
 			RepositoryRequestContext context = new RepositoryRequestContext();
 			context.setConnection(connection);
