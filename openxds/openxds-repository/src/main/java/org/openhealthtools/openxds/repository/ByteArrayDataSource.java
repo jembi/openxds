@@ -1,13 +1,23 @@
-/*
- * ====================================================================
+/**
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
- * This code is subject to the freebxml License, Version 1.1
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * Copyright (c) 2001 - 2003 freebxml.org.  All rights reserved.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * $Header: /cvsroot/ebxmlrr/omar/src/java/org/freebxml/omar/server/repository/hibernate/ByteArrayDataSource.java,v 1.2 2007/03/21 14:24:34 farrukh_najmi Exp $
- * ====================================================================
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  Contributors:
+ *    Misys Open Source Solutions - initial API and implementation
+ *    -
  */
+
 package org.openhealthtools.openxds.repository;
 
 import java.io.ByteArrayInputStream;

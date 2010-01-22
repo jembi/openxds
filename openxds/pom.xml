@@ -93,34 +93,63 @@
                     <useFullNames>false</useFullNames>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <configuration>
-                    <header>${project.parent.basedir}/src/main/resources/header.txt</header>
-                    <excludes>
-                        <exclude>**/header.txt</exclude>
-                        <exclude>**/*.log</exclude>
-                        <exclude>**/*.bat</exclude>
+        	<plugin>
+				<inherited>false</inherited>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<header>${basedir}/src/main/resources/header.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>							
+	                <mapping> 
+	                    <jwc>XML_STYLE</jwc> 
+	                    <application>XML_STYLE</application> 
+	                    <myFileExtension>JAVADOC_STYLE</myFileExtension> 
+	                </mapping> 
+	                <useDefaultMapping>true</useDefaultMapping> 
+					<properties>
+						<year>2009-2010</year>
+						<company>Misys Open Source Solutions (MOSS) and others</company>
+						<contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
+						<contributor2>-</contributor2>
+					</properties>
+					<excludes>
+						<exclude>**/header.txt</exclude>
+						<exclude>**/README.txt</exclude>
+						<exclude>**/*.log</exclude>
+						<exclude>**/*.xml</exclude>
+						<exclude>**/*.xsd</exclude>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.bat</exclude>
+						<exclude>**/*.list</exclude>
                         <exclude>**/*.mar</exclude>
                         <exclude>**/*.aar</exclude>
-                        <exclude>**/*.list</exclude>
                         <exclude>**/.xsdconfig</exclude>
                         <exclude>**/*.original</exclude>
                         <exclude>**/.myhibernatedata</exclude>
                         <exclude>**/axis2.xml</exclude>
-                    </excludes>
-		            <executions>
-		                <execution>
-		                    <goals>
-		                        <goal>check</goal>
-		                    </goals>
-		                </execution>
-		            </executions>                    
+						<exclude>**/*.sh</exclude>
+						<exclude>**/*.jks</exclude>
+						<exclude>**/*.p12</exclude>
+						<exclude>**/build/**</exclude>
+						<exclude>**/test/resources/**</exclude>
+						<exclude>**/gov/nist/**</exclude>
+						<exclude>**/org/json/**</exclude>
+						<exclude>**/common/ws/server/**</exclude>
+						<exclude>**/Utility.java</exclude>
+						<exclude>**/ByteArrayInputStream.java</exclude>
+					</excludes>
                 </configuration>
+	            <executions>
+	                <execution>
+			            <phase>verify</phase> 
+	                    <goals>
+	                        <goal>format</goal>
+	                    </goals>
+	                </execution>
+	            </executions>                    
             </plugin>
-
-            
         </plugins>
     </build>
 
@@ -133,6 +162,18 @@
             <id>appfuse</id>
             <url>http://static.appfuse.org/repository</url>
         </repository>
+		<repository>
+			<id>sun1</id>
+			<url>http://download.java.net/maven/1</url>
+		</repository>
+		<repository>
+			<id>sun2</id>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>ibilio</id>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>		
         <repository>
             <id>openxds</id>
             <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
@@ -144,17 +185,17 @@
             <id>appfuse</id>
             <url>http://static.appfuse.org/repository</url>
         </pluginRepository>
-	<pluginRepository>
-	    <id>mc-release</id>
-	    <name>Local Maven repository of releases</name>
-	    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-	    <snapshots>
-	        <enabled>false</enabled>
-	    </snapshots>
-	    <releases>
-	        <enabled>true</enabled>
-	    </releases>
-	</pluginRepository>
+		<pluginRepository>
+		    <id>mc-release</id>
+		    <name>Local Maven repository of releases</name>
+		    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+		    <snapshots>
+		        <enabled>false</enabled>
+		    </snapshots>
+		    <releases>
+		        <enabled>true</enabled>
+		    </releases>
+		</pluginRepository>
     </pluginRepositories>
 
     <!-- Dependencies calculated by AppFuse when running full-source plugin -->
