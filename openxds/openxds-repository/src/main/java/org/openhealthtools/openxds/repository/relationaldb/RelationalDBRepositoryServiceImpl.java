@@ -135,7 +135,7 @@ public class RelationalDBRepositoryServiceImpl implements XdsRepositoryService {
 		Repository bean =null;
 		byte contentBytes[]= null;
 		// get the mime type of the document.
-		String mimeTypeCode = item.getDataHandler().getContentType();
+		String mimeTypeCode = item.getMimeType();
 		
 		// Strip off the "urn:uuid:"
         String id = Utility.getInstance().stripId(item.getDocumentUniqueId());
