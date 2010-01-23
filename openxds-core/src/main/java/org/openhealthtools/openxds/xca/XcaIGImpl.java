@@ -56,8 +56,10 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
 	private IConnectionDescription registryClientConnection = null;
     /**The client side of XDS Repository connection*/
 	private IConnectionDescription repositoryClientConnection = null;
-    /**The client side of XCA Responding Gateway connections*/
-	private List<IConnectionDescription> rgClientConnections = null;
+    /**The client side of XCA Responding Gateway Query connections*/
+	private List<IConnectionDescription> rgQueryClientConnections = null;
+    /**The client side of XCA Responding Gateway Retrieve connections*/
+	private List<IConnectionDescription> rgRetrieveClientConnections = null;
 
     /** The XCA Responding Gateway Server */    
     IheHTTPServer igServer = null;
@@ -67,13 +69,14 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
      *
      */
      public XcaIGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, 
-    		 IConnectionDescription repositoryClientConnection, List<IConnectionDescription> rgClientConnections, 
-    		 IheAuditTrail auditTrail) {
+    		 IConnectionDescription repositoryClientConnection, List<IConnectionDescription> rgQueryClientConnections, 
+    		 List<IConnectionDescription> rgRetrieveClientConnections, IheAuditTrail auditTrail) {
     	 super(rgServerConnection, auditTrail);
          this.connection = rgServerConnection;
          this.registryClientConnection = registryClientConnection;
          this.repositoryClientConnection = repositoryClientConnection;
-         this.rgClientConnections = rgClientConnections;
+         this.rgQueryClientConnections = rgQueryClientConnections;
+         this.rgRetrieveClientConnections = rgRetrieveClientConnections;
     }
 
     
@@ -95,11 +98,7 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
 	        String axis2repopath = null;
 	        String axis2xmlpath = null;	        	
 	        String repo = Properties.loader().getString("axis2.repo.dir");
-	        URL repoPath = XdsRegistryImpl.class.getResource(repo);
-	        if (repoPath != null) {
-		        axis2repopath = repoPath.getPath();
-		        axis2xmlpath = repoPath.getPath() +"/axis2.xml";
-	        } else  if (new File(repo).exists()) {
+	        if (new File(repo).exists()) {
 		        axis2repopath = repo;
 		        axis2xmlpath = repo +"/axis2.xml";	        	
 	        } else {
@@ -146,10 +145,14 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
         super.stop();
     }
 
-	public List<IConnectionDescription> getRGClientConnections() {
-    	return rgClientConnections;
+	public List<IConnectionDescription> getRGQueryClientConnections() {
+    	return rgQueryClientConnections;
     }
 
+	public List<IConnectionDescription> getRGRetrieveClientConnections() {
+    	return rgRetrieveClientConnections;
+    }
+	
 	public IConnectionDescription getRegistryClientConnection() {
 		return registryClientConnection;
 	}

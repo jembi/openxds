@@ -44,26 +44,6 @@
 		</PropertySet>
 	</StandardConnection>
 
-	<StandardConnection name="ibm-arr-bsd">
-		<HostName>nist1.ihe.net</HostName>
-		<Port>15500</Port>
-		<Property name="TYPE" value="BSD SYSLOG" />
-		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="misys1" />
-			<Entry name="HOSTNAME" value="misys1" />
-			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="MISYS" />
-			<Entry name="SOURCE" value="MISYS" />
-			<Entry name="APPNAME" value="OpenXDS" />
-			<Entry name="FACILITY" value="MISYS" />
-			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
-		</PropertySet>
-		<PropertySet name="ParticipantObject">
-			<Entry name="PatientNameEncoding" value="HL7" />
-			<Entry name="PatientIdEncoding" value="HL7" />
-		</PropertySet>
-	</StandardConnection>
-
 	<StandardConnection name="log4j_audittrail">
 		<Property name="TYPE" value="LOG4J LOGGER" />
 		<PropertySet name="localhost">
@@ -88,7 +68,107 @@
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="misys1" />
 			<Entry name="HOSTNAME" value="misys1" />
-			<Entry name="IP" value="10.242.0.51" />
+			<Entry name="IP" value="10.242.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+	
+	<StandardConnection name="ibm_arr_udp">
+		<HostName>ibm1</HostName>
+		<Port>514</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+	
+	<StandardConnection name="misys_arr_udp">
+		<HostName>misys1</HostName>
+		<Port>2863</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+	
+	<StandardConnection name="spirit_arr_udp">
+		<HostName>tiani3</HostName>
+		<Port>5555</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<StandardConnection name="sun_arr_udp">
+		<HostName>sun1</HostName>
+		<Port>4010</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+	</StandardConnection>
+
+	<StandardConnection name="oracle_arr_udp">
+		<HostName>sun1</HostName>
+		<Port>514</Port>
+		<Property name="TYPE" value="UDP SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
 			<Entry name="SITE" value="MISYS" />
 			<Entry name="SOURCE" value="MISYS" />
 			<Entry name="APPNAME" value="OpenXDS" />

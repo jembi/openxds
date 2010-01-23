@@ -46,7 +46,7 @@ public class XcaRepository extends RepositoryB {
 			String home_att = home_att_ele.getText();
 			if (home_att == null || home_att.equals(""))
 				rel.add_error(MetadataSupport.XDSMissingHomeCommunityId, "homeCommunityId missing or empty" , null, log_message);
-			else if ( !home_att.equals(home) && !Ig.rgMap.keySet().contains(home_att) )
+			else if ( !home_att.equals(home) && !Ig.rgRetrieveMap.keySet().contains(home_att) )
 				rel.add_error(MetadataSupport.XDSUnknownCommunity, "Do not understand homeCommunityId " + home_att , null, log_message);
 		}
 	}
@@ -83,7 +83,7 @@ public class XcaRepository extends RepositoryB {
 				Ig.exec.execute( sc );
 			} else {
 				//forward to the gateway
-				IConnectionDescription rgConnection = Ig.rgMap.get(requestHomeId);
+				IConnectionDescription rgConnection = Ig.rgRetrieveMap.get(requestHomeId);
 				SoapCall sc = new SoapCall(rgConnection, rootRequest,  "urn:ihe:iti:2007:CrossGatewayRetrieve", requestHomeId, true/*mtom*/, ag, this);
 				Ig.exec.execute( sc );
 			}			

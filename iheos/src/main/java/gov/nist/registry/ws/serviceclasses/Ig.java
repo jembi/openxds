@@ -27,8 +27,9 @@ public class Ig {
 	static ExecutorService exec = Executors.newFixedThreadPool( 10 ); 
 	static String home = XdsService.properties.getString("home.community.id");
 	
-	static Map<String, IConnectionDescription> rgMap = Collections.synchronizedMap(new HashMap<String, IConnectionDescription>());
-    
+	static Map<String, IConnectionDescription> rgQueryMap = Collections.synchronizedMap(new HashMap<String, IConnectionDescription>());
+	static Map<String, IConnectionDescription> rgRetrieveMap = Collections.synchronizedMap(new HashMap<String, IConnectionDescription>());
+        
 	public OMElement AdhocQueryRequest(OMElement ahqr) throws AxisFault {
 		XcaRegistry reg = new XcaRegistry();
 		
@@ -56,19 +57,34 @@ public class Ig {
 				logger.fatal("Internal Error getting XcaIG actor configuration: " + e.getMessage());
 			}
 			
-			//Init Responding Gateway map
-			List<IConnectionDescription> rgClientConnections = actor.getRGClientConnections();
-			if (rgClientConnections == null || rgClientConnections.size() == 0) {
-				logger.warn("No XcaIG XcaRGClient connection is configured");
+			//Init Responding Gateway Query map
+			List<IConnectionDescription> rgQueryClientConnections = actor.getRGQueryClientConnections();
+			if (rgQueryClientConnections == null || rgQueryClientConnections.size() == 0) {
+				logger.warn("No XcaIG XcaRGQueryClient connection is configured");
 			} else {
-				for (IConnectionDescription rgConnectgion : rgClientConnections) {
-					String homeId = rgConnectgion.getProperty("homeId");
+				for (IConnectionDescription rgQueryConnectgion : rgQueryClientConnections) {
+					String homeId = rgQueryConnectgion.getProperty("homeId");
 					if (homeId == null)
-						logger.error("Missing the required homeId property in XcaRGClient connection configuration: " + rgConnectgion.getDescription());
+						logger.error("Missing the required homeId property in XcaRGQueryClient connection configuration: " + rgQueryConnectgion.getDescription());
 					else
-						rgMap.put(homeId, rgConnectgion);
+						rgQueryMap.put(homeId, rgQueryConnectgion);
 				}
 			}
+			
+			//Init Responding Gateway Retrieve map
+			List<IConnectionDescription> rgRetrieveClientConnections = actor.getRGRetrieveClientConnections();
+			if (rgRetrieveClientConnections == null || rgRetrieveClientConnections.size() == 0) {
+				logger.warn("No XcaIG XcaRGRetrieveClient connection is configured");
+			} else {
+				for (IConnectionDescription rgRetrieveConnectgion : rgRetrieveClientConnections) {
+					String homeId = rgRetrieveConnectgion.getProperty("homeId");
+					if (homeId == null)
+						logger.error("Missing the required homeId property in XcaRGRetrieveClient connection configuration: " + rgRetrieveConnectgion.getDescription());
+					else
+						rgRetrieveMap.put(homeId, rgRetrieveConnectgion);
+				}
+			}
+			
 		}			
 		return actor;
 	}
