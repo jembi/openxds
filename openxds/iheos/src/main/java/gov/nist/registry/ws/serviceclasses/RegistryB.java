@@ -38,9 +38,9 @@ public class RegistryB  extends AbstractRegistry  {
 
 	protected void validateWS(boolean isSQ) throws XdsWSException {
 		checkSOAP12();
-		if (isAsync())
-			throw new XdsWSException("Asynchronous web service request not acceptable on this endpoint" + 
-					" - replyTo is " + getMessageContext().getReplyTo().getAddress());
+//		if (isAsync())
+//			throw new XdsWSException("Asynchronous web service request not acceptable on this endpoint" + 
+//					" - replyTo is " + getMessageContext().getReplyTo().getAddress());
 	}
 
 	protected void validateSubmitTransaction(OMElement sor)

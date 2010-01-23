@@ -143,7 +143,6 @@
                 </configuration>
 	            <executions>
 	                <execution>
-			            <phase>verify</phase> 
 	                    <goals>
 	                        <goal>format</goal>
 	                    </goals>

@@ -39,4 +39,145 @@
 		
 		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />
 	</StandardConnection>
+	
+<!--=========================================================================-->
+<!-- The XDS Registry connections to which this Reposonding Gateway connects -->
+<!-- All the connections below are used for Connecatathon NA 2010            -->
+<!--=========================================================================-->	
+	<StandardConnection name="vangent-rg">
+		<HostName>vangent1</HostName>
+		<Port>8080</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" />
+	</StandardConnection>
+	<SecureConnection name="vangent-secure-rg">
+		<HostName>vangent1</HostName>
+		<Port>8181</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>				
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<SecureConnection name="spirit-secure-rg">
+		<HostName>spirit7</HostName>
+		<Port>8443</Port>
+		<UrlPath>/XCA/responding</UrlPath>				
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="ibm-rg-query">
+		<HostName>ibm1</HostName>
+		<Port>9085</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />
+	</StandardConnection>
+	<SecureConnection name="ibm-secure-rg-query">
+		<HostName>ibm1</HostName>
+		<Port>9448</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="ibm-rg-retrieve">
+		<HostName>ibm1</HostName>
+		<Port>9085</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />
+	</StandardConnection>
+	<SecureConnection name="ibm-secure-rg-retrieve">
+		<HostName>ibm1</HostName>
+		<Port>9448</Port>
+		<UrlPath>XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="icw-rg-query">
+		<HostName>icw2</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" />
+	</StandardConnection>
+	<SecureConnection name="icw-secure-rg-query">
+		<HostName>icw2</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="icw-rg-retrieve">
+		<HostName>icw2</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />
+	</StandardConnection>
+	<SecureConnection name="icw-secure-rg-retrieve">
+		<HostName>icw2</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="epic-rg-query">
+		<HostName>epic3</HostName>
+		<Port>80</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />
+	</StandardConnection>
+	<SecureConnection name="epic-secure-rg-query">
+		<HostName>epic3</HostName>
+		<Port>443</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>				
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="epic-rg-retrieve">
+		<HostName>epic3</HostName>
+		<Port>80</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>						
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />
+	</StandardConnection>
+	<SecureConnection name="epic-s-rg-retrieve">
+		<HostName>epic3</HostName>
+		<Port>443</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>				
+		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
 </Configuration>

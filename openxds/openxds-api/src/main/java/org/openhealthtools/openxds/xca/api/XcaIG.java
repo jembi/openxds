@@ -35,11 +35,18 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
 public interface XcaIG extends IheActor {
 
 	/**
-	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s of this actor.
+	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s for Query.
 	 * 
-	 * @return the list of client side Responding Gateway connections
+	 * @return the list of client side Responding Gateway connections for Query
 	 */
-	public List<IConnectionDescription> getRGClientConnections();	
+	public List<IConnectionDescription> getRGQueryClientConnections();	
+	
+	/**
+	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s for Retrieve.
+	 * 
+	 * @return the list of client side Responding Gateway connections for Retrieve
+	 */
+	public List<IConnectionDescription> getRGRetrieveClientConnections();	
 	
 	/**
 	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.

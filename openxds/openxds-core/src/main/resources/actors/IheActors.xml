@@ -75,7 +75,8 @@
 	<Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
 		<XcaIG connection="xca-ig" />
-		<XcaRGClient connection="xca-rg-client" />
+		<XcaRGQueryClient connection="xca-rg-client" />
+		<XcaRGRetrieveClient connection="xca-rg-client" />
 		<XdsRegistryClient connection="xds-registry-client" />
 		<XdsRepositoryClient connection="xds-repository-client" />
 	</Actor>
@@ -90,10 +91,6 @@
 		<Actor name="auditnist" type="SecureNode">
 		<Description>NIST AUDIT TRAILS</Description>
 		<AuditTrail consumer="nist-arr-bsd" />
-		</Actor>
-		<Actor name="auditibm" type="SecureNode">
-		<Description>IBM AUDIT TRAILS</Description>
-		<AuditTrail consumer="ibm-arr-bsd" />
 		</Actor>-->
 		<Actor name="localaudit" type="SecureNode">
 		<Description>LOCAL AUDIT</Description>
