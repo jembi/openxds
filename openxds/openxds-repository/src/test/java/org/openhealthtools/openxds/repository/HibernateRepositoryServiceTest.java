@@ -131,6 +131,7 @@ public class HibernateRepositoryServiceTest {
 	 private XdsRepositoryItem createRepositoryItem(String id, File content) throws Exception {    	
 	        DataHandler contentDataHandler = new DataHandler(new FileDataSource(content));
 	        XdsRepositoryItem repositoryItem = new XdsRepositoryItemImpl(id, contentDataHandler);
+	        repositoryItem.setMimeType("plain/text");
 	        return repositoryItem;
 	        
 	    }
