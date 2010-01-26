@@ -26,8 +26,19 @@
 		<!--The host name of the Responding Gateway Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
-		<Port>8040</Port>
+		<Port>9080</Port>
 	</StandardConnection>
+	<SecureConnection name="xca-secure-rg">
+		<!--The host name of the Responding Gateway Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8041</Port>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 	
 	<StandardConnection name="xds-repository-client">
 		<!--The host name of the XDS Repository Server-->
@@ -37,5 +48,40 @@
 		<!--The URL of the XDS Registry web services -->
 		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
 	</StandardConnection>
+
+    <!-- Axolotl Registry for HIMSS Vitual Testing -->
+	<StandardConnection name="axolotl-vt-registry">
+		<HostName>208.37.137.112</HostName>
+		<Port>80</Port>
+		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="axolotl-vt-secure-registry">
+		<HostName>208.37.137.112</HostName>
+		<Port>443</Port>
+		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+    <!-- Oracle Repository for HIMSS Vitual Testing -->
+	<StandardConnection name="oracle-vt-repository">
+		<HostName>10.149.124.186</HostName>
+		<Port>7777</Port>
+		<UrlPath>/XDS/xdsrepositoryb_Soap12</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="oracle-vt-secure-repository">
+		<HostName>10.149.124.186</HostName>
+		<Port>4444</Port>		
+		<UrlPath>/XDS/xdsrepositoryb_Soap12</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
 
 </Configuration>

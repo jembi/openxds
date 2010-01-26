@@ -67,16 +67,34 @@
 	<Actor name="xcarg" type="XcaRG">
 		<Description>XCA Responding Gateway</Description>
 		<XcaRG connection="xca-rg" />
-		<XdsRegistryClient connection="xds-registry-client" />
-		<XdsRepositoryClient connection="xds-repository-client" />
+		<XdsRegistryClient connection="axolotl-vt-registry" />
+		<XdsRepositoryClient connection="oracle-vt-repository" />
+	</Actor>
+	<Actor name="xcasrg" type="XcaRG">
+		<Description>Secure XCA Responding Gateway</Description>
+		<XcaRG connection="xca-secure-rg" />
+		<XdsRegistryClient connection="axolotl-vt-secure-registry" />
+		<XdsRepositoryClient connection="oracle-vt-secure-repository" />
 	</Actor>
 	
 	<!--The XCA Initiating Gateway actor configuration-->
 	<Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
 		<XcaIG connection="xca-ig" />
+		<!--  
 		<XcaRGQueryClient connection="xca-rg-client" />
 		<XcaRGRetrieveClient connection="xca-rg-client" />
+		-->
+		<XdsRegistryClient connection="xds-registry-client" />
+		<XdsRepositoryClient connection="xds-repository-client" />
+	</Actor>
+	<Actor name="xcasig" type="XcaIG">
+		<Description>Secure XCA Initiating Gateway</Description>
+		<XcaIG connection="xca-secure-ig" />
+		<!--  
+		<XcaRGQueryClient connection="xca-rg-client" />
+		<XcaRGRetrieveClient connection="xca-rg-client" />
+		-->
 		<XdsRegistryClient connection="xds-registry-client" />
 		<XdsRepositoryClient connection="xds-repository-client" />
 	</Actor>
