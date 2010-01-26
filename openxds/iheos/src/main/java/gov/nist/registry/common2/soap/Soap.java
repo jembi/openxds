@@ -7,6 +7,7 @@ import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.xml.Util;
+import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,8 +26,10 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.OperationContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.logging.LogFactory;
 
 public class Soap implements SoapInterface {
+	private final static org.apache.commons.logging.Log logger = LogFactory.getLog(Soap.class);
     ServiceClient serviceClient = null;
 	OMElement result = null;
 	boolean async;
@@ -183,7 +186,10 @@ public class Soap implements SoapInterface {
 			if ( async && !serviceClient.getOptions().isUseSeparateListener())
 				serviceClient.getOptions().setUseSeparateListener(async);
 
-			//System.out.println("call " + endpoint);
+			if (logger.isInfoEnabled()) {
+				logger.info("Call " + endpoint);
+				logger.info("Action " + action);
+			}
 			OMElement result = serviceClient.sendReceive(body);
 
 			if (async)
