@@ -142,7 +142,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return processRegResult(result);
 		} 
 		catch (Exception e) {
-			return endTransaction(ahqr, e, AppendixV.REPOSITORY_ACTOR, "");
+			return endTransaction(ahqr, e, AppendixV.REGISTRY_ACTOR, "");
 		}
 	}
 
