@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.net.URL;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.xerces.parsers.DOMParser;
@@ -53,9 +54,11 @@ public class SchemaValidation implements MetadataTypes {
 
 		if (localSchema == null) {
 			String SchemaLoc = Properties.loader().getString("xds.schema.dir");
-			File file =new File(SchemaLoc);
+			URL repoPath = SchemaValidation.class.getResource(SchemaLoc);
+			//File file =new File(SchemaLoc);
 			try{
-				localSchema = file.getCanonicalPath();
+				//localSchema = file.getCanonicalPath();
+				localSchema = repoPath.getPath();
 			}catch (Exception e) {
 			    throw new XdsInternalException("I/O exception occured while getting the canonical path");
 			}
