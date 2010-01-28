@@ -49,7 +49,8 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean isValidPatient(PatientIdentifier pid, RegistryPatientContext context) throws RegistryPatientException {
 		try {
-			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(pid.getId());
+			PersonIdentifier identifier = getPersonIdentifier(pid);	
+			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
 			if (personIdentifier == null) {
 				return false;
 			}
@@ -62,23 +63,33 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	}
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void createPatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
-		for (PatientIdentifier pid : patient.getPatientIds()) {
-			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());			
 		try {
-			xdsRegistryPatientDao.savePersonIdentifier(identifier);
-		} catch (Exception e) {
+		for (PatientIdentifier pid : patient.getPatientIds()) {
+			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());
+			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
+			if(personIdentifier != null){
+				if(personIdentifier.isMerged()){
+					personIdentifier.setMerged(false);
+					xdsRegistryPatientDao.updatePersonIdentifier(personIdentifier);
+				}
+			}else{
+				xdsRegistryPatientDao.savePersonIdentifier(identifier);
+			} 
+		}
+		}
+		catch (Exception e) {
 			log.error("Failed while trying to save a new patient record in the patient registry." + e, e);
 			throw new RegistryPatientException(e.getMessage());
 		}
-		}	 
 	}
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updatePatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
 		for (PatientIdentifier pid : patient.getPatientIds()) {
-			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(pid.getId());
-			PersonIdentifier identifier = getPersonIdentifier(personIdentifier,pid,patient.isDeathIndicator());			
+			PersonIdentifier identifier = getPersonIdentifier(pid);	
+			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
+			PersonIdentifier updateidentifier = getPersonIdentifier(personIdentifier,pid,patient.isDeathIndicator());			
 		try {
-			xdsRegistryPatientDao.updatePersonIdentifier(identifier);
+			xdsRegistryPatientDao.updatePersonIdentifier(updateidentifier);
 		} catch (Exception e) {
 			log.error("Failed while trying to update a patient record in the patient registry." + e, e);
 			throw new RegistryPatientException(e.getMessage());
@@ -88,9 +99,11 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void mergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
 		PatientIdentifier survivingId = survivingPatient.getPatientIds().get(0);
-		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(survivingId.getId());
+		PersonIdentifier personIdentifier = getPersonIdentifier(survivingId);	
+		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(personIdentifier);
 		for (PatientIdentifier pid : mergePatient.getPatientIds()) {
-		PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(pid.getId());
+			PersonIdentifier retiredId = getPersonIdentifier(pid);		
+			PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(retiredId);
 		if (retiredPersonId == null ||  survivingPersonId == null) {
 			log.error("Unable to locate one of the two patient records that need to be merged.");
 			throw new RegistryPatientException("Unable to identify the two patient records that need to be merged.");
@@ -108,9 +121,11 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void unmergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
 		PatientIdentifier survivingId = survivingPatient.getPatientIds().get(0);
-		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(survivingId.getId());
+		PersonIdentifier personIdentifier = getPersonIdentifier(survivingId);	
+		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(personIdentifier);
 		for (PatientIdentifier pid : mergePatient.getPatientIds()) {
-		PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getMergedPersonId(pid.getId());
+			PersonIdentifier retiredId = getPersonIdentifier(pid);		
+			PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(retiredId);
 		if (retiredPersonId == null ||  survivingPersonId == null) {
 			log.error("Unable to locate one of the two patient records that need to be unmerged.");
 			throw new RegistryPatientException("Unable to identify the two patient records that need to be unmerged.");
@@ -139,19 +154,20 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		this.xdsRegistryPatientDao = xdsRegistryPatientDao;
 	}
 	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier,boolean deleted) {
-		PersonIdentifier pi = new PersonIdentifier();
-		pi.setPatientId(patientIdentifier.getId());
-		String assignAuth = getAssigningAuthority(patientIdentifier);
-		pi.setAssigningAuthority(assignAuth);
+		PersonIdentifier pi = getPersonIdentifier(patientIdentifier);		
 		pi.setDeleted(deleted ? true : false);
 		pi.setMerged(false);
 		return pi;
 	}
-	
-	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,boolean deleted) {
+	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier){
+		PersonIdentifier pi = new PersonIdentifier();
 		pi.setPatientId(patientIdentifier.getId());
 		String assignAuth = getAssigningAuthority(patientIdentifier);
 		pi.setAssigningAuthority(assignAuth);
+		return pi;		
+	}
+	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,boolean deleted) {
+		pi = getPersonIdentifier(patientIdentifier);		
 		pi.setDeleted(deleted ? true : false);
 		return pi;
 	}
