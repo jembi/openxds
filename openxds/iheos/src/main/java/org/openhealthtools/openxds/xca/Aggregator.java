@@ -98,26 +98,30 @@ public abstract class Aggregator {
     	
     	for (String homeId : results.keySet()) {
     		OMElement result = results.get(homeId);
+			logMessage.addOtherParam("Response from " + homeId, result.toString()) ;
     		
     		String error = checkNullResult( result );
     		
     		if (error != null) {
     			rel.add_error(MetadataSupport.XDSRegistryError, error + " from Responding Gateway " + homeId , "XcaRegistry.java", logMessage);	    			
-    			logMessage.addOtherParam("Response from " + homeId, response.getResponse().toString()) ;
     			continue;
     		}
 
     		OMElement responseElemWithStatus = getResponseElementWithStatus(result);
     		String status = responseElemWithStatus.getAttributeValue(MetadataSupport.status_qname);
-    		if ( !status.equals(MetadataSupport.response_status_type_namespace + "Success")) {
-    			OMElement registry_error_list = MetadataSupport.firstChildWithLocalName(responseElemWithStatus, "RegistryErrorList"); 
-    			rel.addRegistryErrorList(registry_error_list, logMessage);
-    			logMessage.addOtherParam("Response from " + homeId, response.getResponse().toString()) ;
-    		} else {
-				addResult(result, homeId);    			
+    		//Add success result
+    		if ( !status.equals(MetadataSupport.response_status_type_namespace + "Failure")) {
+    			response.setHasSuccess();
+				addResult(result, homeId);    			    		
+    		}
+			//Add error and/or warning
+			OMElement registry_error_list = MetadataSupport.firstChildWithLocalName(responseElemWithStatus, "RegistryErrorList"); 
+			if (registry_error_list != null) {
+				rel.addRegistryErrorList(registry_error_list, logMessage);
     		}    			
     	}//for
 		logMessage.addOtherParam("Result", response.getResponse().toString());
+		
 		return response.getResponse();
     }
     
