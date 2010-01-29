@@ -68,8 +68,8 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());
 			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
 			if(personIdentifier != null){
-				if(personIdentifier.isMerged()){
-					personIdentifier.setMerged(false);
+				if(personIdentifier.getMerge().equals("Y")){
+					personIdentifier.setMerge("N");
 					xdsRegistryPatientDao.updatePersonIdentifier(personIdentifier);
 				}
 			}else{
@@ -109,7 +109,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 			throw new RegistryPatientException("Unable to identify the two patient records that need to be merged.");
 		}
 		retiredPersonId.setSurvivingPatientId(survivingPersonId.getPatientId());
-		retiredPersonId.setMerged(true);
+		retiredPersonId.setMerge("Y");
 		try {
 			xdsRegistryPatientDao.mergePersonIdentifier(retiredPersonId);
 		} catch (Exception e) {
@@ -132,7 +132,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		}
 		if(retiredPersonId.getSurvivingPatientId().equals(survivingPersonId.getPatientId())){
 			retiredPersonId.setSurvivingPatientId("");
-			retiredPersonId.setMerged(false);
+			retiredPersonId.setMerge("N");
 		}else{
 			log.error("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
 			throw new RegistryPatientException("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
@@ -155,8 +155,8 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	}
 	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier,boolean deleted) {
 		PersonIdentifier pi = getPersonIdentifier(patientIdentifier);		
-		pi.setDeleted(deleted ? true : false);
-		pi.setMerged(false);
+		pi.setDelete(deleted ? "Y" : "N");
+		pi.setMerge("N");
 		return pi;
 	}
 	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier){
@@ -167,8 +167,10 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		return pi;		
 	}
 	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,boolean deleted) {
-		pi = getPersonIdentifier(patientIdentifier);		
-		pi.setDeleted(deleted ? true : false);
+		pi.setPatientId(patientIdentifier.getId());
+		String assignAuth = getAssigningAuthority(patientIdentifier);
+		pi.setAssigningAuthority(assignAuth);	
+		pi.setDelete(deleted ? "Y" : "N");
 		return pi;
 	}
 	private static String getAssigningAuthority(PatientIdentifier patientIdentifier){

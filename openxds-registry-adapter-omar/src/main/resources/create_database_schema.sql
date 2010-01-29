@@ -76,7 +76,7 @@ CREATE TABLE repository
 (
   documentuniqueid character varying(255) NOT NULL PRIMARY KEY,
   mimetype character varying(255) NOT NULL,
-  size INT NOT NULL,
+  document_size INT NOT NULL,
   hash character varying(255) NOT NULL,
   "content" bytea 
 );
@@ -88,8 +88,8 @@ CREATE TABLE personidentifier
   registry_patient_id character varying(255) NOT NULL PRIMARY KEY,
   assigning_authority character varying(255) NOT NULL,
   patient_id character varying(255) NOT NULL, 
-  deleted boolean,
-  merged boolean,
+  deleted varchar(1),
+  merged varchar(1),
   surviving_patient_id character varying(255)  
 );
 ALTER TABLE personidentifier OWNER TO openxds;

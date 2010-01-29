@@ -9,8 +9,8 @@
         </id>
         <property name="assigningAuthority" column="assigning_authority" type="string"/>
         <property name="patientId" column="patient_id" type="string"/>
-        <property name="deleted" column="deleted" type="boolean"/>
-        <property name="merged" column="merged" type="boolean"/>
+        <property name="delete" column="deleted" type="string"/>
+        <property name="merge" column="merged" type="string"/>
         <property name="survivingPatientId" column="surviving_patient_id" type="string"/>        
     </class>
 </hibernate-mapping>
