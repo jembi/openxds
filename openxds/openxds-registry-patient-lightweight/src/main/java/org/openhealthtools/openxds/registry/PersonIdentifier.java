@@ -33,8 +33,8 @@ public class PersonIdentifier implements Serializable{
       private String assigningAuthority;
       private String survivingPatientId;
       private String registryPatientId;
-      private boolean deleted;
-      private boolean merged;
+      private String delete;
+      private String merge;
 
 	public String getAssigningAuthority() {
 		return assigningAuthority;
@@ -54,23 +54,23 @@ public class PersonIdentifier implements Serializable{
 	public void setSurvivingPatientId(String survivingPatientId) {
 		this.survivingPatientId = survivingPatientId;
 	}
-	public boolean isDeleted() {
-		return deleted;
-	}
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	public boolean isMerged() {
-		return merged;
-	}
-	public void setMerged(boolean merged) {
-		this.merged = merged;
-	}
 	public String getRegistryPatientId() {
 		return registryPatientId;
 	}
 	public void setRegistryPatientId(String registryPatientId) {
 		this.registryPatientId = registryPatientId;
+	}
+	public String getDelete() {
+		return delete;
+	}
+	public void setDelete(String delete) {
+		this.delete = delete;
+	}
+	public String getMerge() {
+		return merge;
+	}
+	public void setMerge(String merge) {
+		this.merge = merge;
 	}
       
 

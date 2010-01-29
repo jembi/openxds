@@ -91,22 +91,8 @@ public class XdsRegistryLifeCycleServiceImpl implements XdsRegistryLifeCycleServ
     @Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void mergePatients(String survivingPatient, String mergePatient, 
 			RegistryLifeCycleContext context) throws RegistryLifeCycleException {
-    	 boolean flag = false;
-		  try {
-			 XdsRegistryPatientService patientService = XdsFactory.getXdsRegistryPatientService();
-			 flag = patientService.isValidPatient(getPatientIdentifier(survivingPatient), null);
-			    if(!flag){
-			    	log.debug("surviving patient is not available in registry");
-			    	throw new RegistryLifeCycleException(
-							"surviving patient is not available in registry");
-			    }
-			    flag = patientService.isValidPatient(getPatientIdentifier(mergePatient), null);
-			    if(!flag){
-			    	log.debug("merge patient is not available in registry");
-			    	throw new RegistryLifeCycleException(
-					"merge patient is not available in registry");
-			    }
-			  mergePatientDao.mergeDocument(survivingPatient, mergePatient);
+    	 try {
+			 mergePatientDao.mergeDocument(survivingPatient, mergePatient);
 			} catch (Exception e) {
 				throw new RegistryLifeCycleException(e);
 			}

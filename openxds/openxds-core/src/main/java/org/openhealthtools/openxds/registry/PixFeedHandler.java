@@ -292,10 +292,15 @@ class PixFeedHandler extends BaseHandler implements Application {
 		}
 		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
 		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
+		XdsRegistryLifeCycleService lifeCycleManager = XdsFactory.getXdsRegistryLifeCycleService();		
 		try {
-			XdsRegistryLifeCycleService lifeCycleManager = XdsFactory.getXdsRegistryLifeCycleService();
 			lifeCycleManager.mergePatients(survivingPatient, mergePatient, new RegistryLifeCycleContext());
 		} catch (Exception e) {
+			try{	 
+				patientManager.unmergePatients(patient, mrgPatient, context);
+			}catch (Exception e1) {
+				throw new ApplicationException(e1);
+			}
 			log.error("error while merging patient document in xds regsitry");
 			throw new ApplicationException(e);
 		}

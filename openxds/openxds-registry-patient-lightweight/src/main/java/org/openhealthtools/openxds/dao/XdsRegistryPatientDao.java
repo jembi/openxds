@@ -36,11 +36,7 @@ public interface XdsRegistryPatientDao {
 	 */
 	public PersonIdentifier getPersonById(PersonIdentifier personId) throws RegistryPatientException;
 	
-	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#isValidPatient()
-	 */
-	public PersonIdentifier getMergedPersonId(String personId) throws RegistryPatientException;
-	
+		
 	/* (non-Javadoc)
 	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#createPatient()
 	 */

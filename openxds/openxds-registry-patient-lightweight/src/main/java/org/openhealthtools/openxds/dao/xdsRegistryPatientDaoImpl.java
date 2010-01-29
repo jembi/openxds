@@ -42,9 +42,10 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		PersonIdentifier personIdentifier = null;
 		String personId = patientId.getPatientId();
 		String assigningAuthority = patientId.getAssigningAuthority();
+		String deletePatient = "N";
 		try{
 		list = this.getHibernateTemplate().find(
-				"from PersonIdentifier where patient_id = '"+ personId +"' and assigning_authority ='" + assigningAuthority + "' and deleted = 'FALSE'");
+				"from PersonIdentifier where patient_id = '"+ personId +"' and assigning_authority ='" + assigningAuthority + "' and deleted ='" + deletePatient + "'");
 		}catch (Exception e) {
 			log.error("Failed to retrieve person identifier from registry patient service",e);
 			throw new RegistryPatientException(e);
@@ -56,22 +57,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 	
 	}
 
-	public PersonIdentifier getMergedPersonId(String personId) throws RegistryPatientException{
-		List list = new ArrayList();
-		PersonIdentifier personIdentifier = null;
-		try{
-		list = this.getHibernateTemplate().find(
-				"from PersonIdentifier where patient_id = '"+ personId +"' and deleted = 'FALSE' and merged = 'TRUE'");
-		}catch (Exception e) {
-			log.error("Failed to retrieve person identifier from registry patient service",e);
-			throw new RegistryPatientException(e);
-		}
-	
-		if (list.size() > 0)
-			personIdentifier = (PersonIdentifier) list.get(0);
-		return personIdentifier;
-	
-	}
 	public void mergePersonIdentifier(PersonIdentifier mergePersonIdentifier) throws RegistryPatientException{
 		try {
 			 this.getHibernateTemplate().update(mergePersonIdentifier);
