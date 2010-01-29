@@ -13,6 +13,8 @@ public abstract class Response implements ErrorLogger {
 	public final static short version_3 = 3;
 	short version;
 	boolean isXCA = false;
+	/**for figuring out particalSuccess*/
+	boolean hasSuccess = false; 
 	//String status = "Success";
 	protected OMNamespace ebRSns;
 	protected OMNamespace ebRIMns;
@@ -34,6 +36,10 @@ public abstract class Response implements ErrorLogger {
 	
 	public void setIsXCA() { 
 		isXCA = true;
+	}
+	
+	public void setHasSuccess() {
+		hasSuccess = true;
 	}
 	
 	public String toString() {
@@ -99,8 +105,12 @@ public abstract class Response implements ErrorLogger {
 				if (error_list != null)
 					response.addChild(error_list);
 			}
-			
-			response.addAttribute("status", MetadataSupport.response_status_type_namespace + registryErrorList.getStatus(), null);
+
+			String status = registryErrorList.getStatus();
+			if (isXCA && hasSuccess && this.has_errors()) {
+				status = "PartialSuccess";
+			} 
+			response.addAttribute("status", MetadataSupport.response_status_type_namespace + status, null);
 			
 			setLocationForXCA();
 			
