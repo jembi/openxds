@@ -17,7 +17,9 @@
 --    Misys Open Source Solutions - initial API and implementation
 --    -
 --
-
+DROP TABLE IF EXISTS Association CASCADE;
+CREATE TABLE Association (
+--Identifiable Attributes
   id				VARCHAR(256) NOT NULL PRIMARY KEY,
   home                      VARCHAR(256),
 --RegistryObject Attributes
