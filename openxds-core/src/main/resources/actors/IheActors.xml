@@ -40,64 +40,69 @@
 	<!--The XDS Registry actor configuration-->
 	<Actor name="xdsreg" type="XdsRegistry">
 		<Description>XDS Registry</Description>
-		<XdsRegistry connection="xds-registry" />
-		<PixRegistry connection="pix-registry" />
+		<Server connection="xds-registry" />
+		<PixServer connection="pix-registry" />
 	</Actor>
 	<Actor name="xdsreg_secure" type="XdsRegistry">
 		<Description>Secure XDS Registry</Description>
-		<XdsRegistry connection="secure-xds-registry" />
-		<PixRegistry connection="secure-pix-registry" />
+		<Server connection="secure-xds-registry" />
+		<PixServer connection="secure-pix-registry" />
 	</Actor>
-
+ 
 	<!--The XDS Repository actor configuration-->
 	<Actor name="xdsrep" type="XdsRepository">
 		<Description>XDS Repository</Description>
-		<XdsRepository connection="xds-repository" />
-		<XdsRegistryClient connection="xds-registry-client" />
-		<!-- AuditTrail consumer="log4j_audittrail" /-->
-		<!-- AuditTrail consumer="mesa_arr_udp" /-->		
+		<Server connection="xds-repository" />
+		<Registry connection="xds-registry-client" />
+		<AuditTrail consumer="log4j_audittrail" />
+		<AuditTrail consumer="misys_arr_udp" />		
 	</Actor>
 	<Actor name="xdsrep_secure" type="XdsRepository">
 		<Description>Secure XDS Repository</Description>
-		<XdsRepository connection="secure-xds-repository" />
-		<XdsRegistryClient connection="secure-xds-registry-client" />
+		<Server connection="secure-xds-repository" />
+		<Registry connection="secure-xds-registry-client" />
 	</Actor>
 
 	<!--The XCA Responding Gateway actor configuration-->
-	<Actor name="xcarg" type="XcaRG">
+	<!-- Actor name="xcarg" type="XcaRG">
 		<Description>XCA Responding Gateway</Description>
-		<XcaRG connection="xca-rg" />
-		<XdsRegistryClient connection="axolotl-vt-registry" />
-		<XdsRepositoryClient connection="oracle-vt-repository" />
+		<Server connection="xca-rg" />
+		<Registry connection="misys-registry" />
+		<Repository connection="misys-repository" />
 	</Actor>
 	<Actor name="xcasrg" type="XcaRG">
 		<Description>Secure XCA Responding Gateway</Description>
-		<XcaRG connection="xca-secure-rg" />
-		<XdsRegistryClient connection="axolotl-vt-secure-registry" />
-		<XdsRepositoryClient connection="oracle-vt-secure-repository" />
-	</Actor>
+		<Server connection="xca-secure-rg" />
+		<Registry connection="misys-registry" />
+		<Repository connection="misys-repository" />
+	</Actor-->
 	
 	<!--The XCA Initiating Gateway actor configuration-->
-	<Actor name="xcaig" type="XcaIG">
+	<!-- Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
-		<XcaIG connection="xca-ig" />
-		<!--  
-		<XcaRGQueryClient connection="xca-rg-client" />
-		<XcaRGRetrieveClient connection="xca-rg-client" />
-		-->
-		<XdsRegistryClient connection="xds-registry-client" />
-		<XdsRepositoryClient connection="xds-repository-client" />
+		<Server connection="xca-ig" />
+		<Registry connection="local-registry" />
+		<Repository connection="local-repository" />
+		<RespondingGateways>
+			<RespondingGateway query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
+			<RespondingGateway query="vangent-rg" retrieve="vangent-rg"/>
+			<RespondingGateway query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway query="hxti-rg" retrieve="hxti-rg"/>
+		</RespondingGateways>
 	</Actor>
 	<Actor name="xcasig" type="XcaIG">
 		<Description>Secure XCA Initiating Gateway</Description>
-		<XcaIG connection="xca-secure-ig" />
-		<!--  
-		<XcaRGQueryClient connection="xca-rg-client" />
-		<XcaRGRetrieveClient connection="xca-rg-client" />
-		-->
-		<XdsRegistryClient connection="xds-registry-client" />
-		<XdsRepositoryClient connection="xds-repository-client" />
-	</Actor>
+		<Server connection="xca-secure-ig" />
+		<Registry connection="local-secure-registry" />
+		<Repository connection="local-secure-repository" />
+		<RespondingGateways>
+			<RespondingGateway query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
+			<RespondingGateway query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
+			<RespondingGateway query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway query="hxti-rg" retrieve="hxti-rg"/>
+		</RespondingGateways>
+	</Actor-->
+	
 	
 	<!-- Audit Repository Actor -->
 	<!-- 

@@ -251,12 +251,14 @@
 	</SecureConnection>
 
 	<StandardConnection name="carefx-registry">
-		<HostName>carefx1</HostName>
+		<!-- HostName>carefx1</HostName--> 
+		<HostName>xdstest.carefx.com</HostName> 
 		<Port>86</Port>
 		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="carefx-secure-registry">
-		<HostName>carefx1</HostName>
+		<!-- HostName>carefx1</HostName--> 
+		<HostName>xdstest.carefx.com</HostName> 
 		<Port>84</Port>
 		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
 		<!-- Trust and Keystore -->
