@@ -19,6 +19,8 @@ import org.apache.xerces.parsers.DOMParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.misyshealthcare.connect.util.StringUtil;
+
 public class SchemaValidation implements MetadataTypes {
 
 	public static String validate(OMElement ele, int metadataType)  throws XdsInternalException {
@@ -54,15 +56,27 @@ public class SchemaValidation implements MetadataTypes {
 
 		if (localSchema == null) {
 			String SchemaLoc = Properties.loader().getString("xds.schema.dir");
+			if (!StringUtil.goodString(SchemaLoc)) {
+			    throw new XdsInternalException("The xds.schema.dir property is not defined in openxds.properties");				
+			}
+			
 			URL repoPath = SchemaValidation.class.getResource(SchemaLoc);
-			//File file =new File(SchemaLoc);
-			try{
-				//localSchema = file.getCanonicalPath();
-				localSchema = repoPath.getPath();
-			}catch (Exception e) {
-			    throw new XdsInternalException("I/O exception occured while getting the canonical path");
+			if (repoPath != null) {
+				localSchema = repoPath.getPath();				
+			} else {
+				File file =new File(SchemaLoc);
+				try{
+					localSchema = file.getCanonicalPath();
+				}catch (Exception e) {
+				    throw new XdsInternalException("I/O exception occured while getting the canonical path - " + e.getMessage(), e);
+				}
 			}
 		}
+		if (!StringUtil.goodString(localSchema)) {
+		    throw new XdsInternalException("The xds.schema.dir property is invalid");				
+		}
+
+		
   		// Decode schema location
 		String schemaLocation;
 		switch (metadataType) {
