@@ -32,8 +32,12 @@
 	
         <Includefile name="XdsCodes.xml" />		
 		
+        <Identifier type="domain" name="GLOBAL">
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
+        </Identifier>
 	</StandardConnection>
-
 	<SecureConnection name="secure-xds-registry">
 		<!--The host name of the XDS Registry Server-->
 		<HostName>localhost</HostName>
@@ -43,6 +47,12 @@
    		<Property name="sourceIds" value="1.3.6.1.4.1.21367.2010.1.2"/>
    
         <Includefile name="XdsCodes.xml" />		
+
+        <Identifier type="domain" name="GLOBAL">
+			<NamespaceId>IHENA</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
+			<UniversalIdType>ISO</UniversalIdType>
+        </Identifier>
 
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>

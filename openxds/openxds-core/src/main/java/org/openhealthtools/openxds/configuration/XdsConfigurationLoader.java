@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -32,6 +33,7 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
@@ -619,18 +621,12 @@ public class XdsConfigurationLoader {
 		ArrayList<IConnectionDescription> logConnections = new ArrayList<IConnectionDescription>();
 		//Define a PIXRegistry server side connection, so that ITI-8 PIX Feed messages can be forwarded to the XDS Registry 
 		IConnectionDescription pixRegistryServerConnection = null;		
-		//Define a XDSRegistry server side connection so that ITI-42 and ITI-18  messages can be forwarded to the XDS Registry
-		IConnectionDescription xdsRegistryServerConnection = null;
-		//Define a XDSRepository server side connection so that ITI-41 and ITI-43  messages can be forwarded to the XDS Repository server
-		IConnectionDescription xdsRepositoryServerConnection = null;
+		//Define a server side connection for each server actor
+		IConnectionDescription serverConnection = null;
 		//Define a XDSRegistry client side connection so that ITI-42 and ITI-38 messages can be forwarded to the XDS Registry server
 		IConnectionDescription xdsRegistryClientConnection = null;
-		//Define a XCARG server side connection so that ITI-38 & ITI-39 messages can be forwarded to the XCA Responding Gateway server
-		IConnectionDescription xcaRGServerConnection = null;
 		//Define a XDSRepository client side connection so that ITI-39 messages can be forwarded to the XDS Repository server
 		IConnectionDescription xdsRepositoryClientConnection = null;
-		//Define a XCAIG server side connection so that ITI-18 & ITI-43 messages can be forwarded to the XCA Initiating Gateway server
-		IConnectionDescription xcaIGServerConnection = null;
 		//Define a XCARG client side Query connections so that ITI-38 messages can be forwarded to the XCA Responding Gateway server
 		List<IConnectionDescription> xcaRGQueryClientConnections = new ArrayList<IConnectionDescription>();
 		//Define a XCARG client side Retrieve connections so that ITI-39 messages can be forwarded to the XCA Responding Gateway server
@@ -673,7 +669,16 @@ public class XdsConfigurationLoader {
 							}
 						}					
 					}
-					
+				} else if (kind.equalsIgnoreCase("SERVER")) {
+					//For each server actor, define a server connection for each transaction
+					String server = getAttributeValue(element, "connection");
+					if (server == null) {
+						throwIheConfigurationException("Server element with no 'connection' attribute in actor '" + actorName + "' is not defined", configFile);
+					}
+					serverConnection = ConnectionFactory.getConnectionDescription(server);
+					if (serverConnection == null) {
+						throwIheConfigurationException("Server connection '" + server + "' in actor '" + actorName + "' is not defined", configFile);
+					}
 				} else if (kind.equalsIgnoreCase("AUDITTRAIL")) {
 					// An ATNA logger definition
 					String logName = getAttributeValue(element, "consumer");
@@ -685,99 +690,62 @@ public class XdsConfigurationLoader {
 						throwIheConfigurationException("AuditTrail connection '" + logName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
 					logConnections.add(logConnection);
-					
-				} else if (kind.equalsIgnoreCase("XDSREGISTRY")) {
-					// For XDS Registry, define a XDSRegistry connection for transactions ITI-42 Register Document Set and ITI-18 stored query
-					String xdsRegistryName = getAttributeValue(element, "connection");
-					if (xdsRegistryName == null) {
-						throwIheConfigurationException("XdsRegistry element with no 'connection' attribute", configFile);
-					}
-					xdsRegistryServerConnection = ConnectionFactory.getConnectionDescription(xdsRegistryName);
-					if (xdsRegistryServerConnection == null) {
-						throwIheConfigurationException("XdsRegistry connection '" + xdsRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("PIXREGISTRY")) {
+				} else if (kind.equalsIgnoreCase("PIXSERVER")) {
 					// For PIX Registry, define a PIX Registry Connection for Transaction ITI-8
 					String pixRegistryName = getAttributeValue(element, "connection");
 					if (pixRegistryName == null) {
-						throwIheConfigurationException("PixRegistry element with no 'connection' attribute", configFile);
+						throwIheConfigurationException("PixServer element with no 'connection' attribute", configFile);
 					}
 				    pixRegistryServerConnection = ConnectionFactory.getConnectionDescription(pixRegistryName);
 					if (pixRegistryServerConnection == null) {
-						throwIheConfigurationException("PixRegistry connection '" + pixRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
+						throwIheConfigurationException("PixServer connection '" + pixRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
 					}					
-				}  else if (kind.equalsIgnoreCase("XDSREPOSITORY")) {
-					// For XDS Repository, define a XDSRepository connection for transactions ITI-41, ITI-42 and ITI-43.
-					String xdsRepositoryName = getAttributeValue(element, "connection");
-					if (xdsRepositoryName == null) {
-						throwIheConfigurationException("XdsRepository element with no 'connection' attribute", configFile);
-					}
-					xdsRepositoryServerConnection = ConnectionFactory.getConnectionDescription(xdsRepositoryName);
-					if (xdsRepositoryServerConnection == null) {
-						throwIheConfigurationException("XdsRepository connection '" + xdsRepositoryName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("XDSREGISTRYCLIENT")) {
-					// For XDS Repository or XCA Responding Gateway, define a XDSRegistry client side connection for transaction ITI-42.
+				} else if (kind.equalsIgnoreCase("REGISTRY")) {
+					// For XDS Repository or XCA Gateway, define an XDSRegistry client side connection
 					String xdsRegistryClientName = getAttributeValue(element, "connection");
 					if (xdsRegistryClientName == null) {
-						throwIheConfigurationException("XdsRegistryClient element with no 'connection' attribute", configFile);
+						throwIheConfigurationException("Registry element with no 'connection' attribute", configFile);
 					}
 					xdsRegistryClientConnection = ConnectionFactory.getConnectionDescription(xdsRegistryClientName);
 					if (xdsRegistryClientConnection == null) {
-						throwIheConfigurationException("XdsRegistryClient connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+						throwIheConfigurationException("Registry connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
-				} else if (kind.equalsIgnoreCase("XDSREPOSITORYCLIENT")) {
-					// For XCA Gateway, define a XDSRepository client side connection for transaction ITI-39.
+				} else if (kind.equalsIgnoreCase("REPOSITORY")) {
+					// For XCA Gateway, define a Repository client side connection for transaction ITI-39.
 					String xdsRepositoryClientName = getAttributeValue(element, "connection");
 					if (xdsRepositoryClientName == null) {
-						throwIheConfigurationException("XdsRepositoryClient element with no 'connection' attribute", configFile);
+						throwIheConfigurationException("Repository element with no 'connection' attribute in actor '" + actorName + "' is not defined", configFile);
 					}
 					xdsRepositoryClientConnection = ConnectionFactory.getConnectionDescription(xdsRepositoryClientName);
 					if (xdsRepositoryClientConnection == null) {
-						throwIheConfigurationException("XdsRepositoryClient connection '" + xdsRepositoryClientName + "' in actor '" + actorName + "' is not defined", configFile);
+						throwIheConfigurationException("Repository connection '" + xdsRepositoryClientName + "' in actor '" + actorName + "' is not defined", configFile);
 					}
-				} else if (kind.equalsIgnoreCase("XCARG")) {
-					// For XCA Responding Gateway, define a XCA RG server connection for transactions ITI-38 & 39
-					String xcaRGName = getAttributeValue(element, "connection");
-					if (xcaRGName == null) {
-						throwIheConfigurationException("XcdRG element with no 'connection' attribute", configFile);
+				} else if (kind.equalsIgnoreCase("RESPONDINGGATEWAYS")) {
+					//Define Gateway query and retrieve connections for each responding gateway 
+					List<Element> rgs = getChildElements(element, "RESPONDINGGATEWAY");
+					
+					for (Element rg : rgs) {
+						//query
+						String queryName = getAttributeValue(rg, "query");
+						if (queryName == null) {
+							throwIheConfigurationException("RespondingGateway element with no 'query' attribute in actor '" + actorName + "' is not defined", configFile);
+						}
+						IConnectionDescription xcaQueryConnection = ConnectionFactory.getConnectionDescription(queryName);
+						if (xcaQueryConnection == null) {
+							throwIheConfigurationException("RespondingGateway query connection '" + queryName + "' in actor '" + actorName + "' is not defined", configFile);
+						}
+						xcaRGQueryClientConnections.add(xcaQueryConnection);
+						//retrieve
+						String retrieveName = getAttributeValue(rg, "retrieve");
+						if (retrieveName == null) {
+							throwIheConfigurationException("RespondingGateway element with no 'retrieve' attribute in actor '" + actorName + "' is not defined", configFile);
+						}
+						IConnectionDescription xcaRetrieveConnection = ConnectionFactory.getConnectionDescription(retrieveName);
+						if (xcaRetrieveConnection == null) {
+							throwIheConfigurationException("RespondingGateway retrieve connection '" + retrieveName + "' in actor '" + actorName + "' is not defined", configFile);
+						}
+						xcaRGRetrieveClientConnections.add(xcaRetrieveConnection);
 					}
-					xcaRGServerConnection = ConnectionFactory.getConnectionDescription(xcaRGName);
-					if (xcaRGServerConnection == null) {
-						throwIheConfigurationException("XcaRG connection '" + xcaRGName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("XCAIG")) {
-					// For XCA Initiating Gateway, define a XCA IG server connection for transactions ITI-18 & 43
-					String xcaIGName = getAttributeValue(element, "connection");
-					if (xcaIGName == null) {
-						throwIheConfigurationException("XcaIG element with no 'connection' attribute", configFile);
-					}
-					xcaIGServerConnection = ConnectionFactory.getConnectionDescription(xcaIGName);
-					if (xcaIGServerConnection == null) {
-						throwIheConfigurationException("XcaIG connection '" + xcaIGName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("XCARGQUERYCLIENT")) {
-					// For XCA Gateway, define a XcaRGQueryClient client side connection for transaction ITI-38.
-					String xcaRGQueryClientName = getAttributeValue(element, "connection");
-					if (xcaRGQueryClientName == null) {
-						throwIheConfigurationException("XcaRGQueryClient element with no 'connection' attribute", configFile);
-					}
-					IConnectionDescription xcaRGQueryClientConnection = ConnectionFactory.getConnectionDescription(xcaRGQueryClientName);
-					if (xcaRGQueryClientConnection == null) {
-						throwIheConfigurationException("XcaRGQueryClient connection '" + xcaRGQueryClientName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-					xcaRGQueryClientConnections.add(xcaRGQueryClientConnection);
-				} else if (kind.equalsIgnoreCase("XCARGRETRIEVECLIENT")) {
-					// For XCA Gateway, define a XcaRGRetrieveClient client side connection for transaction ITI-39.
-					String xcaRGRetrieveClientName = getAttributeValue(element, "connection");
-					if (xcaRGRetrieveClientName == null) {
-						throwIheConfigurationException("XcaRGRetrieveClient element with no 'connection' attribute", configFile);
-					}
-					IConnectionDescription xcaRGRetrieveClientConnection = ConnectionFactory.getConnectionDescription(xcaRGRetrieveClientName);
-					if (xcaRGRetrieveClientConnection == null) {
-						throwIheConfigurationException("XcaRGRetrieveClient connection '" + xcaRGRetrieveClientName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-					xcaRGRetrieveClientConnections.add(xcaRGRetrieveClientConnection);
 				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
 					// A description of this actor for GUI presentation
 					description = getAttributeValue(element, "value");
@@ -806,29 +774,29 @@ public class XdsConfigurationLoader {
 		// Make sure we got out a valid definition
 		if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
 			if (pixRegistryServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (xdsRegistryServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistry in configuration file \"" + configFile.getAbsolutePath() + "\"");
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixServer in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (serverConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
-			if (xdsRepositoryServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepository in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (serverConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			if (xdsRegistryClientConnection==null)
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		} else if (actorType.equalsIgnoreCase("XCARG")) {
-			if (xcaRGServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XcaRG in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (serverConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			if (xdsRegistryClientConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Registry in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			if (xdsRepositoryClientConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepositoryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Repository in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		}else if (actorType.equalsIgnoreCase("XCAIG")) {
-			if (xcaIGServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XcaIG in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			if (serverConnection==null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			if (xdsRegistryClientConnection==null && (xcaRGQueryClientConnections==null || xcaRGQueryClientConnections.size()==0) ) {
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient or XcaRGQueryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Registry or RespondingGateway Query in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			}
 			if (xdsRepositoryClientConnection==null && (xcaRGRetrieveClientConnections==null || xcaRGRetrieveClientConnections.size()==0) ) {
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRepositoryClient or XcaRGRetrieveClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Repository or RespondingGateway Retrieve in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			}
 		}
 		
@@ -837,13 +805,13 @@ public class XdsConfigurationLoader {
 			// Actually create the actor
 		if (autoInstall) {
 			if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
-				return createXdsRegistryActor(actorName,xdsRegistryServerConnection, pixRegistryServerConnection, logConnections, null, configFile);
+				return createXdsRegistryActor(actorName,serverConnection, pixRegistryServerConnection, logConnections, null, configFile);
 			} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
-				return createXdsRepositoryActor(actorName,xdsRepositoryServerConnection, xdsRegistryClientConnection, logConnections, null, configFile);
+				return createXdsRepositoryActor(actorName,serverConnection, xdsRegistryClientConnection, logConnections, null, configFile);
 			} else if (actorType.equalsIgnoreCase("XCARG")) {
-				return createXcaRGActor(actorName, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);
+				return createXcaRGActor(actorName, serverConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);
 			} else if (actorType.equalsIgnoreCase("XCAIG")) {
-				return createXcaIGActor(actorName, xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, xcaRGQueryClientConnections, xcaRGRetrieveClientConnections, logConnections, null, configFile);	
+				return createXcaIGActor(actorName, serverConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, xcaRGQueryClientConnections, xcaRGRetrieveClientConnections, logConnections, null, configFile);	
 			} else 
 				return true;
 		} else {			
@@ -854,37 +822,26 @@ public class XdsConfigurationLoader {
 			actor.sourceConnection = sourceConnection;
 			actor.consumerConnection = consumerConnection;
 			actor.logConnections = logConnections;
-			if (xdsRegistryServerConnection != null) {
-				actor.description = getHumanConnectionDescription(description, xdsRegistryServerConnection);
-			} else if (xdsRepositoryServerConnection != null) {
-				actor.description = getHumanConnectionDescription(description, xdsRepositoryServerConnection);
-			} else if (xcaRGServerConnection != null) {
-				actor.description = getHumanConnectionDescription(description, xcaRGServerConnection);
-			} else if (xcaIGServerConnection != null) {
-				actor.description = getHumanConnectionDescription(description, xcaIGServerConnection);
+			if (serverConnection != null) {
+				actor.description = getHumanConnectionDescription(description, serverConnection);
 			} else if (actorType.equalsIgnoreCase("SecureNode") && !logConnections.isEmpty()) {
 				actor.description = getHumanConnectionDescription(description, logConnections.get(0));
 			} else {
 				actor.description = actorName;
 			}
-//TODO: 
-//			if (actor instanceof PixManagerActorDescription) {
-//				((PixManagerActorDescription)actor).pixConsumerConnections = pixConsumerConnections;
-//				((PixManagerActorDescription)actor).xdsRegistryConnection = xdsRegistryConnection;
-//			}
 			
 			if (actor instanceof XdsRegistryActorDescription) {
-				((XdsRegistryActorDescription)actor).xdsRegistryConnection = xdsRegistryServerConnection;
+				((XdsRegistryActorDescription)actor).xdsRegistryConnection = serverConnection;
 				((XdsRegistryActorDescription)actor).pixRegistryConnection = pixRegistryServerConnection;				
 			}else if (actor instanceof XdsRepositoryActorDescription) {
-				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = xdsRepositoryServerConnection;
+				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = serverConnection;
 				((XdsRepositoryActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
 			}else if (actor instanceof XcaRGActorDescription) {
-				((XcaRGActorDescription)actor).xcaRGServerConnection = xcaRGServerConnection;
+				((XcaRGActorDescription)actor).xcaRGServerConnection = serverConnection;
 				((XcaRGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
 				((XcaRGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
 			}else if (actor instanceof XcaIGActorDescription) {
-				((XcaIGActorDescription)actor).xcaIGServerConnection = xcaIGServerConnection;
+				((XcaIGActorDescription)actor).xcaIGServerConnection = serverConnection;
 				((XcaIGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
 				((XcaIGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
 			}else if (actor instanceof XdsAuditActorDescription){
@@ -1169,6 +1126,23 @@ public class XdsConfigurationLoader {
 		throw new IheConfigurationException(message);
 	}
 	
+	private List<Element> getChildElements(Node element, String name) {
+		List<Element> ret = new ArrayList<Element>();
+		
+		NodeList nodes = element.getChildNodes();
+		for (int elementIndex = 0; elementIndex < nodes.getLength(); elementIndex++) {
+			Node node = nodes.item(elementIndex);
+			if (node instanceof Element) {
+				// See what type of element it is
+				String kind = node.getNodeName();
+				if (kind.equalsIgnoreCase(name)) {
+					ret.add((Element)node);
+				}
+			}
+		}
+		return ret;
+	}
+
 	/**
 	 * Gets an attribute value
 	 * 

@@ -26,7 +26,7 @@
 		<!--The host name of the Responding Gateway Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
-		<Port>9080</Port>
+		<Port>8040</Port>
 	</StandardConnection>
 	<SecureConnection name="xca-secure-rg">
 		<!--The host name of the Responding Gateway Server-->
@@ -40,12 +40,14 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
-	<StandardConnection name="xds-repository-client">
-		<!--The host name of the XDS Repository Server-->
+	<StandardConnection name="misys-registry">
 		<HostName>localhost</HostName>
-		<!--The port-->
+		<Port>8010</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="misys-repository">
+		<HostName>localhost</HostName>
 		<Port>8020</Port>
-		<!--The URL of the XDS Registry web services -->
 		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
 	</StandardConnection>
 
@@ -83,5 +85,38 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
+    <!-- ICW Registry for HIMSS Vitual Testing -->
+	<StandardConnection name="icw-vt-registry">
+		<HostName>62.182.99.61</HostName>
+		<Port>8080</Port>
+		<UrlPath>/pxs-vmr-assembly/webservices/rev6/xdsb-storedquery</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="icw-vt-secure-registry">
+		<HostName>62.182.99.61</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/rev6/xdsb-storedquery</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+    <!-- Carefx Repository for HIMSS Vitual Testing -->
+	<StandardConnection name="carefx-vt-repository">
+		<HostName>xdstest.carefx.com</HostName>
+		<Port>8083</Port>
+		<UrlPath>/axis2/services/DocumentRepositoryService</UrlPath>	
+	</StandardConnection>
+	<SecureConnection name="carefx-vt-secure-repository">
+		<HostName>xdstest.carefx.com</HostName>
+		<Port>8090</Port>
+		<UrlPath>/axis2/services/DocumentRepositoryService</UrlPath>	
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 
 </Configuration>
