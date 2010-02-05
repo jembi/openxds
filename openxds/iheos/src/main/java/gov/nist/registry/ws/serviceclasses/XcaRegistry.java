@@ -5,6 +5,7 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.xml.Util;
 import gov.nist.registry.ws.AdhocQueryRequest;
@@ -103,12 +104,16 @@ public class XcaRegistry extends RegistryB {
 		//wait for and aggregate responses	
 		ag.waitForAll();
 
+		Response response = ag.getResponse();
 		a.transaction_type = XdsCommon.SQ_transaction;
-		a.init(ag.getResponse(), XdsCommon.xds_b, getMessageContext());
+		a.init(response, XdsCommon.xds_b, getMessageContext());
 
-		return ag.getResponse().getResponse();
+		log_response(response);
+		
+		return response.getResponse();
 	}
 	
+
 }
 
 

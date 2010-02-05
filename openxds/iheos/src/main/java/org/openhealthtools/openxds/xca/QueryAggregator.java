@@ -48,6 +48,7 @@ public class QueryAggregator extends Aggregator {
         super(numRequests, logMessage);
         
 		response = new AdhocQueryResponse(Response.version_3, rel);
+		response.setIsXCA();
     }
     
     protected String checkNullResult(OMElement result) {

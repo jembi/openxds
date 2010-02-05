@@ -5,6 +5,7 @@ import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
+import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
 import gov.nist.registry.common2.xml.Util;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
@@ -90,8 +91,12 @@ public class XcaRepository extends RepositoryB {
 		}
 		//wait for and aggregate responses	
 		ag.waitForAll();
-		
-		return ((RetrieveAggregator)ag).getRetrieveDocumentSetResponse().getResponse();
+
+		RetrieveDocumentSetResponse response = ((RetrieveAggregator)ag).getRetrieveDocumentSetResponse();
+
+		log_response(response.getRegistryResponse());
+
+		return response.getResponse();
 	}
 	
 }

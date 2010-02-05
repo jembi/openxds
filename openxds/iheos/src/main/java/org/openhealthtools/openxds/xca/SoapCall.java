@@ -51,6 +51,7 @@ public class SoapCall implements Runnable {
 		this.homeId = homeId;
 		this.mtom = mtom;
 		this.ag = ag;
+		this.service = service;
 	}
 	
 	public void run() {

@@ -36,4 +36,7 @@ public class RetrieveDocumentSetResponse {
 		documentResponses.add( docResponse );
 	}
 
+	public Response getRegistryResponse() {
+		return rr;
+	}
 }
