@@ -50,7 +50,9 @@ public class RetrieveAggregator extends Aggregator {
         super(numRequests, logMessage);
         
         response = new RegistryResponse(RegistryErrorList.version_3, rel);
-		rdsResponse = new RetrieveDocumentSetResponse((RegistryResponse)response);
+		response.setIsXCA();
+		
+        rdsResponse = new RetrieveDocumentSetResponse((RegistryResponse)response);		
     }
     
     protected String checkNullResult(OMElement result) {

@@ -1,8 +1,11 @@
 package gov.nist.registry.common2.service;
 
 import gov.nist.registry.common2.exception.XdsFormatException;
+import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
+import gov.nist.registry.common2.registry.Response;
 
 import javax.xml.namespace.QName;
 
@@ -112,5 +115,29 @@ public abstract class AppendixV {
 		//currentMessageContext = inMessage ;
 	}
 
+	protected void log_response(Response response)  {
+		
+//		generateAuditLog(response);
+		
+		if (log_message == null) {
+			System.out.println("\nFATAL ERROR: AppendixV.log_response(): log_message is null\n");
+			return;
+		}
+		try {
+			if (response.has_errors()) {
+				log_message.setPass(false);
+				log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
+			} else
+				log_message.setPass(true);
+
+			log_message.addOtherParam("Response", response.getResponse().toString());
+		}
+		catch (LoggerException e) {
+			System.out.println("**************ERROR: Logger exception attempting to return to user");
+		}
+		catch (XdsInternalException e) {
+			System.out.println("**************ERROR: Internal exception attempting to return to user");
+		}
+	}
 
 }
