@@ -51,7 +51,11 @@ abstract public class StoredQueryFactory {
 	public void setIsSecure(boolean is) { is_secure = is; }
 	public void setServiceName(String serviceName) { serviceName = service_name; }
 	public void setQueryId(String qid) { query_id = qid; }
-
+	
+	public String getQueryId() {
+		return query_id; 
+	}
+	
 	public boolean isLeafClassReturnType() {
 		OMElement response_option = MetadataSupport.firstChildWithLocalName(ahqr, "ResponseOption");
 		if (response_option == null) return true;

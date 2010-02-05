@@ -302,6 +302,9 @@ public class SubmitObjectsRequest extends XdsCommon {
 						missing);
 
 		}
+		
+		//Get SSUID before UUID allocation  
+		String ssUid = m.getSubmissionSetUniqueId();
 
 		// allocate uuids for symbolic ids
 		IdParser ra = new IdParser(m);
@@ -344,8 +347,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 		if (!status) {
 			return;
 		}
-		if(auditLog != null)
-			auditLog(patient_id, m.getSubmissionSetUniqueId(), AuditTypeCodes.RegisterDocumentSet_b);
+
+		auditLog(patient_id, ssUid, AuditTypeCodes.RegisterDocumentSet_b);
 
 		// Approve
 		List<String> approvable_object_ids = ra.approvable_object_ids(m);
