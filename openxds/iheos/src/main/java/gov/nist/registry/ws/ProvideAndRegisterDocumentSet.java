@@ -371,8 +371,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		
 		if (success) {
 			//ITI-42 Succeed, log a success message
-			if(auditLog != null)
-				auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
+			auditLog(m, AuditTypeCodes.RegisterDocumentSet_b, false);
 		} else {		
 			List<String> rollbackDocs = new ArrayList<String>();
 			
@@ -480,7 +479,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
-		if(auditLog != null)
+		
 		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);
 
 		// set size, hash, URI into metadata
@@ -549,8 +548,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		}catch(RepositoryException e) {
 			throw new XdsException("Error saving document to the repository - " + e.getMessage(), e);
 		}
-		if(auditLog != null)
-			auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);		
+
+		auditLog(m, AuditTypeCodes.ProvideAndRegisterDocumentSet_b, true);		
 
 		m.setSlot(extrinsic_object, "size", size_str);
 		m.setSlot(extrinsic_object, "hash", hash_value);

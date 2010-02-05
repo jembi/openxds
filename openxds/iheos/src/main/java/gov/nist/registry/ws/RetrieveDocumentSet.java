@@ -1,13 +1,25 @@
 package gov.nist.registry.ws;
 
+import gov.nist.registry.common2.MetadataTypes;
+import gov.nist.registry.common2.exception.ExceptionUtil;
+import gov.nist.registry.common2.exception.MetadataException;
+import gov.nist.registry.common2.exception.SchemaValidationException;
+import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.XdsFormatException;
+import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.logging.LogMessage;
+import gov.nist.registry.common2.logging.LoggerException;
+import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.RegistryUtility;
+import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
+import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.common2.service.AppendixV;
+import gov.nist.registry.ws.config.Repository;
+import gov.nist.registry.ws.serviceclasses.XdsService;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.misyshealthcare.connect.base.audit.ActiveParticipant;
-import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
-import com.misyshealthcare.connect.net.CodeSet;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.util.Pair;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMText;
@@ -23,17 +35,11 @@ import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-import gov.nist.registry.common2.MetadataTypes;
-import gov.nist.registry.common2.exception.*;
-import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.RegistryUtility;
-import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
-import gov.nist.registry.common2.registry.XdsCommon;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
-import gov.nist.registry.common2.service.AppendixV;
-import gov.nist.registry.ws.config.Repository;
-import gov.nist.registry.ws.serviceclasses.XdsService;
+
+import com.misyshealthcare.connect.base.audit.ActiveParticipant;
+import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
+import com.misyshealthcare.connect.net.IConnectionDescription;
+import com.misyshealthcare.connect.util.Pair;
 
 public class RetrieveDocumentSet extends XdsCommon {
     ContentValidationService validater;
@@ -166,8 +172,9 @@ public class RetrieveDocumentSet extends XdsCommon {
             if (document_response != null)
                 document_responses.add(document_response);
         }
-        if (auditLog != null)
-            auditLog(doclist, AuditCodeMappings.AuditTypeCodes.RetrieveDocumentSet);
+        
+        auditLog(doclist, AuditCodeMappings.AuditTypeCodes.RetrieveDocumentSet);
+        
         return document_responses;
     }
 

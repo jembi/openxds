@@ -289,6 +289,9 @@ public class AdhocQueryRequest extends XdsCommon {
 		fact.setIsSecure(is_secure);
 		StoredQuery sq = fact.getImpl();
 		Metadata m = sq.run();
+
+		auditLog(ahqr, true, fact.getQueryId());
+		
 		if (!isMPQ(ahqr)) {
 			if ( !m.isPatientIdConsistent() )
 				throw new XdsResultNotSinglePatientException("More than one Patient ID in Stored Query result");
@@ -338,9 +341,9 @@ public class AdhocQueryRequest extends XdsCommon {
 		OMElement results = br.query(ahqr.toString(), isleafClass);
 
 		Metadata metadata = MetadataParser.parseNonSubmission(results);
-		if(auditLog != null){
+
 		auditLog(ahqr, false, null);
-		}
+		
 		if (is_secure) {
 			BasicQuery bq = new BasicQuery();
 			bq.secure_URI(metadata);
