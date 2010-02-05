@@ -270,12 +270,11 @@ public class XdsService extends AppendixV {
 		if (log == null) {
 			System.out.println("+++++++++++++++++++++ start test log");
 			try {
-				log = new Log("jdbc:postgresql://localhost/log2", "logs", "xdslogs") ;
+				log = new Log(properties.getString("logs.db.url"), properties.getString("logs.db.username"), properties.getString("logs.db.password")) ;
 			}
 			catch (LoggerException e) {
 				// happens intermittently - this may help
-				log = new Log("jdbc:postgresql://localhost/log2", "logs", "xdslogs") ;
-
+				log = new Log(properties.getString("logs.db.url"), properties.getString("logs.db.username"), properties.getString("logs.db.password")) ;
 			}
 		}
 	}
