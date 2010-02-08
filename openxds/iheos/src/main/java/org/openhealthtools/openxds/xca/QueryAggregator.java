@@ -28,6 +28,7 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.xml.Util;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.axiom.om.OMElement;
@@ -42,13 +43,12 @@ public class QueryAggregator extends Aggregator {
     private Log log = LogFactory.getLog( QueryAggregator.class );
     
     /**
-     * @param numRequests the total number of requests.
+     * @param requestHomeIds the collection of request home ids
      */
-   public QueryAggregator(int numRequests, LogMessage logMessage) throws XdsException {
-        super(numRequests, logMessage);
+   public QueryAggregator(final Collection<String> requestHomeIds, LogMessage logMessage) throws XdsException {
+        super(requestHomeIds, logMessage);
         
 		response = new AdhocQueryResponse(Response.version_3, rel);
-		response.setIsXCA();
     }
     
     protected String checkNullResult(OMElement result) {

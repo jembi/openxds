@@ -69,7 +69,7 @@ public class XcaRepository extends RepositoryB {
 		}
 		
 		Set<String> requestHomeIds = requestByHome.keySet();
-		Aggregator ag = new RetrieveAggregator(requestHomeIds.size(), log_message);
+		Aggregator ag = new RetrieveAggregator(requestHomeIds, log_message);
 		
 		for(String requestHomeId :requestHomeIds) {
 			List<OMElement> requests = requestByHome.get( requestHomeId );
