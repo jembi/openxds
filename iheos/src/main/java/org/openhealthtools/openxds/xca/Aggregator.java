@@ -24,20 +24,23 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.logging.LoggerException;
-import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.Response;
-import gov.nist.registry.common2.xml.Util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaxen.JaxenException;
 
 /**
  *
@@ -45,6 +48,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class Aggregator {
     private Log log = LogFactory.getLog( Aggregator.class );
+    /**The home IDs whose response is still pending*/
+    protected Collection<String> pendingHomeIds = new ArrayList<String>();
     /** The total number of requests associated with this Aggregator */
     protected int totalNumber;
     /** The number of requests whose results are available */
@@ -62,28 +67,35 @@ public abstract class Aggregator {
     protected RegistryErrorList rel; 
     /**The final response */
     protected Response response;
+
     /**
-     * @param numRequests the total number of requests.
+     * @param requestHomeIds the collection of request home ids
      */
-   Aggregator(int numRequests, LogMessage logMessage) throws XdsException {
-        this.totalNumber = numRequests;
+   Aggregator(final Collection<String> requestHomeIds, LogMessage logMessage) throws XdsException {
+	    for (String homeId : requestHomeIds) {
+		    this.pendingHomeIds.add(homeId);    	
+	    }
+        this.totalNumber = requestHomeIds.size();
         this.availableNumber = 0;
         this.failureNumber = 0;
         this.logMessage = logMessage;
     	rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-		rel.setIsXCA();
     }
 
    public synchronized void waitForAll() throws XdsInternalException, LoggerException {
         long start = System.currentTimeMillis();
         while( this.availableNumber + this.failureNumber < this.totalNumber ){
-            log.debug("available/failed/total - " + this.availableNumber + "/" + this.failureNumber + "/"
+        	if (log.isDebugEnabled()) {
+        		log.debug("available/failed/total - " + this.availableNumber + "/" + this.failureNumber + "/"
                     + this.totalNumber + ", put to sleep");
-
+        	}
+        	
             long now = System.currentTimeMillis();
             if ((now-start) > maxWait * 1000 ) {
-            	String msg = "Request stoped after waiting for "+ maxWait +" seconds. Some communities did not respond.";
-            	response.add_error( MetadataSupport.XDSUnavailableCommunity, msg, "Aggregator.java", logMessage);
+            	for (String homeId : pendingHomeIds){
+	            	String msg = "Request stoped after waiting for "+ maxWait +" seconds. Home Community "+ homeId +" did not respond.";
+	            	response.add_error( MetadataSupport.XDSUnavailableCommunity, msg, homeId, logMessage);
+            	}
                 break;  //stop after for maxWait.
             }
             try {
@@ -103,7 +115,7 @@ public abstract class Aggregator {
     		String error = checkNullResult( result );
     		
     		if (error != null) {
-    			rel.add_error(MetadataSupport.XDSRegistryError, error + " from Responding Gateway " + homeId , "XcaRegistry.java", logMessage);	    			
+    			rel.add_error(MetadataSupport.XDSRegistryError, error + " from Responding Gateway " + homeId , homeId, logMessage);	    			
     			continue;
     		}
 
@@ -117,14 +129,28 @@ public abstract class Aggregator {
 			//Add error and/or warning
 			OMElement registry_error_list = MetadataSupport.firstChildWithLocalName(responseElemWithStatus, "RegistryErrorList"); 
 			if (registry_error_list != null) {
+				//Add the location attribute
+				setHomeAsLocation(registry_error_list, homeId);
 				rel.addRegistryErrorList(registry_error_list, logMessage);
     		}    			
     	}//for
-		logMessage.addOtherParam("Result", response.getResponse().toString());
 		
 		return response.getResponse();
     }
     
+	private void setHomeAsLocation(OMElement registryErrorList, String homeId) {
+		String reXPath = "//*[local-name()='RegistryError']";
+		try {
+			AXIOMXPath xpathExpression = new AXIOMXPath (reXPath);
+			List<?> nodes = xpathExpression.selectNodes(registryErrorList);
+			for (OMElement node : (List<OMElement>) nodes) {
+				node.addAttribute("location", homeId, null);
+			}
+		} catch (JaxenException e) {
+			log.error("Failed to add the location" + e.getMessage(), e);
+		}
+	}
+
     abstract protected String checkNullResult(OMElement result);    
     abstract protected OMElement getResponseElementWithStatus(OMElement result);
     abstract protected void addResult(OMElement result, String homeId) throws XdsInternalException;
@@ -140,8 +166,9 @@ public abstract class Aggregator {
     	}
     	results.put(homeId, result);
 
-    	notifyAvailable();
+    	pendingHomeIds.remove(homeId);
 
+    	notifyAvailable();
     }
 
     synchronized void notifyAvailable(){

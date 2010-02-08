@@ -106,11 +106,11 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			validateQueryTransaction(ahqr);
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-			rel.setIsXCA();
+			rel.setIsRG();
 
 			AdhocQueryRequest a = new AdhocQueryRequest(log_message, getMessageContext(), isSecure(), XdsCommon.xds_b );
 			a.setServiceName(service_name);
-			a.setIsXCA();
+			a.setIsRG();
 
 			if (a.requiresHomeInXGQ(ahqr)) {
 				String home = a.getHome(ahqr);
@@ -161,7 +161,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 			verifyHomeOnRetrieve(rdsr, rel, home);
 			if (rel.has_errors()) {
-				rel.setIsXCA();
+				rel.setIsRG();
 				OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
 				addOther("Response", response.toString());
 				endTransaction(false);
@@ -191,7 +191,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	}
 	private OMElement processResult(OMElement result) throws XdsInternalException, LoggerException {
 		RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-		rel.setIsXCA();
+		rel.setIsRG();
 		
 		if (result == null) {
 			rel.add_error(MetadataSupport.XDSRepositoryError, "Null response message from Repository", "RGAbstract.java", log_message);
@@ -236,7 +236,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	
 	private OMElement processRegResult(OMElement result) throws XdsInternalException, LoggerException {
 		RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-		rel.setIsXCA();
+		rel.setIsRG();
 		
 		if (result == null) {
 			rel.add_error(MetadataSupport.XDSRegistryError, "Null response message from Registry", "RGAbstract.java", log_message);
@@ -321,7 +321,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			}
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-			rel.setIsXCA();
+			rel.setIsRG();
 
 			rel.add_error(MetadataSupport.XDSTooManyResults, 
 					"Too many documents were requested", 
@@ -361,7 +361,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			}
 
 			RegistryErrorList rel = new RegistryErrorList(RegistryErrorList.version_3,  true /* log */);
-			rel.setIsXCA();
+			rel.setIsRG();
 
 			rel.add_error(errorCode, 
 					errorMessage, 
@@ -396,7 +396,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 					"RGAbstract.java", log_message);
 			
 			if (rel.has_errors()) {
-				rel.setIsXCA();
+				rel.setIsRG();
 				OMElement response = new RetrieveDocumentSetResponse(new RegistryResponse(RegistryErrorList.version_3, rel)).getResponse();
 				addOther("Response", response.toString());
 				endTransaction(false);
@@ -405,7 +405,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 
 			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
-			s.setIsXCA();
+			s.setIsRG();
 
 			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
 			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);

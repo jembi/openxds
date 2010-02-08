@@ -10,6 +10,8 @@ import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.xml.Util;
 import gov.nist.registry.ws.AdhocQueryRequest;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -48,13 +50,15 @@ public class XcaRegistry extends RegistryB {
 	protected OMElement processAdhocQueryRequest(AdhocQueryRequest a, final OMElement ahqr) throws AxisFault, XdsException, XdsValidationException, LoggerException {
 		Set<String> rgs = Ig.rgQueryMap.keySet();
 
-		int requestNum = rgs.size();
+		Collection<String> requestHomeIds = new ArrayList<String>();
+		
 		Aggregator ag = null;
 		String homeFromRequest = getHomeParameter(ahqr, a);
 		if (homeFromRequest != null && !homeFromRequest.equals("")) {
 			//If the home is specified, send the request to only that home community. 
-			requestNum = 1;
-			ag = new QueryAggregator(requestNum, log_message);
+			requestHomeIds.add(homeFromRequest);
+			
+			ag = new QueryAggregator(requestHomeIds, log_message);
 			if (rgs.contains(homeFromRequest)) {
 				//request to the remote responding gateway community
 				IConnectionDescription rgConnection = Ig.rgQueryMap.get(homeFromRequest);
@@ -74,10 +78,13 @@ public class XcaRegistry extends RegistryB {
 			}
 		} else {	
 			//Request to all available communities
-			if (Ig.home != null && actor.getRegistryClientConnection() != null) {
-				requestNum++;
+			for (String rgHomeId : rgs) {
+				requestHomeIds.add(rgHomeId);
 			}
-			ag = new QueryAggregator(requestNum, log_message);
+			if (Ig.home != null && actor.getRegistryClientConnection() != null) {
+				requestHomeIds.add(Ig.home);
+			}
+			ag = new QueryAggregator(requestHomeIds, log_message);
 
 			for (String rgHomeId : rgs) {
 				//forward to each gateway

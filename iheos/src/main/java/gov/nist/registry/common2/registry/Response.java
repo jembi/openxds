@@ -12,7 +12,8 @@ public abstract class Response implements ErrorLogger {
 	public final static short version_2 = 2;
 	public final static short version_3 = 3;
 	short version;
-	boolean isXCA = false;
+	/**Is Responding Gateway*/
+	boolean isRG = false;
 	/**for figuring out particalSuccess*/
 	boolean hasSuccess = false; 
 	//String status = "Success";
@@ -34,8 +35,8 @@ public abstract class Response implements ErrorLogger {
 	OMElement content = null;
 	public RegistryErrorList registryErrorList;
 	
-	public void setIsXCA() { 
-		isXCA = true;
+	public void setIsRG() { 
+		isRG = true;
 	}
 	
 	public void setHasSuccess() {
@@ -107,12 +108,12 @@ public abstract class Response implements ErrorLogger {
 			}
 
 			String status = registryErrorList.getStatus();
-			if (isXCA && hasSuccess && this.has_errors()) {
+			if (hasSuccess && this.has_errors()) {
 				status = "PartialSuccess";
 			} 
 			response.addAttribute("status", MetadataSupport.response_status_type_namespace + status, null);
 			
-			setLocationForXCA();
+			setLocationForRG();
 			
 			if (this instanceof RetrieveMultipleResponse) {
 				return ((RetrieveMultipleResponse) this).rdsr;
@@ -134,9 +135,9 @@ public abstract class Response implements ErrorLogger {
 		return response;
 	}
 	
-	void setLocationForXCA() {
-		if (isXCA && registryErrorList != null)
-			registryErrorList.setIsXCA();
+	void setLocationForRG() {
+		if (isRG && registryErrorList != null)
+			registryErrorList.setIsRG();
 		
 	}
 

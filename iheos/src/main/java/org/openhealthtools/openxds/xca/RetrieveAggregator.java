@@ -28,6 +28,7 @@ import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
@@ -44,13 +45,12 @@ public class RetrieveAggregator extends Aggregator {
     private RetrieveDocumentSetResponse rdsResponse;
     
     /**
-     * @param numRequests the total number of requests.
+     * @param requestHomeIds the collection of request home ids
      */
-   public RetrieveAggregator(int numRequests, LogMessage logMessage) throws XdsException {
-        super(numRequests, logMessage);
+   public RetrieveAggregator(final Collection<String> requestHomeIds, LogMessage logMessage) throws XdsException {
+        super(requestHomeIds, logMessage);
         
         response = new RegistryResponse(RegistryErrorList.version_3, rel);
-		response.setIsXCA();
 		
         rdsResponse = new RetrieveDocumentSetResponse((RegistryResponse)response);		
     }

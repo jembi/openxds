@@ -38,9 +38,10 @@ public class RegistryErrorList implements ErrorLogger {
 	private final static Log logger = LogFactory.getLog(RegistryErrorList.class);
 	boolean verbose = true;
 	boolean log;
-	boolean isXCA = false;
+	/**Is Responding Gateway*/
+	boolean isRG = false;
 	
-	public void setIsXCA() { isXCA = true; }
+	public void setIsRG() { isRG = true; }
 	
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
@@ -101,7 +102,7 @@ public class RegistryErrorList implements ErrorLogger {
 	OMElement registryErrorList() {
 		if (rel == null)
 			rel = MetadataSupport.om_factory.createOMElement("RegistryErrorList", ebRSns);
-		if (isXCA)
+		if (isRG)
 			setHomeAsLocation();
 		return rel;
 	}

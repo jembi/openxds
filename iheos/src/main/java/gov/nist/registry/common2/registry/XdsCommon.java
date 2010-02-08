@@ -18,7 +18,8 @@ public class XdsCommon  {
 	public static final short xds_b = 3;
 	public short xds_version = xds_none;
 	MessageContext messageContext = null;
-	boolean isXCA = false;
+	/**Is Responding Gateway*/
+	boolean isRG = false;
 	private final static Log logger = LogFactory.getLog(XdsCommon.class);
 	
 	public static final short UNKNOWN_transaction = 0;
@@ -33,18 +34,18 @@ public class XdsCommon  {
 		return messageContext;
 	}
 	
-	public void setIsXCA() {
-		isXCA = true;
+	public void setIsRG() {
+		isRG = true;
 		if (response != null)
-			response.setIsXCA();
+			response.setIsRG();
 	}
 	
 	public void init(Response response, short xds_version, MessageContext messageContext) throws XdsInternalException {
 		if (transaction_type == UNKNOWN_transaction)
 			throw new XdsInternalException("transaction_type is UNKNOWN");
 		this.response = response;
-		if (isXCA)
-			response.setIsXCA();
+		if (isRG)
+			response.setIsRG();
 		this.xds_version = xds_version;
 		this.messageContext = messageContext;
 
