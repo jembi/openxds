@@ -23,7 +23,9 @@ package org.openhealthtools.openxds;
 import gov.nist.registry.common2.registry.Properties;
 
 import java.io.File;
+import java.util.Collection;
 
+import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
@@ -67,7 +69,9 @@ public class XdsServer {
 	    //Start up the servers
 		XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
         try {
-            loader.loadConfiguration(actorFile, true);
+            loader.loadConfiguration(actorFile, false);
+            Collection actors = loader.getActorDescriptions();
+            loader.resetConfiguration(actors);
         } catch (IheConfigurationException e) {
             e.printStackTrace();
         }

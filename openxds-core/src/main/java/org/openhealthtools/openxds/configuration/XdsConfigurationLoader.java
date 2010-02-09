@@ -410,9 +410,9 @@ public class XdsConfigurationLoader {
 		// Reset all the brokers
 		resetAllBrokers();
 		// Setup the log
-		log.info("Log file closed.");
+		log.debug("Log file closed.");
 		setLoggingFile(logFilename, null, null);
-		log.info("Log file opened.");
+		log.debug("Log file opened.");
 		// Jump out if nothing to start up
 		if (actorDescriptions == null) return true;
 		// First, map all the supplied actor/actor names into descriptions
