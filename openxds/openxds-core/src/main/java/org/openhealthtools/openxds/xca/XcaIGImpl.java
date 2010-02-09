@@ -98,7 +98,11 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
 	        String axis2repopath = null;
 	        String axis2xmlpath = null;	        	
 	        String repo = Properties.loader().getString("axis2.repo.dir");
-	        if (new File(repo).exists()) {
+	        URL repoPath = XdsRegistryImpl.class.getResource(repo);
+	        if (repoPath != null) {
+		        axis2repopath = repoPath.getPath();
+		        axis2xmlpath = repoPath.getPath() +"/axis2.xml";
+	        } else  if (new File(repo).exists()) {
 		        axis2repopath = repo;
 		        axis2xmlpath = repo +"/axis2.xml";	        	
 	        } else {
