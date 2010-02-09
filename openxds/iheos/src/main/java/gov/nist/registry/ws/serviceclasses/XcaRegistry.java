@@ -48,7 +48,7 @@ public class XcaRegistry extends RegistryB {
 	}
 
 	protected OMElement processAdhocQueryRequest(AdhocQueryRequest a, final OMElement ahqr) throws AxisFault, XdsException, XdsValidationException, LoggerException {
-		Set<String> rgs = Ig.rgQueryMap.keySet();
+		Set<String> rgs = actor.getRGQueryClientConnections().keySet();
 
 		Collection<String> requestHomeIds = new ArrayList<String>();
 		
@@ -61,7 +61,7 @@ public class XcaRegistry extends RegistryB {
 			ag = new QueryAggregator(requestHomeIds, log_message);
 			if (rgs.contains(homeFromRequest)) {
 				//request to the remote responding gateway community
-				IConnectionDescription rgConnection = Ig.rgQueryMap.get(homeFromRequest);
+				IConnectionDescription rgConnection = actor.getRGQueryClientConnections().get(homeFromRequest);
 				SoapCall sc = new SoapCall(rgConnection, ahqr,  "urn:ihe:iti:2007:CrossGatewayQuery", homeFromRequest, false/*mtom*/, ag, this);
 				Ig.exec.execute( sc );				
 			} else if (homeFromRequest.equals(Ig.home)) {
@@ -88,7 +88,7 @@ public class XcaRegistry extends RegistryB {
 
 			for (String rgHomeId : rgs) {
 				//forward to each gateway
-				IConnectionDescription rgConnection = Ig.rgQueryMap.get(rgHomeId);
+				IConnectionDescription rgConnection =  actor.getRGQueryClientConnections().get(rgHomeId);
 
 				OMElement request = Util.deep_copy(ahqr);
 				OMElement aq = request.getFirstChildWithName(new QName(MetadataSupport.ebRIMns3_uri, "AdhocQuery" ));

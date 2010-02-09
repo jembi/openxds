@@ -78,16 +78,16 @@
 	</Actor-->
 	
 	<!--The XCA Initiating Gateway actor configuration-->
-	<!-- Actor name="xcaig" type="XcaIG">
+	<Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
 		<Server connection="xca-ig" />
 		<Registry connection="local-registry" />
 		<Repository connection="local-repository" />
 		<RespondingGateways>
-			<RespondingGateway query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
-			<RespondingGateway query="vangent-rg" retrieve="vangent-rg"/>
-			<RespondingGateway query="spirit-rg" retrieve="spirit-rg"/>
-			<RespondingGateway query="hxti-rg" retrieve="hxti-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-rg" retrieve="vangent-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
 		</RespondingGateways>
 	</Actor>
 	<Actor name="xcasig" type="XcaIG">
@@ -96,12 +96,12 @@
 		<Registry connection="local-secure-registry" />
 		<Repository connection="local-secure-repository" />
 		<RespondingGateways>
-			<RespondingGateway query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
-			<RespondingGateway query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
-			<RespondingGateway query="spirit-rg" retrieve="spirit-rg"/>
-			<RespondingGateway query="hxti-rg" retrieve="hxti-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
 		</RespondingGateways>
-	</Actor-->
+	</Actor>
 	
 	
 	<!-- Audit Repository Actor -->

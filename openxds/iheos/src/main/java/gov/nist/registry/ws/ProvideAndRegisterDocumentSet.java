@@ -86,11 +86,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			}
 			connection = actor.getConnection();
 			if (connection == null) {
-				throw new XdsInternalException("Cannot find XdsRepository connection configuration.");			
+				throw new XdsInternalException("Cannot find Server connection configuration.");			
 			}
 			registryClientConnection = ((XdsRepository)actor).getRegistryClientConnection();
 			if (registryClientConnection == null) {
-				throw new XdsInternalException("Cannot find XdsRepository XdsRegistryClient connection configuration.");			
+				throw new XdsInternalException("Cannot find XdsRepository Registry connection configuration.");			
 			}
 			auditLog = actor.getAuditTrail();	
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
