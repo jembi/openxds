@@ -20,7 +20,7 @@
 
 package org.openhealthtools.openxds.xca.api;
 
-import java.util.List;
+import java.util.Map;
 
 import org.openhealthtools.common.ihe.IheActor;
 
@@ -35,18 +35,18 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
 public interface XcaIG extends IheActor {
 
 	/**
-	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s for Query.
+	 * Gets a map of the client side Responding Gateway <code>IConnectionDescription</code>s for Query.
 	 * 
-	 * @return the list of client side Responding Gateway connections for Query
+	 * @return the map of client side Responding Gateway connections for Query
 	 */
-	public List<IConnectionDescription> getRGQueryClientConnections();	
+	public Map<String, IConnectionDescription> getRGQueryClientConnections();	
 	
 	/**
-	 * Gets a list of the client side Responding Gateway <code>IConnectionDescription</code>s for Retrieve.
+	 * Gets a map of the client side Responding Gateway <code>IConnectionDescription</code>s for Retrieve.
 	 * 
-	 * @return the list of client side Responding Gateway connections for Retrieve
+	 * @return the map of client side Responding Gateway connections for Retrieve
 	 */
-	public List<IConnectionDescription> getRGRetrieveClientConnections();	
+	public Map<String, IConnectionDescription> getRGRetrieveClientConnections();	
 	
 	/**
 	 * Gets the client side Registry <code>IConnectionDescription</code> of this actor.

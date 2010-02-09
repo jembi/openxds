@@ -24,7 +24,7 @@ import gov.nist.registry.common2.registry.Properties;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
+import java.util.Map;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -57,9 +57,9 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
     /**The client side of XDS Repository connection*/
 	private IConnectionDescription repositoryClientConnection = null;
     /**The client side of XCA Responding Gateway Query connections*/
-	private List<IConnectionDescription> rgQueryClientConnections = null;
+	private Map<String, IConnectionDescription> rgQueryClientConnections = null;
     /**The client side of XCA Responding Gateway Retrieve connections*/
-	private List<IConnectionDescription> rgRetrieveClientConnections = null;
+	private Map<String, IConnectionDescription> rgRetrieveClientConnections = null;
 
     /** The XCA Responding Gateway Server */    
     IheHTTPServer igServer = null;
@@ -69,8 +69,8 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
      *
      */
      public XcaIGImpl(IConnectionDescription rgServerConnection, IConnectionDescription registryClientConnection, 
-    		 IConnectionDescription repositoryClientConnection, List<IConnectionDescription> rgQueryClientConnections, 
-    		 List<IConnectionDescription> rgRetrieveClientConnections, IheAuditTrail auditTrail) {
+    		 IConnectionDescription repositoryClientConnection, Map<String, IConnectionDescription> rgQueryClientConnections, 
+    		 Map<String, IConnectionDescription> rgRetrieveClientConnections, IheAuditTrail auditTrail) {
     	 super(rgServerConnection, auditTrail);
          this.connection = rgServerConnection;
          this.registryClientConnection = registryClientConnection;
@@ -145,11 +145,11 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
         super.stop();
     }
 
-	public List<IConnectionDescription> getRGQueryClientConnections() {
+	public Map<String, IConnectionDescription> getRGQueryClientConnections() {
     	return rgQueryClientConnections;
     }
 
-	public List<IConnectionDescription> getRGRetrieveClientConnections() {
+	public Map<String, IConnectionDescription> getRGRetrieveClientConnections() {
     	return rgRetrieveClientConnections;
     }
 	

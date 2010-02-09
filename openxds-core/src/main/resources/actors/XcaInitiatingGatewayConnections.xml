@@ -79,8 +79,6 @@
 		<Port>8040</Port>
 		<!--The URL of the XCA Responding Gateway web services -->
 		<UrlPath>/axis2/services/rg</UrlPath>				
-		
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />
 	</StandardConnection>
 	
 <!--=========================================================================-->
@@ -92,14 +90,12 @@
 		<HostName>208.81.185.143</HostName>
 		<Port>8080</Port>
 		<UrlPath>/axis2/services/xcarg</UrlPath>
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" />
 	</StandardConnection>
 	<SecureConnection name="vangent-secure-rg">
 		<!-- HostName>vangent1</HostName-->
 		<HostName>208.81.185.143</HostName>
 		<Port>8181</Port>
 		<UrlPath>/axis2/services/xcarg</UrlPath>				
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -111,14 +107,12 @@
 		<HostName>hx-registry.hxti.net</HostName>
 		<Port>8080</Port>
 		<UrlPath>/XCAGateway/respond</UrlPath>
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" />
 	</StandardConnection>
 
 	<StandardConnection name="spirit-rg">
 		<HostName>80.122.119.94</HostName>
 		<Port>18081</Port>		
 		<UrlPath>/XCA/responding</UrlPath>				
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" />		
 	</StandardConnection>
 	<SecureConnection name="spirit-secure-rg">
 		<!-- 
@@ -128,7 +122,6 @@
 		<HostName>80.122.119.94</HostName>
 		<Port>18081</Port>		
 		<UrlPath>/XCA/responding</UrlPath>				
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -144,7 +137,6 @@
 		<HostName>xds-ibm.lgs.com</HostName>
 		<Port>9080</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />
 	</StandardConnection>	
 	<SecureConnection name="ibm-secure-rg-query">
 		<!-- 
@@ -154,8 +146,6 @@
 		<HostName>xds-ibm.lgs.com</HostName>
 		<Port>9443</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
-		
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -170,7 +160,6 @@
 		<HostName>xds-ibm.lgs.com</HostName>
 		<Port>9080</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayRetrieve</UrlPath>		
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />
 	</StandardConnection>
 	<SecureConnection name="ibm-secure-rg-retrieve">
 		<!-- 
@@ -180,7 +169,6 @@
 		<HostName>xds-ibm.lgs.com</HostName>
 		<Port>9443</Port>
 		<UrlPath>XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -192,13 +180,11 @@
 		<HostName>icw2</HostName>
 		<Port>8080</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" />
 	</StandardConnection>
 	<SecureConnection name="icw-secure-rg-query">
 		<HostName>icw2</HostName>
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -209,13 +195,11 @@
 		<HostName>icw2</HostName>
 		<Port>8080</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />
 	</StandardConnection>
 	<SecureConnection name="icw-secure-rg-retrieve">
 		<HostName>icw2</HostName>
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -227,13 +211,11 @@
 		<HostName>epic3</HostName>
 		<Port>80</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />
 	</StandardConnection>
 	<SecureConnection name="epic-secure-rg-query">
 		<HostName>epic3</HostName>
 		<Port>443</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>				
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -245,13 +227,11 @@
 		<HostName>epic3</HostName>
 		<Port>80</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>						
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />
 	</StandardConnection>
 	<SecureConnection name="epic-s-rg-retrieve">
 		<HostName>epic3</HostName>
 		<Port>443</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>				
-		<Property name="homeId" value="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2005" />		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>

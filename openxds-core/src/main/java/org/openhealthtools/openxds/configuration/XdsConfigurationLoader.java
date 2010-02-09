@@ -25,15 +25,15 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
@@ -70,6 +70,8 @@ import com.misyshealthcare.connect.util.LibraryConfig;
 import com.misyshealthcare.connect.util.OID;
 import com.misyshealthcare.connect.util.LibraryConfig.ILogContext;
 import com.misyshealthcare.connect.util.LibraryConfig.IPatientIdConverter;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This class loads an IHE Actor configuration file and initializes all of the
@@ -484,8 +486,8 @@ public class XdsConfigurationLoader {
 				IConnectionDescription xcaIGServerConnection = ((XcaIGActorDescription)actor).getXcaIGServerConnection();
 				IConnectionDescription xdsRegistryClientConnection = ((XcaIGActorDescription)actor).getXdsRegistryClientConnection();
 				IConnectionDescription xdsRepositoryClientConnection = ((XcaIGActorDescription)actor).getXdsRepositoryClientConnection();
-				List<IConnectionDescription> xcaRGQueryClientConnections = ((XcaIGActorDescription)actor).getXcaRGQueryClientConnections();
-				List<IConnectionDescription> xcaRGRetrieveClientConnections = ((XcaIGActorDescription)actor).getXcaRGRetrieveClientConnections();
+				Map<String, IConnectionDescription> xcaRGQueryClientConnections = ((XcaIGActorDescription)actor).getXcaRGQueryClientConnections();
+				Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = ((XcaIGActorDescription)actor).getXcaRGRetrieveClientConnections();
 				if (!createXcaIGActor(actor.id, xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, xcaRGQueryClientConnections, xcaRGRetrieveClientConnections, actorAudit, log, null))
 					okay = false;
 			}
@@ -627,10 +629,11 @@ public class XdsConfigurationLoader {
 		IConnectionDescription xdsRegistryClientConnection = null;
 		//Define a XDSRepository client side connection so that ITI-39 messages can be forwarded to the XDS Repository server
 		IConnectionDescription xdsRepositoryClientConnection = null;
+
 		//Define a XCARG client side Query connections so that ITI-38 messages can be forwarded to the XCA Responding Gateway server
-		List<IConnectionDescription> xcaRGQueryClientConnections = new ArrayList<IConnectionDescription>();
+		Map<String, IConnectionDescription> xcaRGQueryClientConnections = new HashMap<String, IConnectionDescription>();
 		//Define a XCARG client side Retrieve connections so that ITI-39 messages can be forwarded to the XCA Responding Gateway server
-		List<IConnectionDescription> xcaRGRetrieveClientConnections = new ArrayList<IConnectionDescription>();
+		Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = new HashMap<String, IConnectionDescription>();
 		
 		// Look at each child node in turn
 		NodeList elements = definition.getChildNodes();
@@ -725,6 +728,11 @@ public class XdsConfigurationLoader {
 					List<Element> rgs = getChildElements(element, "RESPONDINGGATEWAY");
 					
 					for (Element rg : rgs) {
+						//homeId
+						String homeId = getAttributeValue(rg, "homeId");
+						if (homeId == null) {
+							throwIheConfigurationException("RespondingGateway element with no 'homeId' attribute in actor '" + actorName + "' is not defined", configFile);
+						}
 						//query
 						String queryName = getAttributeValue(rg, "query");
 						if (queryName == null) {
@@ -734,7 +742,7 @@ public class XdsConfigurationLoader {
 						if (xcaQueryConnection == null) {
 							throwIheConfigurationException("RespondingGateway query connection '" + queryName + "' in actor '" + actorName + "' is not defined", configFile);
 						}
-						xcaRGQueryClientConnections.add(xcaQueryConnection);
+						xcaRGQueryClientConnections.put(homeId, xcaQueryConnection);
 						//retrieve
 						String retrieveName = getAttributeValue(rg, "retrieve");
 						if (retrieveName == null) {
@@ -744,7 +752,7 @@ public class XdsConfigurationLoader {
 						if (xcaRetrieveConnection == null) {
 							throwIheConfigurationException("RespondingGateway retrieve connection '" + retrieveName + "' in actor '" + actorName + "' is not defined", configFile);
 						}
-						xcaRGRetrieveClientConnections.add(xcaRetrieveConnection);
+						xcaRGRetrieveClientConnections.put(homeId, xcaRetrieveConnection);
 					}
 				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
 					// A description of this actor for GUI presentation
@@ -1058,8 +1066,8 @@ public class XdsConfigurationLoader {
 	 * @throws IheConfigurationException When there is a problem with the configuration
 	 */
 	private boolean createXcaIGActor(String name, IConnectionDescription xcaIGServerConnection, IConnectionDescription xdsRegistryClientConnection, 
-			IConnectionDescription xdsRepositoryClientConnection, List<IConnectionDescription> rgQueryClientConnections, 
-			List<IConnectionDescription> rgRetrieveClientConnections, Collection<IConnectionDescription> auditConnections,			
+			IConnectionDescription xdsRepositoryClientConnection, Map<String, IConnectionDescription> rgQueryClientConnections, 
+			Map<String, IConnectionDescription> rgRetrieveClientConnections, Collection<IConnectionDescription> auditConnections,			
 			IMesaLogger logger, File configFile) throws IheConfigurationException {
 		boolean okay = false;
 		IheAuditTrail auditTrail = null;
@@ -1381,10 +1389,10 @@ public class XdsConfigurationLoader {
 		private IConnectionDescription xdsRepositoryClientConnection = null;
 		
 		/** Defines the client side of XCA Responding Gateway Query Connections */
-		private List<IConnectionDescription> xcaRGQueryClientConnections = new ArrayList<IConnectionDescription>();
+		private Map<String, IConnectionDescription> xcaRGQueryClientConnections = new HashMap<String, IConnectionDescription>();
 		
 		/** Defines the client side of XCA Responding Gateway Retrieve Connections */
-		private List<IConnectionDescription> xcaRGRetrieveClientConnections = new ArrayList<IConnectionDescription>();
+		private Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = new HashMap<String, IConnectionDescription>();
 		
 		/**
 		 * Gets the connection for the XCA Initiating Gateway server. 
@@ -1414,20 +1422,20 @@ public class XdsConfigurationLoader {
 		}
 		
 		/**
-		 * Gets the list of the XCA Responding Gateway client side connections for Query.  
+		 * Gets the map of the XCA Responding Gateway client side connections for Query.  
 		 * 
-		 * @return the list of Query connections for XCA Responding Gateway client
+		 * @return the map of Query connections for XCA Responding Gateway client
 		 */
-		public List<IConnectionDescription> getXcaRGQueryClientConnections() {
+		public Map<String, IConnectionDescription> getXcaRGQueryClientConnections() {
 			return xcaRGQueryClientConnections;
 		}
 		
 		/**
-		 * Gets the list of the XCA Responding Gateway client side connections for Retrieve.  
+		 * Gets the map of the XCA Responding Gateway client side connections for Retrieve.  
 		 * 
 		 * @return the list of Retrieve connections for XCA Responding Gateway client
 		 */
-		public List<IConnectionDescription> getXcaRGRetrieveClientConnections() {
+		public Map<String, IConnectionDescription> getXcaRGRetrieveClientConnections() {
 			return xcaRGRetrieveClientConnections;
 		}		
 	}

@@ -57,7 +57,7 @@ public abstract class Aggregator {
     /** The number of requests whose results are failed to retrieve */
     protected int failureNumber;
     /**The max wait time in seconds before aggregation*/
-    protected int maxWait = 30;
+    protected int maxWait = 20;
     /**The LogMessage*/
     protected LogMessage logMessage;
     /**The map to store the results from each home community

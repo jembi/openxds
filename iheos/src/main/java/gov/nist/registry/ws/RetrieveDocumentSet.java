@@ -63,7 +63,7 @@ public class RetrieveDocumentSet extends XdsCommon {
             }
             connection = actor.getConnection();
             if (connection == null) {
-                throw new XdsInternalException("Cannot find XdsRepository connection configuration.");
+                throw new XdsInternalException("Cannot find Server connection configuration.");
             }
             auditLog = actor.getAuditTrail();
             init(new RetrieveMultipleResponse(), xds_version, messageContext);
