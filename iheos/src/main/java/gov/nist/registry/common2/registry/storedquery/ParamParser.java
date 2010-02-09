@@ -66,7 +66,9 @@ public class ParamParser {
 						names.add(name);
 				}
 				
-				System.out.println("SQParams: " + parms);
+				if (logger.isDebugEnabled()) {
+					logger.debug("SQParams: " + parms);
+				}
 			}
 		}
 

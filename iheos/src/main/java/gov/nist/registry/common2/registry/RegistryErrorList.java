@@ -258,12 +258,12 @@ public class RegistryErrorList implements ErrorLogger {
 
 	public void error(String msg) {
 		if (verbose)
-		System.out.println("ERROR: " + msg);
+		 logger.error("ERROR: " + msg);
 	}
 
 	public void warning(String msg) {
 		if (verbose)
-		System.out.println("WARNING: " + msg);
+		 logger.warn("WARNING: " + msg);
 	}
 
 	public static String exception_details(Exception e) {

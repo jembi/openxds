@@ -202,7 +202,11 @@ public class RetrieveDocumentSet extends XdsCommon {
             throw new XdsException("Document is not found in Repository");
 
         OMText t = MetadataSupport.om_factory.createOMText(repositoryItem.getDataHandler(), optimize);
-        System.out.println("OPTIMIZE IS " + optimize);
+        
+        if (logger.isDebugEnabled()) {
+        	logger.debug("OPTIMIZE IS " + optimize);
+        }
+        
         t.setOptimize(optimize);
         OMElement document_response = MetadataSupport.om_factory.createOMElement("DocumentResponse", MetadataSupport.xdsB);
 

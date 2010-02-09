@@ -1,9 +1,5 @@
 package gov.nist.registry.ws.wsbypass;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.xml.parsers.FactoryConfigurationError;
-
 import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
@@ -12,8 +8,11 @@ import gov.nist.registry.common2.soap.SoapInterface;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SoapBypass implements SoapInterface {
+	private static final Log log = LogFactory.getLog(SoapBypass.class);
 	OMElement result = null;
 
 	public String getExpectedReturnAction() {
@@ -76,7 +75,7 @@ public class SoapBypass implements SoapInterface {
 			return new ServiceFinder(endpoint, action).invoke(body);
 		}
 		catch (Exception e) {
-			System.out.println(ExceptionUtil.exception_details(e));
+			log.error(ExceptionUtil.exception_details(e));
 			throw new XdsException("SoapBypass call failed", e);
 		}
 	}

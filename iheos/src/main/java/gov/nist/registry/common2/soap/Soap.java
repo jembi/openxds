@@ -106,7 +106,7 @@ public class Soap implements SoapInterface {
 			}
 
 			if (System.getenv("XDSHTTP10") != null) {
-				System.out.println("Generating HTTP 1.0");
+				logger.info("Generating HTTP 1.0");
 
 				serviceClient.getOptions().setProperty
 				(org.apache.axis2.transport.http.HTTPConstants.HTTP_PROTOCOL_VERSION,
@@ -134,7 +134,7 @@ public class Soap implements SoapInterface {
 //			System.out.println("fire and forget " + endpoint);
 //			serviceClient.fireAndForget(body);
 
-			System.out.println("sendRobust " + endpoint);
+			logger.info("sendRobust " + endpoint);
 			serviceClient.sendRobust(body);
 
 	}
@@ -150,7 +150,7 @@ public class Soap implements SoapInterface {
 			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
 
 			if (System.getenv("XDSHTTP10") != null) {
-				System.out.println("Generating HTTP 1.0");
+				logger.info("Generating HTTP 1.0");
 
 				serviceClient.getOptions().setProperty
 				(org.apache.axis2.transport.http.HTTPConstants.HTTP_PROTOCOL_VERSION,

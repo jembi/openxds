@@ -13,12 +13,15 @@ import java.util.HashSet;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 public class Evs extends XdsService {
+	private static final Log logger = LogFactory.getLog(Evs.class);
 
-	void init() throws LoggerException { startTestLog(); }
-	void done() { stopTestLog(); }
+	void init() throws LoggerException { startTransactionLog(); }
+	void done() { stopTransactionLog(); }
 
 	public String getReport(String messageId) {
 		String reportTxt = null;
@@ -95,8 +98,9 @@ public class Evs extends XdsService {
 			throw new XdsInternalException("Missing Table");
 		}
 
-		System.out.println(index(m));
-
+		if (logger.isDebugEnabled()) {
+			logger.debug(index(m));
+		}
 		HashMap<String, HashMap<String, Object>> mm = m.toHashMap();
 
 		OMElement report = MetadataSupport.om_factory.createOMElement(new QName("XdsEvsResult"));
@@ -115,11 +119,8 @@ public class Evs extends XdsService {
 		
 		addParm(report, mm, "Error", "error", "Error");
 		
-		System.out.println("errors are:\n" + mm.get("error"));
+		logger.error("errors are:\n" + mm.get("error"));
 		
-		
-
-
 		return report;
 	}
 

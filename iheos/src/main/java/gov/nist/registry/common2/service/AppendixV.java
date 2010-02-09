@@ -6,6 +6,7 @@ import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Response;
+import gov.nist.registry.ws.evs.Evs;
 
 import javax.xml.namespace.QName;
 
@@ -13,8 +14,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public abstract class AppendixV {
+	private static final Log logger = LogFactory.getLog(AppendixV.class);
 
 	abstract protected OMElement beginTransaction(String service_name, OMElement request, short actor);
 	abstract protected OMElement endTransaction(OMElement request, Exception e, short actor, String message);
@@ -120,7 +124,7 @@ public abstract class AppendixV {
 //		generateAuditLog(response);
 		
 		if (log_message == null) {
-			System.out.println("\nFATAL ERROR: AppendixV.log_response(): log_message is null\n");
+			logger.fatal("\nFATAL ERROR: AppendixV.log_response(): log_message is null\n");
 			return;
 		}
 		try {
@@ -133,10 +137,10 @@ public abstract class AppendixV {
 			log_message.addOtherParam("Response", response.getResponse().toString());
 		}
 		catch (LoggerException e) {
-			System.out.println("**************ERROR: Logger exception attempting to return to user");
+			logger.error("**************ERROR: Logger exception attempting to return to user");
 		}
 		catch (XdsInternalException e) {
-			System.out.println("**************ERROR: Internal exception attempting to return to user");
+			logger.error("**************ERROR: Internal exception attempting to return to user");
 		}
 	}
 

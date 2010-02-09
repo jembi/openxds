@@ -17,6 +17,7 @@ import gov.nist.registry.common2.registry.SQCodeAnd;
 import gov.nist.registry.common2.registry.SQCodeOr;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
+import gov.nist.registry.ws.evs.Evs;
 import gov.nist.registry.ws.sq.RegistryValidations;
 
 import java.util.ArrayList;
@@ -25,8 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class EbXML21QuerySupport implements RegistryValidations {
+	private static final Log logger = LogFactory.getLog(EbXML21QuerySupport.class);
 
 	StoredQuerySupport sqs;
 	BackendRegistry br;
@@ -910,11 +914,12 @@ public class EbXML21QuerySupport implements RegistryValidations {
 				String sub_hash = m.getSlotValue(sub_obj, "hash", 0);
 				String reg_hash = m.getSlotValue(reg_obj, "hash", 0);
 
-				System.out.println("doc_uid " + doc_uid);
-				System.out.println("sub_hash " + sub_hash);
-				System.out.println("reg_hash " + reg_hash);
-				System.out.println("");
-
+				if (logger.isDebugEnabled()) {
+					logger.debug("doc_uid " + doc_uid);
+					logger.debug("sub_hash " + sub_hash);
+					logger.debug("reg_hash " + reg_hash);
+				}
+				
 				if (sub_hash != null && reg_hash != null && !sub_hash.equals(reg_hash))
 					throw new XdsNonIdenticalHashException(
 							"UniqueId " + doc_uid + " exists in both the submission and Registry and the hash value is not the same: " +

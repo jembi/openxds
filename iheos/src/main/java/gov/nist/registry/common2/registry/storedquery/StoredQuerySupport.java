@@ -9,7 +9,11 @@ import gov.nist.registry.common2.registry.SQCodedTerm;
 
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class StoredQuerySupport {
+	private static final Log log = LogFactory.getLog(StoredQuerySupport.class);
 	public ErrorLogger response;
 	public LogMessage log_message;
 	public SqParams params;
@@ -104,8 +108,10 @@ public class StoredQuerySupport {
 	public void validate_parm(String name, boolean required, boolean multiple, boolean is_string, boolean is_code, boolean and_or_ok, String... alternatives) {
 		Object value = params.getParm(name);
 
-		System.out.println("validate_parm: name=" + name + " value=" + value + " required=" + required + " multiple=" + multiple + " is_string=" + is_string + " is_code=" + is_code + " alternatives=" + valuesAsString(null, alternatives));
-
+		if (log.isDebugEnabled()) {
+			log.debug("validate_parm: name=" + name + " value=" + value + " required=" + required + " multiple=" + multiple + " is_string=" + is_string + " is_code=" + is_code + " alternatives=" + valuesAsString(null, alternatives));
+		}
+		
 		if (value == null && alternatives == null) {
 			if (required ) {
 				response.add_error("XDSRegistryError", "Parameter " + name + " is required but not present in query", "StoredQuery.java", log_message);
@@ -116,7 +122,7 @@ public class StoredQuerySupport {
 		}
 
 		if (value == null && alternatives != null) {
-			System.out.println("looking for alternatives");
+			log.debug("looking for alternatives");
 			if (! isAlternativePresent(alternatives)) {
 				if ( ! has_alternate_validation_errors) {
 					response.add_error("XDSRegistryError", "One of these parameters must be present in the query: " + valuesAsString(name, alternatives), "StoredQuery.java", log_message);
@@ -192,8 +198,10 @@ public class StoredQuerySupport {
 	public void validate_parm(String name, boolean required, boolean multiple, boolean is_string, String same_size_as, String... alternatives) {
 		Object value = params.getParm(name);
 
-		System.out.println("validate_parm: name=" + name + " value=" + value + " required=" + required + " multiple=" + multiple + " is_string=" + is_string + " same_size_as=" + same_size_as + " alternatives=" + valuesAsString(null, alternatives));
-
+		if (log.isDebugEnabled()) {
+			log.debug("validate_parm: name=" + name + " value=" + value + " required=" + required + " multiple=" + multiple + " is_string=" + is_string + " same_size_as=" + same_size_as + " alternatives=" + valuesAsString(null, alternatives));
+		}
+		
 		if (value == null && alternatives == null) {
 			if (required ) {
 				response.add_error("XDSRegistryError", "Parameter " + name + " is required but not present in query", "StoredQuery.java", log_message);
@@ -204,7 +212,7 @@ public class StoredQuerySupport {
 		}
 
 		if (value == null && alternatives != null) {
-			System.out.println("looking for alternatives");
+			log.debug("looking for alternatives");
 			if (! isAlternativePresent(alternatives)) {
 				if ( ! has_alternate_validation_errors) {
 					response.add_error("XDSRegistryError", "One of these parameters must be present in the query: " + valuesAsString(name, alternatives), "StoredQuery.java", log_message);

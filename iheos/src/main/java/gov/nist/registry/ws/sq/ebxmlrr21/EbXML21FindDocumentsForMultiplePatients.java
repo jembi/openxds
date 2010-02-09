@@ -1,5 +1,8 @@
 package gov.nist.registry.ws.sq.ebxmlrr21;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
@@ -7,6 +10,7 @@ import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
+import gov.nist.registry.ws.evs.Evs;
 import gov.nist.registry.ws.sq.FindDocumentsForMultiplePatients;
 
 /**
@@ -16,6 +20,7 @@ import gov.nist.registry.ws.sq.FindDocumentsForMultiplePatients;
  *
  */
 public class EbXML21FindDocumentsForMultiplePatients extends FindDocumentsForMultiplePatients {
+	private static final Log logger = LogFactory.getLog(EbXML21FindDocumentsForMultiplePatients.class);
 
 	EbXML21QuerySupport eb;
 
@@ -102,8 +107,9 @@ public class EbXML21FindDocumentsForMultiplePatients extends FindDocumentsForMul
 
 		eb.and(); eb.a(" doc.status IN "); eb.a(status);
 
-		System.out.println(eb.getQuery().toString());
-		
+		if (logger.isDebugEnabled()) {
+			logger.debug(eb.getQuery().toString());
+		}
 
 		return MetadataParser.parseNonSubmission(eb.query(sqs.return_leaf_class));
 	}

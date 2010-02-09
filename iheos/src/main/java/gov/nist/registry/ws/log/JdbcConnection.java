@@ -6,11 +6,15 @@
 
 package gov.nist.registry.ws.log;
 
+import gov.nist.registry.xdslog.Log;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.apache.commons.logging.LogFactory;
 
 
 
@@ -22,6 +26,7 @@ import java.sql.Statement;
 
 public class JdbcConnection {
     
+	private static final org.apache.commons.logging.Log log = LogFactory.getLog(JdbcConnection.class);
     
     private String hostname = null;
     private static Connection con;
@@ -42,7 +47,7 @@ public class JdbcConnection {
         try {
             Class.forName("org.postgresql.Driver");
             String url = "jdbc:postgresql://" + this.getHostname() + "/logs";
-            System.out.println("Connecting to postres on url " + url);
+            log.info("Connecting to postres on url " + url);
             try {
                 con = DriverManager.getConnection(url, "postgres", "");
             } catch (Exception e) {
@@ -51,7 +56,7 @@ public class JdbcConnection {
             stmt = con.createStatement();
             successfulConnection = true;
         } catch (ClassNotFoundException e) {
-            System.out.println(e);
+            log.error(e);
             e.printStackTrace();
             successfulConnection = false;
         }

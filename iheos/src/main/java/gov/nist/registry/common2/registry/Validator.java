@@ -13,8 +13,11 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Validator {
+	private static final Log log = LogFactory.getLog(Validator.class);
 	Metadata m;
 	StringBuffer errs = new StringBuffer();
 	boolean error = false;
@@ -852,7 +855,7 @@ public class Validator {
 			}
 		} 
 		catch (Exception e) {
-			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			log.error(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(-1);
 		}
 

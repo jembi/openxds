@@ -17,6 +17,8 @@ import java.util.Set;
 import javax.mail.internet.MimeBodyPart;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.soap.util.mime.ByteArrayDataSource;
 
 
@@ -25,6 +27,7 @@ import org.apache.soap.util.mime.ByteArrayDataSource;
  * @author  bill
  */
 public class MultipartMap {
+	private static final Log log = LogFactory.getLog(MultipartMap.class);
     javax.mail.internet.MimeMultipart mp;
     HashMap map, typemap;
     
@@ -118,7 +121,10 @@ public class MultipartMap {
                 } else {
                     map.put(name, bp.getInputStream());         //getDataHandler());
                 }
-                System.out.println("name = " + name);
+                
+                if (log.isDebugEnabled()) {
+                    log.debug("name = " + name);                	
+                }
             }
         } else {
             throw new javax.mail.MessagingException("MultipartMap requires Multipart/Form format as input");

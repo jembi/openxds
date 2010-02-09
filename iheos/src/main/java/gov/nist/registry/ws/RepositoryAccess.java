@@ -5,10 +5,14 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import java.io.File;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class RepositoryAccess  {
 
+	private static final Log log = LogFactory.getLog(RepositoryAccess.class);
 	String doc_id;
 	Collection<String> file_types;
 	File dir;
@@ -22,15 +26,15 @@ public class RepositoryAccess  {
 	}
 
 	public File find() {
-		System.out.println("Known file types are: " + file_types);
+		log.info("Known file types are: " + file_types);
 		for (String ext : file_types) {
 			File file = new File(dir, doc_id + "." + ext);
 			if (file.exists()) {
 				this.ext = ext;
-				System.out.println("Repository File " + file.getPath() + " found");
+				log.info("Repository File " + file.getPath() + " found");
 				return file;
 			} else
-				System.out.println("Repository File " + file.getPath() + " does not exist");
+				log.info("Repository File " + file.getPath() + " does not exist");
 		}
 		return null;
 	}

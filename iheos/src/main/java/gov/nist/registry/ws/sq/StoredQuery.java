@@ -1,6 +1,5 @@
 package gov.nist.registry.ws.sq;
 
-import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.logging.LoggerException;
@@ -8,9 +7,8 @@ import gov.nist.registry.common2.registry.BasicQuery;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-import java.util.List;
-
-import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * 
@@ -50,7 +48,7 @@ import org.apache.axiom.om.OMElement;
  *      FindDocuments declares: abstract protected Metadata runImplementation();
  */
 abstract public class StoredQuery extends BasicQuery  {
-
+	private static final Log log = LogFactory.getLog(StoredQuery.class);
 	// Run specific Stored Query (defined in Stored Query specific subclass)
 	abstract public Metadata runSpecific() throws XdsException, LoggerException, XDSRegistryOutOfResourcesException;
 
@@ -92,7 +90,10 @@ abstract public class StoredQuery extends BasicQuery  {
 			return new Metadata().addToMetadata(metadata.getV3(), true);
 		}
 		else {
-			System.out.println("StoredQuery#run refs = " + metadata.getMajorObjects());
+			if (log.isDebugEnabled()) {
+				log.debug("StoredQuery#run refs = " + metadata.getMajorObjects());
+			}
+			
 			return new Metadata().
 			     addToMetadata(metadata.getObjectRefs(metadata.getMajorObjects(), false /* v3 */),
 					true  /* discard_duplicates */);

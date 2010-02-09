@@ -14,9 +14,12 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 public class ServiceFinder {
+	private static final Log log = LogFactory.getLog(ServiceFinder.class);
 	File serviceFile = new File("/Users/bill/exp/xds/services-testng.xml");
 	OMElement services;
 	static QName nameQName = new QName("name");
@@ -34,7 +37,7 @@ public class ServiceFinder {
 		try {
 		meth = clas.getMethod(methodName, parmTypes);
 		} catch (NoSuchMethodException e) {
-			System.out.println(ExceptionUtil.exception_details(e));
+			log.error(ExceptionUtil.exception_details(e));
 			throw new Exception("ServiceFinder: endpoint=" + endpoint + " action=" + action + " class=" + clas.getName() + " method=" + methodName, e);
 		}
 		//System.out.println("ServiceFinder: launching " + clas.getName() + "#" + meth.getName());
