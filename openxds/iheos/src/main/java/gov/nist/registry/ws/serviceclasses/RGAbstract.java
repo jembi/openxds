@@ -407,7 +407,10 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			RetrieveDocumentSet s = new RetrieveDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
 			s.setIsRG();
 
-			System.out.println("RBAbstract:Retrieve(): optimize is " + optimize);
+			if (logger.isDebugEnabled()) {	
+				logger.debug("RBAbstract:Retrieve(): optimize is " + optimize);
+			}
+			
 			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
 
 			setHomeOnRetResponse(result);

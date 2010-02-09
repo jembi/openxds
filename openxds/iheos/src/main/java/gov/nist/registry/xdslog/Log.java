@@ -16,6 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,7 +29,8 @@ import org.xml.sax.SAXException;
  *
  */
 public class Log {
-	
+	private static final org.apache.commons.logging.Log log = LogFactory.getLog(Log.class);
+
 	/**
 	 * Path of the Log parameter file. This file contains the connection parameters. <br />
 	 * it should be formated like that : <br />
@@ -114,7 +116,7 @@ public class Log {
                 if (n.getNodeName().equalsIgnoreCase("connection") == true ) 
                 {
                 	 
-                	 System.out.println  ("connection new : " + "jdbc:postgresql://" + e.getAttribute("host") + "/"+  e.getAttribute("db") + " ," + e.getAttribute("user") + "," + e.getAttribute("password") ) ;
+                	 log.info("connection new : " + "jdbc:postgresql://" + e.getAttribute("host") + "/"+  e.getAttribute("db") + " ," + e.getAttribute("user") + "," + e.getAttribute("password") ) ;
                 	 if ( connection == null )
                 	 {
 						try {

@@ -312,7 +312,7 @@ public class AdhocQueryRequest extends XdsCommon {
 
 		RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_Q);
 
-		System.out.println("sql_query");
+		logger.debug("sql_query");
 		// check and repair SQL
 		boolean isleafClass = false; 
 		SqlRepair sr = new SqlRepair();
@@ -333,8 +333,10 @@ public class AdhocQueryRequest extends XdsCommon {
 		if (log_message != null)
 			log_message.addOtherParam("SQL", sr.get_query_text(ahqr));
 
-		System.out.println("SQLQuery:\n" + sr.get_query_text(ahqr));
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("SQLQuery:\n" + sr.get_query_text(ahqr));
+		}
+		
 		//return backend_query(ahqr);
 
 		BackendRegistry br = new BackendRegistry(response, log_message);

@@ -8,8 +8,11 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class RetrieveDocumentSetResponse {
+	private static final Log log = LogFactory.getLog(RetrieveDocumentSetResponse.class);
 	RegistryResponse rr;
 	List<OMElement> documentResponses = new ArrayList<OMElement>();
 	
@@ -27,8 +30,10 @@ public class RetrieveDocumentSetResponse {
 			response.addChild(docResponse);		
 		}
 		
-		System.out.println("response is \n" + response.toString());
-	
+		if (log.isDebugEnabled()) {
+			log.debug("response is \n" + response.toString());
+		}
+		
 		return response;
 	}
 	

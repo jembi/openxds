@@ -2,8 +2,6 @@ package gov.nist.registry.xdslog;
 
 import gov.nist.registry.common2.logging.LoggerException;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +10,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+
+import org.apache.commons.logging.LogFactory;
 
 
 enum MainTableFields { messageid , ip  , timereceived  , test  ,pass , is_secure } ;  
@@ -22,6 +22,7 @@ enum MainTableFields { messageid , ip  , timereceived  , test  ,pass , is_secure
  */
 public class MainTable extends AbstractLogTable {
 
+	private static final org.apache.commons.logging.Log log = LogFactory.getLog(MainTable.class);
     public static final String MESSAGE_ID = "messageid"    ;
     public static final String IP         = "ip"           ;
     public static final String TIMESTAMP  = "timereceived" ;
@@ -207,7 +208,7 @@ public class MainTable extends AbstractLogTable {
 		{
 		    if ( parameterName.equals(MainTableFields.messageid))
 		    {
-			System.out.println( "UPDATE "+ TABLE_NAME +" SET " + MESSAGE_ID +" = '"+ parameterValue +"' WHERE " + MESSAGE_ID +" = '"+ messageId +"';" ) ;
+			log.info( "UPDATE "+ TABLE_NAME +" SET " + MESSAGE_ID +" = '"+ parameterValue +"' WHERE " + MESSAGE_ID +" = '"+ messageId +"';" ) ;
 			s.execute( "UPDATE "+ TABLE_NAME +" SET " + MESSAGE_ID +" = '"+ parameterValue +"' WHERE " + MESSAGE_ID +" = '"+ messageId +"';"  ) ;
 			// s.execute( "insert into "+ tableName +" values ( '"+ parameterValue.trim() + "' , '' , 'now' , -1 ,false ) ;"  );
 			messageId =  parameterValue.trim() ;
@@ -313,7 +314,7 @@ public class MainTable extends AbstractLogTable {
 
 	    //pass
 	    writePreparedStatement.setBoolean( 6 , pass ) ;
-	    System.out.println( writePreparedStatement.toString() ) ;
+	    log.info( writePreparedStatement.toString() ) ;
 	    writePreparedStatement.execute() ;
 
 	} catch (SQLException e1) 

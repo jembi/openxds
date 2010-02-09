@@ -93,7 +93,7 @@ public class XdsService extends AppendixV {
 
 		logger.info("Start " + service_name + " : " + incoming_ip_address  + " : " + getMessageContext().getTo().toString());
 		try {
-			startTestLog();
+			startTransactionLog();
 			if (log != null && log_message == null) {
 //				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
 				log_message = log.createMessage(incoming_ip_address);
@@ -146,9 +146,9 @@ public class XdsService extends AppendixV {
 
 			return null;  // no error
 		} catch (LoggerException e) {
-			System.out.println("LoggerException: new Log: " + e.getMessage());
+			logger.error("LoggerException: new Log: " + e.getMessage());
 			e.printStackTrace();
-			stopTestLog();
+			stopTransactionLog();
 			return start_up_error(request, e, actor, "Internal Error:Cannot access Test Log Facility");
 		}
 	}
@@ -159,7 +159,7 @@ public class XdsService extends AppendixV {
 				((status) ? "Pass" : "Fail")
 		);
 
-		stopTestLog();
+		stopTransactionLog();
 	}
 	
 	public void generateLogMessage(OMElement response) {
@@ -173,7 +173,7 @@ public class XdsService extends AppendixV {
 	protected OMElement endTransaction(OMElement request, Exception e, short actor, String message) {
 		if (message == null || message.equals(""))
 			message = e.getMessage();
-		System.out.println("Exception: " + exception_details(e));
+		logger.error("Exception: " + exception_details(e));
 		OMElement response = start_up_error(request, e, actor, message);
 		generateLogMessage(response);
 		endTransaction(false);
@@ -183,7 +183,7 @@ public class XdsService extends AppendixV {
 	protected OMElement endTransaction(OMElement request, Exception e, short actor, String message, String error_type) {
 		if (message == null || message.equals(""))
 			message = e.getMessage();
-		System.out.println("Exception: " + exception_details(e));
+		logger.error("Exception: " + exception_details(e));
 		OMElement response = start_up_error(request, e, actor, message, false, error_type);
 		generateLogMessage(response);
 		endTransaction(false);
@@ -266,9 +266,9 @@ public class XdsService extends AppendixV {
 
 	}
 
-	protected void startTestLog() throws LoggerException {
+	protected void startTransactionLog() throws LoggerException {
 		if (log == null) {
-			System.out.println("+++++++++++++++++++++ start test log");
+			logger.info("+++++++++++++++++++++ start transaction log");
 			try {
 				log = new Log(properties.getString("logs.db.url"), properties.getString("logs.db.username"), properties.getString("logs.db.password")) ;
 			}
@@ -279,10 +279,10 @@ public class XdsService extends AppendixV {
 		}
 	}
 
-	protected void stopTestLog() {
+	protected void stopTransactionLog() {
 		try {
 			if (log != null) { 
-				System.out.println("+++++++++++++++++++++ stop test log");
+				logger.info("+++++++++++++++++++++ stop transaction log");
 				if (log_message != null)
 					log.writeMessage(log_message);
 				log.close();
@@ -290,7 +290,7 @@ public class XdsService extends AppendixV {
 				log_message = null;
 			} 
 		} catch (LoggerException e) {
-			System.out.println("LoggerException: " + exception_details(e));
+			logger.error("LoggerException: " + exception_details(e));
 		}
 	}
 

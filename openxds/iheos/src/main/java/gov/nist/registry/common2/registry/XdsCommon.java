@@ -81,7 +81,7 @@ public class XdsCommon  {
 		generateAuditLog(response);
 		
 		if (log_message == null) {
-			System.out.println("\nFATAL ERROR: XdsCommon.log_response(): log_message is null\n");
+			logger.fatal("\nFATAL ERROR: XdsCommon.log_response(): log_message is null\n");
 			return;
 		}
 		try {
@@ -94,10 +94,10 @@ public class XdsCommon  {
 			log_message.addOtherParam("Response", response.getResponse().toString());
 		}
 		catch (LoggerException e) {
-			System.out.println("**************ERROR: Logger exception attempting to return to user");
+			logger.error("**************ERROR: Logger exception attempting to return to user");
 		}
 		catch (XdsInternalException e) {
-			System.out.println("**************ERROR: Internal exception attempting to return to user");
+			logger.error("**************ERROR: Internal exception attempting to return to user");
 		}
 	}
 	

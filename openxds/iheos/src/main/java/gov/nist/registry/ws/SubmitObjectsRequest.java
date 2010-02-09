@@ -219,10 +219,12 @@ public class SubmitObjectsRequest extends XdsCommon {
 		
 		// return test log message id only if request from internal Repository
 		if (returnTestLogId() && "127.0.0.1".equals(clientIPAddress)) {
-			System.out.println("Adding testLogId");
+			logger.info("Adding testLogId");
 			res.addAttribute("testLogId", log_message.getMessageID(), null);
 		}
-		System.out.println("response is " + res.toString());
+		if (logger.isInfoEnabled()){
+			logger.info("response is " + res.toString());
+		}
 		return res;
 
 	}
@@ -267,7 +269,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			vals.validateProperUids(m);
 
 		if (response.has_errors())
-			System.out.println("metadata validator failed");
+			logger.error("metadata validator failed");
 
 		if (response.has_errors())
 			return;

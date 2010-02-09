@@ -68,9 +68,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	private IheAuditTrail auditLog = null;
 	private final static Log logger = LogFactory.getLog(ProvideAndRegisterDocumentSet.class);
 
-	static {
-		BasicConfigurator.configure();
-	}
+//	static {
+//		BasicConfigurator.configure();
+//	}
 
 	public ProvideAndRegisterDocumentSet(LogMessage log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
@@ -101,8 +101,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 	public OMElement provideAndRegisterDocumentSet(OMElement pnr, ContentValidationService validater) {
 		this.validater = validater;
-
-		//System.out.println("PnR started -- version = " + xds_version);
 
 		try {
 			pnr.build();
@@ -168,7 +166,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				logger.debug(res.toString());
 			}
 		} catch (XdsInternalException e) {
-			//System.out.println("Error generating response");
+			logger.error("Error generating response");
 			try {
 				log_message.addErrorParam("Internal Error", "Error generating response from PnR");
 			}
@@ -244,8 +242,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				doc_count++;
 				String id = document.getAttributeValue(MetadataSupport.id_qname);
 				OMText binaryNode = (OMText) document.getFirstOMChild();
-				//System.out.println("isOptimized: " + binaryNode.isOptimized());
-
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("isOptimized: " + binaryNode.isOptimized());
+				}
+				
 				if ( ! accept_xop ) {
 					if (binaryNode.isOptimized() == true) {
 						throw new XdsIOException("Submission uses XOP for optimized encoding - not acceptable on this endpoint");

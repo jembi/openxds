@@ -7,6 +7,8 @@
 package gov.nist.registry.common2.util.xsl;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.registry.Validator;
+import gov.nist.registry.xds.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,11 +25,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * A class for handling XSL transforms.
  * @author Bill Majurski
  */
 public class Transform {
+	private static final Log log = LogFactory.getLog(Transform.class);
 	static HashMap transforms = null;
 	InputStream inputStream;
 	OutputStream outputStream;
@@ -147,7 +153,9 @@ public class Transform {
 	 * @throws java.lang.Exception Thrown if there is a problem accessing the URI.
 	 */
 	public void setTransform(String systemId) throws TransformerConfigurationException {
-		System.out.println("Transform:setTransform: " + systemId);
+		if (log.isDebugEnabled()) {
+			log.debug("Transform:setTransform: " + systemId);
+		}
 		StreamSource streamSource;
 		streamSource = new StreamSource(systemId);
 		if (tFactory == null)
@@ -167,7 +175,9 @@ public class Transform {
 		if (parameters == null)
 			parameters = new HashMap();
 		parameters.put(name, value);
-		System.out.println("Transform:setParameter " + name + "=>" + value);
+		if (log.isDebugEnabled() ) {
+			log.debug("Transform:setParameter " + name + "=>" + value);
+		}
 	}
 
 	/**
@@ -176,9 +186,11 @@ public class Transform {
 	 */
 	public void setInput(String input) {
 		int display = 80;
-		System.out.println("Transform.setInput: " +
-				input.substring(0,
-						(input.length() < display) ? input.length() : display));
+		if (log.isDebugEnabled() ) {
+			log.debug("Transform.setInput: " +
+					input.substring(0,
+							(input.length() < display) ? input.length() : display));
+		}
 		inputStream = new StringBufferInputStream(input);
 		outputStream = new ByteArrayOutputStream();
 	}
@@ -191,14 +203,15 @@ public class Transform {
 	public void run() throws XdsInternalException {
 		transformer.clearParameters();
 		if (parameters != null) {
-			System.out.println("Transform.java: Has parameters");
+			log.debug("Transform.java: Has parameters");				
+			
 			for (Iterator it=parameters.keySet().iterator(); it.hasNext(); ) {
 				String key = (String) it.next();
 				Object value = parameters.get(key);
 				System.out.println("key=" + key + " value=" + (String) value);
 				transformer.setParameter(key, value);
 			}
-			System.out.println("parameters set");
+			log.debug("parameters set");
 		}
 		StreamSource in;
 		try {

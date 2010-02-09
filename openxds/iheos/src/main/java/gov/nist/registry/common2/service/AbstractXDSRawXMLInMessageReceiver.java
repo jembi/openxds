@@ -13,10 +13,13 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.receivers.AbstractInMessageReceiver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 abstract public class AbstractXDSRawXMLInMessageReceiver extends
 AbstractInMessageReceiver {
 
+	private static final Log logger = LogFactory.getLog(AbstractXDSRawXMLInMessageReceiver.class);
 
 	abstract public void validate_action(MessageContext msgContext) throws Exception ;
 
@@ -54,7 +57,11 @@ AbstractInMessageReceiver {
 		} catch (Exception e) {
 			throw AxisFault.makeFault(e);
 		}
-		System.out.println("return class is " + method.getReturnType().getName());
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("return class is " + method.getReturnType().getName());
+		}
+		
 		return null;
 
 	}
@@ -74,8 +81,10 @@ AbstractInMessageReceiver {
 
 			String in_action = msgContext.getWSAAction();
 
-			System.out.println("In MEP: in_action = " + in_action);
-
+			if (logger.isDebugEnabled()) {
+				logger.debug("In MEP: in_action = " + in_action);
+			}
+			
 			validate_action(msgContext);  
 
 			// get the implementation class for the Web Service
@@ -91,7 +100,7 @@ AbstractInMessageReceiver {
 
 		} catch (Exception e) {
 
-			System.out.println("Error in XDSRawXMLIn:\n" +  ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
+			logger.error("Error in XDSRawXMLIn:\n" +  ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
 
 			throw AxisFault.makeFault(e);
 
@@ -112,13 +121,13 @@ AbstractInMessageReceiver {
 			methodDisplay = implClass.getMethod("setMessageContextIn",
 					new Class[] { MessageContext.class });
 		} catch (SecurityException e) {
-			System.out.println("Error in XDSRawXMLIn:\n" +  
+			logger.error("Error in XDSRawXMLIn:\n" +  
 					"class is " + implClass.getName() + " method is setMessageContextIn" + 
 					ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
 
 			throw AxisFault.makeFault(e);
 		} catch (NoSuchMethodException e) {
-			System.out.println("Error in XDSRawXMLIn:\n" +  
+			logger.error("Error in XDSRawXMLIn:\n" +  
 					"class is " + implClass.getName() + " method is setMessageContextIn" + 
 					ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
 
@@ -129,7 +138,7 @@ AbstractInMessageReceiver {
 			methodDisplay.invoke(obj, new Object[] { msgContext });
 		} 
 		catch (Exception e) {
-			System.out.println("Error in XDSRawXMLIn:\n" +  
+			logger.error("Error in XDSRawXMLIn:\n" +  
 					"class is " + implClass.getName() + " method is setMessageContextIn" + 
 					ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
 
@@ -149,7 +158,7 @@ AbstractInMessageReceiver {
 							.getFirstElement() });
 		} 
 		catch (Exception e) {
-			System.out.println("Error in XDSRawXMLIn:\n" +  
+			logger.error("Error in XDSRawXMLIn:\n" +  
 					"class is " + implClass.getName() + " method is setMessageContextIn" + 
 					ExceptionUtil.exception_details(e) + "\ngetSoapAction = " + msgContext.getSoapAction());
 

@@ -5,13 +5,17 @@ import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
+import gov.nist.registry.ws.evs.Evs;
 
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class EchoV3Metadata extends XdsCommon {
-	
+	private static final Log logger = LogFactory.getLog(EchoV3Metadata.class);
+
 	public EchoV3Metadata() {
 
 	}
@@ -28,7 +32,7 @@ public class EchoV3Metadata extends XdsCommon {
 			return ahqr.getResponse();
 		} 
 		catch (Exception e) {
-			System.out.println(RegistryUtility.exception_details(e));
+			logger.error(RegistryUtility.exception_details(e));
 			return null;
 		}
 	}
