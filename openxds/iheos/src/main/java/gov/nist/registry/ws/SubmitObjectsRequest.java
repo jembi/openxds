@@ -29,6 +29,7 @@ import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.common2.registry.validation.Structure;
 import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.ws.config.Registry;
+import gov.nist.registry.ws.sq.GetAssociations;
 import gov.nist.registry.ws.sq.RegistryObjectValidator;
 import gov.nist.registry.ws.sq.RegistryValidations;
 import gov.nist.registry.ws.sq.SQFactory;
@@ -527,10 +528,17 @@ public class SubmitObjectsRequest extends XdsCommon {
 		if (Properties.loader().getBoolean("validate.patient.id")) {
 			try {
 				XdsRegistryPatientService patientMan = XdsFactory.getXdsRegistryPatientService();
-				PatientIdentifier pid = getPatientIdentifier(patient_id); 
+				PatientIdentifier pid = getPatientIdentifier(patient_id);
 				boolean known_patient_id = patientMan.isValidPatient(pid, null);
 				if ( !known_patient_id)
-					throw new XdsUnknownPatientIdException("PatientId " + patient_id + " is not known to the Registry");
+				{
+					String aa = "unknown";
+					if (pid.getAssigningAuthority() != null)
+					{
+						aa = "'" + pid.getAssigningAuthority().getAuthorityNameString() + "'";
+					}
+					throw new XdsUnknownPatientIdException("PatientId " + patient_id + " (Assigning Authority " + aa + ") is not known to the Registry");
+				}
 			} 
 			catch (RegistryPatientException e) {
 				throw new XdsInternalException("RegistryPatientException: " + e.getMessage(), e);
