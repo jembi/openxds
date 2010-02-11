@@ -173,12 +173,21 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		pi.setDelete(deleted ? "Y" : "N");
 		return pi;
 	}
+	
+	/**
+	 * @param patientIdentifier The patient identifier object.
+	 * @return The assigning authority for this patient identifier, formatted as a String
+	 */
 	private static String getAssigningAuthority(PatientIdentifier patientIdentifier){
+		 if (patientIdentifier.getAssigningAuthority() == null)
+		 {
+			 return null;
+		 }
 		 String assignFacNam = patientIdentifier.getAssigningAuthority().getNamespaceId();
 		 String assignFacUniversal = patientIdentifier.getAssigningAuthority().getUniversalId();
 		 String assignFacUniversaltype = patientIdentifier.getAssigningAuthority().getUniversalIdType();
 		 if(assignFacNam != null && assignFacUniversal != null && assignFacUniversaltype !=null)
-		    return assignFacNam +"&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
+			 return assignFacNam +"&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
 		 else if(assignFacNam == null && assignFacUniversal != null && assignFacUniversaltype !=null){
 			 return  "&"+ assignFacUniversal + "&"+ assignFacUniversaltype;
 		 }else if(assignFacNam != null && assignFacUniversaltype == null){
