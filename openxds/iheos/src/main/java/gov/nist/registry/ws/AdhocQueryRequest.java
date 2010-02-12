@@ -135,7 +135,18 @@ public class AdhocQueryRequest extends XdsCommon {
 			logger.fatal(logger_exception_details(e));
 		}
 		catch (MetadataValidationException e) {
-			response.add_error("XDSRegistryError", "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
+			String code;
+			if (e.getMessage() != null && e.getMessage().contains("XDSResultNotSinglePatient"))
+			{
+				// This may happen when patientId.run() in MetadataParser (in the iheos common2-registry) 
+				// finds multiple patient id's 
+				code = "XDSResultNotSinglePatient";
+			}
+			else
+			{
+				code = "XDSRegistryError"; 
+			}
+			response.add_error(code, "Metadata Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		}  
 		catch (SqlRepairException e) {
 			response.add_error("XDSRegistryError", "Could not decode SQL: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
