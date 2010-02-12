@@ -25,12 +25,6 @@ public class MetadataParser {
 
 			m.runParser();
 		}
-		try {
-			PatientId patientId = new PatientId(m, null, false, false);
-			patientId.run();
-		} catch (Exception sqle) {
-			throw new MetadataValidationException("Stored query XDSResultNotSinglePatient Error" + sqle.getMessage());
-		}
 		return m;
 	}
 
