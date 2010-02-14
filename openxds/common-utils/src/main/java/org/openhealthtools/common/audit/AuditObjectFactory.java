@@ -15,21 +15,19 @@
  *
  *  Contributors:
  *    Misys Open Source Solutions - initial API and implementation
- *    -
+ *
  */
-
 package org.openhealthtools.common.audit;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.openhealthtools.common.audit.jaxb.ActiveParticipantType;
 import org.openhealthtools.common.audit.jaxb.AuditMessage;
@@ -197,7 +195,7 @@ public class AuditObjectFactory {
         //add auditSourceTypes
         List auditSourceTypes = sourceId.getAuditSourceTypeCode();
         for(AuditCodeMappings.AuditSourceType type : sourceTypes) {
-            AuditSourceIdentificationType.AuditSourceTypeCodeType auditSourceType = messageFactory.createAuditSourceIdentificationTypeAuditSourceTypeCodeType();
+            AuditSourceIdentificationType.AuditSourceTypeCode auditSourceType = messageFactory.createAuditSourceIdentificationTypeAuditSourceTypeCode();
             auditSourceType.setCode( type.getValue() );
             auditSourceTypes.add( auditSourceType );
         }
@@ -251,7 +249,7 @@ public class AuditObjectFactory {
 	{
 		ParticipantObjectIdentificationType participant = messageFactory.createParticipantObjectIdentificationType();
 		
-		ParticipantObjectIdentificationType.ParticipantObjectIDTypeCodeType participantID = messageFactory.createParticipantObjectIdentificationTypeParticipantObjectIDTypeCodeType();
+		ParticipantObjectIdentificationType.ParticipantObjectIDTypeCode participantID = messageFactory.createParticipantObjectIdentificationTypeParticipantObjectIDTypeCode();
 		participant.setParticipantObjectTypeCode(participantObject.typeCode.getValue());
 		participant.setParticipantObjectTypeCodeRole(participantObject.role.getValue());
 		participant.setParticipantObjectID(participantObject.getId(dIE));
@@ -297,8 +295,12 @@ public class AuditObjectFactory {
 		eventId = messageFactory.createEventIdentificationType();
 		eventId.setEventID(createCodedValueType(AuditCodeMappings.getCodeMapping(eventIdType.eventId)));
 		eventId.setEventActionCode( eventIdType.actionCode.getValue() );
-		eventId.setEventDateTime(Calendar.getInstance());
-		eventId.setEventOutcomeIndicator(new BigInteger(eventIdType.outcome.getValue()));
+        try {
+            eventId.setEventDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        eventId.setEventOutcomeIndicator(new BigInteger(eventIdType.outcome.getValue()));
 		if (eventIdType.typeCode != null)
 			eventId.getEventTypeCode().add(createCodedValueType(AuditCodeMappings.getCodeMapping(eventIdType.typeCode)));
 	}
