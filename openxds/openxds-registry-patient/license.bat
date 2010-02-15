@@ -1,2 +1,0 @@
-@rem Run this command to update and format copyright header
-mvn license:format -Dyear=2009 -Dcompany="Sysnet International and others"  -Dcontributor1="Sysnet International   - initial API and implementation" -Dcontributor2="Misys Open Source Solutions - modification and bug fixes"
