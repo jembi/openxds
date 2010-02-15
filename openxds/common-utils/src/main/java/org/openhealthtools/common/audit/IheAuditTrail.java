@@ -122,9 +122,10 @@ public class IheAuditTrail implements IAuditTrail {
                 //messengers.add(new Log4JMessenger(description));
             } else if (type.equalsIgnoreCase(AuditTrailDescription.LOG4J)) {
 				messengers.add(new Log4JMessenger(description));
-			} else if (type.equalsIgnoreCase(AuditTrailDescription.RELIABLE)) {
-				messengers.add(new RSyslogMessenger(description));
 			}
+//			else if (type.equalsIgnoreCase(AuditTrailDescription.RELIABLE)) {
+//				messengers.add(new RSyslogMessenger(description));
+//			}
 		}
 	}
 	
