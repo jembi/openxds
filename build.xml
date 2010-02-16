@@ -29,17 +29,19 @@
             <fileset dir="${eclise.openxds.dir}/iheos/target/classes/">
 				<include name="schema/**" />
             </fileset>
-            <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
-				<include name="commons-logging.properties" />
-            </fileset>
         </copy> 	
         <copy flatten="true" todir="${build.dir}">
             <fileset dir="${eclise.openxds.dir}/openxds-config/target/classes/">
+				<include name="commons-logging.properties" />
 				<include name="log4j.xml" />
 				<include name="openxds.properties" />
 				<include name="applicationContext.xml" />
             </fileset>
-        </copy> 	
+            <fileset dir="${eclise.openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+				<include name="omar.properties" />
+				<include name="repository.jdbc.cfg.xml" />
+            </fileset>
+        </copy> 	    	
     </target>
 	
 	<target name="create_run_jar" depends="copy_files">
@@ -86,10 +88,8 @@
                 <include name="externalidentifier.hbm.xml" />
                 <include name="jaxr-ebxml.properties" />
                 <include name="omar-common.properties" />
-                <include name="omar.properties" />
                 <include name="repository.datasource.cfg.xml" />
                 <include name="repository.hbm.xml" />
-                <include name="repository.jdbc.cfg.xml" />
             </fileset>
             <fileset dir="${eclise.openxds.dir}/openxds-registry-patient-lightweight/target/classes">
             	<include name="org/**" />
