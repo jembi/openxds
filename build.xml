@@ -8,6 +8,8 @@
     <target name="init">
         <mkdir dir="${openxds.conf.dir}"/>
         <mkdir dir="${openxds.lib.dir}"/>
+    	<mkdir dir="${openxds.licenses.dir}"/>
+    	<mkdir dir="${openxds.dist.dir}"/>
     </target>
 
     <target name="clean">
@@ -41,7 +43,14 @@
 				<include name="omar.properties" />
 				<include name="repository.jdbc.cfg.xml" />
             </fileset>
-        </copy> 	    	
+        </copy> 
+    	
+    	<copy todir="${openxds.licenses.dir}" >
+    	   		<fileset dir="${eclise.openxds.dir}/src/main/resources/licences">  
+    	  			<include name="**/*" />
+    	   		</fileset>
+    	</copy>
+
     </target>
 	
 	<target name="create_run_jar" depends="copy_files">
@@ -111,4 +120,9 @@
             </fileset>
         </jar>
     </target>
+	
+	<target name="dist" depends="create_run_jar">
+		<zip destfile="${openxds.dist.dir}/${openxds.zip.name}" basedir="${build.dir}" update="true" />
+		<zip destfile="${openxds.dist.dir}/${openxds.tar.name}" basedir="${build.dir}" update="true" />
+	</target>
 </project>
