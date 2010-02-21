@@ -228,6 +228,8 @@ public class AuditObjectFactory {
 			participant.setNetworkAccessPointID(activeParticipant.getAccessPointId());
 		if (activeParticipant.getAccessPointTypeCode() != null)   
 			participant.setNetworkAccessPointTypeCode(activeParticipant.getAccessPointTypeCode().getValue());
+		if (activeParticipant.getUserName() != null)
+			participant.setUserName(activeParticipant.getUserName());
 		activeParticipants.add(participant);
 	}
 
