@@ -1255,7 +1255,7 @@ CREATE INDEX lastNm_Person_idx ON Person(personName_lastName);
 
 --Grant Privilages
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  Association TO openxds; 
-GRANT  DELETE, INSERT, SELECT, UPDATE ON  AuditableEvent TO public;
+GRANT  DELETE, INSERT, SELECT, UPDATE ON  AuditableEvent TO openxds;
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  AffectedObject TO openxds; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  Classification TO openxds; 
 GRANT  DELETE, INSERT, SELECT, UPDATE ON  ClassificationNode TO openxds; 
