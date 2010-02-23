@@ -9,6 +9,7 @@
         <mkdir dir="${openxds.conf.dir}"/>
         <mkdir dir="${openxds.lib.dir}"/>
     	<mkdir dir="${openxds.licenses.dir}"/>
+    	<mkdir dir="${openxds.misc.dir}"/>
     	<mkdir dir="${openxds.dist.dir}"/>
     </target>
 
@@ -44,13 +45,19 @@
 				<include name="repository.jdbc.cfg.xml" />
             </fileset>
         </copy> 
-    	
     	<copy todir="${openxds.licenses.dir}" >
     	   		<fileset dir="${eclise.openxds.dir}/src/main/resources/licences">  
     	  			<include name="**/*" />
     	   		</fileset>
     	</copy>
-
+		<copy todir="${openxds.misc.dir}" >
+			<fileset dir="${eclise.openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+				<include name="*.sql" />
+			</fileset>
+			<fileset dir="${eclise.openxds.dir}/openxds-web/target">
+				<include name="*.war" />
+			</fileset>
+		</copy>    	
     </target>
 	
 	<target name="create_run_jar" depends="copy_files">
