@@ -183,6 +183,16 @@
 			        </dependentWarExcludes>
 					<webResources>
 						<resource>
+              				<!-- this is relative to the pom.xml directory 
+							if openxds-web/pom.xml <directory>../lib</directory>
+							if from root pom.xml <directory>./lib</directory>-->
+              				<directory>./lib</directory>
+              				<targetPath>WEB-INF/lib</targetPath>
+              				<includes>
+               				 <include>*.mar</include>
+             				</includes>
+            			</resource>
+						<resource>
 							<!-- this is relative to the pom.xml directory 
 							if openxds-web/pom.xml <directory>../../build</directory>
 							if from root pom.xml <directory>../build</directory>-->
