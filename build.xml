@@ -132,6 +132,6 @@
 			</fileset>
 		</copy>    	
 		<zip destfile="${openxds.dist.dir}/${openxds.zip.name}" basedir="${build.dir}" update="true" />
-		<zip destfile="${openxds.dist.dir}/${openxds.tar.name}" basedir="${build.dir}" update="true" />
+		<tar destfile="${openxds.dist.dir}/${openxds.tar.name}" basedir="${build.dir}" compression="gzip"/>
 	</target>
 </project>
