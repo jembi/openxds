@@ -1,0 +1,536 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<p class="h2">There are two types of configuration files for OpenXDS. 
+project level configuration and actor level configuration.
+The project level configuration files define general project related properties, 
+while the actor level configuration files mainly define actor connection information.</p>
+<h2 class="h2">Project Configuration</h2>
+<p class="h2"><strong>openxds.properties</strong>- the main project level properties file which contains the main properties</p>
+<p class="h2"><strong>applicationContext.xml</strong>- the spring context file. Usually it is not modified unless more control is needed</p>
+<p class="h2"><strong>omar.properties</strong>- the properties for the freebxml omar configuration</p>
+<p class="h2"><strong>repository.jdbc.cfg.xml</strong>- jdbc connection for the omar repository. (As the omar repository is not used by OpenXDS, it should be removed in the future)</p>
+<h2 class="h2">Actor Configuration </h2>
+<p>OpenXDS have sample actor configuration files located at the conf/actors folder. These files were successfully used for mesa tests and Connectathon tests. You are free to copy the whole actors folder and create your own configuration files. The actors folder has a bunch of xml configuration files. The starting xml file is IheActors.xml; all the other xml files can be linked from the IheActors.xml. This file contains connections, actors, or files that describe actors or connections. The certs folder under actors contains private key and public certificate used by secure transactions.</p>
+
+<h2 class="h2">Understand Configuration Files</h2>
+<p class="h2">Note: The xml syntax including tags, attributes and
+elements is all case-insensitive.</p>
+<p class="h2"><strong>Tags</strong></p>
+<p class="h2"><strong>Configuration Tag</strong></p>
+<p class="h2">
+<table cellspacing="0" cellpadding="0" border="1">
+	<tbody>
+		<tr>
+			<td valign="top"><strong>Configuration</strong><br />
+			</td>
+			<td valign="top">Each XML configuration file has a root
+			Configuration tag.<br />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+<p class="h2">&nbsp;</p>
+<p class="h2"><strong>ConnectionFile Tag:</strong></p>
+<p class="h2">
+<table cellspacing="0" cellpadding="0" border="1">
+	<tbody>
+		<tr>
+			<td valign="top"><strong>ConnectionFile</strong><br />
+			</td>
+			<td valign="top" colspan="2">Specifies a file that defines
+			standard connection and/or secure connection configuration.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3">Attributes<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>File<br />
+			</strong></td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The file name of this ConnectionFile.<br />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+<p class="h2">&nbsp;</p>
+<div class="h2">Ex:<span lang="EN-GB"> &lt;</span>ConnectionFile
+file=&quot;AuditRepositoryConnections.xml&quot; /&gt;</div>
+<p class="h2"><strong>Actor Tag:</strong></p>
+<p class="h2">
+<table cellspacing="0" cellpadding="0" border="1">
+	<tbody>
+		<tr>
+			<td valign="top"><strong>Actor</strong><br />
+			</td>
+			<td valign="top" colspan="2">Defines an actor such as XDS Repository, XDS Registry, Xca Initiating Gateway or XCA Responding Gateway.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3">Attributes<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Name</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The name of this actor. Any name can be given,
+			but be sure to avoid duplication.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Type</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">Use 
+XdsRepository for an XDS Repository actor,<br /> 
+XdsRegistry for an XDS Registry actor,<br />
+XcaIG for an XCA Initiating Gateway actor,<br />
+XcaRG for an XCA Responding Gateway actor, and<br />
+SecureNode for an Audit Trail client actor. 
+<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3">Elements and Attributes<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Description</strong><br />
+			</td>
+			<td valign="top">Optional<br />
+			</td>
+			<td valign="top">The detailed description of this actor<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Server</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">Describes the server connection of this actor.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>
+			- connection</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The connection name of this server connection.  <br />
+			Note: all connections including the ones described below have to be defined in one of the Connections.xml files
+			<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>PixServer</strong><br />
+			</td>
+			<td valign="top">Required for XdsRegistry<br />
+			</td>
+			<td valign="top">Describes a PIX Registry Server that accepts PIX Feed messages from a PIX Source or PIX Manager. It is applicable to the XdsRegistry actor.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>
+			- connection</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The connection name of this PIX registry server, defined in XdsRegistryConnections.xml
+			<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Registry</strong><br />
+			</td>
+			<td valign="top">Required for XdsRepostiory and XcaRG,<br />Optional for XcaIG<br />
+			</td>
+			<td valign="top">Describes a client connection for this actor to connect to a Document Registry actor. It is applicable to the XdsRepository, XcaRG and XcaIG actors.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>
+			- connection</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The connection name for the client side of the Registry
+			<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Repository</strong><br />
+			</td>
+			<td valign="top">Required for XcaRG,<br />Optional for XcaIG<br />
+			</td>
+			<td valign="top">Describes a client connection for this actor to connect to a Document Repository actor. It is applicable to the XcaRG and XcaIG actors.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;<strong>-connection</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The connection name for the client side of the Repository<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Responding Gateways</strong><br />
+			</td>
+			<td valign="top">Required for XcaIG</td>
+			<td valign="top">Describes a list of Responding Gateways that this Initiating Gateway actor connects to. It is applicable to only the XcaIG actor.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Responding Gateway</strong><br />
+			</td>
+			<td valign="top">At one is required in RespondingGateways</td>
+			<td valign="top">Describes a Responding Gateway connection that this Initiating Gateway actor can connects to. It is applicable to the XcaRG and XcaIG actors.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp; <strong>-
+			homeId</strong><br />
+			</td>
+			<td valign="top">Required in RespondingGateway<br />
+			</td>
+			<td valign="top">The home community id of this responding gateway</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp; <strong>-
+			query</strong><br />
+			</td>
+			<td valign="top">Required in RespondingGateway<br />
+			</td>
+			<td valign="top">The connection name for the cross gateway query transaction of this responding gateway </td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp; <strong>-
+			retrieve</strong><br />
+			</td>
+			<td valign="top">Required in RespondingGateway<br />
+			</td>
+			<td valign="top">The connection name for the cross gateway retrieve transaction of this responding gateway </td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>AuditTrail</strong><br />
+			</td>
+			<td valign="top">Required for SecureNode<br />
+			</td>
+			<td valign="top">Describes an audit trail type.  Applicable to all actors.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;<strong>-consumer</strong><br />
+			</td>
+			<td valign="top">Required in AuditTrail<br />
+			</td>
+			<td valign="top">The connection to an audit record repository consuming the audit messages.<br />
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+</p>
+<p class="h2">&nbsp;</p>
+<p class="h2"><br />
+
+<code>
+<p class="h2">IheActors.xml Example:</p>
+<p class="h2">&lt;Configuration&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Defines the configuration of Audit Repository Server for Audit Client--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;ConnectionFile file=&quot;AuditRepositoryConnections.xml&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Defines the configuration of XDS Registry --&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;ConnectionFile file=&quot;XdsRegistryConnections.xml&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Defines the configuration of XDS Repository--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;ConnectionFile file=&quot;XdsRepositoryConnections.xml&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Defines the configuration of XCA Responding Gateway--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;ConnectionFile file=&quot;XcaRespondingGatewayConnections.xml&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Defines the configuration of XCA Initiating Gateway--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;ConnectionFile file=&quot;XcaInitiatingGatewayConnections.xml&quot; /&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--The XDS Registry actor configuration--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xdsreg&quot; type=&quot;XdsRegistry&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;XDS Registry&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xds-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;PixServer connection=&quot;pix-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xdsreg_secure&quot; type=&quot;XdsRegistry&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;Secure XDS Registry &lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;secure-xds-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;PixServer connection=&quot;secure-pix-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--The XDS Repository actor configuration--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xdsrep&quot; type=&quot;XdsRepository&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;XDS Repository&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xds-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry  connection=&quot;xds-registry-client&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xdsrep_secure&quot; type=&quot;XdsRegistry&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;Secure XDS Repository&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;secure-xds-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry connection=&quot;secure-xds-registry-client&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--The XCA Responding Gateway actor configuration--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xcarg&quot; type=&quot;XcaRG&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;XCA Responding Gateway&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xca-rg&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry connection=&quot;misys-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Repository connection=&quot;misys-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xcasrg&quot; type=&quot;XcaRG&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;Secure XCA Responding Gateway&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xca-secure-rg&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry connection=&quot;misys-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Repository connection=&quot;misys-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--The XCA Initiating Gateway actor configuration--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xcaig&quot; type=&quot;XcaIG&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;XCA Initiating Gateway&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xca-ig&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry connection=&quot;local-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Repository connection=&quot;local-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateways&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050&quot; 
+query=&quot;ibm-rg-query&quot; retrieve=&quot;ibm-rg-retrieve&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025&quot; 
+query=&quot;vangent-rg&quot; retrieve=&quot;vangent-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010&quot; 
+query=&quot;spirit-rg&quot; retrieve=&quot;spirit-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040&quot; 
+query=&quot;hxti-rg&quot; retrieve=&quot;hxti-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/RespondingGateways&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;xcasig&quot; type=&quot;XcaIG&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;Secure XCA Initiating Gateway&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Server connection=&quot;xca-secure-ig&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Registry connection=&quot;local-secure-registry&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Repository connection=&quot;local-secure-repository&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateways&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050&quot; 
+query=&quot;ibm-secure-rg-query&quot; retrieve=&quot;ibm-secure-rg-retrieve&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025&quot; 
+query=&quot;vangent-secure-rg&quot; retrieve=&quot;vangent-secure-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010&quot; 
+query=&quot;spirit-rg&quot; retrieve=&quot;spirit-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;RespondingGateway homeId=&quot;urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040&quot; 
+query=&quot;hxti-rg&quot; retrieve=&quot;hxti-rg&quot;/&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/RespondingGateways&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;!--Audit Repository Actor--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;Actor name=&quot;localaudit&quot; type=&quot;SecureNode&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Description&gt;LOCAL AUDIT&lt;/Description&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;AuditTrail consumer=&quot;log4j_audittrail&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;AuditTrail consumer=&quot;misys_arr_udp&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/Actor&gt;</p>
+
+<p class="h2">&lt;/Configuration&gt;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p class="h2">&nbsp;</p>
+</code>
+</p>
+
+<p class="h2"><strong>StandardConnection Tag:</strong></p>
+<div class="h2"><br />
+</div>
+<p class="h2">
+<table cellspacing="0" cellpadding="0" border="1" >
+	<tbody>
+		<tr>
+			<td valign="top"><strong>StandardConnection</strong><br />
+			</td>
+			<td valign="top" colspan="2">Defines a non-TLS connection.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3"><span lang="EN-GB">Attributes<br />
+			</span></td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Name</strong><br />
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The name of this connection, which must be
+			referenced by the Actors defined in IheActor.xml. <br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3"><strong>Elements<br />
+			</strong></td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>HostName</strong></td>
+			<td valign="top">Optional for server; required for Client.<br />
+			</td>
+			<td valign="top">The host name or ip address that this
+			connection connects to.<br />
+			Use localhost if this connection is for a server socket.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Port<br />
+			</strong></td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The port of this connection<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Url<br />
+			</strong></td>
+			<td valign="top">Required for the client connetion<br />
+			</td>
+			<td valign="top">The url part of this connection<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Identifier</strong><br />
+			&nbsp;<strong>-NamespaceId<br /></strong>
+			&nbsp;<strong>-UniversalId<br /></strong>
+			&nbsp;<strong>-UniversalIdType<br /></strong>
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The identifier tag specifies an assigning authority, or an identity. It can include 3 elements: NamespaceId, UniversalId and UniversalIdType. There are two ways to specify an Identity: one way is to use NamespceId; the other is to use the combination of UniversalId and UniversalIdType. If both NamespaceId and the combination of UniversalId and UniversalIdType are used, they must be consistent and refer to the same entity.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>Property<br />
+			</strong></td>
+			<td valign="top">Required and Optional<br />
+			</td>
+			<td valign="top">The Property tag defines a property for this
+			connection.<br />
+			There are multiple properties defined for each actor connection. Some
+			are required; some others optional. <br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>PropertySet<br />
+			</strong></td>
+			<td valign="top">Optional<br />
+			</td>
+			<td valign="top">Defines a group of related properties.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">&nbsp;&nbsp; <strong>-Entry<br />
+			</strong></td>
+			<td valign="top">Optional<br />
+			</td>
+			<td valign="top">Each entry defines a specific property for this PropertySet.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>IncludeFile<br />
+			</strong></td>
+			<td valign="top">Optional<br />
+			</td>
+			<td valign="top">This is an inline element. It can be used to place a trunk of properties in a separate xml file. The main purpose of the IncludeFile is to reuse some common configuration.<br />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+<div class="h2"><br />
+</div>
+<p class="h2">&nbsp;</p>
+<p class="h2">Example for XdsRegistry connection:</p>
+<code>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;StandardConnection name=&quot;xds-registry&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!--The host name of the Registry Server--&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;HostName&gt;localhost&lt;/HostName&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!--The port --&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Port&gt;8010&lt;/Port&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Property name=&quot;sourceIds&quot; value=&quot;1.3.6.1.4.1.21367.2010.1.2&quot; /&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Includefile name=&quot;XdsCodes.xml&quot; /&gt;</p>
+
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Identifier type=&quot;domain&quot; name=&quot;GLOBAL&quot;&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;NamespaceId&gt;IHENA&lt;/NamespaceId&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;UniversalId&gt;1.3.6.1.4.1.21367.2010.1.2.300&lt;/UniversalId&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;UniversalIdType&gt;ISO&lt;/UniversalIdType&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/Identifier&gt;</p>
+<p class="h2">&nbsp;&nbsp;&nbsp; &lt;/StandardConnection&gt;</p>
+</code>
+
+<p class="h2">&nbsp;</p>
+<p class="h2"><strong>SecureConnection Tag:</strong></p>
+<p class="h2">
+<table cellspacing="0" cellpadding="0" border="1">
+	<tbody>
+		<tr>
+			<td valign="top">
+			<p><strong>SecureConnection</strong></p>
+			</td>
+			<td valign="top" colspan="2">Defines a TLS connection. <br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" colspan="3">It has the same attributes and
+			elements as the corresponding StandardConnection. In addition, a
+			SecureConnection must include the following additional Elements:<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<p><strong>KeyStore</strong></p>
+			</td>
+			<td valign="top">Required<br />
+			</td>
+			<td valign="top">The file containing the Key Store for this
+			connection. By default, it is in the certs folder.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>KeyPass<br />
+			</strong></td>
+			<td valign="top">Required <br />
+			</td>
+			<td valign="top">The password for the Key Store.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>TrustStore<br />
+			</strong></td>
+			<td valign="top">Required <br />
+			</td>
+			<td valign="top">The file containing the Trust Store for this
+			connection. By default, it is in the certs folder.<br />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top"><strong>TrustPass<br />
+			</strong></td>
+			<td valign="top">Required <br />
+			</td>
+			<td valign="top">The password for the Trust Store.<br />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</p>
+<p class="h2">&nbsp;</p>
+<p class="h2">Example for Trust and KeyStore in SecureConnection tag.</p>
+<code>
+<p class="h2">&lt;!-- Trust and Keystore --&gt;</p>
+<p class="h2">&nbsp;&lt;!-- Used by Connectathon 2009 --&gt;</p>
+<p class="h2">&nbsp;&lt;KeyStore&gt;certs/OpenPIXPDQ_2009_KEY.p12&lt;/KeyStore&gt;</p>
+<p class="h2">&nbsp;&lt;KeyPass&gt;password&lt;/KeyPass&gt;</p>
+<p class="h2">&nbsp;&lt;TrustStore&gt;certs/OpenPIXPDQ_2009_STORE.jks&lt;/TrustStore&gt;</p>
+<p class="h2">&nbsp;&lt;TrustPass&gt;password&lt;/TrustPass&gt;</p>
+</code>
+
+Go to:<a href="https://openxds.projects.openhealthtools.org/servlets/ProjectProcess?pageID=oi2FVJ">Documentation</a>

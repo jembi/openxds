@@ -1,0 +1,15 @@
+<query:AdhocQueryResponse xmlns:query="urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0" status="urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:PartialSuccess">
+  <rs:RegistryErrorList xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0">
+    <rs:RegistryError codeContext="Request stoped after waiting for 20 seconds. Home Community urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040 did not respond." errorCode="XDSUnavailableCommunity" location="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" severity="urn:oasis:names:tc:ebxml-regrep:ErrorSeverityType:Error" />
+  </rs:RegistryErrorList>
+  <rim:RegistryObjectList xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0">
+    <rim:ExtrinsicObject xmlns:ns1="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" isOpaque="false" mimeType="text/xml" lid="urn:uuid:1c58cfac-9c52-4394-0b20-0016cf875c54" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" status="urn:oasis:names:tc:ebxml-regrep:StatusType:Approved" id="urn:uuid:1c58cfac-9c52-4394-0b20-0016cf875c54" home="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025">
+          
+      ......
+    </rim:ExtrinsicObject>
+    <rim:ExtrinsicObject xmlns:ns1="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" isOpaque="false" mimeType="text/xml" lid="urn:uuid:2fd4462e-cfd0-41c8-74a7-0016cf875c54" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" status="urn:oasis:names:tc:ebxml-regrep:StatusType:Approved" id="urn:uuid:2fd4462e-cfd0-41c8-74a7-0016cf875c54" home="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025">
+
+      ......   
+    </rim:ExtrinsicObject>
+  </rim:RegistryObjectList>
+</query:AdhocQueryResponse>
