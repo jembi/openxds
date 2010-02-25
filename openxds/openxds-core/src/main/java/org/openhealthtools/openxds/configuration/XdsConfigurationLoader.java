@@ -852,6 +852,8 @@ public class XdsConfigurationLoader {
 				((XcaIGActorDescription)actor).xcaIGServerConnection = serverConnection;
 				((XcaIGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
 				((XcaIGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
+				((XcaIGActorDescription)actor).xcaRGQueryClientConnections = xcaRGQueryClientConnections;
+				((XcaIGActorDescription)actor).xcaRGRetrieveClientConnections = xcaRGRetrieveClientConnections;
 			}else if (actor instanceof XdsAuditActorDescription){
 				((XdsAuditActorDescription)actor).xdsAuditConnection = logConnections;
 			}

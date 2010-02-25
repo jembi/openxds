@@ -102,7 +102,7 @@
 	</StandardConnection>
 	
 	<StandardConnection name="misys_arr_udp">
-		<HostName>198.160.211.53</HostName>
+		<HostName>localhost</HostName>
 		<Port>2863</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
