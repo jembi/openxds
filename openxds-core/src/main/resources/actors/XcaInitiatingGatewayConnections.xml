@@ -176,6 +176,33 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
+	<StandardConnection name="intel-rg">
+		<HostName>64.109.190.66</HostName>
+		<Port>7080</Port>
+		<UrlPath>/</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="intel-secure-rg">
+		<HostName>64.109.190.66</HostName>
+		<Port>7081</Port>
+		<UrlPath>/</UrlPath>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="ge-rg-query">
+		<HostName>62.182.99.62</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+	</StandardConnection>
+	<StandardConnection name="ge-rg-retrieve">
+		<HostName>62.182.99.62</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+	</StandardConnection>
+
 	<StandardConnection name="icw-rg-query">
 		<HostName>icw2</HostName>
 		<Port>8080</Port>

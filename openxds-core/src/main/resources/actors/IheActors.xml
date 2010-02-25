@@ -85,7 +85,9 @@
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-rg" retrieve="vangent-rg"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-rg" retrieve="intel-rg"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
 		</RespondingGateways>
 	</Actor>
 	<Actor name="xcasig" type="XcaIG">
@@ -97,7 +99,9 @@
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-secure-rg" retrieve="intel-secure-rg"/>
 			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
+			<RespondingGateway homeId="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
 		</RespondingGateways>
 	</Actor-->
 	
