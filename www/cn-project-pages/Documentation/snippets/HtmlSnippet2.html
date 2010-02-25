@@ -1,5 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <div class="h2">
+<h2>Installation</h2>
+<p> Installation steps for OpenXDS</p>
 <h2>Software Requirements</h2>
 <p>For the out-of-the-box binary installation, make sure to have these requirements:</p>
 <ul>
@@ -9,9 +11,7 @@
 <li>Operating System: No requirements, all operating systems are supported</li>
 </li>
 </ul>	
-<h2>Installation</h2>
-<p> Installation steps for OpenXDS</p>
-<h3>Installation from the Binary Code</h3>
+<h2>Installation from the Binary Code</h2>
 <ul>
 	<li>Obtain an out-of-the-box binary distributable file of OpenXDS from the OHT OpenXDS project site <a href="">Download</a></li>
 	<li>Unzip (for Windows) or ungzip (for Unix) the above file to a directory, where you would like to run the OpenXDS servers. We will refer to the root directory as OpenXDS_HOME</li>
@@ -19,7 +19,7 @@
 	<li>If you wish, go to the OpenXDS_HOME/conf/actors directory to modify the actor configuration. See more information in the <a href="https://openxds.projects.openhealthtools.org/servlets/ProjectProcess?documentContainer=c2__Actor%20Configuration&viewFromEditor=true">Actor Configuration</a> section</li>
 	<li>Proceed to the <a href="https://openxds.projects.openhealthtools.org/cn-project-pages/Documentation/#_runserver">Run OpenXDS servers</a> section for execution</li>
 </ul>
-<h3>Installation from the Source Code</h3>
+<h2>Installation from the Source Code</h2>
 <p>A subversion client such as Collabnet Subversion Client, Eclipse IDE, or any other type of subversion client is required to download the OpenXDS source code. The following section illustrates how to use the Collabnet Subversion Client and Eclipse IDE to download and build the source code, respectively. You can choose either one of the subversion clients</p>
 <p><strong>1. Build the Source Code Using Collabnet Subversion Client</strong></p>
 <p>
@@ -86,7 +86,7 @@
 		<li>Proceed to the <a href="https://openxds.projects.openhealthtools.org/cn-project-pages/Documentation/#_runserver">Run OpenXDS servers</a> section for execution</li>
 	</ul>
 </p>	
-<h3><a name="#_setupdb"></a>Set Up Databases</h3>
+<h2><a name="#_setupdb"></a>Set Up Databases</h2>
 <p>As of this writing, the current OpenXDS version only supports PostgreSQL (the tested version is PostsgresSQL 8.3) although database neutrality will be available in future releases</p>
 <ul>
 	<li>Download and install PostgreSQL from <a href="http://www.postgresql.org/">here</a></li>
@@ -129,7 +129,7 @@
 		<li>If you wish, create an actors directory by copying the OpenXDS_HOME/conf/actors directory, and modify the actor configuration based on your needs. For more information see <a href="">Actor Configuration</a></li>
 	</ul>
 </p>
-<p><strong>Start up the OpenXDS servers</strong>
+<p><strong>2. Start up the OpenXDS servers</strong>
 	<ul>
 		<li>Start up your application server</li>
 		<li>Open a browser (currently IE is supported) on the machine where your application server runs, go to this URL <strong>http://localhost:<port>/openxds-web/</strong> (replacing <port> with the actual port for your application server), and click the Configuration tab.</li>
@@ -145,7 +145,7 @@
 		<li>Proceed to the <a href="https://openxds.projects.openhealthtools.org/cn-project-pages/Documentation/#_testing">Testing</a> section to verify the installation</li>
 	</ul>
 </p>
-<h3><a name="#_testing"></a>Testing</h3>
+<h2><a name="#_testing"></a>Testing</h2>
 <p>There are two approaches to test the OpenXDS servers: <br />
 1. Integration test clients <br />
 2. NIST xdstest tool.</p>
