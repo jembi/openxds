@@ -54,9 +54,6 @@
 			<fileset dir="${eclise.openxds.dir}/openxds-registry-adapter-omar/target/classes/">
 				<include name="*.sql" />
 			</fileset>
-			<fileset dir="${eclise.openxds.dir}/openxds-web/target">
-				<include name="*.war" />
-			</fileset>
 		</copy>    	
     </target>
 	
@@ -129,6 +126,11 @@
     </target>
 	
 	<target name="dist" depends="create_run_jar">
+		<copy todir="${openxds.misc.dir}" >
+			<fileset dir="${eclise.openxds.dir}/openxds-web/target">
+				<include name="*.war" />
+			</fileset>
+		</copy>    	
 		<zip destfile="${openxds.dist.dir}/${openxds.zip.name}" basedir="${build.dir}" update="true" />
 		<zip destfile="${openxds.dist.dir}/${openxds.tar.name}" basedir="${build.dir}" update="true" />
 	</target>
