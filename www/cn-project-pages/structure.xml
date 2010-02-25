@@ -6,5 +6,11 @@
     <directory>Architecture</directory>
     <ordinal>1</ordinal>
   </page>
+  <page>
+    <id>oi2FVJ</id>
+    <name>Documentation</name>
+    <directory>Documentation</directory>
+    <ordinal>2</ordinal>
+  </page>
 </structure>
 
