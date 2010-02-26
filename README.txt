@@ -30,8 +30,8 @@
   ------------
   The OpenExchange (OpenATNA, OpenAuth, OpenPIXPDQ and OpenXDS) developement
   has been led by Misys Open Source Solutions (MOSS) and University of Cardiff. 
-  Other contributors include Sysnet International, Topicus Zorg and a few
-  individuals. OpenXDS also contains software developed by freebXML.org 
+  Other contributors include Sysnet International, Topicus Zorg and a number 
+  of individuals. OpenXDS also contains software developed by freebXML.org 
   and NIST.    
   
 	
@@ -114,6 +114,12 @@
   This software is licensed under the terms you may find in the file 
   named "LICENSE.txt" in this directory.
  
+ 
+  Support
+  ---------
+
+  For commercial support, please contact Kondayya.Mullapudi@misys.com. 
+  
   
  
   Thanks for using OpenExcange - OpenXDS.
@@ -121,4 +127,4 @@
 				    
 				    Open Health Tools (OHT)  <http://www.openhealthtools.org>
                     Misys Open Source Solutions (MOSS) <http://www.misysoss.com/>
-                    University of Cardiff <http://www.cardiff.ac.uk>
+                    University of Cardiff <http://www.cs.cardiff.ac.uk>
