@@ -46,7 +46,7 @@ public abstract class Sq {
 		query.addChild(response_option);
 		response_option.addAttribute("returnComposedObjects", "true", null);
 		response_option.addAttribute("returnType", "LeafClass", null);
-		OMElement adhoc_query = MetadataSupport.om_factory.createOMElement("AdhocQuery", null);
+		OMElement adhoc_query = MetadataSupport.om_factory.createOMElement("AdhocQuery", MetadataSupport.ebRIMns3);
 		query.addChild(adhoc_query);
 		adhoc_query.addAttribute("id", query_id, null);
 		ArrayList<OMElement> elements = new ArrayList<OMElement>();
@@ -62,7 +62,7 @@ public abstract class Sq {
 		query.addChild(response_option);
 		response_option.addAttribute("returnComposedObjects", "true", null);
 		response_option.addAttribute("returnType", "ObjectRef", null);
-		OMElement adhoc_query = MetadataSupport.om_factory.createOMElement("AdhocQuery",null);
+		OMElement adhoc_query = MetadataSupport.om_factory.createOMElement("AdhocQuery", MetadataSupport.ebRIMns3);
 		query.addChild(adhoc_query);
 		adhoc_query.addAttribute("id", query_id, null);
 		ArrayList<OMElement> elements = new ArrayList<OMElement>();

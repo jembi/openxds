@@ -39,7 +39,7 @@ public class FindFolders extends Sq {
 		this.ids = ids;
 		ArrayList<OMElement> query = build_query_wrapper("urn:uuid:958f3006-baad-4929-a4de-ff1114824431");
 		String stat_list = "('urn:oasis:names:tc:ebxml-regrep:StatusType:Approved', 'urn:oasis:names:tc:ebxml-regrep:StatusType:Deprecated')";
-		add_slot(query, "$XDSFolderPatientId", this.query_array_list(ids));
+		add_slot(query, "$XDSFolderPatientId", this.query_singleton(ids));
 		add_slot(query, "$XDSFolderStatus", stat_list);
 		return query.get(0);
 	}
