@@ -1,0 +1,14 @@
+OpenExchange - OpenXDS
+Copyright (c) 2009-2010 Misys Open Source Solutions(MOSS),
+                        Univerisy of Cardiff and others
+             
+This product includes software developed by
+•Misys Open Source Solutions(MOSS)(http://www.misysoss.com/). 
+•Sysnet International http://www.sysnetint.com
+•Topicus Zorg  http://www.topicus.nl
+•University of Cardiff http://www.cardiff.ac.uk/
+
+OpenXDS also includes software developed by
+•	freebxml.org (http://www.freebxml.org/)
+•	NIST (http://www.nist.org)
+
