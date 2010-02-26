@@ -1,7 +1,7 @@
 <xdsb:RetrieveDocumentSetResponse xmlns:xdsb="urn:ihe:iti:xds-b:2007">
   <rs:RegistryResponse xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0" status="urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success" />
   <xdsb:DocumentResponse>
-    <xdsb:HomeCommunityId>1.3.6.1.4.1.21367.2010.1.2.2045</xdsb:RepositoryUniqueId>
+    <xdsb:HomeCommunityId>1.3.6.1.4.1.21367.2010.1.2.2045</xdsb:HomeCommunityId>
     <xdsb:RepositoryUniqueId>1.3.6.1.4.1.21367.2010.1.2.1125</xdsb:RepositoryUniqueId>
     <xdsb:DocumentUniqueId>1.3.6.1.4.1.21367.2010.1.2.110.1260801017357.8</xdsb:DocumentUniqueId>
     <xdsb:mimeType>text/xml</xdsb:mimeType>
