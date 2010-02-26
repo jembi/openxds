@@ -229,6 +229,7 @@
 								<exclude>lib/</exclude>
 								<exclude>*.jar</exclude>
 								<exclude>*.log</exclude>
+								<exclude>*.txt</exclude>
 							</excludes>
 						</resource>
 					</webResources>
