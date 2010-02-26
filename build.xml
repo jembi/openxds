@@ -44,6 +44,9 @@
 				<include name="omar.properties" />
 				<include name="repository.jdbc.cfg.xml" />
             </fileset>
+        	<fileset dir="${eclise.openxds.dir}">
+        		<include name="*.txt" />        		
+        	</fileset>        	
         </copy> 
     	<copy todir="${openxds.licenses.dir}" >
     	   		<fileset dir="${eclise.openxds.dir}/src/main/resources/licences">  
