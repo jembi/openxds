@@ -18,11 +18,5 @@
     <directory>Message Samples</directory>
     <ordinal>3</ordinal>
   </page>
-  <page>
-    <id>nhwkge</id>
-    <name>Downloads</name>
-    <directory>Downloads</directory>
-    <ordinal>4</ordinal>
-  </page>
 </structure>
 
