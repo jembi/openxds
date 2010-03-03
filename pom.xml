@@ -5,7 +5,7 @@
     <groupId>org.openhealthtools.openxds</groupId>
     <artifactId>openxds</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${release.version}</version>
     <name>OpenXDS Parent</name>
     <url>https://openxds.projects.openhealthtools.org</url>
 
@@ -472,6 +472,7 @@
     </profiles>
 
     <properties>
+		<release.version>1.0</release.version>
         <!-- Application settings -->
         <copyright.year>2008</copyright.year>
         <dao.framework>hibernate</dao.framework>

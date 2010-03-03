@@ -4,7 +4,7 @@
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${release.version}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -16,13 +16,13 @@
   	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>apache-axis2</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   		<type>pom</type>
   	</dependency>
   	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>common-utils</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.openhealthexchange.openpixpdq</groupId>
