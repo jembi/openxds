@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${release.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
-            <version>${project.version}</version>
+            <version>${release.version}</version>
         </dependency>
 	<dependency>
 		<groupId>org.aspectj</groupId>
@@ -179,13 +179,17 @@
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-config</artifactId>
-            <version>${project.version}</version>
+            <version>${release.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>common-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${release.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.misys.braid</groupId>
+            <artifactId>braid-base</artifactId>
+            <version>${braid.version}</version>
+        </dependency>        
     </dependencies>
 </project>

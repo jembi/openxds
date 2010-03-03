@@ -2,7 +2,7 @@
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${release.version}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
@@ -19,38 +19,38 @@
    	<dependency>
  		<groupId>org.openhealthtools.openxds</groupId>
  		<artifactId>openxds-api</artifactId>
- 		<version>${project.version}</version>
+ 		<version>${release.version}</version>
  	</dependency>    
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>apache-axis2</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   		<type>pom</type>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>common-ws</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>common-utils</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>openxds-repository</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>openxds-registry-adapter-omar</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>openxds-registry-patient-lightweight</artifactId>
-  		<version>${project.version}</version>
+  		<version>${release.version}</version>
   	</dependency>
    	<dependency>
   		<groupId>com.misys.braid</groupId>

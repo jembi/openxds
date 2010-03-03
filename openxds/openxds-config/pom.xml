@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>openxds</artifactId>
 		<groupId>org.openhealthtools.openxds</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>${release.version}</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openhealthtools.openxds</groupId>
@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>openxds-api</artifactId>
-			<version>${project.version}</version>
+			<version>${release.version}</version>
 		</dependency>
 	</dependencies>
 	
