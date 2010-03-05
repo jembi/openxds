@@ -1,6 +1,7 @@
 package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.common2.registry.Properties;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -20,7 +21,9 @@ import com.misyshealthcare.connect.net.IConnectionDescription;
 public class Ig {
 	private final static Log logger = LogFactory.getLog(Ig.class);
 
-	static ExecutorService exec = Executors.newFixedThreadPool( 10 ); 
+    private static int numOfThreads = Properties.loader().getInteger("ig.threads.number", 5);
+	static ExecutorService exec = Executors.newFixedThreadPool( numOfThreads ); 
+
 	static String home = XdsService.properties.getString("home.community.id");
 	
 	public OMElement AdhocQueryRequest(OMElement ahqr) throws AxisFault {

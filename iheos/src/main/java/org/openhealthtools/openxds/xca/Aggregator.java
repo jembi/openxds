@@ -47,7 +47,7 @@ import org.jaxen.JaxenException;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public abstract class Aggregator {
-    private Log log = LogFactory.getLog( Aggregator.class );
+    private static final Log log = LogFactory.getLog( Aggregator.class );
     /**The home IDs whose response is still pending*/
     protected Collection<String> pendingHomeIds = new ArrayList<String>();
     /** The total number of requests associated with this Aggregator */
@@ -56,8 +56,9 @@ public abstract class Aggregator {
     protected int availableNumber;
     /** The number of requests whose results are failed to retrieve */
     protected int failureNumber;
-    /**The max wait time in seconds before aggregation*/
-    protected int maxWait = 20;
+    /**The max wait time in millisecond before aggregation*/
+    private static int timeout = Properties.loader().getInteger("ig.timeout", 15000);
+
     /**The LogMessage*/
     protected LogMessage logMessage;
     /**The map to store the results from each home community
@@ -91,9 +92,9 @@ public abstract class Aggregator {
         	}
         	
             long now = System.currentTimeMillis();
-            if ((now-start) > maxWait * 1000 ) {
+            if ((now-start) > timeout ) {
             	for (String homeId : pendingHomeIds){
-	            	String msg = "Request stoped after waiting for "+ maxWait +" seconds. Home Community "+ homeId +" did not respond.";
+	            	String msg = "Request stoped after waiting for "+ timeout / 1000 +" seconds. Home Community "+ homeId +" did not respond.";
 	            	response.add_error( MetadataSupport.XDSUnavailableCommunity, msg, homeId, logMessage);
             	}
                 break;  //stop after for maxWait.

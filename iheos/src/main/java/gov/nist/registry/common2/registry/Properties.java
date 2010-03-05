@@ -41,6 +41,18 @@ public class Properties {
 		return (properties.getProperty(name).equals("false")) ? false : true;
 	}
 
+	public int getInteger(String name, int defaultVal) {
+		int ret = -1;
+    	try {
+    		ret = Integer.parseInt(properties.getProperty(name));        
+    	}catch(Exception e) {
+    		logger.warn("The " + name + " property cannot be parsed", e);
+    		//Set to the default value 
+    		ret = defaultVal; 
+    	}
+    	return ret;
+	}
+	
 	public static String exception_details(Exception e) {
 		if (e == null) 
 			return "";
