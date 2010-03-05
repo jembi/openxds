@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>${release.version}</version>
+        <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -125,17 +125,17 @@
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
-            <version>${release.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>common-ws</artifactId>
-            <version>${release.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>iheos</artifactId>
-            <version>${release.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openhealthexchange.openpixpdq</groupId>
@@ -280,27 +280,7 @@
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-config</artifactId>
-            <version>${release.version}</version>
+            <version>${project.version}</version>
         </dependency>
-  		<dependency>
-  			<groupId>org.openhealthtools.openxds</groupId>
-  			<artifactId>common-utils</artifactId>
-  			<version>${release.version}</version>
-  		</dependency>
-  		<dependency>
-	  	  <groupId>org.apache.axis2</groupId>
-	  	  <artifactId>axis2-transport-http</artifactId>
-	 	   <version>1.5a</version>
-		</dependency> 
-		<dependency>
-	 	   <groupId>org.apache.axis2</groupId>
-	 	   <artifactId>axis2-transport-local</artifactId>
-	 	   <version>${axis2.version}</version>
-		</dependency> 
-		<dependency>
-		    <groupId>org.apache.axis2</groupId>
-		    <artifactId>axis2-kernel</artifactId>
-		    <version>${axis2.version}</version>
-		</dependency>        
     </dependencies>
 </project>
