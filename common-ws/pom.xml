@@ -2,7 +2,7 @@
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>${release.version}</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
@@ -14,13 +14,13 @@
   	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>apache-axis2</artifactId>
-  		<version>${release.version}</version>
+  		<version>${project.version}</version>
   		<type>pom</type>
   	</dependency>
   	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>common-utils</artifactId>
-  		<version>${release.version}</version>
+  		<version>${project.version}</version>
   	</dependency>
    	<dependency>
   		<groupId>com.misys.braid</groupId>
