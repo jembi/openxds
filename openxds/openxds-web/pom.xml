@@ -53,6 +53,7 @@
                                 <phase>install</phase>
                                 <configuration>
                                     <tasks>
+                                  		<property name="project.version" value="${project.version}" />
 										<ant dir="../" target="dist" />
                                     </tasks>
                                 </configuration>

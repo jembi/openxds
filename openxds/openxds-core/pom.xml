@@ -63,6 +63,7 @@
 						<phase>install</phase>
 						<configuration>
 							<tasks>
+								<property name="project.version" value="${project.version}" />
 								<ant dir="../" />
 							</tasks>
 						</configuration>
@@ -75,6 +76,7 @@
 						<phase>clean</phase>
 						<configuration>
 							<tasks>
+								<property name="project.version" value="${project.version}" />
 								<ant dir="../" target="clean" />
 							</tasks>
 						</configuration>
