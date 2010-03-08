@@ -5,7 +5,7 @@
     <groupId>org.openhealthtools.openxds</groupId>
     <artifactId>openxds</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0RC</version>
     <name>OpenXDS Parent</name>
     <url>https://openxds.projects.openhealthtools.org</url>
 
@@ -21,22 +21,22 @@
     </licenses>
 
     <scm>
-    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</connection>
-    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</developerConnection>
-    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds</url>
+    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/tags/REL-1.0RC</connection>
+    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/tags/REL-1.0RC</developerConnection>
+    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds/tags/REL-1.0RC</url>
     </scm>
 
     <issueManagement>
-        <system/>
-        <url/>
+        <system />
+        <url />
     </issueManagement>
 
     <developers>
         <developer>
-            <id/>
-            <name/>
-            <email/>
-            <timezone/>
+            <id />
+            <name />
+            <email />
+            <timezone />
         </developer>
     </developers>
     
@@ -393,7 +393,7 @@
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:h2:${java.io.tmpdir}/openxds]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password/>
+                <jdbc.password />
             </properties>
         </profile>
         <profile>
@@ -407,7 +407,7 @@
                 <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:hsqldb:${java.io.tmpdir}/openxds;shutdown=true]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password/>
+                <jdbc.password />
             </properties>
         </profile>
         <profile>
@@ -467,7 +467,7 @@
 		        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
 		        <jdbc.url><![CDATA[jdbc:mysql://localhost/openxds?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
 		        <jdbc.username>root</jdbc.username>
-		        <jdbc.password/>
+		        <jdbc.password />
             </properties>
         </profile>
 
