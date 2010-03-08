@@ -15,8 +15,8 @@
 
     <licenses>
         <license>
-            <name/>
-            <url/>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
 
@@ -39,6 +39,14 @@
             <timezone/>
         </developer>
     </developers>
+    
+    <distributionManagement>
+        <repository>
+            <id>openxds</id>
+            <name>OpenXDS Maven Repository</name>
+            <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
+        </repository>
+    </distributionManagement>
     
     <build>
         <defaultGoal>install</defaultGoal>
