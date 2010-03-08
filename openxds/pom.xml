@@ -21,6 +21,9 @@
     </licenses>
 
     <scm>
+    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</connection>
+    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</developerConnection>
+    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds</url>
     </scm>
 
     <issueManagement>

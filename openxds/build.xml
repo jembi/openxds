@@ -72,7 +72,7 @@
           <classpath refid="jar.class.path" />
         </manifestclasspath>
 		<!-- Make a jar file -->
-        <jar destfile="${build.dir}/${output.jar.name}">
+        <jar destfile="${build.dir}/${project.name}-${project.version}.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.openhealthtools.openxds.XdsServer"/>
                 <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
@@ -134,7 +134,7 @@
 				<include name="*.war" />
 			</fileset>
 		</copy>    	
-		<zip destfile="${openxds.dist.dir}/${openxds.zip.name}" basedir="${build.dir}" update="true" />
-		<tar destfile="${openxds.dist.dir}/${openxds.tar.name}" basedir="${build.dir}" compression="gzip"/>
+		<zip destfile="${openxds.dist.dir}/${project.name}-${project.version}.zip" basedir="${build.dir}" update="true" />
+		<tar destfile="${openxds.dist.dir}/${project.name}-${project.version}.tar.gz" basedir="${build.dir}" compression="gzip"/>
 	</target>
 </project>
