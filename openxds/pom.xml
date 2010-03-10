@@ -498,7 +498,7 @@
         <jmock.version>2.4.0</jmock.version>
         <jsp.version>2.0</jsp.version>
         <junit.version>4.4</junit.version>
-        <servlet.version>2.4</servlet.version>
+        <servlet.version>2.5</servlet.version>
         <wiser.version>1.2</wiser.version>
 
         <!-- WebTest dependency versions  -->
