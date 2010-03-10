@@ -115,12 +115,24 @@
             <version>${xfire.version}</version>
             <exclusions>
                 <exclusion>
+                    <artifactId>ant</artifactId>
+                    <groupId>ant</groupId>
+                </exclusion>
+                <exclusion>
                     <artifactId>spring</artifactId>
                     <groupId>org.springframework</groupId>
                 </exclusion>
                 <exclusion>
                     <artifactId>spring-remoting</artifactId>
                     <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>XmlSchema</artifactId>
+                	<groupId>org.apache.ws.commons</groupId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>stax-api</artifactId>
+                	<groupId>stax</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -132,6 +144,10 @@
                 <exclusion>
                     <artifactId>commons-collections</artifactId>
                     <groupId>commons-collections</groupId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>ehcache</artifactId>
+                	<groupId>net.sf.ehcache</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

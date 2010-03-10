@@ -14,7 +14,7 @@
 	<dependency>
 	    <groupId>javax.servlet</groupId>
 	    <artifactId>servlet-api</artifactId>
-	    <version>2.5</version>
+	    <version>${servlet.version}</version>
 	</dependency>  
    	<dependency>
  		<groupId>org.openhealthtools.openxds</groupId>
@@ -86,7 +86,13 @@
 	<dependency>
 	    <groupId>org.testng</groupId>
 	    <artifactId>testng</artifactId>
-    <version>5.0</version>
+    	<version>5.0</version>
+    	<exclusions>
+    		<exclusion>
+    			<groupId>ant</groupId>
+    			<artifactId>ant</artifactId>
+    		</exclusion>
+    	</exclusions>
 </dependency> 
   </dependencies>
 

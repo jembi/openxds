@@ -137,6 +137,12 @@
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>iheos</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>ant</artifactId>
+            		<groupId>ant</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openhealthexchange.openpixpdq</groupId>
@@ -213,6 +219,10 @@
                     <artifactId>XmlSchema</artifactId>
                     <groupId>org.apache.ws.commons</groupId>
                 </exclusion>
+                <exclusion>
+                	<artifactId>stax-api</artifactId>
+                	<groupId>stax</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -220,6 +230,10 @@
             <artifactId>xfire-spring</artifactId>
             <version>${xfire.version}</version>
             <exclusions>
+ 				<exclusion>
+                    <artifactId>xfire-annotations</artifactId>
+                    <groupId>org.codehaus.xfire</groupId>
+                </exclusion>           
                 <exclusion>
                     <artifactId>spring</artifactId>
                     <groupId>org.springframework</groupId>
