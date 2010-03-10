@@ -112,11 +112,6 @@
             <version>${braid.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.1.7</version>
@@ -169,7 +164,7 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>0.9</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>hibernate</groupId>
@@ -180,16 +175,28 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
             <version>${hibernate.annotations.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>commons-collections</groupId>
+            		<artifactId>commons-collections</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-jaxws</artifactId>
             <version>${axis2.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>xml-apis</groupId>
+            		<artifactId>xml-apis</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>1.4</version>
+            <version>1.6.1</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -203,6 +210,12 @@
             <artifactId>xsdlib</artifactId>
             <version>20060615</version>
             <scope>runtime</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>isorelax</groupId>
+            		<artifactId>isorelax</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -223,6 +236,12 @@
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.1</version>
+            <exclusions>
+		       <exclusion> 
+	               <groupId>commons-collections</groupId>
+                   <artifactId>commons-collections</artifactId>
+		       </exclusion>
+		    </exclusions> 
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
