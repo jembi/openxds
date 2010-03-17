@@ -4,14 +4,14 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="org.openhealthtools.openxds.registry.PersonIdentifier" table="personidentifier">
-        <id name="registryPatientId" column="registry_patient_id" type="string">
+        <id name="registryPatientId" column="registrypatientid" type="string">
           <generator class="uuid"/>
         </id>
-        <property name="assigningAuthority" column="assigning_authority" type="string"/>
-        <property name="patientId" column="patient_id" type="string"/>
+        <property name="assigningAuthority" column="assigningauthority" type="string"/>
+        <property name="patientId" column="patientid" type="string"/>
         <property name="delete" column="deleted" type="string"/>
         <property name="merge" column="merged" type="string"/>
-        <property name="survivingPatientId" column="surviving_patient_id" type="string"/>        
+        <property name="survivingPatientId" column="survivingpatientid" type="string"/>        
     </class>
 </hibernate-mapping>
 
