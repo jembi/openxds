@@ -45,7 +45,7 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		String deletePatient = "N";
 		try{
 		list = this.getHibernateTemplate().find(
-				"from PersonIdentifier where patient_id = '"+ personId +"' and assigning_authority ='" + assigningAuthority + "' and deleted ='" + deletePatient + "'");
+				"from PersonIdentifier where patientid = '"+ personId +"' and assigningauthority ='" + assigningAuthority + "' and deleted ='" + deletePatient + "'");
 		}catch (Exception e) {
 			log.error("Failed to retrieve person identifier from registry patient service",e);
 			throw new RegistryPatientException(e);
