@@ -105,7 +105,7 @@ class BsdMessenger implements IMessageTransmitter {
         }
         try {
 			byte[] messageBytes = completeMessage.getBytes("UTF-8");
-			DatagramPacket packet = new DatagramPacket(messageBytes, length, address, port);
+			DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length, address, port);
 			DatagramSocket socket = new DatagramSocket();
 			socket.send(packet);
 			socket.close();

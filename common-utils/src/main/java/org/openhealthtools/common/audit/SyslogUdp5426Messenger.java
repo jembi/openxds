@@ -97,6 +97,9 @@ class SyslogUdp5426Messenger implements IMessageTransmitter {
 
 		String SyslogVersion = "1";
 		String bom = "\uFEFF";
+        String date = formatter.format(now);
+        // Append colon to timezone info (required for RFC 5424)
+        date = date.substring(0, date.length() - 2) + ":" + date.substring(date.length() - 2);
 		String completeMessage = "<" + PRI + ">"+ SyslogVersion +" " + formatter.format(now) + " " + localHostName + " OpenXDS - - - " + bom + message;
         
         try {
