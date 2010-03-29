@@ -3,8 +3,6 @@ package gov.nist.registry.common2.service;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsWSException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.ws.evs.Evs;
 
@@ -16,6 +14,8 @@ import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public abstract class AppendixV {
 	private static final Log logger = LogFactory.getLog(AppendixV.class);

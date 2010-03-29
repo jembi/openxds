@@ -10,9 +10,9 @@ import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.ws.config.Registry;
 import gov.nist.registry.ws.sq.StoredQueryFactory;
-import gov.nist.registry.xdslog.Message;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.Message;
 
 public class Test12306 extends RG {
 

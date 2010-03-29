@@ -2,19 +2,18 @@ package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.ws.testvalidator.LogModel;
 import gov.nist.registry.ws.testvalidator.Response;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class TestValidator extends XdsService {
 	boolean log;

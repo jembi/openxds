@@ -2,13 +2,13 @@ package gov.nist.registry.ws.sq;
 
 import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.BasicQuery;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * 

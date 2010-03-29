@@ -1,6 +1,7 @@
 package gov.nist.registry.common2.registry;
 
-import gov.nist.registry.common2.logging.LogMessage;
+import org.openhealthtools.openxds.log.LogMessage;
+
 
 
 public interface ErrorLogger {

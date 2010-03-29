@@ -1,8 +1,6 @@
 package gov.nist.registry.ws;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
@@ -12,6 +10,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class TestImpl11710  extends XdsCommon {
 	MessageContext messageContext;

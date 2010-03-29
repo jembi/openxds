@@ -5,7 +5,6 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.NoMetadataException;
 import gov.nist.registry.common2.exception.NoSubmissionSetException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.xml.Util;
 
 import java.io.File;
@@ -22,6 +21,7 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class Metadata {
 	protected OMFactory fac;

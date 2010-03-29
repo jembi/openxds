@@ -1,7 +1,6 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.MetadataException;
-import gov.nist.registry.common2.logging.LogMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.List;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class IdIndex {
 	Metadata m;

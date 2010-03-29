@@ -4,7 +4,6 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
@@ -30,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;

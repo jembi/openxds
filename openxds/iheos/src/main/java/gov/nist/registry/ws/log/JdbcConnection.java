@@ -6,7 +6,6 @@
 
 package gov.nist.registry.ws.log;
 
-import gov.nist.registry.xdslog.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

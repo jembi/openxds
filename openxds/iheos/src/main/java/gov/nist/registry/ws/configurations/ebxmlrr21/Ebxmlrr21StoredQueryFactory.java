@@ -3,8 +3,6 @@ package gov.nist.registry.ws.configurations.ebxmlrr21;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
@@ -27,6 +25,8 @@ import gov.nist.registry.ws.sq.ebxmlrr21.EbXML21GetSubmissionSetAndContents;
 import gov.nist.registry.ws.sq.ebxmlrr21.EbXML21GetSubmissionSets;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * Factory class for Stored Queries going to the ebxmlrr2.1-final1 registry implementation. 

@@ -2,12 +2,12 @@ package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class XdsCommon  {
 

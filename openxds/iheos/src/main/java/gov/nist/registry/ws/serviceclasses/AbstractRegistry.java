@@ -6,7 +6,6 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Response;
@@ -18,6 +17,7 @@ import gov.nist.registry.ws.SubmitObjectsRequest;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public abstract class AbstractRegistry extends XdsService implements
 ContentValidationService {

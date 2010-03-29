@@ -97,6 +97,23 @@
     <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
   	    <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+    
+    <!-- DataSource and Transaction configuration for logs -->
+    
+    <bean id="logsdataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${logs.db.driver}"/>
+		<property name="url" value="${logs.db.url}"/>
+		<property name="username" value="${logs.db.username}"/>
+		<property name="password" value="${logs.db.password}"/>
+	</bean>
+	
+	<bean id="logstransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="logssessionFactory" />
+	</bean>       
+    
+    <bean id="logshibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+  	    <property name="sessionFactory" ref="logssessionFactory" />
+    </bean>
   
     <!-- Enable @Transactional support -->
 	<tx:annotation-driven/>
@@ -136,10 +153,50 @@
     	</property>
      	<property name="hibernateProperties">
         	<props>
-            	<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+            	<prop key="hibernate.dialect">${openxds.hibernate.dialect}</prop>
+		    	<prop key="hibernate.show_sql">false</prop>
+        	</props>
+        </property>
+	</bean>
+	
+	<bean id="logssessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    	<property name="dataSource" ref="logsdataSource" />
+        <property name="annotatedClasses">
+			<list>
+				<value>
+					org.openhealthtools.openxds.log.Message
+				</value>
+				<value>
+					org.openhealthtools.openxds.log.CompanyDetails
+				</value>
+				<value>
+					org.openhealthtools.openxds.log.ErrorMessage
+				</value>
+				<value>
+					org.openhealthtools.openxds.log.HttpMessage
+				</value>
+				<value>
+					org.openhealthtools.openxds.log.OtherMessage
+				</value>
+				<value>
+					org.openhealthtools.openxds.log.SoapMessage
+				</value>
+			</list>
+		</property>
+     	<property name="hibernateProperties">
+        	<props>
+            	<prop key="hibernate.dialect">${logs.hibernate.dialect}</prop>
+            	<!-- <prop key="hibernate.hbm2ddl.auto">update</prop>  -->
 		    	<prop key="hibernate.show_sql">false</prop>
         	</props>
         </property>
 	</bean>  
+	
+	<bean id="logsService"
+		class="org.openhealthtools.openxds.log.LogImpl" lazy-init="true">
+		<property name="sessionFactory">
+			<ref local="logssessionFactory" />
+		</property>
+	</bean>
    
 </beans>    

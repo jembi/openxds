@@ -2,7 +2,6 @@ package gov.nist.registry.ws.sq;
 
 import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryResponse;
@@ -14,6 +13,8 @@ import gov.nist.registry.ws.config.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * This class offers short-cut methods for using Stored Queries within the XDS registry front end.  It uses the generic
