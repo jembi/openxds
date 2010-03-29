@@ -1,5 +1,6 @@
 package gov.nist.registry.ws.serviceclasses.testharness;
 
+import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.SubmitObjectsRequest;
@@ -9,7 +10,7 @@ import org.apache.axiom.om.OMElement;
 
 public class RegistryBTestHarness {
 	
-	public OMElement AdhocQueryRequest(OMElement ahqr) {
+	public OMElement AdhocQueryRequest(OMElement ahqr) throws XdsInternalException {
 		AdhocQueryRequest q = new AdhocQueryRequest(
 				new MockLog(),
 				null /* MessageContext */,

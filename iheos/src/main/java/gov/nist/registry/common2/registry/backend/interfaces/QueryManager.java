@@ -1,12 +1,11 @@
 package gov.nist.registry.common2.registry.backend.interfaces;
 
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.logging.LoggerException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public interface QueryManager {
 

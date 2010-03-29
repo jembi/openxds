@@ -7,7 +7,6 @@ import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsNonIdenticalHashException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.And;
 import gov.nist.registry.common2.registry.BackendRegistry;
 import gov.nist.registry.common2.registry.Metadata;
@@ -28,6 +27,7 @@ import java.util.List;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class EbXML21QuerySupport implements RegistryValidations {
 	private static final Log logger = LogFactory.getLog(EbXML21QuerySupport.class);

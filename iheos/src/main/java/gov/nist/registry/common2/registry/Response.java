@@ -1,12 +1,12 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
 
 import java.util.ArrayList;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public abstract class Response implements ErrorLogger {
 	public final static short version_2 = 2;

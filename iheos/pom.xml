@@ -52,6 +52,11 @@
   		<artifactId>openxds-registry-patient-lightweight</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	<dependency>
+		<groupId>org.openhealthtools.openxds</groupId>
+		<artifactId>openxds-log</artifactId>
+		<version>${project.version}</version>
+	</dependency>
    	<dependency>
   		<groupId>com.misys.braid</groupId>
   		<artifactId>braid-base</artifactId>

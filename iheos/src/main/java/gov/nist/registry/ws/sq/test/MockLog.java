@@ -1,10 +1,11 @@
 package gov.nist.registry.ws.sq.test;
 
+import gov.nist.registry.common2.exception.ExceptionUtil;
+
 import java.sql.Timestamp;
 
-import gov.nist.registry.common2.exception.ExceptionUtil;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class MockLog implements LogMessage {
 

@@ -2,7 +2,6 @@ package gov.nist.registry.ws.test;
 
 import gov.nist.registry.common2.MetadataTypes;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.xml.SchemaValidation;
@@ -22,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class XdsTest extends TestCase {
 

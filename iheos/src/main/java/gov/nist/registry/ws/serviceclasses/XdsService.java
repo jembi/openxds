@@ -2,7 +2,6 @@ package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsErrorCodeException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.Properties;
@@ -11,7 +10,6 @@ import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
 import gov.nist.registry.common2.service.AppendixV;
 import gov.nist.registry.ws.log.Fields;
-import gov.nist.registry.xdslog.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -29,6 +27,9 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.log.Log;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class XdsService extends AppendixV {
 	protected Log log = null;
@@ -270,12 +271,11 @@ public class XdsService extends AppendixV {
 		if (log == null) {
 			logger.info("+++++++++++++++++++++ start transaction log");
 			try {
-				log = new Log(properties.getString("logs.db.url"), properties.getString("logs.db.username"), properties.getString("logs.db.password")) ;
+				log = (Log) XdsFactory.getInstance().getBean("logsService");
+			} catch (Exception e) {
+				new LoggerException("Exception while creating logsService bean object:" + e.getMessage(), e);
 			}
-			catch (LoggerException e) {
-				// happens intermittently - this may help
-				log = new Log(properties.getString("logs.db.url"), properties.getString("logs.db.username"), properties.getString("logs.db.password")) ;
-			}
+			
 		}
 	}
 
@@ -285,7 +285,6 @@ public class XdsService extends AppendixV {
 				logger.info("+++++++++++++++++++++ stop transaction log");
 				if (log_message != null)
 					log.writeMessage(log_message);
-				log.close();
 				log = null;
 				log_message = null;
 			} 

@@ -1,7 +1,5 @@
 package gov.nist.registry.common2.registry.storedquery;
 
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.ErrorLogger;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.SQCodeAnd;
@@ -11,6 +9,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class StoredQuerySupport {
 	private static final Log log = LogFactory.getLog(StoredQuerySupport.class);

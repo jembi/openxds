@@ -3,7 +3,6 @@ package gov.nist.registry.ws.sq.ebxmlrr21;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  {
 	StoredQuerySupport sqs;

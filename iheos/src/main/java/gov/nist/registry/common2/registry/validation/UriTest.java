@@ -5,7 +5,6 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.xml.Parse;
@@ -15,6 +14,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class UriTest extends TestCase {
 	RegistryErrorList rel;

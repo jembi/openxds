@@ -2,7 +2,6 @@ package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsValidationException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RetrieveDocumentSetResponse;
@@ -18,6 +17,7 @@ import java.util.Set;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.RetrieveAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;

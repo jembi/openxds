@@ -4,7 +4,6 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.exception.XdsWSException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
@@ -20,6 +19,7 @@ import gov.nist.registry.ws.RetrieveDocumentSet;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
+import org.openhealthtools.openxds.log.LoggerException;
 
 abstract public class AbstractRepository extends XdsService  implements ContentValidationService {
 	boolean optimize_retrieve = true;

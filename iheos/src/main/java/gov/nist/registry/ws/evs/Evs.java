@@ -1,10 +1,8 @@
 package gov.nist.registry.ws.evs;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.ws.serviceclasses.XdsService;
-import gov.nist.registry.xdslog.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +13,8 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxds.log.Message;
 
 
 public class Evs extends XdsService {

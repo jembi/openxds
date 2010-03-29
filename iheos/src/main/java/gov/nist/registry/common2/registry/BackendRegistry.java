@@ -6,8 +6,6 @@ import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XMLParserException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +19,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;

@@ -4,8 +4,6 @@ import gov.nist.registry.common2.exception.ExceptionUtil;
 import gov.nist.registry.common2.exception.SchemaValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.common2.xml.SchemaValidation;
 
@@ -13,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 import com.misyshealthcare.connect.net.IConnectionDescription;
 

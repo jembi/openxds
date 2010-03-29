@@ -1,8 +1,6 @@
 package gov.nist.registry.ws.config;
 
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.logging.LogMessage;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.ErrorLogger;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.storedquery.SqParams;
@@ -15,6 +13,8 @@ import gov.nist.registry.ws.sq.ebxmlrr21.EbXML21QuerySupport;
 import gov.nist.registry.ws.sq.ebxmlrr21.EbXML21RegistryObjectValidator;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * This class configures the Registry actor by pointing to concrete implementations of key

@@ -4,10 +4,8 @@ import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.logging.LoggerException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
-import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.ws.sq.GetRelatedDocuments;
 
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * Implementation specific class for GetRelatedDocuments stored query. 
