@@ -57,6 +57,9 @@
 			<fileset dir="${eclise.openxds.dir}/openxds-registry-adapter-omar/target/classes/">
 				<include name="*.sql" />
 			</fileset>
+			<fileset dir="${eclise.openxds.dir}/openxds-log/target/classes/">
+				<include name="*.sql" />
+			</fileset>
 		</copy>    	
     </target>
 	
