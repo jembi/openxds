@@ -54,7 +54,8 @@ public class BaseMessage implements Serializable {
 
 	private String name;
 
-	@Column(name="value", columnDefinition="TEXT")
+	@Lob
+	@Column(name="value", length=1048576)
 	private String value;
 	
 	@ManyToOne

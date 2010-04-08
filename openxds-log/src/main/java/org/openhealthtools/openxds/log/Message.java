@@ -73,7 +73,8 @@ public class Message implements LogMessage{
 	@Column(name = "timereceived")
 	private Date timeReceived;
 
-	@Column(name = "test", columnDefinition="TEXT")
+	@Lob
+	@Column(name = "test", length=1048576)
 	private String test;
 
 	@Column(name = "pass")
