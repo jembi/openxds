@@ -66,8 +66,8 @@ abstract public class FindDocumentsForMultiplePatients extends StoredQuery {
 			sqs.return_leaf_class = false;
 
 			Metadata m = runImplementation();
-			if (m.getObjectRefs().size() > 25) 
-				throw new XDSRegistryOutOfResourcesException("GetDocuments Stored Query for LeafClass is limited to 25 documents on this Registry. Your query targeted " + m.getObjectRefs().size() + " documents");
+			if (m.getObjectRefs().size() > queryMaxReturn) 
+				throw new XDSRegistryOutOfResourcesException("GetDocuments Stored Query for LeafClass is limited to "+ queryMaxReturn +" documents on this Registry. Your query targeted " + m.getObjectRefs().size() + " documents");
 
 
 			sqs.return_leaf_class = true;

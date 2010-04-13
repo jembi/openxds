@@ -4,6 +4,7 @@ import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.registry.BasicQuery;
 import gov.nist.registry.common2.registry.Metadata;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import org.apache.commons.logging.Log;
@@ -49,6 +50,9 @@ import org.openhealthtools.openxds.log.LoggerException;
  */
 abstract public class StoredQuery extends BasicQuery  {
 	private static final Log log = LogFactory.getLog(StoredQuery.class);
+	
+	protected static int queryMaxReturn = Properties.loader().getInteger("query.max.return", 25);
+
 	// Run specific Stored Query (defined in Stored Query specific subclass)
 	abstract public Metadata runSpecific() throws XdsException, LoggerException, XDSRegistryOutOfResourcesException;
 
