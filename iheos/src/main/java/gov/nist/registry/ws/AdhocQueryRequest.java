@@ -17,6 +17,7 @@ import gov.nist.registry.common2.registry.BasicQuery;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
@@ -111,9 +112,21 @@ public class AdhocQueryRequest extends XdsCommon {
 			return null;
 		}
 
+		// Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
 		try {
-			AdhocQueryRequestInternal(ahqr);
-		} 
+			boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+			if(validateUserAssertion){
+				SoapHeader header = new SoapHeader(messageContext);
+				boolean status = validateAssertion(header);
+				if (status)
+					AdhocQueryRequestInternal(ahqr);
+				else
+					throw new XdsException("Invalid Identity Assertion");
+			}
+			else {
+				AdhocQueryRequestInternal(ahqr);
+			}
+		}
 		catch (XdsResultNotSinglePatientException e) {
 			response.add_error("XDSResultNotSinglePatient", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		} 

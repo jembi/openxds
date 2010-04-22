@@ -307,6 +307,7 @@
         <module>common-utils</module>
         <module>common-ws</module>
         <module>openxds-config</module>
+        <!-- <module>xua-core</module>  -->
         <module>openxds-log</module>
         <module>iheos</module>
         <module>openxds-api</module>

@@ -8,6 +8,7 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
@@ -93,8 +94,20 @@ public class RetrieveDocumentSet extends XdsCommon {
 
         ArrayList<OMElement> retrieve_documents = null;
 
+     // Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
         try {
-            retrieve_documents = retrieve_documents(rds);
+        	boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+        	if(validateUserAssertion){
+		        SoapHeader header = new SoapHeader(messageContext);
+		        boolean status = validateAssertion(header);
+	        	if (status)
+	        		retrieve_documents = retrieve_documents(rds);
+	        	else
+					throw new XdsException("Invalid Identity Assertion");
+	    	}
+			else {
+				retrieve_documents = retrieve_documents(rds);
+			}
         }
         catch (XdsFormatException e) {
             response.add_error("XDSRepositoryError", "SOAP Format Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -104,6 +117,10 @@ public class RetrieveDocumentSet extends XdsCommon {
         }
         catch (XdsException e) {
             response.add_error("XDSRepositoryError", e.getMessage(), RegistryUtility.exception_details(e), log_message);
+            logger.fatal(logger_exception_details(e));
+        }
+        catch (Exception e) {
+            response.add_error("General Exception", e.getMessage(), RegistryUtility.exception_details(e), log_message);
             logger.fatal(logger_exception_details(e));
         }
 
