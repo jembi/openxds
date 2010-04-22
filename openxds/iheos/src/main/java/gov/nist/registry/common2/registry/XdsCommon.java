@@ -1,13 +1,18 @@
 package gov.nist.registry.common2.registry;
 
 import gov.nist.registry.common2.exception.ExceptionUtil;
+import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
+import gov.nist.registry.ws.SoapHeader;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxua.api.XServiceProvider;
 
 public class XdsCommon  {
 
@@ -107,6 +112,27 @@ public class XdsCommon  {
 	
 	protected void generateAuditLog(Metadata m) {
 		
+	}
+	
+	protected boolean validateAssertion(SoapHeader header)throws XdsException, Exception {
+		boolean status = false;
+		// Get Identity Assertion from web-services security header
+		OMElement security = MetadataSupport.firstChildWithLocalName(header.getHdr(), "Security");
+		if (security != null) {
+			OMElement element = MetadataSupport.firstChildWithLocalName(security, "Assertion");
+			if (element != null) {
+				XServiceProvider provider = (XServiceProvider) XdsFactory.getInstance().getBean("xuaServiceProvider");
+				if (provider != null) {
+					status = provider.validateToken(element);
+				} else
+					throw new Exception("Exception while getting XServiceProvider instance");
+			} else {
+				throw new XdsException("Identity Assertion does not exists in web-services security header");
+			}
+		} else {
+			throw new XdsException("Security element does not exists in web-services security header");
+		}
+		return status;
 	}
 
 }

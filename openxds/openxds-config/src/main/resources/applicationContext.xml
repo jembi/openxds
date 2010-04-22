@@ -198,5 +198,8 @@
 			<ref local="logssessionFactory" />
 		</property>
 	</bean>
+	
+	<bean id="xuaServiceProvider" class="org.openhealthtools.xua.XServiceProviderImpl">
+	</bean>
    
 </beans>    

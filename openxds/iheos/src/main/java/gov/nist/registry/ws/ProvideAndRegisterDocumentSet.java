@@ -15,6 +15,7 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.io.Sha1Bean;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
@@ -102,11 +103,24 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	public OMElement provideAndRegisterDocumentSet(OMElement pnr, ContentValidationService validater) {
 		this.validater = validater;
 
+		// Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
 		try {
-			pnr.build();
-			
-			provide_and_register(pnr);
-		} 
+			boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+			if(validateUserAssertion){
+		        SoapHeader header = new SoapHeader(messageContext);
+		        boolean status = validateAssertion(header);
+		        if (status) {
+		        	pnr.build();
+					provide_and_register(pnr);
+		        }
+		        else
+					throw new XdsException("Invalid Identity Assertion");
+			}
+			else {
+				pnr.build();
+				provide_and_register(pnr);
+			}
+		}  
 		catch (XDSRepositoryMetadataException e) {
 			response.add_error("XDSRepositoryMetadataError", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		} 
