@@ -25,12 +25,11 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.IBrokerController;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.xca.api.XcaIG;
 import org.openhealthtools.openxds.xca.api.XcaRG;
-
-import com.misyshealthcare.connect.base.IBrokerController;
 
 /**
  * This class presents a single global <code>XdsBroker</code>

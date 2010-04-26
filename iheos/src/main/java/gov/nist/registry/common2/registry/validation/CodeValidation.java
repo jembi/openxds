@@ -14,11 +14,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
-
-import com.misyshealthcare.connect.net.CodeSet;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.Identifier;
-import com.misyshealthcare.connect.util.Pair;
+import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.Identifier;
+import org.openhealthtools.openexchange.utils.Pair;
 
 
 //this gets invoked from both Validator.java and directly from Repository.  Should optimize the implementation so that codes.xml

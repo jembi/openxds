@@ -25,8 +25,7 @@ import gov.nist.registry.common2.registry.Properties;
 import java.io.File;
 import java.util.Collection;
 
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**

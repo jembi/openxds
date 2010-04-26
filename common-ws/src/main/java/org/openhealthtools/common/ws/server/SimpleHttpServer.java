@@ -34,8 +34,7 @@ import org.apache.axis2.transport.http.server.WorkerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.params.HttpParams;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 
 /**

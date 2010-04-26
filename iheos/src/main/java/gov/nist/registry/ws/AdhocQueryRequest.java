@@ -36,16 +36,14 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.ActiveParticipant;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
-
-import com.misyshealthcare.connect.base.audit.ActiveParticipant;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-
 
 public class AdhocQueryRequest extends XdsCommon {
 	MessageContext messageContext;

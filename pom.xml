@@ -557,6 +557,7 @@
         <xfire.version>1.2.6</xfire.version>
         
         <!-- Properties defined by OpenXDS -->
+        <openexchange.version>1.0-SNAPSHOT</openexchange.version>
         <openpixpdq.version>1.0</openpixpdq.version>
         <braid.version>1.2.2</braid.version>
         <hapi.version>0.5.1</hapi.version>

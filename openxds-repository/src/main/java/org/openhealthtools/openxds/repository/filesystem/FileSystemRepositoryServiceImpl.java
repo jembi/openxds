@@ -31,6 +31,9 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.utils.Pair;
 import org.openhealthtools.openxds.repository.Utility;
 import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
@@ -38,9 +41,6 @@ import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
-import com.misyshealthcare.connect.net.CodeSet;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.util.Pair;
 
 /**
  * This class provides a file system based repository manager implementation.

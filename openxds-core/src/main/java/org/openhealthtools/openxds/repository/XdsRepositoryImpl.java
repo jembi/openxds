@@ -24,6 +24,7 @@ import gov.nist.registry.common2.registry.Properties;
 
 import java.io.File;
 import java.net.URL;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -32,14 +33,14 @@ import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.common.utils.UnZip;
+import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  * This class represents an XDS Repository actor.

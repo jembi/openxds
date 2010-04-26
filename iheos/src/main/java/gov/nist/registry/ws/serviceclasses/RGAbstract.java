@@ -29,10 +29,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public abstract class RGAbstract extends XdsService implements ContentValidationService {
 	private final static Log logger = LogFactory.getLog(RGAbstract.class);

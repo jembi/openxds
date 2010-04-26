@@ -5,14 +5,19 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.SoapHeader;
 
+import java.util.List;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxua.api.XServiceProvider;
+
+import com.misyshealthcare.connect.net.Identifier;
 
 public class XdsCommon  {
 
@@ -134,5 +139,32 @@ public class XdsCommon  {
 		}
 		return status;
 	}
+
+    /**
+     * Reconciles authority with the ConnectionDescritpion configuration. An authority
+     * can have NameSpace and/or UniversalId/UniversalIdType. For example, in the data source such as
+     * database, if an authority is represented by NameSpace only, while in the xml configuration, the authority is configured
+     * with both NameSpace and UnviersalId/UniversalIdType. The authority in the datasource has to be mapped
+     * to the authority configured in the XML files.
+     *
+     * @param authority The authority
+     * @param connection
+     * @param adapter the adapter from where to get the domains
+     * @return The authority according the configuration
+     */
+    protected Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
+        List<org.openhealthtools.openexchange.actorconfig.net.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+        for (org.openhealthtools.openexchange.actorconfig.net.Identifier id : identifiers) {
+    
+        	//TODO: Fix the Identifier type
+        	//Temporary conversion during the library migration
+        	Identifier identifier = new Identifier(id.getAuthorityNameString(), id.getUniversalId(), id.getUniversalIdType()); 
+            if ( identifier.equals(authority) ) {
+                return identifier;
+            }
+        }
+        //no identifier is found, just return the original authority
+        return authority;
+    }
 
 }

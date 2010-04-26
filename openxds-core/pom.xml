@@ -124,6 +124,16 @@
     <!-- Dependencies calculated by AppFuse when running full-source plugin -->
     <dependencies>
         <dependency>
+            <groupId>org.openhealthtools.openexchange</groupId>
+            <artifactId>openexchange-actorconfig</artifactId>
+			<version>${openexchange.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openexchange</groupId>
+            <artifactId>openexchange-audit</artifactId>
+			<version>${openexchange.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
             <version>${project.version}</version>

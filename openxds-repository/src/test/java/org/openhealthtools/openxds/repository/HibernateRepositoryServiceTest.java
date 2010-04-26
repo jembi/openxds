@@ -27,19 +27,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.openxds.repository.ModuleManager;
-import org.openhealthtools.openxds.repository.Utility;
-import org.openhealthtools.openxds.repository.XdsRepositoryItemImpl;
+import org.openhealthtools.openexchange.actorconfig.net.ConnectionFactory;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
-
-import com.misyshealthcare.connect.net.ConnectionFactory;
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  * This class is used to test the relational database repository manager implementation.

@@ -28,7 +28,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 public class ConfigAction extends BaseAction {
@@ -54,15 +54,15 @@ public class ConfigAction extends BaseAction {
 				configFile = null;
 				logfile = null;
 				actors = null;
-				List<IheActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				String[] sList = new String[l.size()];
 				int x = 0;
-				for (IheActorDescription ida : l) {
+				for (IActorDescription ida : l) {
 					if (ida.isInstalled()) {
-						sList[x++] = ida.getId();
+						sList[x++] = ida.getName();
 					}
 				}
 				setActors(sList);
@@ -72,14 +72,14 @@ public class ConfigAction extends BaseAction {
 				//First reset the config settings before loading
 				XdsConfigurationLoader.getInstance().resetConfiguration(null, null);
 				XdsConfigurationLoader.getInstance().loadConfiguration(getConfigFile(), false);
-				List<IheActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				String[] sList = new String[l.size()];
 				int x = 0;
-				for (IheActorDescription ida : l) {
+				for (IActorDescription ida : l) {
 					if (ida.isInstalled()) {
-						sList[x++] = ida.getId();
+						sList[x++] = ida.getName();
 					}
 				}
 				getRequest().setAttribute("Actors", sList);
@@ -100,13 +100,13 @@ public class ConfigAction extends BaseAction {
 				} else {
 					XdsConfigurationLoader.getInstance().resetConfiguration(lString, null);
 				}
-				List<IheActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				return SUCCESS;
 			} else if (getAction().equalsIgnoreCase("stopall")) {
 				XdsConfigurationLoader.getInstance().resetConfiguration(null, null);
-				List<IheActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				setActors(null);
@@ -157,9 +157,9 @@ public class ConfigAction extends BaseAction {
 
 		public int compare(Object first, Object second) {
 			try {
-				IheActorDescription f = (IheActorDescription) first;
-				IheActorDescription s = (IheActorDescription) second;
-				return f.getType().compareToIgnoreCase(s.getType());
+				IActorDescription f = (IActorDescription) first;
+				IActorDescription s = (IActorDescription) second;
+				return f.getHumanReadableType().compareToIgnoreCase(s.getHumanReadableType());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

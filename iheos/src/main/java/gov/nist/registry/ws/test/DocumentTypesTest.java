@@ -4,7 +4,8 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.DocumentTypes;
 import junit.framework.TestCase;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+
 
 public class DocumentTypesTest extends TestCase {
     //TODO: Init connection

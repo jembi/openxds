@@ -23,7 +23,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.LinkedList"%>
-<%@ page import="org.openhealthexchange.openpixpdq.ihe.configuration.*"%>
+<%@ page import="org.openhealthtools.openexchange.actorconfig.*"%>
 <html>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/styles/table.css" type="text/css" />
 <body>
@@ -64,7 +64,7 @@
     	}
     	List lActors = (List) request.getAttribute("ActorList");
     	if (lActors != null && lActors.size() > 0) {
-    		String sType = ((IheActorDescription) lActors.get(0)).getType();
+    		String sType = ((IActorDescription) lActors.get(0)).getHumanReadableType();
     %>
     <div class="Table">
 	 <table class = "TableCON">
@@ -75,9 +75,9 @@
 		</thead>
 	<%
 			for (int x = 0; x < lActors.size(); x++) {
-				IheActorDescription iad = (IheActorDescription) lActors.get(x);
-				if (!sType.equals(iad.getType())) {
-			sType = iad.getType();
+				IActorDescription iad = (IActorDescription) lActors.get(x);
+				if (!sType.equals(iad.getHumanReadableType())) {
+			sType = iad.getHumanReadableType();
 	%>
 			<table class = "TableCON">
   				<thead class = "TableTH">
@@ -91,8 +91,8 @@
 			 			%>
 		<tr class = "TableTS">
 		<td class = "TableTS">
-		<input type="checkbox" name="actors" value="<%=iad.getId()%>" 
-		<%if (l.contains(iad.getId())){ %> checked="checked"<%}%> >
+		<input type="checkbox" name="actors" value="<%=iad.getName()%>" 
+		<%if (l.contains(iad.getName())){ %> checked="checked"<%}%> >
 			<%=iad.getDescription()%>
 		</td>
 		</tr>

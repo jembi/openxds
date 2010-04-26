@@ -21,31 +21,22 @@
 package org.openhealthtools.openxds.configuration;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheActorDescription;
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
-import org.openhealthexchange.openpixpdq.ihe.log.IMesaLogger;
-import org.openhealthexchange.openpixpdq.ihe.log.Log4jLogger;
-import org.openhealthtools.common.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.actorconfig.ActorConfigurationLoader;
+import org.openhealthtools.openexchange.actorconfig.ActorDescriptionLoader;
+import org.openhealthtools.openexchange.actorconfig.AuditBroker;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
+import org.openhealthtools.openexchange.actorconfig.IBrokerController;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.actorconfig.Transactions;
+import org.openhealthtools.openexchange.actorconfig.TransactionsSet;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.log.IMesaLogger;
 import org.openhealthtools.openxds.XdsBroker;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
@@ -53,56 +44,34 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.repository.XdsRepositoryImpl;
 import org.openhealthtools.openxds.xca.XcaIGImpl;
 import org.openhealthtools.openxds.xca.XcaRGImpl;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-
-import com.misyshealthcare.connect.base.AuditBroker;
-import com.misyshealthcare.connect.base.IBrokerController;
-import com.misyshealthcare.connect.base.codemapping.ICodeMappingManager;
-import com.misyshealthcare.connect.net.ConnectionFactory;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.util.LibraryConfig;
-import com.misyshealthcare.connect.util.OID;
-import com.misyshealthcare.connect.util.LibraryConfig.ILogContext;
-import com.misyshealthcare.connect.util.LibraryConfig.IPatientIdConverter;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
- * This class loads an IHE Actor configuration file and initializes all of the
- * appropriate actors within the DocumentBroker, XdsBroker and AuditBroker.
+ * This class loads an Actor configuration file and initializes all of the
+ * appropriate OpenXDS actors within the XdsBroker and AuditBroker.
  * 
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
-public class XdsConfigurationLoader {
+public class XdsConfigurationLoader extends ActorConfigurationLoader {
 
 	/* Logger for debugging messages */
 	private static final Log log = LogFactory.getLog(XdsConfigurationLoader.class);
 	
-	/* Logger for IHE Actor message traffic */
-	private static final Log4jLogger iheLog = new Log4jLogger();
-	
 	/* Singleton instance */
 	private static XdsConfigurationLoader instance = null;
 	
-	/* The configuration file to load */
-	//private File configFile = null;
+	//Actor Type Constants
+	public static final String XDSREGISTRY     = "XdsRegistry";
+	public static final String XDSREPOSITORY   = "XdsRepository";
+	public static final String XCARG           = "XcaRG";
+	public static final String XCAIG           = "XcaIG";
+	//Connection Type Constants
+	public static final String SERVER     = "Server";
+	public static final String PIXSERVER  = "PixServer";
+	public static final String REGISTRY   = "Registry";
+	public static final String REPOSITORY = "Repository";
+	//TransactionsSet Type - RespondingGateway
+	public static final String RESPONDINGGATEWAY = "RespondingGateway";
 	
-	/* Current root logger appender */
-	Appender currentAppender = null;
-	
-	/* The actor definitions loaded by the config file */
-	private Vector<ActorDescription> actorDefinitions = null;
-	
-	/* The IDs of the actors last installed */
-	/* This is a very weak set, it may not match the actual set of installed actors */
-	private Vector<String> actorsInstalled = new Vector<String>();
-		
 	/**
 	 * Gets the singleton instance for this class.
 	 * 
@@ -113,394 +82,8 @@ public class XdsConfigurationLoader {
 		return instance;
 	}
 	
-	/**
-	 * Loads the supplied configuration file and
-	 * creates all of the IHE actors that it defines.
-	 * 
-	 * @param filename the name of the configuration file
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id.
-	 * @param styleSheetLocation the style sheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
-	 * @return True if the configuration file was processed successfully
-	 * @throws IheConfigurationException When there is something wrong with the specified configuration
-	 */
-	public boolean loadConfiguration(String filename, String oidRoot, OID.OidSource oidSource, String styleSheetLocation, Properties patientQueryDesignProps, ICodeMappingManager codeMappingManager, ILogContext logContext) throws IheConfigurationException {
-		if (filename == null) return false;
-		return loadConfiguration(new File(filename), true, oidRoot, oidSource, styleSheetLocation, patientQueryDesignProps, codeMappingManager, logContext);
-	}
-	
-	/**
-	 * Loads the supplied configuration file and
-	 * create all of the IHE actors that it defines.
-	 * 
-	 * @param file The configuration file
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id.
-	 * @param styleSheetLocation the style sheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
-	 * @return True if the configuration file was processed successfully
-	 * @throws IheConfigurationException When there is something wrong with the specified configuration
-	 */
-	public boolean loadConfiguration(File file, String oidRoot, OID.OidSource oidSource, String styleSheetLocation, Properties patientQueryDesignProps, ICodeMappingManager codeMappingManager, ILogContext logContext) throws IheConfigurationException {
-		if (file == null) return false;
-		return loadConfiguration(file, true, oidRoot, oidSource, styleSheetLocation, patientQueryDesignProps, codeMappingManager, logContext);
-	}
-	
-	/**
-	 * Loads the supplied configuration file.  If the argument is
-	 * 'true', then create an initialize all of the IHE actors in the file.  If the
-	 * argument is 'false', save the actors away for GUI access.
-	 * 
-	 * @param filename the name of the configuration file
-	 * @param autoInstallActors If 'true' create the actors in this configuration, else store them up
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id.
-	 * @param styleSheetLocation the style sheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
-	 * @return 'true' if the configuration was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public boolean loadConfiguration(String filename, boolean autoInstallActors, String oidRoot, OID.OidSource oidSource, String styleSheetLocation,
-         Properties patientQueryDesignProps, ICodeMappingManager codeMappingManager, ILogContext logContext) throws IheConfigurationException {
-		return loadConfiguration(new File(filename), autoInstallActors, oidRoot, oidSource, styleSheetLocation, patientQueryDesignProps, codeMappingManager, logContext);
-	}
-
-	/**
-	 * Loads the supplied configuration file.  If the argument is
-	 * 'true', then create an initialize all of the IHE actors in the file.  If the
-	 * argument is 'false', save the actors away for GUI access.
-	 * 
-	 * @param filename the name of the configuration file
-	 * @param autoInstallActors If 'true' create the actors in this configuration, else store them up
-	 * @return 'true' if the configuration was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public boolean loadConfiguration(String filename, boolean autoInstallActors) throws IheConfigurationException {
-		return loadConfiguration(filename, autoInstallActors, null, null, null, null, null, null);
-	}
-    /**
-	 * Loads the supplied configuration file.  If the argument is
-	 * 'true', then create an initialize all of the IHE actors in the file.  If the
-	 * argument is 'false', save the actors away for GUI access.
-	 *
-	 * @param file the configuration file
-	 * @param autoInstallActors If 'true' create the actors in this configuration, else store them up
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id.
-	 * @param styleSheetLocation the style sheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
-	 * @return 'true' if the configuration was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public synchronized boolean loadConfiguration(File file, boolean autoInstallActors, String oidRoot, OID.OidSource oidSource, String styleSheetLocation, Properties patientQueryDesignProps, ICodeMappingManager codeMappingManager, ILogContext logContext) throws IheConfigurationException {
-		return loadConfiguration(file, autoInstallActors, true, oidRoot, oidSource, styleSheetLocation, patientQueryDesignProps, codeMappingManager, logContext);
-	}
-    /**
-	 * Loads the supplied configuration file.  If the argument is
-	 * 'true', then create an initialize all of the IHE actors in the file.  If the
-	 * argument is 'false', save the actors away for GUI access.
-	 *
-	 * @param file the configuration file
-	 * @param autoInstallActors If 'true' create the actors in this configuration, else store them up
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id.
-	 * @param styleSheetLocation the style sheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
- 	 * @param pidConvert the patientIdConverter to be used to convert the sourcePatientId to the PixLocalPatientId
- 	 * @return 'true' if the configuration was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */	
-	public synchronized boolean loadConfiguration(File file, boolean autoInstallActors, String oidRoot, OID.OidSource oidSource, String styleSheetLocation, Properties patientQueryDesignProps, ICodeMappingManager codeMappingManager, ILogContext logContext, IPatientIdConverter pidConverter) throws IheConfigurationException {
-		return loadConfiguration(file, autoInstallActors, true, oidRoot, oidSource, styleSheetLocation, patientQueryDesignProps, codeMappingManager, logContext);
-	}     
-    /**
-	 * Loads the supplied configuration file.  If the argument is
-	 * 'true', then create an initialize all of the IHE actors in the file.  If the
-	 * argument is 'false', save the actors away for GUI access.
-	 * 
-	 * @param file the configuration file
-	 * @param autoInstallActors If 'true' create the actors in this configuration, else store them up
-     * @param reset whether to reset actorDefinitions or resetAllBrokers
-	 * @param oidRoot the OID root
-     * @param oidSource the OID.OidSource interface which provides a unique oid id
-	 * @param styleSheetLocation the stylesheet location for CDA transformation
-	 * @param patientQueryDesignProps the query design properties
-	 * @param codeMappingManager the CodeMappingManager to be used for data transformation
-	 * @param logContext the LogContext to be used for audit logging
-	 * @param pidConvert the patientIdConverter to be used to convert the sourcePatientId to the PixLocalPatientId
-	 * @return 'true' if the configuration was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	private boolean loadConfiguration(File file, boolean autoInstallActors, boolean reset, String oidRoot, 
-			    OID.OidSource oidSource, String styleSheetLocation, Properties patientQueryDesignProps, 
-			    ICodeMappingManager codeMappingManager, ILogContext logContext) throws IheConfigurationException {
-		LibraryConfig libConfig = LibraryConfig.getInstance();
-		libConfig.setOidRoot(oidRoot);
-        libConfig.setOidSource(oidSource);
-        libConfig.setStyleSheetLocation(styleSheetLocation);
-		libConfig.setPatientQueryDesignProps(patientQueryDesignProps);
-		libConfig.setCodeMappingManager(codeMappingManager);
-		libConfig.setLogContext(logContext);
-		if(libConfig.getPatientIdConverter()==null) {
-			libConfig.setPatientIdConverter(LibraryConfig.DefaultPatientIdConverter.getInstance());
-		}
-		boolean okay = true;
-		// Reset the list of loaded actors
-		if (reset) actorDefinitions = new Vector<ActorDescription>();
-		// If we are auto-installing, reset all the brokers
-		if (autoInstallActors && reset) resetAllBrokers();
-		// Make sure we have a configuration file
-		File configFile = file;
-		if (configFile == null) {
-			throw new IheConfigurationException("No file given to configuration loader");
-		} else if (!configFile.exists()) {
-			throw new IheConfigurationException("The configuration file \"" + configFile.getAbsolutePath() + "\" does not exist");
-		}
-		// Create a builder factory and a builder, and get the configuration document.
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		Document configuration = null;
-		try {
-			configuration = factory.newDocumentBuilder().parse(configFile);
-		} catch (SAXException e) {
-			// An XML exception
-			throw new IheConfigurationException("Invalid XML in configuration file '" + configFile.getAbsolutePath() + "'", e);
-		} catch (IOException e) {
-			// A problem reading the file
-			throw new IheConfigurationException("Cannot read configuration file '" + configFile.getAbsolutePath() + "'", e);
-		} catch (ParserConfigurationException e) {
-			// No XML implementation
-			throw new IheConfigurationException("No XML implementation to process configuration file '" + configFile.getAbsolutePath() + "'", e);
-		}
-		// Get the list of XML elements in the configuration file
-		NodeList configurationElements = configuration.getDocumentElement().getChildNodes();
-		// Load all the connection definitions first
-		for (int elementIndex = 0; elementIndex < configurationElements.getLength(); elementIndex++) {
-			Node element = configurationElements.item(elementIndex);
-			if (element instanceof Element) {
-				// See what type of element it is
-				String name = element.getNodeName();
-				if (name.equalsIgnoreCase("CONNECTIONFILE")) {
-					// An included connection file, load it
-					if (!processConnectionFile((Element) element, configFile)) okay = false;
-				} else if (name.equalsIgnoreCase("SECURECONNECTION") || name.equalsIgnoreCase("STANDARDCONNECTION")) {
-					// An included connection, load it
-					if (!ConnectionFactory.loadConnectionDescriptionsFromXmlNode(element, configFile)) {
-						throwIheConfigurationException("Error loading configuration file '" + configFile.getAbsolutePath() + "'", configFile);
-						okay = false;
-					}
-				}
-			}
-		}
-		// If all the connection files loaded okay, define the various actors
-		if (okay) {
-			for (int elementIndex = 0; elementIndex < configurationElements.getLength(); elementIndex++) {
-				Node element = configurationElements.item(elementIndex);
-				if (element instanceof Element) {
-					// See what type of element it is
-					String name = element.getNodeName();
-                    if (name.equalsIgnoreCase("ACTORFILE")) {
-                        if (!processActorFile((Element) element, autoInstallActors, configFile, false)) okay = false;
-                    } else if (name.equalsIgnoreCase("ACTOR")) {
-						// An IHE actor definition
-						if (!processActorDefinition((Element) element, autoInstallActors, configFile)) okay = false;
-					}
-				}
-			}
-		}
-		// Done
-		return true;
-	}
-	
-	/** Sets the default file to write to for the root.
-	 * Also sets the level.  Note: if level is null 
-	 * the rool level will be set to INFO.  Note that
-	 * if there already is a file appender set this way
-	 * it will be removed before the new one is added.
-	 * All other appenders are left untouched.
-	 * 
-	 * @param fullPathToLogFile the Path to append the log to.
-	 * @param level the Level to log, null for INFO.
-	 * @param pattern Some other pattern to use for logging.  null ok.
-	 */
-	public synchronized void setLoggingFile(String fullPathToLogFile, Level level, String pattern) {
-		Logger root = Logger.getRootLogger();
-		try {
-			if (pattern == null)
-				pattern =  "Milliseconds since program start: %r %n" +
-					"Date of message: %d %n" +
-					//"Classname of caller: %C %n" +
-					"Location: %l %n" +
-					"Message: %m %n %n";
-			if (currentAppender != null) root.removeAppender(currentAppender);
-			if (fullPathToLogFile != null) {
-				currentAppender = new FileAppender(new PatternLayout(pattern), fullPathToLogFile);
-				if (currentAppender != null) root.addAppender(currentAppender);
-				if (level == null) level = Level.INFO;
-				root.setLevel(level);
-			}
-		} catch(Exception e) { log.error("Unable to set output file for logger: " + fullPathToLogFile, e); }
-	}
-	
-	/**
-	 * Gets the actor descriptions loaded in the configuration.
-	 * 
-	 * @return the actor descriptions
-	 */
-	public synchronized Collection<IheActorDescription> getActorDescriptions() {
-		Vector<IheActorDescription> actors = new Vector<IheActorDescription>();
-		if (actorDefinitions != null) {
-			for (ActorDescription actor: actorDefinitions) {
-				actor.isInstalled = actorsInstalled.contains(actor.id);
-				actors.add(actor);
-			}
-		}
-		return actors;
-	}
-	
-	/**
-	 * Resets the current IHE brokers to use the actors described in the list passed
-	 * in.  These may be actor descriptions objects or the IDs of actor description
-	 * objects.  This call will not do any logging.
-	 * 
-	 * @param actorDescriptions the actor descriptions or IDs to use to define the actors
-	 * @return 'true' if the actors were created and initialized successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public synchronized boolean resetConfiguration(Collection<Object> actorDescriptions) throws IheConfigurationException {
-		return resetConfiguration(actorDescriptions, null);
-	}
-	/**
-	 * Resets the current IHE brokers to use the actors described in the list passed
-	 * in.  These may be actor descriptions objects or the IDs of actor description
-	 * objects.
-	 * 
-	 * @param actorDescriptions the actor descriptions or IDs to use to define the actors
-	 * @param logFilename the log file to install for this set of actors
-	 * @return 'true' if the actors were created and initialized successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public synchronized boolean resetConfiguration(Collection<Object> actorDescriptions, String logFilename) throws IheConfigurationException {  
-		return resetConfiguration(actorDescriptions, logFilename, null);
-	}
-
-	/**
-	 * Resets the current IHE brokers to use the actors described in the list passed
-	 * in.  These may be actor descriptions objects or the IDs of actor description
-	 * objects.
-	 * 
-	 * @param actorDescriptions the actor descriptions or IDs to use to define the actors
-	 * @param logFilename the log file to install for this set of actors
-     * @param mesaLog the mesa log used for mesa tests
-	 * @return 'true' if the actors were created and initialized successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration file
-	 */
-	public synchronized boolean resetConfiguration(Collection<Object> actorDescriptions, String logFilename, IMesaLogger mesaLog) throws IheConfigurationException {
-		// Reset all the brokers
-		resetAllBrokers();
-		// Setup the log
-		log.debug("Log file closed.");
-		setLoggingFile(logFilename, null, null);
-		log.debug("Log file opened.");
-		// Jump out if nothing to start up
-		if (actorDescriptions == null) return true;
-		// First, map all the supplied actor/actor names into descriptions
-		ArrayList<ActorDescription> actors = new ArrayList<ActorDescription>();
-		for (Object thing: actorDescriptions) {
-			if (thing instanceof ActorDescription) {
-				// Its an actor
-				actors.add((ActorDescription) thing);
-			} else if (thing instanceof String) {
-				// Its an actor name
-				ActorDescription actor = getDescriptionById((String) thing);
-				if (actor != null) actors.add(actor);
-			}
-		}
-		// Second, pull out the connections from any Secure Node actors and the source from the XdsDocumentConsumer
-		ArrayList<IConnectionDescription> auditConnections = new ArrayList<IConnectionDescription>();
-		IConnectionDescription source = null;
-		for (ActorDescription actor: actors) {
-			if (actor.actorType.equalsIgnoreCase("SecureNode")) {
-				// This is an audit repository, save its connections for all actors to use
-				Collection<IConnectionDescription> logConnections = actor.logConnections;
-				if (logConnections != null) auditConnections.addAll(logConnections);
-			} else if (actor.actorType.equalsIgnoreCase("XdsDocumentConsumer")) {
-				// This actor gets documents, save it as a replace query source
-				if (actor.sourceConnection != null) source = actor.sourceConnection;
-			}
-		}
-		// Third, create all the actors
-		boolean okay = true;
-		IMesaLogger log = mesaLog==null ? iheLog : mesaLog;
-		for (ActorDescription actor: actors) {
-			Collection<IConnectionDescription> actorAudit = actor.logConnections;
-			if ((actorAudit == null) || actorAudit.isEmpty()) actorAudit = auditConnections;
-			IConnectionDescription sourceConnection = actor.sourceConnection;
-			if (actor.actorType.equalsIgnoreCase("XdsDocumentSource")) {
-				if (sourceConnection == null) sourceConnection = source;
-			}
-			
-			if(actor.actorType.equalsIgnoreCase("SecureNode")) {
-				// Build a new audit trail if there are any connections to audit repositories.
-				ArrayList<IConnectionDescription> xdsAuditConnection = ((XdsAuditActorDescription)actor).getXdsAuditConnection();
-				if (!createXdsAuditActor(actor.id, xdsAuditConnection, log, null))
-					okay = false;
-			}
-			//XDS Registry
-			if(actor.actorType.equalsIgnoreCase("XdsRegistry")) {
-				IConnectionDescription xdsRegistryConnection = ((XdsRegistryActorDescription)actor).getXdsRegistryConnection();
-				IConnectionDescription pixRegistryConnection = ((XdsRegistryActorDescription)actor).getPixRegistryConnection();
-				if (!createXdsRegistryActor(actor.id, xdsRegistryConnection, pixRegistryConnection, 
-						actorAudit, log, null))
-					okay = false;
-			}
-			//XDS Repository
-			if(actor.actorType.equalsIgnoreCase("XdsRepository")) {
-				IConnectionDescription xdsRepositoryServerConnection = ((XdsRepositoryActorDescription)actor).getXdsRepositoryServerConnection();
-				IConnectionDescription xdsRegistryClientConnection = ((XdsRepositoryActorDescription)actor).getXdsRegistryClientConnection();
-				if (!createXdsRepositoryActor(actor.id, xdsRepositoryServerConnection, xdsRegistryClientConnection, 
-						actorAudit, log, null))
-					okay = false;
-			}
-			//XCA Responding Gateway
-			if(actor.actorType.equalsIgnoreCase("XcaRG")) {
-				IConnectionDescription xcaRGServerConnection = ((XcaRGActorDescription)actor).getXcaRGServerConnection();
-				IConnectionDescription xdsRegistryClientConnection = ((XcaRGActorDescription)actor).getXdsRegistryClientConnection();
-				IConnectionDescription xdsRepositoryClientConnection = ((XcaRGActorDescription)actor).getXdsRepositoryClientConnection();
-				if (!createXcaRGActor(actor.id, xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, actorAudit, log, null))
-					okay = false;
-			}
-			//XCA Initiating Gateway
-			if(actor.actorType.equalsIgnoreCase("XcaIG")) {
-				IConnectionDescription xcaIGServerConnection = ((XcaIGActorDescription)actor).getXcaIGServerConnection();
-				IConnectionDescription xdsRegistryClientConnection = ((XcaIGActorDescription)actor).getXdsRegistryClientConnection();
-				IConnectionDescription xdsRepositoryClientConnection = ((XcaIGActorDescription)actor).getXdsRepositoryClientConnection();
-				Map<String, IConnectionDescription> xcaRGQueryClientConnections = ((XcaIGActorDescription)actor).getXcaRGQueryClientConnections();
-				Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = ((XcaIGActorDescription)actor).getXcaRGRetrieveClientConnections();
-				if (!createXcaIGActor(actor.id, xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, xcaRGQueryClientConnections, xcaRGRetrieveClientConnections, actorAudit, log, null))
-					okay = false;
-			}
-			
-		}
-		// Done
-		return okay;
-	}
-	
-	/**
-	 * Clears all brokers and stops all active actors.
-	 */
-	public void resetAllBrokers() {
+	@Override
+	protected void destroyAllActors() {
 		// Create a controller that will reset all IHE actors
 		IheBrokerController controller = new IheBrokerController();
 		// Apply it to the AuditBroker
@@ -510,368 +93,151 @@ public class XdsConfigurationLoader {
 		XdsBroker xdsBroker = XdsBroker.getInstance();
 		xdsBroker.unregisterXdsRegistries(controller);
 		xdsBroker.unregisterXdsRepositories(controller);
+		xdsBroker.unregisterXcaIG(controller);
+		xdsBroker.unregisterXcaRG(controller);
         // Okay, nothing is installed
 		actorsInstalled.clear();
 	}
 	
-	/**
-	 * Looks up an actor description given an ID.
-	 * 
-	 * @param id the actor description ID
-	 * @return the actor description, if there is one
-	 */
-	public ActorDescription getDescriptionById(String id) {
-		if (id == null) return null;
-		for (ActorDescription actor: actorDefinitions) {
-			if (id.equalsIgnoreCase(actor.getId())) return actor;
-		}
-		return null;
-	}
-	
-	/**
-	 * Processes a ConnectionFile element.  This element will specify a file that includes
-	 * definitions of various connections that can be used by the IHE actors.
-	 * 
-	 * @param element the XML DOM element defining the connection file
-	 * @return <code>true</code> if the file was loaded successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean processConnectionFile(Element element, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		// Get out the file name
-		String filename = getAttributeValue(element, "file");
-		if (filename == null) filename = getAttributeValue(element, "name");
-		if (filename == null) filename = getNodeAsText(element);
-		if (filename != null) {
-			// Got the connection file name, load it
-			File includeFile = new File(configFile.getParentFile(), filename);
-			if (ConnectionFactory.loadConnectionDescriptionsFromFile(includeFile)) {
-				okay = true;
-			} else {
-				throwIheConfigurationException("Error loading connection file \"" + filename + "\"", configFile);
-			}
-		} else {
-			// No connection file name given
-			logConfigurationWarning("Missing attribute 'name' in 'ConnectionFile' definition", configFile);
-		}
-		// Done
-		return okay;
-	}
-
-    private boolean processActorFile(Element element, boolean autoInstall, File configFile, boolean resetActorDefinition) throws IheConfigurationException {
-        boolean okay = false;
-        // Get out the file name
-        String filename = getAttributeValue(element, "file");
-        if (filename == null) filename = getAttributeValue(element, "name");
-        if (filename == null) filename = getNodeAsText(element);
-        if (filename != null) {
-            // Got the actor file name, load it
-            File includeFile = new File(configFile.getParentFile(), filename);
-            if (loadConfiguration(includeFile, autoInstall, false, LibraryConfig.getInstance().getOidRoot(),
-                   LibraryConfig.getInstance().getOidSource(), LibraryConfig.getInstance().getStyleSheetLocation(),
-                   LibraryConfig.getInstance().getPatientQueryDesignProps(), LibraryConfig.getInstance().getCodeMappingManager(),
-                   LibraryConfig.getInstance().getLogContext())) {
-                okay = true;
-            } else {
-                throwIheConfigurationException("Error loading actor file \"" + filename + "\"", configFile);
-            }
-        } else {
-            // No connection file name given
-            logConfigurationWarning("Missing attribute 'name' in 'ActorFile' definition", configFile);
-        }
-        // Done
-        return okay;
-    }
-
-    /**
-	 * Processes an Actor element.  This element will specify a single IHE actor
-	 * and the connection(s) it should use.
-	 * 
-	 * @param element the XML DOM element defining the actor
-	 * @return True if the actor was created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean processActorDefinition(Element element, boolean autoInstall, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		// Get out the actor name and type
-		String actorName = getAttributeValue(element, "name");
-		if (actorName == null)
-			throwIheConfigurationException("Missing attribute 'name' in 'Actor' definition", configFile);
-		String actorType = getAttributeValue(element, "type");
-		if (actorType == null)
-			throwIheConfigurationException("Missing attribute 'type' in 'Actor' definition", configFile);
-		// Process the definition
-		okay = processIheActorDefinition(actorType, actorName, element, autoInstall, configFile);
-		return okay;
-	}
-	
-	/**
-	 * Processes an Actor element to extract the parameters and create and install the appropriate
-	 * object.
-	 * 
-	 * @param actorType the type of the actor to create
-	 * @param actorName the name for this actor within the configuration file
-	 * @param definition the XML DOM element defining the actor
-	 * @return <code>true</code> if the actor was create successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean processIheActorDefinition(String actorType, String actorName, Element definition, boolean autoInstall, File configFile) throws IheConfigurationException {
-		// Parse out the following information
-		String description = null;
-		IConnectionDescription sourceConnection = null;
-		IConnectionDescription consumerConnection = null;
-		ArrayList<IConnectionDescription> logConnections = new ArrayList<IConnectionDescription>();
-		//Define a PIXRegistry server side connection, so that ITI-8 PIX Feed messages can be forwarded to the XDS Registry 
-		IConnectionDescription pixRegistryServerConnection = null;		
-		//Define a server side connection for each server actor
-		IConnectionDescription serverConnection = null;
-		//Define a XDSRegistry client side connection so that ITI-42 and ITI-38 messages can be forwarded to the XDS Registry server
-		IConnectionDescription xdsRegistryClientConnection = null;
-		//Define a XDSRepository client side connection so that ITI-39 messages can be forwarded to the XDS Repository server
-		IConnectionDescription xdsRepositoryClientConnection = null;
-
-		//Define a XCARG client side Query connections so that ITI-38 messages can be forwarded to the XCA Responding Gateway server
-		Map<String, IConnectionDescription> xcaRGQueryClientConnections = new HashMap<String, IConnectionDescription>();
-		//Define a XCARG client side Retrieve connections so that ITI-39 messages can be forwarded to the XCA Responding Gateway server
-		Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = new HashMap<String, IConnectionDescription>();
-		
-		// Look at each child node in turn
-		NodeList elements = definition.getChildNodes();
-		for (int elementIndex = 0; elementIndex < elements.getLength(); elementIndex++) {
-			Node element = elements.item(elementIndex);
-			if (element instanceof Element) {
-				// See what type of element it is
-				String kind = element.getNodeName();
-				if (kind.equalsIgnoreCase("CONNECTION")) {
-					// It is a connection element, get out the connection description
-					String sourceName = getAttributeValue(element, "source");
-					String consumerName = getAttributeValue(element, "consumer");
-					if ((sourceName == null) && (consumerName == null) ) {
-						logConfigurationWarning("Connection element with no 'source' or 'consumer' attribute", configFile);
-					} else {
-						// Pull out the source connection
-						if (sourceName != null) {
-							if (sourceConnection != null) {
-								logConfigurationWarning("Duplicate 'source' connection attributes", configFile);
-							} else {
-								sourceConnection = ConnectionFactory.getConnectionDescription(sourceName);
-								if (sourceConnection == null) {
-									throwIheConfigurationException("Connection '" + sourceName + "' in actor '" + actorName + "' is not defined", configFile);
-								}
-							}
-						}
-						// Pull out the consumer connection
-						if (consumerName != null) {
-							if (consumerConnection != null) {
-								logConfigurationWarning("Duplicate 'consumer' connection attributes", configFile);
-							} else {
-								consumerConnection = ConnectionFactory.getConnectionDescription(consumerName);
-								if (consumerConnection == null) {
-									throwIheConfigurationException("Connection '" + consumerName + "' in actor '" + actorName + "' is not defined", configFile);
-								}
-							}
-						}					
-					}
-				} else if (kind.equalsIgnoreCase("SERVER")) {
-					//For each server actor, define a server connection for each transaction
-					String server = getAttributeValue(element, "connection");
-					if (server == null) {
-						throwIheConfigurationException("Server element with no 'connection' attribute in actor '" + actorName + "' is not defined", configFile);
-					}
-					serverConnection = ConnectionFactory.getConnectionDescription(server);
-					if (serverConnection == null) {
-						throwIheConfigurationException("Server connection '" + server + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("AUDITTRAIL")) {
-					// An ATNA logger definition
-					String logName = getAttributeValue(element, "consumer");
-					if (logName == null) {
-						logConfigurationWarning("AuditTrail element with no 'consumer' attribute", configFile);
-					}
-					IConnectionDescription logConnection = ConnectionFactory.getConnectionDescription(logName);
-					if (logConnection == null) {
-						throwIheConfigurationException("AuditTrail connection '" + logName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-					logConnections.add(logConnection);
-				} else if (kind.equalsIgnoreCase("PIXSERVER")) {
-					// For PIX Registry, define a PIX Registry Connection for Transaction ITI-8
-					String pixRegistryName = getAttributeValue(element, "connection");
-					if (pixRegistryName == null) {
-						throwIheConfigurationException("PixServer element with no 'connection' attribute", configFile);
-					}
-				    pixRegistryServerConnection = ConnectionFactory.getConnectionDescription(pixRegistryName);
-					if (pixRegistryServerConnection == null) {
-						throwIheConfigurationException("PixServer connection '" + pixRegistryName + "' in actor '" + actorName + "' is not defined", configFile);
-					}					
-				} else if (kind.equalsIgnoreCase("REGISTRY")) {
-					// For XDS Repository or XCA Gateway, define an XDSRegistry client side connection
-					String xdsRegistryClientName = getAttributeValue(element, "connection");
-					if (xdsRegistryClientName == null) {
-						throwIheConfigurationException("Registry element with no 'connection' attribute", configFile);
-					}
-					xdsRegistryClientConnection = ConnectionFactory.getConnectionDescription(xdsRegistryClientName);
-					if (xdsRegistryClientConnection == null) {
-						throwIheConfigurationException("Registry connection '" + xdsRegistryClientName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("REPOSITORY")) {
-					// For XCA Gateway, define a Repository client side connection for transaction ITI-39.
-					String xdsRepositoryClientName = getAttributeValue(element, "connection");
-					if (xdsRepositoryClientName == null) {
-						throwIheConfigurationException("Repository element with no 'connection' attribute in actor '" + actorName + "' is not defined", configFile);
-					}
-					xdsRepositoryClientConnection = ConnectionFactory.getConnectionDescription(xdsRepositoryClientName);
-					if (xdsRepositoryClientConnection == null) {
-						throwIheConfigurationException("Repository connection '" + xdsRepositoryClientName + "' in actor '" + actorName + "' is not defined", configFile);
-					}
-				} else if (kind.equalsIgnoreCase("RESPONDINGGATEWAYS")) {
-					//Define Gateway query and retrieve connections for each responding gateway 
-					List<Element> rgs = getChildElements(element, "RESPONDINGGATEWAY");
-					
-					for (Element rg : rgs) {
-						//homeId
-						String homeId = getAttributeValue(rg, "homeId");
-						if (homeId == null) {
-							throwIheConfigurationException("RespondingGateway element with no 'homeId' attribute in actor '" + actorName + "' is not defined", configFile);
-						}
-						//query
-						String queryName = getAttributeValue(rg, "query");
-						if (queryName == null) {
-							throwIheConfigurationException("RespondingGateway element with no 'query' attribute in actor '" + actorName + "' is not defined", configFile);
-						}
-						IConnectionDescription xcaQueryConnection = ConnectionFactory.getConnectionDescription(queryName);
-						if (xcaQueryConnection == null) {
-							throwIheConfigurationException("RespondingGateway query connection '" + queryName + "' in actor '" + actorName + "' is not defined", configFile);
-						}
-						xcaRGQueryClientConnections.put(homeId, xcaQueryConnection);
-						//retrieve
-						String retrieveName = getAttributeValue(rg, "retrieve");
-						if (retrieveName == null) {
-							throwIheConfigurationException("RespondingGateway element with no 'retrieve' attribute in actor '" + actorName + "' is not defined", configFile);
-						}
-						IConnectionDescription xcaRetrieveConnection = ConnectionFactory.getConnectionDescription(retrieveName);
-						if (xcaRetrieveConnection == null) {
-							throwIheConfigurationException("RespondingGateway retrieve connection '" + retrieveName + "' in actor '" + actorName + "' is not defined", configFile);
-						}
-						xcaRGRetrieveClientConnections.put(homeId, xcaRetrieveConnection);
-					}
-				} else if (kind.equalsIgnoreCase("DESCRIPTION")) {
-					// A description of this actor for GUI presentation
-					description = getAttributeValue(element, "value");
-					if (description == null) description = getNodeAsText(element);
-					
-				} else {
-					// Not an element we know about
-					logConfigurationWarning("Unknown actor XML element '" + kind + "'", configFile);
-				}
-			}
-		}
-		// Allow for some sloppiness in Secure Nodes
-		if (actorType.equalsIgnoreCase("SecureNode")) {
-			boolean warn = false;
-			if (sourceConnection != null) {
-				warn = true;
-				logConnections.add(sourceConnection);
-			}
-			if (consumerConnection != null) {
-				warn = true;
-				logConnections.add(consumerConnection);
-			}
-			if (warn)
-				log.warn("Actor '" + actorName + "' specifies a connection instead of an auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		}
+	@Override
+	protected boolean validateActor(IActorDescription actor, File configFile) throws IheConfigurationException {
+		String actorName = actor.getName();
 		// Make sure we got out a valid definition
-		if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
-			if (pixRegistryServerConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid PixServer in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (serverConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
-			if (serverConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (xdsRegistryClientConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid XdsRegistryClient in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		} else if (actorType.equalsIgnoreCase("XCARG")) {
-			if (serverConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (xdsRegistryClientConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Registry in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (xdsRepositoryClientConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Repository in configuration file \"" + configFile.getAbsolutePath() + "\"");
-		}else if (actorType.equalsIgnoreCase("XCAIG")) {
-			if (serverConnection==null)
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Server in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			if (xdsRegistryClientConnection==null && (xcaRGQueryClientConnections==null || xcaRGQueryClientConnections.size()==0) ) {
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Registry or RespondingGateway Query in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		if (actor.getType().equalsIgnoreCase(XDSREGISTRY)) {
+			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			if (actor.getConnectionDescriptionsByType(PIXSERVER).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + PIXSERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		} 
+		else if (actor.getType().equalsIgnoreCase(XDSREPOSITORY)) {
+			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			if (actor.getConnectionDescriptionsByType(REGISTRY).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+		}
+	    else if (actor.getType().equalsIgnoreCase(XCARG)) {
+			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			if (actor.getConnectionDescriptionsByType(REGISTRY).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			if (actor.getConnectionDescriptionsByType(REPOSITORY).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REPOSITORY + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+	    }
+		else if (actor.getType().equalsIgnoreCase(XCAIG)) {
+			TransactionsSet respondingGatewaySet = actor.getTransactionSet(RESPONDINGGATEWAY);
+			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			// At least a registry or responding gateway has to be defined.
+			if (actor.getConnectionDescriptionsByType(REGISTRY).isEmpty() && respondingGatewaySet == null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection or Responding Gateway in configuration file \"" + configFile.getAbsolutePath() + "\"");				
+			
+			// At least a repository or responding gateway has to be defined.
+			if (actor.getConnectionDescriptionsByType(REPOSITORY).isEmpty() && respondingGatewaySet == null)
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REPOSITORY + "' Connection or Responding Gateway in configuration file \"" + configFile.getAbsolutePath() + "\"");
+			
+			if (respondingGatewaySet != null) {
+				for (Transactions transactions : respondingGatewaySet.getAllTransactions() ) {
+					if (transactions.getQuery() == null)
+						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + QUERY + "' attribute");
+					if (transactions.getRetrieve() == null)
+						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + RETRIEVE + "' attribute");
+				}	
 			}
-			if (xdsRepositoryClientConnection==null && (xcaRGRetrieveClientConnections==null || xcaRGRetrieveClientConnections.size()==0) ) {
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid Repository or RespondingGateway Retrieve in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			}
+		}
+		else if (actor.getType().equalsIgnoreCase(SECURENODE)) {
+			if (actor.getAuditLogConnection().isEmpty())
+				throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid '" + AUDITTRAIL + "' element");
+		}
+		else {
+			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid actor type");			
 		}
 		
-		if (actorType.equalsIgnoreCase("SecureNode") && logConnections.isEmpty())
-			throw new IheConfigurationException("Actor '" + actorName + "' must specify a valid auditTrail in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			// Actually create the actor
-		if (autoInstall) {
-			if (actorType.equalsIgnoreCase("XDSREGISTRY")) {
-				return createXdsRegistryActor(actorName,serverConnection, pixRegistryServerConnection, logConnections, null, configFile);
-			} else if (actorType.equalsIgnoreCase("XDSREPOSITORY")) {
-				return createXdsRepositoryActor(actorName,serverConnection, xdsRegistryClientConnection, logConnections, null, configFile);
-			} else if (actorType.equalsIgnoreCase("XCARG")) {
-				return createXcaRGActor(actorName, serverConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, logConnections, null, configFile);
-			} else if (actorType.equalsIgnoreCase("XCAIG")) {
-				return createXcaIGActor(actorName, serverConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, xcaRGQueryClientConnections, xcaRGRetrieveClientConnections, logConnections, null, configFile);	
-			} else 
-				return true;
-		} else {			
-			ActorDescription actor = initActor(actorType);
-			actor.id = actorName;
-			actor.type = getHumanActorTypeString(actorType, configFile);
-			actor.actorType = actorType;
-			actor.sourceConnection = sourceConnection;
-			actor.consumerConnection = consumerConnection;
-			actor.logConnections = logConnections;
-			if (serverConnection != null) {
-				actor.description = getHumanConnectionDescription(description, serverConnection);
-			} else if (actorType.equalsIgnoreCase("SecureNode") && !logConnections.isEmpty()) {
-				actor.description = getHumanConnectionDescription(description, logConnections.get(0));
-			} else {
-				actor.description = actorName;
-			}
-			
-			if (actor instanceof XdsRegistryActorDescription) {
-				((XdsRegistryActorDescription)actor).xdsRegistryConnection = serverConnection;
-				((XdsRegistryActorDescription)actor).pixRegistryConnection = pixRegistryServerConnection;				
-			}else if (actor instanceof XdsRepositoryActorDescription) {
-				((XdsRepositoryActorDescription)actor).xdsRepositoryServerConnection = serverConnection;
-				((XdsRepositoryActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
-			}else if (actor instanceof XcaRGActorDescription) {
-				((XcaRGActorDescription)actor).xcaRGServerConnection = serverConnection;
-				((XcaRGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
-				((XcaRGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
-			}else if (actor instanceof XcaIGActorDescription) {
-				((XcaIGActorDescription)actor).xcaIGServerConnection = serverConnection;
-				((XcaIGActorDescription)actor).xdsRegistryClientConnection = xdsRegistryClientConnection;				
-				((XcaIGActorDescription)actor).xdsRepositoryClientConnection = xdsRepositoryClientConnection;
-				((XcaIGActorDescription)actor).xcaRGQueryClientConnections = xcaRGQueryClientConnections;
-				((XcaIGActorDescription)actor).xcaRGRetrieveClientConnections = xcaRGRetrieveClientConnections;
-			}else if (actor instanceof XdsAuditActorDescription){
-				((XdsAuditActorDescription)actor).xdsAuditConnection = logConnections;
-			}
-			
-			actorDefinitions.add(actor);			
-			return true;
-		}
+		return true;
 	}
 	
-	/**
-	 * Gets a human understandable actor type name. 
-	 * 
-	 * @param type the actor type
-	 * @param configFile the configuration file
-	 * @return a human understandable actor type name
-	 * @throws IheConfigurationException
-	 */
-	private String getHumanActorTypeString(String type, File configFile) throws IheConfigurationException {
+
+	@Override
+	protected boolean createIheActor(IActorDescription actor, Collection<IConnectionDescription> auditLogs, IMesaLogger logger, File configFile) 
+	throws IheConfigurationException {
+		boolean okay = false;
+		IheAuditTrail auditTrail = null;
+		
+		// Build a new audit trail if there are any connections to audit repositories.
+		if (!auditLogs.isEmpty()) { 
+			auditTrail = new IheAuditTrail(actor.getName(), auditLogs);
+		}
+		
+		// Actually create the actor
+		if (actor.getType().equalsIgnoreCase(SECURENODE)) {
+			if (auditTrail != null) {
+				AuditBroker broker = AuditBroker.getInstance();
+				broker.registerAuditSource(auditTrail);
+				okay = true;
+			}
+		}
+		else if (actor.getType().equalsIgnoreCase(XDSREGISTRY)) {
+			IConnectionDescription xdsRegistryServerConnection = actor.getConnectionDescriptionByType(SERVER);
+			IConnectionDescription pixRegistryServerConnection = actor.getConnectionDescriptionByType(PIXSERVER);
+			XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryServerConnection, xdsRegistryServerConnection, auditTrail);
+
+			XdsRegistryPatientService patientManager = XdsFactory.getXdsRegistryPatientService();
+			xdsRegistry.registerPatientManager(patientManager);
+
+			if (xdsRegistry != null) {
+	            XdsBroker broker = XdsBroker.getInstance();
+	            broker.registerXdsRegistry(xdsRegistry);
+	            okay = true;
+	        }
+		}
+		else if (actor.getType().equalsIgnoreCase(XDSREPOSITORY)) {
+			IConnectionDescription repositoryServerConnection = actor.getConnectionDescriptionByType(SERVER);
+			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
+
+			XdsRepositoryImpl xdsRepository = new XdsRepositoryImpl(repositoryServerConnection, registryClientConnection, auditTrail);
+			if (repositoryServerConnection != null) {
+	            XdsBroker broker = XdsBroker.getInstance();
+	            broker.registerXdsRepository(xdsRepository);
+	            okay = true;
+	        }
+		}
+		else if (actor.getType().equalsIgnoreCase(XCARG)) {
+			IConnectionDescription rgServerConnection = actor.getConnectionDescriptionByType(SERVER);
+			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
+			IConnectionDescription reposiotryClientConnection = actor.getConnectionDescriptionByType(REPOSITORY);
+			
+			XcaRGImpl xcaRG = new XcaRGImpl(rgServerConnection, registryClientConnection, reposiotryClientConnection, auditTrail);
+	        if (xcaRG != null) {
+	            XdsBroker broker = XdsBroker.getInstance();
+	            broker.registerXcaRG(xcaRG);
+	            okay = true;
+	        }
+		}
+		else if (actor.getType().equalsIgnoreCase(XCAIG)) {
+			IConnectionDescription igServerConnection = actor.getConnectionDescriptionByType(SERVER);
+			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
+			IConnectionDescription reposiotryClientConnection = actor.getConnectionDescriptionByType(REPOSITORY);
+			TransactionsSet respondingGateways = actor.getTransactionSet(RESPONDINGGATEWAY);
+			
+			XcaIGImpl xcaIG = new XcaIGImpl(igServerConnection, registryClientConnection, reposiotryClientConnection, respondingGateways, auditTrail);
+	        if (xcaIG != null) {
+	            XdsBroker broker = XdsBroker.getInstance();
+	            broker.registerXcaIG(xcaIG);
+	            okay = true;
+	        }
+		}
+		
+        // Record this installation, if it succeeded
+		if (okay) actorsInstalled.add(actor.getName()); 
+		return okay;
+	}
+
+	@Override
+	protected String getHumanReadableActorType(String type, File configFile) throws IheConfigurationException {
 		if (type.equalsIgnoreCase("SecureNode")) {
 			return "Audit Record Repository";
 		} else if (type.equals("XdsRegistry")) {
@@ -884,586 +250,47 @@ public class XdsConfigurationLoader {
 	        return "OpenXDS XCA Initiating Gateway";
 	    }
 		else {
-			throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
+			ActorDescriptionLoader.throwIheConfigurationException("Invalid actor type '" + type + "'", configFile);
 			return null;
 		}
 	}
 	
-	/**
-	 * Gets a human understandable connection description.
-	 * 
-	 * @param description the description
-	 * @param connection the connection
-	 * @return a human understandable description of this connection
-	 */
-	private String getHumanConnectionDescription(String description, IConnectionDescription connection) {
-		StringBuffer sb = new StringBuffer();
-		String hostName = connection.getHostname();
-		int port = connection.getPort();
-		if (description != null)  {
-			// "description host:port (TLS)"
-			sb.append(description);
-			if (connection.isSecure()) sb.append(" (TLS)");
-			if (hostName != null) {
-				sb.append(' ');
-				sb.append(hostName);
-				if (port >= 0) {
-					sb.append(':');
-					sb.append(port);
-				}
-			}
-		} else if (hostName != null) {
-			// "host:port (TLS)"
-			sb.append(hostName);
-			if (port >= 0) {
-				sb.append(':');
-				sb.append(port);
-			}
-			if (connection.isSecure()) sb.append(" (TLS)");
-		}
-		// Done
-		return sb.toString();
-	}
-	
-	
-	/**
-	 * Creates an IHE XDS AuditTrail actor and install it into the AuditBroker.
-	 * 
-	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xdsAuditConnection The description of the connection of the XDS
-     * 			AuditTail in the affinity domain
-	 * @param auditConnections the audit trail connections this actor should log to
-	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-	 * @return <code>true</code> if the actor is created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean createXdsAuditActor(String name, Collection<IConnectionDescription> auditConnections, IMesaLogger logger, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		IheAuditTrail auditTrail = null;
-		// Build a new audit trail if there are any connections to audit repositories.
-		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
+//	/**
+//	 * Gets a human understandable connection description.
+//	 * 
+//	 * @param description the description
+//	 * @param connection the connection
+//	 * @return a human understandable description of this connection
+//	 */
+//	protected String getHumanConnectionDescription(String description, IConnectionDescription connection) {
+//		StringBuffer sb = new StringBuffer();
+//		String hostName = connection.getHostname();
+//		int port = connection.getPort();
+//		if (description != null)  {
+//			// "description host:port (TLS)"
+//			sb.append(description);
+//			if (connection.isSecure()) sb.append(" (TLS)");
+//			if (hostName != null) {
+//				sb.append(' ');
+//				sb.append(hostName);
+//				if (port >= 0) {
+//					sb.append(':');
+//					sb.append(port);
+//				}
+//			}
+//		} else if (hostName != null) {
+//			// "host:port (TLS)"
+//			sb.append(hostName);
+//			if (port >= 0) {
+//				sb.append(':');
+//				sb.append(port);
+//			}
+//			if (connection.isSecure()) sb.append(" (TLS)");
+//		}
+//		// Done
+//		return sb.toString();
+//	}
 
-		if (auditTrail != null) {
-			AuditBroker broker = AuditBroker.getInstance();
-			broker.registerAuditSource(auditTrail);
-			okay = true;
-		}
-		// Record this installation, if it succeeded
-		if (okay) actorsInstalled.add(name);
-		return okay;
-	}
-	
-	/**
-	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
-	 * 
-	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xdsRegistryConnection The description of the connection of the XDS
-     * 			Registry in the affinity domain
-	 * @param pixRegistryConnection The description of the connection of the PIX
-	 * 			Registry in the affinity domain
-	 * @param auditConnections the audit trail connections this actor should log to
-	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-	 * @return <code>true</code> if the actor is created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean createXdsRegistryActor(String name, IConnectionDescription xdsRegistryConnection, 
-			IConnectionDescription pixRegistryConnection, Collection<IConnectionDescription> auditConnections,			
-			IMesaLogger logger, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		IheAuditTrail auditTrail = null;		
-		// Build a new audit trail if there are any connections to audit repositories.
-		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-		XdsRegistryPatientService patientManager = XdsFactory.getXdsRegistryPatientService();
-		XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryConnection, xdsRegistryConnection, auditTrail);
-		xdsRegistry.registerPatientManager(patientManager);
-	    if (xdsRegistry != null) {
-            XdsBroker broker = XdsBroker.getInstance();
-            broker.registerXdsRegistry(xdsRegistry);
-            okay = true;
-        }
-		// Record this installation, if it succeeded
-		if (okay) actorsInstalled.add(name);
-		return okay;
-	}
-
-	/**
-	 * Creates an IHE XDS Registry actor and install it into the DocumentBroker.
-	 * 
-	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xdsRepositoryServerConnection The description of the connection of the XDS
-     * 			Repository in the affinity domain
-	 * @param xdsRegistryClientConnection The description of the client side connection of
-	 * 			the XDS Registry in the affinity domain
-	 * @param auditConnections the audit trail connections this actor should log to
-	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-	 * @return <code>true</code> if the actor is created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean createXdsRepositoryActor(String name, IConnectionDescription xdsRepositoryServerConnection, 
-			IConnectionDescription xdsRegistryClientConnection, Collection<IConnectionDescription> auditConnections,			
-			IMesaLogger logger, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		IheAuditTrail auditTrail = null;
-		// Build a new audit trail if there are any connections to audit repositories.
-		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-
-		XdsRepositoryImpl xdsRepository = new XdsRepositoryImpl(xdsRepositoryServerConnection, xdsRegistryClientConnection, auditTrail);
-        if (xdsRepositoryServerConnection != null) {
-            XdsBroker broker = XdsBroker.getInstance();
-            broker.registerXdsRepository(xdsRepository);
-            okay = true;
-        }
-		// Record this installation, if it succeeded
-		if (okay) actorsInstalled.add(name);
-		return okay;
-	}
-	
-	/**
-	 * Creates an IHE XCA Responding Gateway actor and install it into the DocumentBroker.
-	 * 
-	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xcaRGServerConnection The description of the connection of the XCA
-     * 			Gateway in the affinity domain
-	 * @param xdsRegistryClientConnection The description of the client side connection of
-	 * 			the XDS Registry in the affinity domain
-	 * @param xdsRepositoryClientConnection The description of the client side connection of
-	 * 			the XDS Repository in the affinity domain
-	 * @param auditConnections the audit trail connections this actor should log to
-	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-	 * @return <code>true</code> if the actor is created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean createXcaRGActor(String name, IConnectionDescription xcaRGServerConnection, IConnectionDescription xdsRegistryClientConnection, 
-			IConnectionDescription xdsRepositoryClientConnection, Collection<IConnectionDescription> auditConnections,			
-			IMesaLogger logger, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		IheAuditTrail auditTrail = null;
-		// Build a new audit trail if there are any connections to audit repositories.
-		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-
-		XcaRGImpl xcaRG = new XcaRGImpl(xcaRGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, auditTrail);
-        if (xcaRGServerConnection != null) {
-            XdsBroker broker = XdsBroker.getInstance();
-            broker.registerXcaRG(xcaRG);
-            okay = true;
-        }
-		// Record this installation, if it succeeded
-		if (okay) actorsInstalled.add(name);
-		return okay;
-	}
-	
-	/**
-	 * Creates an IHE XCA Initiating Gateway actor and install it into the DocumentBroker.
-	 * 
-	 * @param name the name of the actor to create (used in audit messages)
-	 * @param xcaIGServerConnection The description of the connection of the XCA
-     * 			Gateway in the affinity domain
-	 * @param xdsRegistryClientConnection The description of the client side connection of
-	 * 			the XDS Registry in the affinity domain
-	 * @param xdsRepositoryClientConnection The description of the client side connection of
-	 * 			the XDS Repository in the affinity domain
-	 * @param auditConnections the audit trail connections this actor should log to
-	 * @param logger the IHE actor message logger to use for this actor, null means no message logging
-	 * @return <code>true</code> if the actor is created successfully
-	 * @throws IheConfigurationException When there is a problem with the configuration
-	 */
-	private boolean createXcaIGActor(String name, IConnectionDescription xcaIGServerConnection, IConnectionDescription xdsRegistryClientConnection, 
-			IConnectionDescription xdsRepositoryClientConnection, Map<String, IConnectionDescription> rgQueryClientConnections, 
-			Map<String, IConnectionDescription> rgRetrieveClientConnections, Collection<IConnectionDescription> auditConnections,			
-			IMesaLogger logger, File configFile) throws IheConfigurationException {
-		boolean okay = false;
-		IheAuditTrail auditTrail = null;
-		// Build a new audit trail if there are any connections to audit repositories.
-		if (!auditConnections.isEmpty()) auditTrail = new IheAuditTrail(name, auditConnections);
-
-		XcaIGImpl xcaIG = new XcaIGImpl(xcaIGServerConnection, xdsRegistryClientConnection, xdsRepositoryClientConnection, rgQueryClientConnections, rgRetrieveClientConnections, auditTrail);
-        if (xcaIGServerConnection != null) {
-            XdsBroker broker = XdsBroker.getInstance();
-            broker.registerXcaIG(xcaIG);
-            okay = true;
-        }
-		// Record this installation, if it succeeded
-		if (okay) actorsInstalled.add(name);
-		return okay;
-	}
-
-	/**
-     * Gets an instance of a Class. This method try to instantiate by newInstance first. If it
-     * does not exist, it will try to invoke getInstance();
-     *
-     * @param c the class whose object is to be instantiated
-     * @return an Instance of Class c
-     * @throws Exception If the object cannot be instantiated
-     */
-    private Object getObjectInstance(Class c) throws Exception {
-        Object ret = null;
-        try {
-            //try new instance first
-            ret = c.newInstance();
-        } catch (InstantiationException e) {
-           //try getInstance() method
-            Method method = c.getMethod("getInstance");
-            ret = method.invoke(null);
-        }
-        return ret;
-    }
- 
-    /**
-	 * Logs a configuration file warning.
-	 * 
-	 * @param message the warning to log
-	 */
-	private void logConfigurationWarning(String message, File configFile) {
-		String filename = null;
-		if (configFile != null) filename = configFile.getAbsolutePath();
-		String warning = message;
-		if (filename != null) warning = message + " in configuration file \"" + filename + "\"";
-		log.warn(warning);
-	}
-
-	/**
-	 * Throws a new IheConfigurationException.
-	 * 
-	 * @param message the message to include in the exception
-	 * @throws IheConfigurationException The exception
-	 */
-	private void throwIheConfigurationException(String message, File configFile) throws IheConfigurationException {
-		String filename = null;
-		if (configFile != null) filename = configFile.getAbsolutePath();
-		String error = message;
-		if (filename != null) error = message + " in configuration file \"" + filename + "\"";
-		log.error(error);
-		throw new IheConfigurationException(message);
-	}
-	
-	private List<Element> getChildElements(Node element, String name) {
-		List<Element> ret = new ArrayList<Element>();
-		
-		NodeList nodes = element.getChildNodes();
-		for (int elementIndex = 0; elementIndex < nodes.getLength(); elementIndex++) {
-			Node node = nodes.item(elementIndex);
-			if (node instanceof Element) {
-				// See what type of element it is
-				String kind = node.getNodeName();
-				if (kind.equalsIgnoreCase(name)) {
-					ret.add((Element)node);
-				}
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * Gets an attribute value
-	 * 
-	 * @param node the XML DOM node holding the attribute
-	 * @param name the name of the attribute
-	 * @return the value of the attribute
-	 */
-	private String getAttributeValue(Node node, String name) {
-		NamedNodeMap attributes = node.getAttributes();
-		if (attributes == null) return null;
-		Node attribute = attributes.getNamedItem(name);
-		if (attribute == null) return null;
-		return attribute.getNodeValue();
-	}
-	
-	/**
-	 * Gets the text included within an XML DOM element
-	 * 
-	 * @param node the XML DOM node holding the text
-	 * @return the text
-	 */
-	private String getNodeAsText(Node node) {
-		if (!node.hasChildNodes()) return null;
-		Text nodeTextContents = (Text) node.getFirstChild();
-		return nodeTextContents.getData();
-	}	
-	
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * GUI elements and other things.
-	 * 
-	 * @author Jim Firby
-	 * @version 1.0 - Jan 11, 2006
-	 */
-	public class ActorDescription implements IheActorDescription {
-		
-		protected String id = null;
-		protected String type = null;
-		protected String description = null;
-		protected boolean isInstalled = false;
-		
-		protected String actorType = null;
-		protected IConnectionDescription sourceConnection = null;
-		protected IConnectionDescription consumerConnection = null;
-		protected Collection<IConnectionDescription> logConnections = null;
-
-		public String getDescription() {
-			return description;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public String getType() {
-			return type;
-		}
-		
-		public String getActorType() {
-			return actorType;
-		}
-		
-		public boolean isInstalled() {
-			return isInstalled;
-		}
-		
-		/**
-		 * Gets the connection description of this actor.
-		 * 
-		 * @return the connection description
-		 */
-		public IConnectionDescription getConnection() {
-			if (sourceConnection != null) return sourceConnection;
-			else return consumerConnection;
-		}
-		
-		/**
-		 * Gets a collection of audit trail log connections for this actor.
-		 * 
-		 * @return a collection of audit trail log connections
-		 */
-		public Collection<IConnectionDescription> getLogConnection() {
-			return logConnections;
-		}
-		
-	}
-	
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * XDS Registry Actor
-	 * 
-	 * @author Wenzhi Li
-	 */
-	public class XdsAuditActorDescription extends ActorDescription {
-		/** Defines the XDS Registry Connection */
-		private ArrayList<IConnectionDescription> xdsAuditConnection = null;
-		
-
-		/**
-		 * Gets the connection for the XDS Audit Trail. The connect provides the details such as host name 
-		 * and port etc which are needed for this XDS Audit Trail to talk to the XDS Repositories and XDS Registries.
-		 * 
-		 * @return the connection of XDS AuditTrail 
-		 */
-		public ArrayList<IConnectionDescription> getXdsAuditConnection() {
-			return xdsAuditConnection;
-		}
-		
-	}
-
-	
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * XDS Registry Actor
-	 * 
-	 * @author Wenzhi Li
-	 */
-	public class XdsRegistryActorDescription extends ActorDescription {
-		/** Defines the XDS Registry Connection */
-		private IConnectionDescription xdsRegistryConnection = null;
-		
-		/** Defines the XDS Registry PIX Connection */
-		private IConnectionDescription pixRegistryConnection = null;
-
-		/**
-		 * Gets the connection for the XDS Registry. The connect provides the details such as host name 
-		 * and port etc which are needed for this XDS Registry to talk to the XDS Repositories and XDS Consumers.
-		 * 
-		 * @return the connection of XDS Registry
-		 */
-		public IConnectionDescription getXdsRegistryConnection() {
-			return xdsRegistryConnection;
-		}
-		
-		/**
-		 * Gets the connection for the PIX Registry. The connect provides the details such as host name 
-		 * and port etc which are needed for this PIX Registry to talk to the PIX Source
-		 * 
-		 * @return the connection of PIX Registry
-		 */
-		public IConnectionDescription getPixRegistryConnection() {
-			return pixRegistryConnection;
-		}
-	}
-
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * XDS Repository Actor
-	 * 
-	 * @author Wenzhi Li
-	 */
-	public class XdsRepositoryActorDescription extends ActorDescription {
-		/** Defines the server side of XDS Repository Connection */
-		private IConnectionDescription xdsRepositoryServerConnection = null;
-		
-		/** Defines the client side of XDS Registry Connection */
-		private IConnectionDescription xdsRegistryClientConnection = null;
-
-		/**
-		 * Gets the connection for the XDS Repository server. 
-		 * 
-		 * @return the connection of XDS Repository for 
-		 */
-		public IConnectionDescription getXdsRepositoryServerConnection() {
-			return xdsRepositoryServerConnection;
-		}
-		
-		/**
-		 * Gets the connection for the XDS Registry client.  
-		 * 
-		 * @return the connection for XDS Registry client such as XDS Repository
-		 */
-		public IConnectionDescription getXdsRegistryClientConnection() {
-			return xdsRegistryClientConnection;
-		}
-	}
-	
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * XCA Responding Gateway Actor
-	 * 
-	 * @author Wenzhi Li
-	 */
-	public class XcaRGActorDescription extends ActorDescription {
-		/** Defines the server side of XCA Responding Gateway Connection */
-		private IConnectionDescription xcaRGServerConnection = null;
-		
-		/** Defines the client side of XDS Registry Connection */
-		private IConnectionDescription xdsRegistryClientConnection = null;
-
-		/** Defines the client side of XDS Repository Connection */
-		private IConnectionDescription xdsRepositoryClientConnection = null;
-		
-		/**
-		 * Gets the connection for the XCA Responding Gateway server. 
-		 * 
-		 * @return the connection of XCA Responding Gateway  
-		 */
-		public IConnectionDescription getXcaRGServerConnection() {
-			return xcaRGServerConnection;
-		}
-		
-		/**
-		 * Gets the connection for the XDS Registry client.  
-		 * 
-		 * @return the connection for XDS Registry client
-		 */
-		public IConnectionDescription getXdsRegistryClientConnection() {
-			return xdsRegistryClientConnection;
-		}
-		
-		/**
-		 * Gets the connection for the XDS Repository client.  
-		 * 
-		 * @return the connection for XDS Repository client
-		 */
-		public IConnectionDescription getXdsRepositoryClientConnection() {
-			return xdsRepositoryClientConnection;
-		}
-	}
-	
-	/**
-	 * An implementation of the IheActorDescription class to be used by 
-	 * XCA Initiating Gateway Actor
-	 * 
-	 * @author Anil Kumar
-	 */
-	public class XcaIGActorDescription extends ActorDescription {
-		/** Defines the server side of XCA Responding Gateway Connection */
-		private IConnectionDescription xcaIGServerConnection = null;
-		
-		/** Defines the client side of XDS Registry Connection */
-		private IConnectionDescription xdsRegistryClientConnection = null;
-
-		/** Defines the client side of XDS Repository Connection */
-		private IConnectionDescription xdsRepositoryClientConnection = null;
-		
-		/** Defines the client side of XCA Responding Gateway Query Connections */
-		private Map<String, IConnectionDescription> xcaRGQueryClientConnections = new HashMap<String, IConnectionDescription>();
-		
-		/** Defines the client side of XCA Responding Gateway Retrieve Connections */
-		private Map<String, IConnectionDescription> xcaRGRetrieveClientConnections = new HashMap<String, IConnectionDescription>();
-		
-		/**
-		 * Gets the connection for the XCA Initiating Gateway server. 
-		 * 
-		 * @return the connection of XCA Initiating Gateway  
-		 */
-		public IConnectionDescription getXcaIGServerConnection() {
-			return xcaIGServerConnection;
-		}
-		
-		/**
-		 * Gets the connection for the XDS Registry client.  
-		 * 
-		 * @return the connection for XDS Registry client
-		 */
-		public IConnectionDescription getXdsRegistryClientConnection() {
-			return xdsRegistryClientConnection;
-		}
-		
-		/**
-		 * Gets the connection for the XDS Repository client.  
-		 * 
-		 * @return the connection for XDS Repository client
-		 */
-		public IConnectionDescription getXdsRepositoryClientConnection() {
-			return xdsRepositoryClientConnection;
-		}
-		
-		/**
-		 * Gets the map of the XCA Responding Gateway client side connections for Query.  
-		 * 
-		 * @return the map of Query connections for XCA Responding Gateway client
-		 */
-		public Map<String, IConnectionDescription> getXcaRGQueryClientConnections() {
-			return xcaRGQueryClientConnections;
-		}
-		
-		/**
-		 * Gets the map of the XCA Responding Gateway client side connections for Retrieve.  
-		 * 
-		 * @return the list of Retrieve connections for XCA Responding Gateway client
-		 */
-		public Map<String, IConnectionDescription> getXcaRGRetrieveClientConnections() {
-			return xcaRGRetrieveClientConnections;
-		}		
-	}
-
-
-	/**
-	 * Initiates this actor.
-	 * 
-	 * @param actorType the type of the actor to be initiated
-	 * @return an instance of ActorDescription
-	 */
-    private ActorDescription initActor(String actorType) {
-    	if (actorType.equalsIgnoreCase("SecureNode")) 
-    		return new XdsAuditActorDescription();
-    	if (actorType.equalsIgnoreCase("XdsRegistry")) 
-    		return new XdsRegistryActorDescription();
-    	if (actorType.equalsIgnoreCase("XdsRepository")) 
-    		return new XdsRepositoryActorDescription();
-    	if (actorType.equalsIgnoreCase("XcaRG")) 
-    		return new XcaRGActorDescription();
-    	if (actorType.equalsIgnoreCase("XcaIG")) 
-    		return new XcaIGActorDescription();
-    	else 
-    	    return new ActorDescription();  
-    }
-	
 	/**
 	 * An implementation of a broker controller that will unregister and IHE actor.
 	 * 
@@ -1479,10 +306,10 @@ public class XdsConfigurationLoader {
             if (actor instanceof XdsRegistryImpl) return true;
             if (actor instanceof XdsRepositoryImpl) return true;
             if (actor instanceof XcaRGImpl) return true;
+            if (actor instanceof XcaIGImpl) return true;
 
             return false;
 		}
-		
 	}
 	
 	/** testing only **/

@@ -7,8 +7,8 @@ import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class RepositoryAccess  {
 

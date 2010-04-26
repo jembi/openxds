@@ -23,8 +23,8 @@ package org.openhealthtools.openxds.xca.api;
 import java.util.Map;
 
 import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  * This interface defines the operations of an XCA Responding Gateway actor.
