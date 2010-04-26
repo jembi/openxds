@@ -22,13 +22,13 @@ package org.openhealthtools.openxds.registry;
 
 import java.net.InetAddress;
 
-import org.openhealthexchange.openpixpdq.ihe.configuration.Configuration;
 import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 import ca.uhn.hl7v2.app.ApplicationException;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 import com.misyshealthcare.connect.net.Identifier;
+
 
 /**
  * The base class of all handlers. It provides some common 
@@ -66,7 +66,7 @@ public class BaseHandler {
 	protected Identifier getServerApplication() throws ApplicationException {
 		Identifier ret = null;
 		try {
-			ret = Configuration.getIdentifier(connection,
+			ret = getIdentifier(connection,
 					"ReceivingApplication", true);
 		} catch (IheConfigurationException e) {
 			throw new ApplicationException(
@@ -87,7 +87,7 @@ public class BaseHandler {
 	protected Identifier getServerFacility() throws ApplicationException {
 		Identifier ret = null;
 		try {
-			ret = Configuration.getIdentifier(connection,
+			ret = getIdentifier(connection,
 					"ReceivingFacility", true);
 		} catch (IheConfigurationException e) {
 			throw new ApplicationException(
@@ -123,4 +123,31 @@ public class BaseHandler {
 		return id;
 	}
 
+	/**
+	 * Gets an identifier description from the connection this
+	 * actor is using.
+	 * 
+	 * @param connection the connection description being used
+	 * @param name the name of the identifier in the configuration
+	 * @param isRequired <code>true</code> if this identifier must exist
+	 * @return the identifier
+	 * @throws IheConfigurationException If this identifier must be in the configuration and it is not
+	 */
+	public static Identifier getIdentifier(IConnectionDescription connection, String name, boolean isRequired) throws IheConfigurationException {
+		if (connection == null)
+			throw new IheConfigurationException("Invalid connection description (NULL)");
+		if (name == null)
+			throw new IheConfigurationException("Invalid identifier name (NULL)");
+		org.openhealthtools.openexchange.actorconfig.net.Identifier identifier = connection.getIdentifier(name);
+		
+		if ((identifier == null) && isRequired) {
+			throw new IheConfigurationException("No identifier '" + name + "' defined for connection \"" + connection.getDescription() + "\"");
+		}
+		
+     	//TODO: Fix the Identifier type
+     	//Temporary conversion during the library migration
+     	Identifier idOld = new Identifier(identifier.getAuthorityNameString(), identifier.getUniversalId(), identifier.getUniversalIdType()); 
+		return idOld;
+	}
+	
 }

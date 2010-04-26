@@ -23,12 +23,12 @@ package org.openhealthtools.openxds;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Util;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
-import org.openhealthtools.common.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 /**
  *

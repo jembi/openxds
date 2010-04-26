@@ -20,9 +20,8 @@
 
 package org.openhealthtools.common.ihe;
 
-import org.openhealthtools.common.audit.IheAuditTrail;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
 
 /**
  *

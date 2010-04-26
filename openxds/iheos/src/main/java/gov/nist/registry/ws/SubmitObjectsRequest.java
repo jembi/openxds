@@ -27,7 +27,6 @@ import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.common2.registry.validation.Structure;
 import gov.nist.registry.common2.registry.validation.Validator;
 import gov.nist.registry.ws.config.Registry;
-import gov.nist.registry.ws.sq.GetAssociations;
 import gov.nist.registry.ws.sq.RegistryObjectValidator;
 import gov.nist.registry.ws.sq.RegistryValidations;
 import gov.nist.registry.ws.sq.SQFactory;
@@ -46,13 +45,16 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthexchange.openpixpdq.ihe.registry.HL7;
-import org.openhealthexchange.openpixpdq.util.AssigningAuthorityUtil;
-import org.openhealthtools.common.audit.IheAuditTrail;
-import org.openhealthtools.common.audit.ParticipantObject;
 import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.common.utils.HL7;
 import org.openhealthtools.common.utils.OMUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.audit.ActiveParticipant;
+import org.openhealthtools.openexchange.audit.AuditCodeMappings;
+import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.audit.ParticipantObject;
+import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
@@ -62,11 +64,8 @@ import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
-import com.misyshealthcare.connect.base.audit.ActiveParticipant;
-import com.misyshealthcare.connect.base.audit.AuditCodeMappings;
-import com.misyshealthcare.connect.base.audit.AuditCodeMappings.AuditTypeCodes;
-import com.misyshealthcare.connect.net.IConnectionDescription;
 import com.misyshealthcare.connect.net.Identifier;
+
 
 public class SubmitObjectsRequest extends XdsCommon {
 	boolean submit_raw = false;
@@ -556,7 +555,7 @@ public class SubmitObjectsRequest extends XdsCommon {
    		String patId = HL7.getIdFromCX(patientId);
    	
     	Identifier assigningAuthority = HL7.getAssigningAuthorityFromCX(patientId);
-    	Identifier aa = AssigningAuthorityUtil.reconcileIdentifier(assigningAuthority, connection);
+    	Identifier aa = reconcileIdentifier(assigningAuthority, connection);
 
     	PatientIdentifier pid = new PatientIdentifier();
     	pid.setId(patId);

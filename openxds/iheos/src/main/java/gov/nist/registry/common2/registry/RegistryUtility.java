@@ -11,11 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
-
 
 public class RegistryUtility {
 

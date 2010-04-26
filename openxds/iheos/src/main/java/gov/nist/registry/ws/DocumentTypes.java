@@ -4,7 +4,8 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.validation.CodeValidation;
 
 import java.util.Collection;
-import com.misyshealthcare.connect.net.IConnectionDescription;
+
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 public class DocumentTypes {
 	CodeValidation cv;

@@ -20,7 +20,8 @@
 
 package org.openhealthtools.openxds.repository.api;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+
 
 /**
  * This classes defines a repository context that are required for

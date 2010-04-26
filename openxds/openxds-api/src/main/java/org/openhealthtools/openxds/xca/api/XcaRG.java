@@ -21,8 +21,7 @@
 package org.openhealthtools.openxds.xca.api;
 
 import org.openhealthtools.common.ihe.IheActor;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 
 /**

@@ -33,14 +33,12 @@ import junit.framework.TestCase;
 
 import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
-import org.openhealthtools.openxds.repository.ModuleManager;
+import org.openhealthtools.openexchange.actorconfig.net.ConnectionFactory;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
-import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 
-import com.misyshealthcare.connect.net.ConnectionFactory;
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.util.OID;
 
 /**
  * This class is used to test the file system based repository manager implementation.
@@ -148,9 +146,4 @@ public class FileSystemRepositoryTest extends TestCase {
         
     }
     
-    public class OidMock implements OID.OidSource {
-        public synchronized String generateId() {
-            return Long.toString( System.currentTimeMillis() );
-        }
-    }
 }

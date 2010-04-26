@@ -21,10 +21,10 @@
 package org.openhealthtools.common.utils;
 
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.SecureConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.SecureSocketFactory;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.SecureConnectionDescription;
-import com.misyshealthcare.connect.net.SecureSocketFactory;
 
 /**
  * The helper class to manipulate IConnectionDescription objects to
