@@ -120,6 +120,31 @@
 			<Entry name="PatientIdEncoding" value="HL7" />
 		</PropertySet>
 	</StandardConnection>
+	<SecureConnection name="misys_arr_tls">
+		<HostName>localhost</HostName>
+		<Port>2862</Port>
+		<Property name="TYPE" value="TLS SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="FACILITY" value="MISYS" />
+			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>		
+	</SecureConnection>
+	
 	
 	<StandardConnection name="spirit_arr_udp">
 		<HostName>tiani3</HostName>
