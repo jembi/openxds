@@ -55,6 +55,7 @@ import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
+import org.openhealthtools.openxua.api.XuaException;
 
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
@@ -108,18 +109,12 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			if(validateUserAssertion){
 		        SoapHeader header = new SoapHeader(messageContext);
 		        boolean status = validateAssertion(header);
-		        if (status) {
-		        	pnr.build();
-					provide_and_register(pnr);
-		        }
-		        else
+		        if (!status)
 					throw new XdsException("Invalid Identity Assertion");
 			}
-			else {
-				pnr.build();
-				provide_and_register(pnr);
-			}
-		}  
+			pnr.build();
+			provide_and_register(pnr);
+		}
 		catch (XDSRepositoryMetadataException e) {
 			response.add_error("XDSRepositoryMetadataError", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 		} 
@@ -162,7 +157,10 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		catch (XdsException e) {
 			response.add_error("XDSRepositoryError", "XDS Internal Error:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			logger.warn(logger_exception_details(e));
-		} 
+		}
+		catch (XuaException e) {
+        	response.add_error("XDSRepositoryError", "XUA Error" + e.getMessage(), RegistryUtility.exception_details(e), log_message);
+		}
 		catch (Exception e) {
 			response.add_error("XDSRepositoryError", "Input Error - no SOAP Body:\n " + e.getMessage(), RegistryUtility.exception_details(e), log_message);
 			logger.fatal(logger_exception_details(e));

@@ -20,6 +20,11 @@
 
 package org.openhealthtools.openxua.api;
 
+/**
+* 
+* @author <a href="mailto:venkata.pragallapati@misys.com">Venkat</a>
+* 
+*/
 public class XuaException extends Exception {
 
 	private static final long serialVersionUID = 1L;

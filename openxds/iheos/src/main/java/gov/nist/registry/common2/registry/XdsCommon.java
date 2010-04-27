@@ -15,6 +15,7 @@ import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxua.api.AssertionException;
 import org.openhealthtools.openxua.api.XServiceProvider;
 
 import com.misyshealthcare.connect.net.Identifier;
@@ -119,24 +120,21 @@ public class XdsCommon  {
 		
 	}
 	
-	protected boolean validateAssertion(SoapHeader header)throws XdsException, Exception {
-		boolean status = false;
+	protected boolean validateAssertion(SoapHeader header)throws XdsException, AssertionException {
 		// Get Identity Assertion from web-services security header
 		OMElement security = MetadataSupport.firstChildWithLocalName(header.getHdr(), "Security");
-		if (security != null) {
-			OMElement element = MetadataSupport.firstChildWithLocalName(security, "Assertion");
-			if (element != null) {
-				XServiceProvider provider = (XServiceProvider) XdsFactory.getInstance().getBean("xuaServiceProvider");
-				if (provider != null) {
-					status = provider.validateToken(element);
-				} else
-					throw new Exception("Exception while getting XServiceProvider instance");
-			} else {
-				throw new XdsException("Identity Assertion does not exists in web-services security header");
-			}
-		} else {
+		if (security == null)
 			throw new XdsException("Security element does not exists in web-services security header");
-		}
+			
+		OMElement element = MetadataSupport.firstChildWithLocalName(security, "Assertion");
+		if (element == null)
+			throw new XdsException("Identity Assertion does not exists in web-services security header");
+			
+		XServiceProvider provider = (XServiceProvider) XdsFactory.getInstance().getBean("xuaServiceProvider");
+		if (provider == null)
+			throw new XdsException("Exception while getting XServiceProvider instance");
+		
+		boolean status = provider.validateToken(element);
 		return status;
 	}
 

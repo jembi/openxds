@@ -22,6 +22,12 @@ package org.openhealthtools.openxua.api;
 
 import org.apache.axiom.om.OMElement;
 
+/**
+* This interface defines the operations to validate user identity assertion
+* 
+* @author <a href="mailto:venkata.pragallapati@misys.com">Venkat</a>
+* 
+*/
 public interface XServiceProvider {
 	/**
 	 * Validate X-User Assertion and return true if it is valid assertion otherwise invalid assertion 

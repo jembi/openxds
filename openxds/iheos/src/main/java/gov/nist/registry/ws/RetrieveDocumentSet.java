@@ -40,6 +40,7 @@ import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
+import org.openhealthtools.openxua.api.XuaException;
 
 public class RetrieveDocumentSet extends XdsCommon {
     ContentValidationService validater;
@@ -99,14 +100,10 @@ public class RetrieveDocumentSet extends XdsCommon {
         	if(validateUserAssertion){
 		        SoapHeader header = new SoapHeader(messageContext);
 		        boolean status = validateAssertion(header);
-	        	if (status)
-	        		retrieve_documents = retrieve_documents(rds);
-	        	else
+	        	if (!status)
 					throw new XdsException("Invalid Identity Assertion");
 	    	}
-			else {
-				retrieve_documents = retrieve_documents(rds);
-			}
+			retrieve_documents = retrieve_documents(rds);
         }
         catch (XdsFormatException e) {
             response.add_error("XDSRepositoryError", "SOAP Format Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -117,11 +114,9 @@ public class RetrieveDocumentSet extends XdsCommon {
         catch (XdsException e) {
             response.add_error("XDSRepositoryError", e.getMessage(), RegistryUtility.exception_details(e), log_message);
             logger.fatal(logger_exception_details(e));
-        }
-        catch (Exception e) {
-            response.add_error("General Exception", e.getMessage(), RegistryUtility.exception_details(e), log_message);
-            logger.fatal(logger_exception_details(e));
-        }
+        } catch (XuaException e) {
+        	response.add_error("XDSRepositoryError", "XUA Error" + e.getMessage(), RegistryUtility.exception_details(e), log_message);
+		}
 
 
         OMElement registry_response = null;
