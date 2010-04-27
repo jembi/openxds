@@ -44,6 +44,7 @@ import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxua.api.XuaException;
 
 public class AdhocQueryRequest extends XdsCommon {
 	MessageContext messageContext;
@@ -116,14 +117,10 @@ public class AdhocQueryRequest extends XdsCommon {
 			if(validateUserAssertion){
 				SoapHeader header = new SoapHeader(messageContext);
 				boolean status = validateAssertion(header);
-				if (status)
-					AdhocQueryRequestInternal(ahqr);
-				else
+				if (!status)
 					throw new XdsException("Invalid Identity Assertion");
 			}
-			else {
-				AdhocQueryRequestInternal(ahqr);
-			}
+			AdhocQueryRequestInternal(ahqr);
 		}
 		catch (XdsResultNotSinglePatientException e) {
 			response.add_error("XDSResultNotSinglePatient", e.getMessage(), RegistryUtility.exception_trace(e), log_message);
@@ -166,7 +163,10 @@ public class AdhocQueryRequest extends XdsCommon {
 		catch (XdsException e) {
 			response.add_error("XDSRegistryError", "XDS Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 			logger.warn(logger_exception_details(e));
-		}  
+		}
+		catch (XuaException e) {
+        	response.add_error("XDSRegistryError", "XUA Error" + e.getMessage(), RegistryUtility.exception_details(e), log_message);
+		}
 		catch (Exception e) {
 			response.add_error("General Exception", "Internal Error: " + e.getMessage(), RegistryUtility.exception_trace(e), log_message);
 			logger.fatal(logger_exception_details(e));
