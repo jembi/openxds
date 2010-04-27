@@ -138,6 +138,12 @@
 			<Entry name="PatientNameEncoding" value="HL7" />
 			<Entry name="PatientIdEncoding" value="HL7" />
 		</PropertySet>
+		<PropertySet name="MessageTransmission">
+		    <!--Defines message transmission mode: Asynchronous, Synchronous--> 
+			<Entry name="Asynchronous" value="true" />
+		    <!--Defines the time interval between two transmissions in milliseconds --> 
+			<Entry name="TransmissionInterval" value="10000" /> 
+		</PropertySet>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
 		<KeyPass>password</KeyPass>
