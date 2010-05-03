@@ -20,11 +20,11 @@
 
 package org.openhealthtools.openxds.webapp.action;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +54,7 @@ public class ConfigAction extends BaseAction {
 				configFile = null;
 				logfile = null;
 				actors = null;
-				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (ArrayList<IActorDescription>) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
@@ -72,7 +72,7 @@ public class ConfigAction extends BaseAction {
 				//First reset the config settings before loading
 				XdsConfigurationLoader.getInstance().resetConfiguration(null, null);
 				XdsConfigurationLoader.getInstance().loadConfiguration(getConfigFile(), false);
-				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (ArrayList<IActorDescription>) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				String[] sList = new String[l.size()];
@@ -100,13 +100,13 @@ public class ConfigAction extends BaseAction {
 				} else {
 					XdsConfigurationLoader.getInstance().resetConfiguration(lString, null);
 				}
-				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (ArrayList<IActorDescription>) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				return SUCCESS;
 			} else if (getAction().equalsIgnoreCase("stopall")) {
 				XdsConfigurationLoader.getInstance().resetConfiguration(null, null);
-				List<IActorDescription> l = (Vector) XdsConfigurationLoader.getInstance().getActorDescriptions();
+				List<IActorDescription> l = (ArrayList<IActorDescription>) XdsConfigurationLoader.getInstance().getActorDescriptions();
 				Collections.sort(l, new compareTypes());
 				getRequest().setAttribute("ActorList", l);
 				setActors(null);
