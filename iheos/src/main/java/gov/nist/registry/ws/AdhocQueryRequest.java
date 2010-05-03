@@ -28,7 +28,9 @@ import gov.nist.registry.ws.sq.StoredQuery;
 import gov.nist.registry.ws.sq.StoredQueryFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -289,7 +291,9 @@ public class AdhocQueryRequest extends XdsCommon {
 	@SuppressWarnings("unchecked")
 	Metadata stored_query(OMElement ahqr) 
 	throws XdsException, LoggerException, XDSRegistryOutOfResourcesException, XdsValidationException {
-
+		boolean isMPQ = true;
+		boolean isSQ = false;
+	
 		//		new StoredQueryRequestSoapValidator(xds_version, messageContext).runWithException();
 
 		//try {
@@ -301,12 +305,16 @@ public class AdhocQueryRequest extends XdsCommon {
 		StoredQuery sq = fact.getImpl();
 		Metadata m = sq.run();
 
-		auditLog(ahqr, true, fact.getQueryId());
 		
-		if (!isMPQ(ahqr)) {
+		if (!isMPQ(ahqr)) {	
+			isMPQ = false;
+			isSQ = true;
 			if ( !m.isPatientIdConsistent() )
 				throw new XdsResultNotSinglePatientException("More than one Patient ID in Stored Query result");
+			
 		}
+		auditLog(ahqr, isSQ, fact.getQueryId(), isMPQ, m);
+			
 		return m;
 		//		}
 		//		catch (Exception e) {
@@ -355,7 +363,7 @@ public class AdhocQueryRequest extends XdsCommon {
 
 		Metadata metadata = MetadataParser.parseNonSubmission(results);
 
-		auditLog(ahqr, false, null);
+		auditLog(ahqr, false, null, false, null);
 		
 		if (is_secure) {
 			BasicQuery bq = new BasicQuery();
@@ -370,9 +378,10 @@ public class AdhocQueryRequest extends XdsCommon {
 
 	 /**
       * Audit Logging of Document Query messages.
+	 * @throws XdsInternalException, MetadataException 
       * 
       */
-      private void auditLog(OMElement aqr, boolean isStoredQuery, String id) throws MetadataValidationException, XdsInternalException {
+      private void auditLog(OMElement aqr, boolean isStoredQuery, String id, boolean isMPQ, Metadata m) throws XdsInternalException, XdsInternalException, MetadataException {
 	       if (auditLog == null)
 	       	 return;
 	   
@@ -390,6 +399,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			dest.setAccessPointId(localIP);
 			
 			//Patient Info
+			List<ParticipantObject> patientObjs = new ArrayList<ParticipantObject>();
 			ParticipantObject patientObj = null;
 			
 			//Query Info
@@ -398,15 +408,25 @@ public class AdhocQueryRequest extends XdsCommon {
 				SqParams params = parser.parse(aqr);
 				String patientId = params.getStringParm("$XDSDocumentEntryPatientId");				
 				if(patientId != null) patientObj = new ParticipantObject("PatientIdentifier", patientId);
-			}  
+				patientObjs.add(patientObj);
+			}
+			
+			if(isMPQ){
+				List<String> patientIds = m.getPatientIds();
+				for(String patientId :patientIds){
+					patientObj = new ParticipantObject("PatientIdentifier", patientId);
+					patientObjs.add(patientObj);
+				}
+			}
 			
 			ParticipantObject queryObj = new ParticipantObject();
 			queryObj.setQuery(aqr.toString());
-			if(isStoredQuery)
+			if(isStoredQuery || isMPQ)
 				queryObj.setId(id);
 		
 			//Finally Log it.
-			auditLog.logRegistryQuery(source, dest, patientObj, queryObj, isStoredQuery);
+			auditLog.logRegistryQuery(source, dest, patientObjs, queryObj, isStoredQuery, isMPQ);
 	   }
+      
 
 }
