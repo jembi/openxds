@@ -155,10 +155,8 @@ public class XdsService extends AppendixV {
 	}
 
 	protected void endTransaction(boolean status) {
-		logger.info("end " + service_name + " " +
-				((log_message == null) ? "null"  : log_message.getMessageID()) + " : " + 
-				((status) ? "Pass" : "Fail")
-		);
+		logger.info(service_name + " " + " : "
+				+ ((status) ? "Pass" : "Fail"));
 
 		stopTransactionLog();
 	}
@@ -282,11 +280,12 @@ public class XdsService extends AppendixV {
 	protected void stopTransactionLog() {
 		try {
 			if (log != null) { 
-				logger.info("+++++++++++++++++++++ stop transaction log");
 				if (log_message != null)
 					log.writeMessage(log_message);
+				logger.info("end " + service_name + " :" +((log_message == null) ? "null"  : log_message.getMessageID()));
 				log = null;
 				log_message = null;
+				logger.info("+++++++++++++++++++++ stop transaction log");
 			} 
 		} catch (LoggerException e) {
 			logger.error("LoggerException: " + exception_details(e));
