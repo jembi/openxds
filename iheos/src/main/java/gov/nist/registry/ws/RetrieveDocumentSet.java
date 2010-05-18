@@ -13,6 +13,7 @@ import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.service.AppendixV;
+import gov.nist.registry.common2.util.PidHelper;
 import gov.nist.registry.ws.config.Repository;
 import gov.nist.registry.ws.serviceclasses.XdsService;
 
@@ -247,12 +248,8 @@ public class RetrieveDocumentSet extends XdsCommon {
     }
 
     /**
-     * Audit Logging of PDQ Query Message.
+     * Audit Logging of Retrieve Document.
      *
-     * @param patients  the patients returned
-     * @param hl7Header the message header from the request
-     * @param queryTag  the query tag from the MSA segment of the PDQ request
-     * @param qpd       the QPD segment of the PDQ request
      * @throws MetadataException
      */
     private void auditLog(ArrayList<Pair> doclist, AuditCodeMappings.AuditTypeCodes eventTypeCode) throws MetadataException {
@@ -265,8 +262,11 @@ public class RetrieveDocumentSet extends XdsCommon {
 
         ActiveParticipant source = new ActiveParticipant();
         source.setUserId(replyto);
+        // 'Retrieve Document Set' requires the altUserId of the source to be set to the Process
+        // ID of the JVM. TF6 vol 2b section 3.43.6.1.1
+        source.setAltUserId(PidHelper.getPid());
         source.setAccessPointId(remoteIP);
-
+        
         ActiveParticipant dest = new ActiveParticipant();
         dest.setAccessPointId(localIP);
         //TODO: Needs to be improved
