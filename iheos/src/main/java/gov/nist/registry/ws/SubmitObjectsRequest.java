@@ -26,6 +26,7 @@ import gov.nist.registry.common2.registry.XdsCommon;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.common2.registry.validation.Structure;
 import gov.nist.registry.common2.registry.validation.Validator;
+import gov.nist.registry.common2.util.PidHelper;
 import gov.nist.registry.ws.config.Registry;
 import gov.nist.registry.ws.sq.RegistryObjectValidator;
 import gov.nist.registry.ws.sq.RegistryValidations;
@@ -638,6 +639,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 		String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
 		ActiveParticipant dest = new ActiveParticipant();
 		dest.setUserId(userid);
+		// the Alternative User ID should be set to our Process ID, see
+		// section TF-2b section 3.42.7.1.2
+		dest.setAltUserId(PidHelper.getPid());
+		
 		dest.setAccessPointId(localIP);
 		auditLog.logDocumentImport(source, dest, patientObj, set, typeCode);		
 	}
