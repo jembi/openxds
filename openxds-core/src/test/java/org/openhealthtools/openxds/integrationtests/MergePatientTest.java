@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -124,8 +125,8 @@ public class MergePatientTest extends XdsTest {
 
 		//6 Submit a document which is expected to be rejected by the Registry
 		
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
-		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
+		String document = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
