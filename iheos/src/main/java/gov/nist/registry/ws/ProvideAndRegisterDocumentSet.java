@@ -25,17 +25,21 @@ import gov.nist.registry.ws.config.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.ihe.IheActor;
@@ -78,9 +82,13 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		this.messageContext = messageContext;
 		this.xds_version = xds_version;
 		transaction_type = PR_transaction;
-		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
 
 		try {
+			if (messageContext == null) {
+				throw new XdsInternalException("Cannot find MessageContext");
+			}
+			IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+			
 			IheActor actor = httpServer.getIheActor();
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
@@ -252,7 +260,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			for (OMElement document : MetadataSupport.childrenWithLocalName(pnr, "Document")) {
 				doc_count++;
 				String id = document.getAttributeValue(MetadataSupport.id_qname);
-				OMText binaryNode = (OMText) document.getFirstOMChild();
+				OMText binaryNode = getBinaryNode(document);
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("isOptimized: " + binaryNode.isOptimized());
@@ -398,6 +406,19 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 			rollbackDocument( rollbackDocs );
 		}
+	}
+
+	static OMText getBinaryNode(OMElement document) {
+		Iterator<OMNode> childrenIterator = document.getChildren();
+		while (childrenIterator.hasNext())
+		{
+			OMNode container = childrenIterator.next();
+			if (container instanceof OMText && StringUtils.isNotBlank(((OMText)container).getText()))
+			{
+				return (OMText)container;
+			}
+		}		
+		return null;
 	}
 
 	private void rollbackDocument(List<String> docs) {
