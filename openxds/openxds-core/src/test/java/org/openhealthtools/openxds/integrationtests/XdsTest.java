@@ -56,6 +56,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.WSDL2Constants;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -201,8 +202,8 @@ public abstract class XdsTest {
 	 * @throws Exception 
 	 */
 	protected String submitOneDocument(String patientId) throws Exception {		
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
-		String document = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_document.xml"));
+		String document = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -237,9 +238,9 @@ public abstract class XdsTest {
 	
 	public String submitMultipleDocuments(String patientId) throws Exception {
 
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_multiple_documents.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
-		String document2 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/submit_multiple_documents.xml"));
+		String document1 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String document2 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSDocumentEntry.uniqueId1", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
@@ -283,8 +284,8 @@ public abstract class XdsTest {
 	}
 	//return folder unique Id
 	protected String submitOneDocument2Folder(String patientId) throws Exception {
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -328,8 +329,8 @@ public abstract class XdsTest {
 		String doc_uuid = submitOneDocument(patientId);
 
 		//Then add a replacement doc
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_replacement.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/document_replacement.xml"));
+		String document1 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/medical_summary.xml"));
 		//replace document and submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -364,8 +365,8 @@ public abstract class XdsTest {
 	 * @throws Exception
 	 */
 	protected String submitDocument2Folder(String patientId) throws Exception {
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
@@ -404,8 +405,8 @@ public abstract class XdsTest {
 	 * @throws Exception
 	 */
 	protected String submitDocument2SubmissionSet(String patientId) throws Exception {
-		String message = getStringFromInputStream( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
-		String document1 = getStringFromInputStream(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
+		String message = IOUtils.toString( ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/add_document2_folder.xml"));
+		String document1 = IOUtils.toString(ProvideAndRegisterDocumentSetTest.class.getResourceAsStream("/data/referral_summary.xml"));
 		//replace document , submission set and folder uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		String subUniqueId =  "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis();
@@ -564,20 +565,6 @@ public abstract class XdsTest {
         }
         submitObjectsRequest.insertSiblingAfter(docElem);
         return request;
-	}
-	
-	protected String getStringFromInputStream(InputStream in) throws java.io.IOException {
-		int count;
-		byte[] by = new byte[256];
-
-		StringBuffer buf = new StringBuffer();
-		while ( (count=in.read(by)) > 0 ) {
-			for (int i=0; i<count; i++) {
-				by[i] &= 0x7f;
-			}
-			buf.append(new String(by,0,count));
-		}
-		return new String(buf);
 	}
 	
 }
