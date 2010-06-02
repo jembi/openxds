@@ -161,6 +161,12 @@
 	            </executions>                    
             </plugin>
         </plugins>
+        <extensions>
+        	<extension>
+        		<groupId>com.google.code.maven-svn-wagon</groupId>
+        		<artifactId>maven-svn-wagon</artifactId>
+        	</extension>
+        </extensions>
     </build>
 
     <repositories>
