@@ -156,7 +156,7 @@ public class XdsCommon  {
     
         	//TODO: Fix the Identifier type
         	//Temporary conversion during the library migration
-        	Identifier identifier = new Identifier(id.getAuthorityNameString(), id.getUniversalId(), id.getUniversalIdType()); 
+        	Identifier identifier = new Identifier(id.getNamespaceId(), id.getUniversalId(), id.getUniversalIdType()); 
             if ( identifier.equals(authority) ) {
                 return identifier;
             }
