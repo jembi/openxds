@@ -7,7 +7,6 @@ import gov.nist.registry.common2.exception.XdsWSException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.Response;
@@ -30,6 +29,7 @@ import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
@@ -41,7 +41,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	String home;
 
 	static {
-		homeProperty = Properties.loader().getString("home.community.id");
+		homeProperty = PropertyFacade.getString("home.community.id");
 	}
     IConnectionDescription connection = null;
     IConnectionDescription registryClientConnection = null;

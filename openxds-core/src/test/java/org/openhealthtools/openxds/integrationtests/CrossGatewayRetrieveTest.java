@@ -49,6 +49,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.w3c.dom.Document;
@@ -67,6 +68,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 	 */
 	@Before
 	public void setUp() throws Exception {
+		PropertyFacade.loadProperties(new String[]{"openxds.properties"});
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 	}
 	
 	static {
-		homeProperty = Properties.loader().getString("home.community.id");
+		homeProperty = PropertyFacade.getString("home.community.id");
 	}
 	
 	/**

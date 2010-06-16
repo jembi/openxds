@@ -8,7 +8,6 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsFormatException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
 import gov.nist.registry.common2.registry.XdsCommon;
@@ -33,6 +32,7 @@ import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.utils.Pair;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
@@ -97,7 +97,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 
      // Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
         try {
-        	boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+        	boolean validateUserAssertion = PropertyFacade.getBoolean("validate.userassertion");
         	if(validateUserAssertion){
 		        SoapHeader header = new SoapHeader(messageContext);
 		        boolean status = validateAssertion(header);

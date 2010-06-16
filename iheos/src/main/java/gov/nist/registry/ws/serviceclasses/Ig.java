@@ -1,9 +1,7 @@
 package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.Properties;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,19 +10,17 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.xca.api.XcaIG;
-
-import com.misyshealthcare.connect.net.IConnectionDescription;
 
 public class Ig {
 	private final static Log logger = LogFactory.getLog(Ig.class);
 
-    private static int numOfThreads = Properties.loader().getInteger("ig.threads.number", 5);
+    private static int numOfThreads = PropertyFacade.getInteger("ig.threads.number", 5);
 	static ExecutorService exec = Executors.newFixedThreadPool( numOfThreads ); 
 
-	static String home = XdsService.properties.getString("home.community.id");
+	static String home = PropertyFacade.getString("home.community.id");
 	
 	public OMElement AdhocQueryRequest(OMElement ahqr) throws AxisFault {
 		XcaRegistry reg = new XcaRegistry();

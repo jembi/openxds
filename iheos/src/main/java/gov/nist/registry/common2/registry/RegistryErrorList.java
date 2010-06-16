@@ -19,6 +19,7 @@ import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 
@@ -277,7 +278,7 @@ public class RegistryErrorList implements ErrorLogger {
 	@SuppressWarnings("unchecked")
 	void setHomeAsLocation() {
 		String reXPath = "//*[local-name()='RegistryError']";
-		String home = Properties.loader().getString("home.community.id");;
+		String home = PropertyFacade.getString("home.community.id");;
 		try {
 			AXIOMXPath xpathExpression = new AXIOMXPath (reXPath);
 			List<?> nodes = xpathExpression.selectNodes(rel);

@@ -24,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -46,6 +45,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -61,6 +61,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 	 */
 	@Before
 	public void setUp() throws Exception {
+		PropertyFacade.loadProperties(new String[]{"openxds.properties"});
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 	}
 	
 	static {
-		homeProperty = Properties.loader().getString("home.community.id");
+		homeProperty = PropertyFacade.getString("home.community.id");
 	}
 
 	/**

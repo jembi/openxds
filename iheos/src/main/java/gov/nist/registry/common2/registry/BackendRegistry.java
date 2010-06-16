@@ -18,6 +18,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
@@ -30,12 +31,8 @@ public class BackendRegistry {
 	ErrorLogger response;
 	LogMessage log_message;
 	String reason = "";
-	static Properties properties = null;
+	
 	private final static Log logger = LogFactory.getLog(BackendRegistry.class);
-
-	static {
-		properties = Properties.loader();
-	}
 
 	public BackendRegistry(ErrorLogger response, LogMessage logMessage) {
 		this.response = response;

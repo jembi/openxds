@@ -20,8 +20,6 @@
 
 package org.openhealthtools.openxds.registry;
 
-import gov.nist.registry.common2.registry.Properties;
-
 import java.io.File;
 import java.net.URL;
 
@@ -36,6 +34,7 @@ import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
@@ -111,7 +110,7 @@ public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
 		try {			
 	        String axis2repopath = null;
 	        String axis2xmlpath = null;	        	
-	        String repo = Properties.loader().getString("axis2.repo.dir");
+	        String repo = PropertyFacade.getString("axis2.repo.dir");
 	        URL repoPath = XdsRegistryImpl.class.getResource(repo);
 	        if (repoPath != null) {
 		        axis2repopath = repoPath.getPath();
