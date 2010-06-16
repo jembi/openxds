@@ -56,6 +56,7 @@ import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
@@ -74,15 +75,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 	short xds_version;
 	private final static Log logger = LogFactory.getLog(SubmitObjectsRequest.class);
  	private IConnectionDescription connection = null;
-	static Properties properties = null;
 	static ArrayList<String> sourceIds = null;
 	String clientIPAddress;
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
-
-	static {
-		properties = Properties.loader();
-	}
 
 	public void setClientIPAddress(String addr) {
 		clientIPAddress = addr;
@@ -263,7 +259,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 		val.run();
 
 		RegistryValidations vals = null;
-		if (properties.getBoolean("validate.metadata"))
+		if (PropertyFacade.getBoolean("validate.metadata"))
 			vals = Registry.getRegistryValidations(response, log_message);
 
 		if (vals != null)
@@ -525,7 +521,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 	private void validate_patient_id(String patient_id) throws SQLException,
 	XdsException, XdsInternalException {
-		if (Properties.loader().getBoolean("validate.patient.id")) {
+		if (PropertyFacade.getBoolean("validate.patient.id")) {
 			try {
 				XdsRegistryPatientService patientMan = XdsFactory.getXdsRegistryPatientService();
 				PatientIdentifier pid = getPatientIdentifier(patient_id);

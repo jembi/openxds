@@ -20,8 +20,6 @@
 
 package org.openhealthtools.openxds.xca;
 
-import gov.nist.registry.common2.registry.Properties;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
@@ -42,6 +40,7 @@ import org.openhealthtools.openexchange.actorconfig.Transactions;
 import org.openhealthtools.openexchange.actorconfig.TransactionsSet;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.xca.api.XcaIG;
@@ -115,7 +114,7 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
         try {
 	        String axis2repopath = null;
 	        String axis2xmlpath = null;	        	
-	        String repo = Properties.loader().getString("axis2.repo.dir");
+	        String repo = PropertyFacade.getString("axis2.repo.dir");
 	        URL repoPath = XdsRegistryImpl.class.getResource(repo);
 	        if (repoPath != null) {
 		        axis2repopath = repoPath.getPath();

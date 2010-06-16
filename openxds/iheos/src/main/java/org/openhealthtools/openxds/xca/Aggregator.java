@@ -23,7 +23,6 @@ package org.openhealthtools.openxds.xca;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.Response;
 
@@ -39,6 +38,7 @@ import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 
@@ -57,7 +57,7 @@ public abstract class Aggregator {
     /** The number of requests whose results are failed to retrieve */
     protected int failureNumber;
     /**The max wait time in millisecond before aggregation*/
-    private static int timeout = Properties.loader().getInteger("ig.timeout", 15000);
+    private static int timeout = PropertyFacade.getInteger("ig.timeout", 15000);
 
     /**The LogMessage*/
     protected LogMessage logMessage;

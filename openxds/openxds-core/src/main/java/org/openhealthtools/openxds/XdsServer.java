@@ -20,12 +20,12 @@
 
 package org.openhealthtools.openxds;
 
-import gov.nist.registry.common2.registry.Properties;
-
 import java.io.File;
 import java.util.Collection;
 
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.config.ConfigurationException;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**
@@ -45,7 +45,14 @@ public class XdsServer {
 	 *        <p>
 	 */
 	public static void main(String[] args) {
-        String actorDir = Properties.loader().getString("ihe.actors.dir");
+        //First of all, load all the properties of this application.
+		try {
+			PropertyFacade.loadProperties(new String[]{"openxds.properties"});
+		}catch(ConfigurationException e) {
+			e.printStackTrace();
+		}
+		
+        String actorDir = PropertyFacade.getString("ihe.actors.dir");
         String actorFile = null; 
         
         File dir = new File(actorDir);

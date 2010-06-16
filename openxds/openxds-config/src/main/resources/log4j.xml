@@ -134,6 +134,9 @@
 	<category name="org.openhealthtools.openxds">
 		<priority value="INFO" />
 	</category>
+	<category name="org.openhealthtools.openexchange">
+		<priority value="INFO" />
+	</category>
 	<category name="gov.nist">
 		<priority value="INFO" />
 	</category>

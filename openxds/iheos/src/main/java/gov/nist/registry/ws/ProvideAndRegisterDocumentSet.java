@@ -15,7 +15,6 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.io.Sha1Bean;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
@@ -32,7 +31,6 @@ import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAttribute;
-import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
@@ -51,6 +49,7 @@ import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
@@ -113,7 +112,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 		// Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
 		try {
-			boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+			boolean validateUserAssertion = PropertyFacade.getBoolean("validate.userassertion");
 			if(validateUserAssertion){
 		        SoapHeader header = new SoapHeader(messageContext);
 		        boolean status = validateAssertion(header);

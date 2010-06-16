@@ -8,11 +8,6 @@ import org.apache.commons.logging.LogFactory;
 
 public class BasicQuery {
 	protected final static Log logger = LogFactory.getLog(BasicQuery.class);
-	static Properties properties = null;
-	
-	static {
-		properties = Properties.loader();
-	}
 	
 	public void secure_URI(Metadata metadata) throws MetadataException {
 		for (OMElement doc : metadata.getExtrinsicObjects()) {

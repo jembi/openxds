@@ -17,7 +17,6 @@ import gov.nist.registry.common2.registry.BasicQuery;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.XdsCommon;
@@ -44,6 +43,7 @@ import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxua.api.XuaException;
@@ -115,7 +115,7 @@ public class AdhocQueryRequest extends XdsCommon {
 
 		// Call X-Service Provider Actor to validate X-User Assertion with X-Assertion Provider
 		try {
-			boolean validateUserAssertion = Properties.loader().getBoolean("validate.userassertion");
+			boolean validateUserAssertion = PropertyFacade.getBoolean("validate.userassertion");
 			if(validateUserAssertion){
 				SoapHeader header = new SoapHeader(messageContext);
 				boolean status = validateAssertion(header);

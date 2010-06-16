@@ -6,7 +6,6 @@ package gov.nist.registry.common2.xml;
 
 import gov.nist.registry.common2.MetadataTypes;
 import gov.nist.registry.common2.exception.XdsInternalException;
-import gov.nist.registry.common2.registry.Properties;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,6 +15,7 @@ import java.net.URL;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.xerces.parsers.DOMParser;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -55,7 +55,7 @@ public class SchemaValidation implements MetadataTypes {
 			localSchema = System.getProperty("xds.schema.dir");
 
 		if (localSchema == null) {
-			String SchemaLoc = Properties.loader().getString("xds.schema.dir");
+			String SchemaLoc = PropertyFacade.getString("xds.schema.dir");
 			if (!StringUtil.goodString(SchemaLoc)) {
 			    throw new XdsInternalException("The xds.schema.dir property is not defined in openxds.properties");				
 			}

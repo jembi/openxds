@@ -1,27 +1,22 @@
 package gov.nist.registry.ws.config;
 
 import gov.nist.registry.common2.exception.XdsConfigurationException;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.ws.serviceclasses.XdsService;
 
-import org.apache.commons.httpclient.protocol.Protocol;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
-import com.misyshealthcare.connect.net.IConnectionDescription;
-import com.misyshealthcare.connect.net.SecureConnectionDescription;
-import com.misyshealthcare.connect.net.SecureSocketFactory;
-
 public class Repository {
 	static public String getBaseDirectory() {
-		return Properties.loader().getString("repository_base_dir");
+		return PropertyFacade.getString("repository_base_dir");
 	}
 
 	static public String getBaseUri() throws XdsConfigurationException {
 		return "http://" + 
-		Properties.loader().getString("repository_machine_name") + ":" + 
-		Properties.loader().getString("repository_port") + 
-		Properties.loader().getString("repository_base_uri");
+		PropertyFacade.getString("repository_machine_name") + ":" + 
+		PropertyFacade.getString("repository_port") + 
+		PropertyFacade.getString("repository_base_uri");
 	}
 
 	// these need updating each year

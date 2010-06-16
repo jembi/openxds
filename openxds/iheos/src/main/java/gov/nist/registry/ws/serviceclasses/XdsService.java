@@ -35,7 +35,6 @@ public class XdsService extends AppendixV {
 	protected Log log = null;
 	private final static org.apache.commons.logging.Log logger = LogFactory.getLog(XdsService.class);
 	String service_name;
-	static Properties properties = null;
 	boolean is_secure;
 	static public String technicalFramework = null;
 	static public String registerAEndpoint = null;
@@ -44,10 +43,6 @@ public class XdsService extends AppendixV {
 
 	static {
 //		BasicConfigurator.configure();
-		properties = Properties.loader();
-		technicalFramework = properties.getString("tf");
-		registerAEndpoint = properties.getString("registerAEndpoint");
-		registerBEndpoint = properties.getString("registerBEndpoint");
 		if (registerAEndpoint == null)
 			registerAEndpoint = "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryainternal";
 		if (registerBEndpoint == null)
