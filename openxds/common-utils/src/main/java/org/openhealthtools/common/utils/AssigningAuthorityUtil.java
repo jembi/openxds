@@ -55,7 +55,7 @@ public class AssigningAuthorityUtil {
     
         	//TODO: Fix the Identifier type
         	//Temporary conversion during the library migration
-        	Identifier idOld = new Identifier(idNew.getAuthorityNameString(), idNew.getUniversalId(), idNew.getUniversalIdType()); 
+        	Identifier idOld = new Identifier(idNew.getNamespaceId(), idNew.getUniversalId(), idNew.getUniversalIdType()); 
             if ( idOld.equals(authority) ) {
                 return idOld;
             }

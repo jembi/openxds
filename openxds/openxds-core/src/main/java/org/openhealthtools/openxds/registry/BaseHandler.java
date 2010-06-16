@@ -146,7 +146,7 @@ public class BaseHandler {
 		
      	//TODO: Fix the Identifier type
      	//Temporary conversion during the library migration
-     	Identifier idOld = new Identifier(identifier.getAuthorityNameString(), identifier.getUniversalId(), identifier.getUniversalIdType()); 
+     	Identifier idOld = new Identifier(identifier.getNamespaceId(), identifier.getUniversalId(), identifier.getUniversalIdType()); 
 		return idOld;
 	}
 	
