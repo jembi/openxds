@@ -199,7 +199,27 @@
 		</property>
 	</bean>
 	
-	<bean id="xuaServiceProvider" class="org.openhealthtools.xua.XServiceProviderImpl">
+	<!-- <bean id="xuaServiceProvider" class="org.openhealthtools.xua.XServiceProviderImpl">
 	</bean>
+	
+	<bean id="resourceingFilter" class="com.misys.hieportal.openexchange.openxds.registry.PolicyengineFilter">
+		<property name="policyEngine" ref="proxyPolicyengineBean" />
+	</bean>
+	
+	<bean id="clientConnector"
+		class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean"
+		lazy-init="true" scope="prototype">
+		<property name="serviceUrl"
+			value="service:jmx:rmi:///jndi/rmi://localhost:9084/jmxrmi" />
+	</bean>
+
+	<bean id="proxyPolicyengineBean"
+		class="org.springframework.jmx.access.MBeanProxyFactoryBean">
+		<property name="objectName"
+			value="MOSS:name=policyEngine" />
+		<property name="proxyInterface"
+			value="com.misys.hieportal.policyengine.PolicyEngine" />
+		<property name="server" ref="clientConnector" />
+	</bean> -->
    
 </beans>    

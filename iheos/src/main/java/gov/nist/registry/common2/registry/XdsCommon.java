@@ -15,6 +15,7 @@ import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxds.registry.api.ResourceingFilter;
 import org.openhealthtools.openxua.api.AssertionException;
 import org.openhealthtools.openxua.api.XServiceProvider;
 
@@ -120,7 +121,7 @@ public class XdsCommon  {
 		
 	}
 	
-	protected boolean validateAssertion(SoapHeader header)throws XdsException, AssertionException {
+	private OMElement getUserAssertion(SoapHeader header) throws XdsException{
 		// Get Identity Assertion from web-services security header
 		OMElement security = MetadataSupport.firstChildWithLocalName(header.getHdr(), "Security");
 		if (security == null)
@@ -129,13 +130,55 @@ public class XdsCommon  {
 		OMElement element = MetadataSupport.firstChildWithLocalName(security, "Assertion");
 		if (element == null)
 			throw new XdsException("Identity Assertion does not exists in web-services security header");
-			
+		
+		return element;
+	}
+	
+	protected boolean validateAssertion(SoapHeader header)throws XdsException, AssertionException {
+		OMElement assertion = getUserAssertion(header);
 		XServiceProvider provider = (XServiceProvider) XdsFactory.getInstance().getBean("xuaServiceProvider");
 		if (provider == null)
 			throw new XdsException("Exception while getting XServiceProvider instance");
 		
-		boolean status = provider.validateToken(element);
+		boolean status = provider.validateToken(assertion);
 		return status;
+	}
+	
+	protected Metadata filter(Metadata metadata, SoapHeader header) throws XdsException, Exception{
+		ResourceingFilter filter = null;
+		try {
+			filter = (ResourceingFilter)XdsFactory.getInstance().getBean("resourceingFilter");
+			if(filter == null){
+				throw new Exception("ResourceingFilter bean is null");
+			}
+		}catch (Exception e) {
+			logger.error("Exception while getting filtering resource bean");
+			throw e;
+		}
+		
+		try {
+			if(metadata == null)
+				return null;
+			List<OMElement> extrinsicObjects = metadata.getExtrinsicObjects();
+			OMElement userAssertion = getUserAssertion(header);
+			List<OMElement> filteredList = filter.filterExtrinsicObjects(extrinsicObjects, userAssertion);
+			
+			if(filteredList != null){
+				Metadata metadataRef = new Metadata();
+				metadataRef.addExtrinsicObjects(filteredList);
+				List<String> extrinsicObjectIds = metadataRef.getExtrinsicObjectIds();
+				metadata.filter(extrinsicObjectIds);
+			}
+		}catch(XdsException e){
+			logger.debug("Exception while getting User Assertion:" + e.getMessage(), e);
+			throw e;
+		}
+		catch(Exception e){
+			logger.error("Exception filtering metadata");
+			throw e;
+		}
+		
+		return metadata;
 	}
 
     /**

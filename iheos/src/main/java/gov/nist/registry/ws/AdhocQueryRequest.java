@@ -305,7 +305,16 @@ public class AdhocQueryRequest extends XdsCommon {
 		StoredQuery sq = fact.getImpl();
 		Metadata m = sq.run();
 
-		
+		//Filter metadata
+		boolean filteringMetadataEnabled = PropertyFacade.getBoolean("filter.metadata");
+		if(filteringMetadataEnabled){
+			SoapHeader header = new SoapHeader(messageContext);
+			try {
+				m = filter(m, header);
+			} catch (Exception e) {
+				throw new XdsException("Exception while filtering metadata", e);
+			}
+		}
 		if (!isMPQ(ahqr)) {	
 			isMPQ = false;
 			isSQ = true;
