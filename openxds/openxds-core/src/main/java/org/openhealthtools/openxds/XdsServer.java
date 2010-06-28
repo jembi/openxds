@@ -24,8 +24,10 @@ import java.io.File;
 import java.util.Collection;
 
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.config.ConfigProcessorFactory;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.config.SpringFacade;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**
@@ -51,7 +53,11 @@ public class XdsServer {
 		}catch(ConfigurationException e) {
 			e.printStackTrace();
 		}
+
+		//then, load Spring container
+		XdsFactory.getInstance();
 		
+		//Last, load actor configuration
         String actorDir = PropertyFacade.getString("ihe.actors.dir");
         String actorFile = null; 
         
@@ -81,9 +87,9 @@ public class XdsServer {
         } catch (IheConfigurationException e) {
             e.printStackTrace();
         }
-
+        
 	}
-	
+        		
 	/**
 	 * Prints the usage of how to start up this XDS server.
 	 */
