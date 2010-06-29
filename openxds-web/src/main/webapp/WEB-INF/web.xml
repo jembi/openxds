@@ -23,8 +23,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   <display-name>struts2 project</display-name>
-     <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+	<servlet>
+		<description>
+		</description>
+		<display-name>ConfigServlet</display-name>
+		<servlet-name>ConfigServlet</servlet-name>
+		<servlet-class>org.openhealthtools.openxds.webapp.servlet.ConfigServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
         <param-value>ApplicationResources</param-value>
     </context-param>
       <!-- Fallback locale if no bundles found for browser's preferred locale -->
