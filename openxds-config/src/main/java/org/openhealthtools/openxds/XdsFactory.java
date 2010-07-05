@@ -66,7 +66,7 @@ public class XdsFactory {
 	
 	private String[] getConfigLocations() {
         return new String[] {
-               "classpath*:/applicationContext.xml" // for modular projects
+               "classpath*:/*applicationContext.xml" // for modular projects
             };
     }
 
