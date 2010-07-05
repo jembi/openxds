@@ -59,7 +59,7 @@
 				<executions>
 					<execution>
 						<id>ant1</id>
-						<phase>compile</phase>
+						<phase>install</phase>
 						<configuration>
 							<tasks>
 								<property name="project.version" value="${project.version}" />

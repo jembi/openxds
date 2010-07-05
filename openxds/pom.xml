@@ -165,6 +165,7 @@
         	<extension>
         		<groupId>com.google.code.maven-svn-wagon</groupId>
         		<artifactId>maven-svn-wagon</artifactId>
+                <version>1.1</version>
         	</extension>
         </extensions>
     </build>
