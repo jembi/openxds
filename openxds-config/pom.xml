@@ -12,11 +12,6 @@
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>org.openhealthtools.openexchange</groupId>
-			<artifactId>openexchange-config</artifactId>
-			<version>${openexchange.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.openhealthtools.openxds</groupId>
 			<artifactId>openxds-api</artifactId>
 			<version>${project.version}</version>
