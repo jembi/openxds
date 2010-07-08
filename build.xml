@@ -38,7 +38,7 @@
 				<include name="commons-logging.properties" />
 				<include name="log4j.xml" />
 				<include name="bootstrap.properties" />
-				<include name="openxds.properties" />
+				<include name="openxds*.properties" />
 				<include name="*applicationContext.xml" />
             </fileset>
             <fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
