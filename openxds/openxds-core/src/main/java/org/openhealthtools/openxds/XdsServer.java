@@ -24,10 +24,12 @@ import java.io.File;
 import java.util.Collection;
 
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigProcessorFactory;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.config.SpringFacade;
+import org.openhealthtools.openexchange.utils.StringUtil;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**
@@ -47,13 +49,14 @@ public class XdsServer {
 	 *        <p>
 	 */
 	public static void main(String[] args) {
-        //First of all, load all the properties of this application.
+        //First of all, load all the properties of this application.       
 		try {
-			PropertyFacade.loadProperties(new String[]{"openxds.properties"});
+			String[] propertyFiles = BootStrapProperties.getPropertyFiles(new String[]{"openxds.properties"});
+			PropertyFacade.loadProperties(propertyFiles);
 		}catch(ConfigurationException e) {
 			e.printStackTrace();
 		}
-
+		
 		//then, load Spring container
 		XdsFactory.getInstance();
 		
