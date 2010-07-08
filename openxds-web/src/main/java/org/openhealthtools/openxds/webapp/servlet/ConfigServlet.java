@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openhealthexchange.openpixpdq.ihe.PatientBroker;
+import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 
@@ -43,15 +44,15 @@ import org.openhealthtools.openexchange.config.PropertyFacade;
 	 * Destroys all Actors 
 	 */
 	public void destroy() {
-		PatientBroker.getInstance().unregisterPixManagers(null);
-		PatientBroker.getInstance().unregisterPdSuppliers(null);
 
 	}   	 	  	  	  
 	public void init() throws ServletException {
 		try {
-			PropertyFacade.loadProperties(new String[]{"openxds.properties"});
+			String[] propertyFiles = BootStrapProperties.getPropertyFiles(new String[]{"openxds.properties"});
+			PropertyFacade.loadProperties(propertyFiles);
 		}catch(ConfigurationException e) {
 			e.printStackTrace();
+			throw new ServletException(e);
 		}
 	}   
 	
