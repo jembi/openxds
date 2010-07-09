@@ -69,7 +69,7 @@
 	
 	<target name="create_run_jar" depends="copy_files">
     	<path id="jar.class.path">
-    	  <fileset dir="${build.lib.dir}">
+    	  <fileset dir="${openxds.dir}/lib">
     	    <include name="**/*.jar"/>
     	    <include name="**/*.mar"/>
     	  </fileset>
