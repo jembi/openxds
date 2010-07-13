@@ -5,6 +5,7 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.SoapHeader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
@@ -152,7 +153,7 @@ public class XdsCommon  {
 				throw new Exception("ResourceingFilter bean is null");
 			}
 		}catch (Exception e) {
-			logger.error("Exception while getting filtering resource bean");
+			logger.error("Exception while getting filtering resource bean",e);
 			throw e;
 		}
 		
@@ -161,14 +162,23 @@ public class XdsCommon  {
 				return null;
 			List<OMElement> extrinsicObjects = metadata.getExtrinsicObjects();
 			OMElement userAssertion = getUserAssertion(header);
+			logger.info("Filtering extrinsicObjects");
 			List<OMElement> filteredList = filter.filterExtrinsicObjects(extrinsicObjects, userAssertion);
 			
 			if(filteredList != null){
 				Metadata metadataRef = new Metadata();
 				metadataRef.addExtrinsicObjects(filteredList);
 				List<String> extrinsicObjectIds = metadataRef.getExtrinsicObjectIds();
-				metadata.filter(extrinsicObjectIds);
+				
+				//Remove extrinsicObjects from metadata those are not available in extrinsicObjectIds
+				List<OMElement> temp = new ArrayList<OMElement>(extrinsicObjects);
+				for (OMElement object : temp) {
+					String id = metadata.id(object);
+					if (!extrinsicObjectIds.contains(id))
+						extrinsicObjects.remove(object);
+				}
 			}
+			logger.info("no. of extrinsicObjects returned:"+metadata.getExtrinsicObjects().size());
 		}catch(XdsException e){
 			logger.debug("Exception while getting User Assertion:" + e.getMessage(), e);
 			throw e;
