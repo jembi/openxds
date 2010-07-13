@@ -204,8 +204,8 @@ public class XdsCommon  {
      * @return The authority according the configuration
      */
     protected Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
-        List<org.openhealthtools.openexchange.actorconfig.net.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-        for (org.openhealthtools.openexchange.actorconfig.net.Identifier id : identifiers) {
+        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+        for (org.openhealthtools.openexchange.patient.data.Identifier id : identifiers) {
     
         	//TODO: Fix the Identifier type
         	//Temporary conversion during the library migration

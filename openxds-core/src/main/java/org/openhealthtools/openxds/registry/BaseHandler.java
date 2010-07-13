@@ -138,7 +138,7 @@ public class BaseHandler {
 			throw new IheConfigurationException("Invalid connection description (NULL)");
 		if (name == null)
 			throw new IheConfigurationException("Invalid identifier name (NULL)");
-		org.openhealthtools.openexchange.actorconfig.net.Identifier identifier = connection.getIdentifier(name);
+		org.openhealthtools.openexchange.patient.data.Identifier identifier = connection.getIdentifier(name);
 		
 		if ((identifier == null) && isRequired) {
 			throw new IheConfigurationException("No identifier '" + name + "' defined for connection \"" + connection.getDescription() + "\"");

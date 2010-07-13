@@ -50,8 +50,8 @@ public class AssigningAuthorityUtil {
      * @return The authority according the configuration
      */
     public static Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
-        List<org.openhealthtools.openexchange.actorconfig.net.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-        for (org.openhealthtools.openexchange.actorconfig.net.Identifier idNew : identifiers) {
+        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+        for (org.openhealthtools.openexchange.patient.data.Identifier idNew : identifiers) {
     
         	//TODO: Fix the Identifier type
         	//Temporary conversion during the library migration
@@ -76,8 +76,8 @@ public class AssigningAuthorityUtil {
     public static boolean validateDomain(Identifier id, IConnectionDescription connection) {
          if (id == null) return  false;
 
-         List<org.openhealthtools.openexchange.actorconfig.net.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-         for (org.openhealthtools.openexchange.actorconfig.net.Identifier idNew : identifiers) {
+         List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+         for (org.openhealthtools.openexchange.patient.data.Identifier idNew : identifiers) {
         	    
          	//TODO: Fix the Identifier type
          	//Temporary conversion during the library migration
@@ -90,7 +90,7 @@ public class AssigningAuthorityUtil {
 	         log.info("Failed to validate domain: "+ id.getNamespaceId() + "," +
 	                 id.getUniversalId() + "," + id.getUniversalIdType());
 	         log.info("List of known domains:");
-	         for (org.openhealthtools.openexchange.actorconfig.net.Identifier identifier : identifiers) {
+	         for (org.openhealthtools.openexchange.patient.data.Identifier identifier : identifiers) {
 	             log.info("  Domain: "+ identifier.getNamespaceId() + "," +
 	                 identifier.getUniversalId() + "," + identifier.getUniversalIdType());
 	         }
