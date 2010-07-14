@@ -162,7 +162,7 @@ public class XdsCommon  {
 				return null;
 			List<OMElement> extrinsicObjects = metadata.getExtrinsicObjects();
 			OMElement userAssertion = getUserAssertion(header);
-			logger.info("Filtering extrinsicObjects");
+			logger.info("Filtering extrinsicObjects:"+extrinsicObjects.size());
 			List<OMElement> filteredList = filter.filterExtrinsicObjects(extrinsicObjects, userAssertion);
 			
 			if(filteredList != null){
@@ -170,12 +170,24 @@ public class XdsCommon  {
 				metadataRef.addExtrinsicObjects(filteredList);
 				List<String> extrinsicObjectIds = metadataRef.getExtrinsicObjectIds();
 				
-				//Remove extrinsicObjects from metadata those are not available in extrinsicObjectIds
-				List<OMElement> temp = new ArrayList<OMElement>(extrinsicObjects);
-				for (OMElement object : temp) {
-					String id = metadata.id(object);
-					if (!extrinsicObjectIds.contains(id))
-						extrinsicObjects.remove(object);
+				//Remove extrinsicObjects from metadata those are not available in extrinsicObjectIds(user does not have permission to view)
+				List<OMElement> duplicateExtList = new ArrayList<OMElement>(extrinsicObjects);
+				for (OMElement extrinsicObject : duplicateExtList) {
+					String id = metadata.id(extrinsicObject);
+					if (!extrinsicObjectIds.contains(id)){
+						extrinsicObjects.remove(extrinsicObject);
+						metadata.getAllObjects().remove(extrinsicObject);
+					}
+				}
+				
+				//Remove associations those are related to deleted extrinsicObjects
+				List<OMElement> associations = metadata.getAssociations();
+				List<OMElement> duplicateAssociations = new ArrayList<OMElement>(associations);
+				for(OMElement association : duplicateAssociations){
+					if(!extrinsicObjectIds.contains(metadata.getAssocSource(association)) || !extrinsicObjectIds.contains(metadata.getAssocTarget(association))){
+						associations.remove(association);
+						metadata.getAllObjects().remove(association);
+					}
 				}
 			}
 			logger.info("no. of extrinsicObjects returned:"+metadata.getExtrinsicObjects().size());
