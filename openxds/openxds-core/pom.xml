@@ -307,5 +307,6 @@
             <artifactId>openxds-config</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--@Custom dependencies go here@-->
     </dependencies>
 </project>
