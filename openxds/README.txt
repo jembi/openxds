@@ -63,8 +63,12 @@
 	conf/schema/v3/            ebxml v3 schema
     lib/                       All the libs needed for running tje OpenXDS server
     licenses/	               All the third party license files 
-    misc/create_database_schema.sql                               
+    misc/create_database_schema_mysql.sql                               
+    		    			   OpenXDS database creation script for MySQL 
+    misc/create_database_schema_postgres.sql                               
     		    			   OpenXDS database creation script for Postgresql 
+    misc/create_database_schema_sqlserver2005.sql                               
+    		    			   OpenXDS database creation script for SQL Server 2005 
     misc/openxds-web.war       OpenXDS web application file.
 
 
@@ -74,8 +78,8 @@
      JDK Version	
 	 OpenXDS supports JDK 1.6 or higher.   
 	     
-     Database
-         Postgresql is needed. Our tested database is Postgresql 8.3.
+     Databases
+     OpenXDS supports Postgresql, MySQL, SQL Server. Our tested database is Postgresql 8.3.
                 
 
   Installation and Configuration
