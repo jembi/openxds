@@ -2,11 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+	<parent>
+	  <groupId>org.sonatype.oss</groupId>
+	  <artifactId>oss-parent</artifactId>
+	  <version>3</version>
+	</parent>
+
     <groupId>org.openhealthtools.openxds</groupId>
     <artifactId>openxds</artifactId>
     <packaging>pom</packaging>
     <version>1.0.1-SNAPSHOT</version>
     <name>OpenXDS Parent</name>
+    <description>Implements the IHE XDS profile - XDS Repository and Registry actors</description>
     <url>https://openxds.projects.openhealthtools.org</url>
 
     <prerequisites>
@@ -21,8 +29,8 @@
     </licenses>
 
     <scm>
-    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</connection>
-    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</developerConnection>
+    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk/openxds</connection>
+    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk/openxds</developerConnection>
     	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds</url>
     </scm>
 
@@ -33,20 +41,58 @@
 
     <developers>
         <developer>
-            <id />
-            <name />
-            <email />
-            <timezone />
+            <id>wenzhil</id>
+            <name>Wenzhi Li</name>
+            <email>wenzhi&lt;dot&gt;li&lt;at&gt;misys.com</email>
+            <timezone>EST</timezone>
+        </developer>
+        <developer>
+            <id>anilk</id>
+            <name>Anil Reddy</name>
+            <email>Anilkumar&lt;dot&gt;Reddy&lt;at&gt;misys.com</email>
+            <timezone>+5.5</timezone>
+        </developer>
+        <developer>
+            <id>venkatap</id>
+            <name>Venkata Pragallapati</name>
+            <email>Venkata&lt;dot&gt;Pragallapati&lt;at&gt;misys.com</email>
+            <timezone>+5.5</timezone>
+        </developer>
+        <developer>
+            <id>rasakannup</id>
+            <name>Rasakannu.Palaniyandi</name>
+            <email>Rasakannu&lt;dot&gt;Palaniyandi&lt;at&gt;misys.com</email>
+            <timezone>+5.5</timezone>
+        </developer>
+        <developer>
+            <id>scmabh</id>
+            <name>Andrew Harrison</name>
+            <email>a&lt;dot&gt;b&lt;dot&gt;harrison&lt;at&gt;cs.cardiff.ac.uk</email>
+            <timezone>GMT</timezone>
+        </developer>
+        <developer>
+            <id>arnoute</id>
+            <name>Arnout Engelen</name>
+            <email>arnout&lt;dot&gt;engelen&lt;at&gt;topicus.nl</email>
+            <timezone>CET</timezone>
+        </developer>
+        <developer>
+            <id>odysseas</id>
+            <name>Odysseas Pentakalos</name>
+            <email>odysseas&lt;at&gt;sysnetint.com</email>
+            <timezone>EST</timezone>
+        </developer>
+        <developer>
+            <id>abbasr</id>
+            <name>Abbas Raza</name>
+            <email>abbasrazam&lt;at&gt;yahoo.com</email>
+            <timezone>PST</timezone>
         </developer>
     </developers>
-    
-    <distributionManagement>
-        <repository>
-            <id>openxds</id>
-            <name>OpenXDS Maven Repository</name>
-            <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
-        </repository>
-    </distributionManagement>
+    <organization>
+    	<name>Open Health Tools</name>
+    	<url>http://www.openhealthtools.org/</url>
+    </organization>
     
     <build>
         <defaultGoal>install</defaultGoal>
