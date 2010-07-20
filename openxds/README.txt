@@ -125,7 +125,17 @@
   For commercial support, please contact Kondayya.Mullapudi@misys.com. 
   
   
- 
+  Major changes in OpenXDS 1.0.1
+  ------------------------------
+    - Additional MySQL and SQL Server databases support
+    - Added audit log with TLS transaction
+    - Generic actor configuration refactoring
+    - Integrated with OpenExchange 
+    - Added property and spring configuration framework
+    - Added configuration pre and post processes interface  
+    - Provided OpenXDS extension hook
+    - Some bug fixes
+    
   Thanks for using OpenExcange - OpenXDS.
 
 				    
