@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>openxds-web</artifactId>
     <packaging>war</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>OpenXDS - Web Application (Struts 2)</name>
 
 

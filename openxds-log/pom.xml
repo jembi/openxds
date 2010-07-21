@@ -2,14 +2,14 @@
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
   <artifactId>openxds-log</artifactId>
   <name>openxds-log</name>
   <packaging>jar</packaging>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.1</version>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
