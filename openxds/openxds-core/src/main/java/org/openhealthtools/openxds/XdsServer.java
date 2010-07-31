@@ -23,13 +23,12 @@ package org.openhealthtools.openxds;
 import java.io.File;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
-import org.openhealthtools.openexchange.config.ConfigProcessorFactory;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.config.SpringFacade;
-import org.openhealthtools.openexchange.utils.StringUtil;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**
@@ -48,13 +47,15 @@ public class XdsServer {
 	 *        path to IheActors.xml.  
 	 *        <p>
 	 */
+	private static final Log log = LogFactory.getLog("org.openhealthtools.openxds.XdsServer");
+	
 	public static void main(String[] args) {
         //First of all, load all the properties of this application.       
 		try {
 			String[] propertyFiles = BootStrapProperties.getPropertyFiles(new String[]{"openxds.properties"});
 			PropertyFacade.loadProperties(propertyFiles);
 		}catch(ConfigurationException e) {
-			e.printStackTrace();
+			log.debug(e);
 		}
 		
 		//then, load Spring container
@@ -88,11 +89,23 @@ public class XdsServer {
             Collection actors = loader.getActorDescriptions();
             loader.resetConfiguration(actors);
         } catch (IheConfigurationException e) {
-            e.printStackTrace();
+            log.debug(e);
         }
-        
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 	}
-        		
+
+	private static class ShutdownHook extends Thread {
+		
+		public void run() {
+			try {
+				XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
+				loader.resetConfiguration(null);
+			} catch (IheConfigurationException e) {
+				log.debug(e);
+			}
+		}
+	}
+	
 	/**
 	 * Prints the usage of how to start up this XDS server.
 	 */
