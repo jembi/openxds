@@ -29,7 +29,15 @@ import org.openhealthtools.openxds.xca.api.XcaIG;
 public class XcaRegistry extends RegistryB {
 	private final static Log logger = LogFactory.getLog(XcaRegistry.class);
 	
-	private XcaIG actor = Ig.getActor();
+	private XcaIG actor = null;
+	
+	public XcaRegistry() {
+		try {
+			actor = Ig.getActor();
+		}catch(XdsInternalException e) {
+			logger.fatal("Internal Error getting XcaIG actor configuration: " + e.getMessage(), e);
+		}
+	}
 		
 	protected void validateQueryInputDecoration(OMElement sor, AdhocQueryRequest a)
 	throws XdsValidationException {

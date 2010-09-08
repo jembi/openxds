@@ -26,15 +26,19 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.junit.Before;
+import static org.junit.Assert.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openhealthtools.openexchange.actorconfig.net.ConnectionFactory;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.ActorDescriptionLoader;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
@@ -47,29 +51,40 @@ import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
  */
 public class HibernateRepositoryServiceTest {
 	private static File content1K;
-    private XdsRepositoryService repositoryManager;
-	private RepositoryRequestContext requestContext = new RepositoryRequestContext();
+    private static XdsRepositoryService repositoryManager;
+	private static RepositoryRequestContext requestContext = new RepositoryRequestContext();
     private static final String id = Utility.getInstance().createId();
-    String documentId = Utility.getInstance().stripId(id);
-    private IConnectionDescription connection = null;
+    private static String documentId = Utility.getInstance().stripId(id);
  
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		try{
 		 repositoryManager = ModuleManager.getXdsRepositoryService();
 		}catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(e);
 		}
-		   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("/XdsRepositoryConnectionsTest.xml").getPath());
-		   connection = ConnectionFactory.getConnectionDescription("xds-repository");
-		   requestContext.setConnection(connection);
+//		   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("/XdsRepositoryConnectionsTest.xml").getPath());
+//		   connection = ConnectionFactory.getConnectionDescription("xds-repository");
+
+		   URL url = FileSystemRepositoryTest.class.getResource("/IheActors.xml");
+		   List<IActorDescription> actors = ActorDescriptionLoader.loadActorDescriptions(url.getFile());
+		   for(IActorDescription actor : actors) {
+			   if (actor.getType().equals("XdsRepository") ) {
+				   requestContext.setActorDescription(actor);
+			   }
+		   }
 	       char content1KArray[] = new char[1024]; //1Kb
 		   Arrays.fill(content1KArray, 'a');
 		   content1K = createTempFile(true, new String(content1KArray));  
 		      
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
 	}
 	
 	/**
@@ -81,6 +96,10 @@ public class HibernateRepositoryServiceTest {
 		
 			XdsRepositoryItem ro = createRepositoryItem(id, content1K);
 			repositoryManager.insert(ro, requestContext);				
+
+			XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+			assertNotNull(repositoryItem);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -105,9 +124,12 @@ public class HibernateRepositoryServiceTest {
 	@Test
 	public void testDeleteStringRepositoryRequestContext() {
 		try{
-			repositoryManager.delete("58a2562c-0dcb-45c4-9223-b817bf095f92", requestContext);
-		}catch (Exception e) {
+			repositoryManager.delete(documentId, requestContext);
 			
+			XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+			assertNull(repositoryItem);
+		}catch (Exception e) {
+			assertFalse(e.getMessage(), true);
 		}
 	}
 	

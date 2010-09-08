@@ -23,6 +23,7 @@ package org.openhealthtools.openxds;
 import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Util;
 import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
 import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 
@@ -43,8 +44,8 @@ public class BaseIheActor {
 	/**The logger used to persist(store) raw inbound and outbound messages.*/
 	private IMessageStoreLogger storeLogger = null;
 	
-	/** The main connection this actor will be using */
-	protected IConnectionDescription connection = null;
+	/** The actor description of this actor*/
+	protected IActorDescription actorDescription = null;
 	
 	/**
 	 * Creates a new IHE Actor.
@@ -57,17 +58,17 @@ public class BaseIheActor {
 	 * Creates a new IHE Actor.
 	 * 
 	 */
-	public BaseIheActor(IConnectionDescription connection) {
-		this.connection = connection;
+	public BaseIheActor(IActorDescription actorDescription) {
+		this.actorDescription = actorDescription;
 	}
 
 	/**
 	 * Creates a new HL7 Actor
 	 * 
 	 */
-	public BaseIheActor(IConnectionDescription connection, IheAuditTrail auditTrail) {
+	public BaseIheActor(IActorDescription actorDescription, IheAuditTrail auditTrail) {
 		this.auditTrail = auditTrail;
-		this.connection = connection;
+		this.actorDescription = actorDescription;
 	}
 	
 	/**
@@ -91,8 +92,8 @@ public class BaseIheActor {
 	 * @returns a useful name for this Actor
 	 */
 	public String getName() {
-		if (connection != null) {
-			return connection.getDescription();
+		if (actorDescription != null) {
+			return actorDescription.getDescription();
 		} else {
 			return "unnamed";
 		}
@@ -158,12 +159,12 @@ public class BaseIheActor {
 	}
 
 	/**
-	 * Gets the main <code>IConnectionDescription</code> of this actor.
+	 * Gets the main <code>IActorDescription</code> of this actor.
 	 * 
 	 * @return the main connection
 	 */
-	public IConnectionDescription getConnection() {
-		return connection;
+	public IActorDescription getActorDescription() {
+		return this.actorDescription;
 	}
 	
 	/**

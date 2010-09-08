@@ -21,6 +21,7 @@
 package org.openhealthtools.openxds.registry.api;
 
 import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 
 /**
@@ -29,5 +30,20 @@ import org.openhealthtools.common.ihe.IheActor;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public interface XdsRegistry extends IheActor {
+	/**
+	 * Gets the connection for the PIX Feed. The connection provides the details (such as 
+	 * port etc) which are needed for this PIX Registry to talk to the PIX Source or Manager.
+	 * 
+	 * @return the connection of PIX Source/Manager
+	 */
+	public IConnectionDescription getPixRegistryConnection();
+
+	/**
+	 * Gets the web service end point of this Registry.
+	 * 
+	 * @param isSecure whether to get secure end point or not.
+	 * @return
+	 */
+	public String getServiceEndpoint(boolean isSecure);
 
 }

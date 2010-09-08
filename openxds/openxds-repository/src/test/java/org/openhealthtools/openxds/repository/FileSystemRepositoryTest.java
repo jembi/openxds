@@ -24,17 +24,20 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-import org.openhealthexchange.openpixpdq.ihe.IPixManagerAdapter;
-import org.openhealthexchange.openpixpdq.ihe.impl_v2.PixManager;
-import org.openhealthtools.openexchange.actorconfig.net.ConnectionFactory;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openhealthtools.openexchange.actorconfig.ActorDescriptionLoader;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
@@ -46,29 +49,30 @@ import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
  * @author <a href="mailto:Rasakannu.Palaniyandi@misys.com">Raja</a>
  *
  */
-public class FileSystemRepositoryTest extends TestCase {
+public class FileSystemRepositoryTest{
 
    private static File content1K;
    private static File content1M;
    private static File content2M;
-   private XdsRepositoryService repositoryManager;
- //  private FileSystemRepositoryManager repositoryManager;
-   private RepositoryRequestContext requestContext = new RepositoryRequestContext();
+   private static XdsRepositoryService repositoryManager;
+   private static RepositoryRequestContext requestContext = new RepositoryRequestContext();
    private static final String id = Utility.getInstance().createId();
-   String documentId = Utility.getInstance().stripId(id);
-   private IConnectionDescription connection = null;
-   private IPixManagerAdapter pixAdapter = null;   
-	private PixManager actor = null;
+   private static String documentId = Utility.getInstance().stripId(id);
    
-   protected void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 	   try{
-	   repositoryManager = ModuleManager.getXdsFileRepository();
-	   ConnectionFactory.loadConnectionDescriptionsFromFile(FileSystemRepositoryTest.class.getResource("/XdsRepositoryConnectionsTest.xml").getPath());
-	   connection = ConnectionFactory.getConnectionDescription("xds-repository");
-	   requestContext.setConnection(connection);
+		   repositoryManager = ModuleManager.getXdsFileRepository();
+		   URL url = FileSystemRepositoryTest.class.getResource("/IheActors.xml");
+		   List<IActorDescription> actors = ActorDescriptionLoader.loadActorDescriptions(url.getFile());
+		   for(IActorDescription actor : actors) {
+			   if (actor.getType().equals("XdsRepository") ) {
+				   requestContext.setActorDescription(actor);
+			   }
+		   }
+	   
        	 if (content1K == null) {			   
 	            // initialize test content
-			    
 	            char content1KArray[] = new char[1024]; //1Kb
 	            char content1MArray[] = new char[1024*1024]; //1Mb
 	            char content2MArray[] = new char[1024*1024*2]; //2Mb
@@ -84,13 +88,22 @@ public class FileSystemRepositoryTest extends TestCase {
 		}
 	}
 
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+	
+   
    /**
 	 * Test FileSystemRepositoryManager: insert method
 	 */
+	@Test	
 	public void testInsertRepoItem(){
 		try {
 			XdsRepositoryItem ro = createRepositoryItem(id, content1M);
 			repositoryManager.insert(ro, requestContext);
+			
+			XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+			assertNotNull(repositoryItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,6 +112,7 @@ public class FileSystemRepositoryTest extends TestCase {
 	/**
 	 * Test FileSystemRepositoryManager: getRepoItem method
 	 */
+	@Test
     public void testgetRepoItem(){
     	XdsRepositoryItem invalidRepositoryId =null;
     	try {    		
@@ -115,12 +129,20 @@ public class FileSystemRepositoryTest extends TestCase {
     /**
 	 * Test FileSystemRepositoryManager: deleteDocumentID method
 	 */
+	@Test
     public void testDeleteDocumentId(){
     	try {		
-    		repositoryManager.delete(documentId, requestContext);    		
+			XdsRepositoryItem repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+			assertNotNull(repositoryItem);
+
+			repositoryManager.delete(documentId, requestContext);    		
+    		
+		    repositoryItem = repositoryManager.getRepositoryItem(documentId, requestContext);
+			assertNull(repositoryItem);
     	} catch (Exception e) {
 		   e.printStackTrace();
-		}
+    	   assertFalse(e.getMessage(), true);
+ 		}
     	
 	}
     

@@ -104,23 +104,14 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 		String actorName = actor.getName();
 		// Make sure we got out a valid definition
 		if (actor.getType().equalsIgnoreCase(XDSREGISTRY)) {
-			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			
 			if (actor.getConnectionDescriptionsByType(PIXSERVER).size() != 1) 
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + PIXSERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		} 
 		else if (actor.getType().equalsIgnoreCase(XDSREPOSITORY)) {
-			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			
 			if (actor.getConnectionDescriptionsByType(REGISTRY).size() != 1) 
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
 		}
 	    else if (actor.getType().equalsIgnoreCase(XCARG)) {
-			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			
 			if (actor.getConnectionDescriptionsByType(REGISTRY).size() != 1) 
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
 			
@@ -129,9 +120,6 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 	    }
 		else if (actor.getType().equalsIgnoreCase(XCAIG)) {
 			TransactionsSet respondingGatewaySet = actor.getTransactionSet(RESPONDINGGATEWAY);
-			if (actor.getConnectionDescriptionsByType(SERVER).size() != 1) 
-				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + SERVER + "' Connection in configuration file \"" + configFile.getAbsolutePath() + "\"");
-			
 			// At least a registry or responding gateway has to be defined.
 			if (actor.getConnectionDescriptionsByType(REGISTRY).isEmpty() && respondingGatewaySet == null)
 				throw new IheConfigurationException("Actor '" + actorName + "' must specify one valid '" + REGISTRY + "' Connection or Responding Gateway in configuration file \"" + configFile.getAbsolutePath() + "\"");				
@@ -181,13 +169,10 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 			}
 		}
 		else if (actor.getType().equalsIgnoreCase(XDSREGISTRY)) {
-			IConnectionDescription xdsRegistryServerConnection = actor.getConnectionDescriptionByType(SERVER);
-			IConnectionDescription pixRegistryServerConnection = actor.getConnectionDescriptionByType(PIXSERVER);
-			XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(pixRegistryServerConnection, xdsRegistryServerConnection, auditTrail);
+			XdsRegistryImpl xdsRegistry = new XdsRegistryImpl(actor, auditTrail);
 
 			XdsRegistryPatientService patientManager = XdsFactory.getXdsRegistryPatientService();
 			xdsRegistry.registerPatientManager(patientManager);
-
 			if (xdsRegistry != null) {
 	            XdsBroker broker = XdsBroker.getInstance();
 	            broker.registerXdsRegistry(xdsRegistry);
@@ -195,22 +180,15 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 	        }
 		}
 		else if (actor.getType().equalsIgnoreCase(XDSREPOSITORY)) {
-			IConnectionDescription repositoryServerConnection = actor.getConnectionDescriptionByType(SERVER);
-			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
-
-			XdsRepositoryImpl xdsRepository = new XdsRepositoryImpl(repositoryServerConnection, registryClientConnection, auditTrail);
-			if (repositoryServerConnection != null) {
-	            XdsBroker broker = XdsBroker.getInstance();
-	            broker.registerXdsRepository(xdsRepository);
-	            okay = true;
-	        }
+			XdsRepositoryImpl xdsRepository = new XdsRepositoryImpl(actor, auditTrail);
+			if (xdsRepository != null) {
+				XdsBroker broker = XdsBroker.getInstance();
+		        broker.registerXdsRepository(xdsRepository);
+		        okay = true;
+			}
 		}
 		else if (actor.getType().equalsIgnoreCase(XCARG)) {
-			IConnectionDescription rgServerConnection = actor.getConnectionDescriptionByType(SERVER);
-			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
-			IConnectionDescription reposiotryClientConnection = actor.getConnectionDescriptionByType(REPOSITORY);
-			
-			XcaRGImpl xcaRG = new XcaRGImpl(rgServerConnection, registryClientConnection, reposiotryClientConnection, auditTrail);
+			XcaRGImpl xcaRG = new XcaRGImpl(actor, auditTrail);
 	        if (xcaRG != null) {
 	            XdsBroker broker = XdsBroker.getInstance();
 	            broker.registerXcaRG(xcaRG);
@@ -218,12 +196,7 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 	        }
 		}
 		else if (actor.getType().equalsIgnoreCase(XCAIG)) {
-			IConnectionDescription igServerConnection = actor.getConnectionDescriptionByType(SERVER);
-			IConnectionDescription registryClientConnection = actor.getConnectionDescriptionByType(REGISTRY);
-			IConnectionDescription reposiotryClientConnection = actor.getConnectionDescriptionByType(REPOSITORY);
-			TransactionsSet respondingGateways = actor.getTransactionSet(RESPONDINGGATEWAY);
-			
-			XcaIGImpl xcaIG = new XcaIGImpl(igServerConnection, registryClientConnection, reposiotryClientConnection, respondingGateways, auditTrail);
+			XcaIGImpl xcaIG = new XcaIGImpl(actor, auditTrail);
 	        if (xcaIG != null) {
 	            XdsBroker broker = XdsBroker.getInstance();
 	            broker.registerXcaIG(xcaIG);

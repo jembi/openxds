@@ -20,7 +20,7 @@
 
 package org.openhealthtools.common.ihe;
 
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 
 /**
@@ -49,11 +49,11 @@ public interface IheActor {
 	public String getName(); 
 	
 	/**
-	 * Gets the main <code>IConnectionDescription</code> of this actor.
+	 * Gets the <code>IActorDescription</code> of this actor.
 	 * 
-	 * @return the main connection
+	 * @return the actor description
 	 */
-	public IConnectionDescription getConnection();
+	public IActorDescription getActorDescription();
 	
 	/**
 	 * Gets the Audit Trail of this actor.

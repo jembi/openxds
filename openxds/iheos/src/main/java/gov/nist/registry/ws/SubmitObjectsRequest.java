@@ -18,7 +18,6 @@ import gov.nist.registry.common2.registry.IdParser;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
@@ -46,23 +45,22 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.HL7;
 import org.openhealthtools.common.utils.OMUtil;
-import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openxds.XdsConstants;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
+import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
@@ -74,7 +72,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	ContentValidationService validater;
 	short xds_version;
 	private final static Log logger = LogFactory.getLog(SubmitObjectsRequest.class);
- 	private IConnectionDescription connection = null;
+	private XdsRegistry actor = null;
 	static ArrayList<String> sourceIds = null;
 	String clientIPAddress;
 	/* The IHE Audit Trail for this actor. */
@@ -97,25 +95,24 @@ public class SubmitObjectsRequest extends XdsCommon {
 	
 	public SubmitObjectsRequest(LogMessage log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
+		this.messageContext = messageContext;
 		this.xds_version = xds_version;
 		this.clientIPAddress = null;
 		transaction_type = R_transaction;
+
 		try {
-			IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
-			IheActor actor = httpServer.getIheActor();
+			actor = getRegistryActor(); 
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
 			}
-			connection = actor.getConnection();
-			if (connection == null) {
-				throw new XdsInternalException("Cannot find XdsRegistry connection configuration.");			
-			}
-			auditLog = actor.getAuditTrail();
+			
+			auditLog = actor.getAuditTrail();	
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
+			
 			loadSourceIds();
 		} catch (XdsInternalException e) {
-			logger.fatal(logger_exception_details(e));
-		}
+            logger.fatal(logger_exception_details(e));
+		} 
 	}
 
 	public SubmitObjectsRequest() {
@@ -124,13 +121,13 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 	void loadSourceIds() throws XdsInternalException {
 		if (sourceIds != null) return;
-		String sids = connection.getProperty("sourceIds");
-		if (sids == null || sids.equals(""))
+		String[] sids = PropertyFacade.getStringArray(XdsConstants.DOC_SOURCE_IDS);
+		if (sids == null || sids.length == 0)
 			throw new XdsInternalException("Registry: sourceIds not configured");
-		String[] parts = sids.split(",");
+		
 		sourceIds = new ArrayList<String>();
-		for (int i=0; i<parts.length; i++) {
-			sourceIds.add(parts[i].trim());
+		for (int i=0; i<sids.length; i++) {
+			sourceIds.add(sids[i]);
 		}
 	}
 
@@ -205,13 +202,33 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		OMElement res = null;
 		try {
-			res =  response.getResponse();
+			res =  response.getResponse();			
 			if (logger.isDebugEnabled()) {
 				logger.debug("Response from the Registry");
 				logger.debug(res.toString());
 			}
 		} catch (XdsInternalException e) {
 
+		}
+		
+		// Notify document submission to subscribers
+		if (!response.has_errors()) {
+			//todo: remove hardcoded url
+//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/http://localhost:8885/opendsub/services/NotificationBroker");
+//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/axis2/services/xdsregistryb");
+//			NotificationProducer producer = new DocumentMetadataProducer(endpoint, );
+//			LocalDsubPublisher publisher = new LocalDsubPublisher(endpoint); 
+			
+//			
+//			//todo: remove hardcoded url
+//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/http://localhost:8885/opendsub/services/NotificationBroker");
+//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/axis2/services/xdsregistryb");
+//			DsubPublisher publisher = new DsubPublisher(endpoint, producerEndpoint);
+//			try {
+//				publisher.receive(sor);
+//			}catch(DsubException e) {
+//				logger.error("Failed to publish to DocumentMetadataNotificationBroker" , e);
+//			}
 		}
 		
 		// return test log message id only if request from internal Repository
@@ -255,7 +272,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		logIds(m);
 
-		Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, false, connection);
+		Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, false, actor.getActorDescription());
 		val.run();
 
 		RegistryValidations vals = null;
@@ -552,7 +569,7 @@ public class SubmitObjectsRequest extends XdsCommon {
    		String patId = HL7.getIdFromCX(patientId);
    	
     	Identifier assigningAuthority = HL7.getAssigningAuthorityFromCX(patientId);
-    	Identifier aa = reconcileIdentifier(assigningAuthority, connection);
+    	Identifier aa = reconcileIdentifier(assigningAuthority, actor.getActorDescription());
 
     	PatientIdentifier pid = new PatientIdentifier();
     	pid.setId(patId);
@@ -631,8 +648,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 		ActiveParticipant source = new ActiveParticipant();
 		source.setUserId(replyto);
 		source.setAccessPointId(remoteIP);
-		//TODO: Needs to be improved
-		String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
+		String userid = actor.getServiceEndpoint(isHttps()); 
 		ActiveParticipant dest = new ActiveParticipant();
 		dest.setUserId(userid);
 		// the Alternative User ID should be set to our Process ID, see

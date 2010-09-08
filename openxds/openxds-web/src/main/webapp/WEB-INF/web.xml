@@ -31,8 +31,56 @@
 		<servlet-class>org.openhealthtools.openxds.webapp.servlet.ConfigServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<context-param>
-		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <display-name>Apache-Axis Servlet</display-name>
+        <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
+        <!--<init-param>-->
+        <!--<param-name>axis2.xml.path</param-name>-->
+        <!--<param-value>/WEB-INF/conf/axis2.xml</param-value>-->
+        <!--<param-name>axis2.xml.url</param-name>-->
+        <!--<param-value>http://localhost/myrepo/axis2.xml</param-value>-->
+        <!--<param-name>axis2.repository.path</param-name>-->
+        <!--<param-value>/WEB-INF</param-value>-->
+        <!--<param-name>axis2.repository.url</param-name>-->
+        <!--<param-value>http://localhost/myrepo</param-value>-->
+        <!--</init-param>-->
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>AxisAdminServlet</servlet-name>
+        <display-name>Apache-Axis AxisAdmin Servlet (Web Admin)</display-name>
+        <servlet-class>
+            org.apache.axis2.webapp.AxisAdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/servlet/AxisServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AxisAdminServlet</servlet-name>
+        <url-pattern>/axis2-admin/*</url-pattern>
+    </servlet-mapping>
+
+    <mime-mapping>
+        <extension>inc</extension>
+        <mime-type>text/plain</mime-type>
+    </mime-mapping>
+
+    <context-param>
+	  <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
         <param-value>ApplicationResources</param-value>
     </context-param>
       <!-- Fallback locale if no bundles found for browser's preferred locale -->
@@ -42,12 +90,13 @@
         <param-value>en</param-value>
     </context-param>
  
-       <context-param>
+    <context-param>
         <param-name>
           org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG
         </param-name>
         <param-value>/WEB-INF/tiles-defs.xml</param-value>
     </context-param>
+ 
     <listener>
     	<listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
     </listener>
@@ -65,22 +114,28 @@
     </filter-mapping>
 
     <error-page>
-        <error-code>500</error-code>
-        <location>/error.jsp</location>
+      <error-code>404</error-code>
+      <location>/axis2-web/Error/error404.jsp</location>
     </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/axis2-web/Error/error500.jsp</location>
+    </error-page>
+
     <error-page>
         <error-code>400</error-code>
         <location>/index.jsp</location>
     </error-page>
+
     <error-page>
         <error-code>403</error-code>
         <location>/403.jsp</location>
     </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/404.jsp</location>
-    </error-page>
+
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+      <welcome-file>index.jsp</welcome-file>
+      <welcome-file>index.html</welcome-file>
+      <welcome-file>/axis2-web/index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

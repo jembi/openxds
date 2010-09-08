@@ -6,17 +6,26 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.SoapHeader;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
+import org.openhealthtools.openxds.XdsConstants;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.registry.api.ResourceingFilter;
+import org.openhealthtools.openxds.registry.api.XdsRegistry;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxua.api.AssertionException;
 import org.openhealthtools.openxua.api.XServiceProvider;
 
@@ -30,7 +39,7 @@ public class XdsCommon  {
 	public static final short xds_a = 2;
 	public static final short xds_b = 3;
 	public short xds_version = xds_none;
-	MessageContext messageContext = null;
+	protected MessageContext messageContext = null;
 	/**Is Responding Gateway*/
 	boolean isRG = false;
 	private final static Log logger = LogFactory.getLog(XdsCommon.class);
@@ -45,6 +54,15 @@ public class XdsCommon  {
 
 	public MessageContext getMessageContext() {
 		return messageContext;
+	}
+	
+	/**whether this transaction request is secure*/
+	protected boolean isHttps() {
+		String protocol = this.messageContext.getTransportIn().getName();
+		if (protocol.equalsIgnoreCase("https")) {
+			return true;
+		} 
+		return false;
 	}
 	
 	public void setIsRG() {
@@ -229,5 +247,72 @@ public class XdsCommon  {
         //no identifier is found, just return the original authority
         return authority;
     }
+    protected Identifier reconcileIdentifier(Identifier authority, IActorDescription actorDescription) {
+        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = actorDescription.getAllIdentifiersByType("domain");
+        for (org.openhealthtools.openexchange.patient.data.Identifier id : identifiers) {
+    
+        	//TODO: Fix the Identifier type
+        	//Temporary conversion during the library migration
+        	Identifier identifier = new Identifier(id.getNamespaceId(), id.getUniversalId(), id.getUniversalIdType()); 
+            if ( identifier.equals(authority) ) {
+                return identifier;
+            }
+        }
+        //no identifier is found, just return the original authority
+        return authority;
+    }
 
+	protected XdsRepository getRepositoryActor() throws XdsInternalException {
+		AxisServlet server = (AxisServlet)this.messageContext.getTransportIn().getReceiver();
+		Collection<XdsRepository> actors = (Collection<XdsRepository>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.REPOSITORY_ACTORS);
+
+		if (actors == null || actors.isEmpty() ) {
+			throw new XdsInternalException("No XdsRepository Actor is configured.");
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XdsRepository ret = null;
+		for (XdsRepository actor : actors) {
+			boolean isSecureActor = actor.getRegistryClientConnection() instanceof SecureConnection;
+			
+			ret = actor;
+			if ( isHttps() && isSecureActor ||
+			  	!isHttps() && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
+ 
+	protected XdsRegistry getRegistryActor() throws XdsInternalException {
+		AxisServlet server = (AxisServlet)this.messageContext.getTransportIn().getReceiver();
+		Collection<XdsRegistry> actors = (Collection<XdsRegistry>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.REGISTRY_ACTORS);
+
+		if (actors == null || actors.isEmpty() ) {
+			throw new XdsInternalException("No XdsRepository Actor is configured.");
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XdsRegistry ret = null;
+		for (XdsRegistry actor : actors) {
+			
+			boolean isSecureActor = actor.getPixRegistryConnection() instanceof SecureConnection;
+			
+			ret = actor;
+			if ( isHttps() && isSecureActor ||
+			  	!isHttps() && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
+	
 }

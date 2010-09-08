@@ -52,16 +52,16 @@
 		<!--The port-->
 		<Port>8010</Port>
 		<!--The URL of the XDS Registry web services -->
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<UrlPath>/openxds/services/xdsregistryb</UrlPath>		
 	</StandardConnection>
 
 	<SecureConnection name="secure-xds-registry-client">
 		<!--The host name of the XDS Registry Server-->
 		<HostName>localhost</HostName>
 		<!--The port-->
-		<Port>8011</Port>
+		<Port>8433</Port>
 		<!--The URL of the XDS Registry web services -->
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<UrlPath>/openxds/services/xdsregistryb</UrlPath>		
 
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>

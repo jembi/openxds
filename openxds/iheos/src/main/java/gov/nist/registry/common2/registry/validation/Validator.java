@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.patient.data.Identifier;
 import org.openhealthtools.openxds.log.LogMessage;
@@ -33,7 +34,7 @@ public class Validator {
 	LogMessage log_message;
 	boolean isPnR = false;
 
-	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, LogMessage log_message, boolean isPnR, IConnectionDescription connection)
+	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, LogMessage log_message, boolean isPnR, IActorDescription actorDescription)
 	throws LoggerException, XdsException {
 		this.rel = rel;
 		this.m = m;
@@ -45,7 +46,7 @@ public class Validator {
 		s = new Structure(m, is_submit, rel, log_message);
 		a = new Attribute(m, is_submit, is_xdsb, rel, isPnR);
 		try {
-			cv = new CodeValidation(m, is_submit, is_xdsb, rel, connection);
+			cv = new CodeValidation(m, is_submit, is_xdsb, rel, actorDescription);
 		}
 		catch (XdsInternalException e) {
 			rel.add_error(MetadataSupport.XDSRegistryError, e.getMessage(), RegistryUtility.exception_details(e), null);

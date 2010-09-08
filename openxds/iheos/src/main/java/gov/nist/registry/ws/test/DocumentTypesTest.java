@@ -4,15 +4,17 @@ import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.ws.DocumentTypes;
 import junit.framework.TestCase;
 
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 
 
 public class DocumentTypesTest extends TestCase {
-    //TODO: Init connection
-	private IConnectionDescription connection;
+    //TODO: Init actor description
+	private IActorDescription actorDescription;
 	
 	public void test_file_extension() throws XdsInternalException {
-		DocumentTypes dt = new DocumentTypes(connection);
+		
+		
+		DocumentTypes dt = new DocumentTypes(actorDescription);
 		try {
 			String file_ext = dt.fileExtension("text/plain");
 			assert(file_ext.equals("txt"));
@@ -23,7 +25,7 @@ public class DocumentTypesTest extends TestCase {
 	}
 	
 	public void test_mime_type()  throws XdsInternalException {
-		DocumentTypes dt = new DocumentTypes(connection);
+		DocumentTypes dt = new DocumentTypes(actorDescription);
 		try {
 			String mime_type = dt.mimeType("txt");
 			assert(mime_type.equals("text/plain"));

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.patient.data.Identifier;
@@ -27,34 +28,34 @@ public class CodeValidation {
 	RegistryErrorList rel;
 	boolean is_submit;
 	boolean xds_b;
-	IConnectionDescription connection;
+	IActorDescription actorDescription;
 
 	List<Identifier> assigning_authorities;
 	HashMap<String, String> mime_map;  // mime => ext
 	HashMap<String, String> ext_map;   // ext => mime
 
 	public CodeValidation(Metadata m, boolean is_submit, boolean xds_b, 
-			RegistryErrorList rel, IConnectionDescription connection) 
+			RegistryErrorList rel, IActorDescription actorDescription) 
 	throws XdsInternalException {
 		this.m = m;
 		this.rel = rel;
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
-		this.connection = connection;
+		this.actorDescription = actorDescription;
 
 		loadCodes();
 	}
 
 	// this is used for easy access to mime lookup
-	public CodeValidation(IConnectionDescription connection) throws XdsInternalException {
-		this.connection = connection;
+	public CodeValidation(IActorDescription actorDescription) throws XdsInternalException {
+		this.actorDescription = actorDescription;
 		loadCodes();
 	}
 
 
 	void loadCodes() throws XdsInternalException {
 		assigning_authorities = new ArrayList<Identifier>();
-		Identifier aa = connection.getIdentifier("AssigningAuthority");
+		Identifier aa = actorDescription.getIdentifier("AssigningAuthority");
 		this.assigning_authorities.add(aa);
 		build_mime_map();
 	}
@@ -76,7 +77,7 @@ public class CodeValidation {
 	}
 
 	private void build_mime_map() throws XdsInternalException {
-		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
+		CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");		
 		if (mimeTypeCodeSet == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find mime type table");
 
 		mime_map = new HashMap<String, String>();
@@ -195,8 +196,8 @@ public class CodeValidation {
 			err("codingScheme (Slot codingScheme) missing", cl);
 			return;
 		}
-		for ( String codeType : connection.getAllCodeTypeNames()){
-			CodeSet codeSet = connection.getCodeSet(codeType);
+		for ( String codeType : actorDescription.getAllCodeTypeNames()){
+			CodeSet codeSet = actorDescription.getCodeSet(codeType);
 			if (codeSet.containsCode(code, coding_scheme))
 		    {
 				val("Coding of " + coding_scheme, null);

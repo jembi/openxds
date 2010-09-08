@@ -1,6 +1,7 @@
 package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsException;
+import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
@@ -27,7 +28,15 @@ import org.openhealthtools.openxds.xca.api.XcaIG;
 public class XcaRepository extends RepositoryB {
 	private final static Log logger = LogFactory.getLog(XcaRepository.class);
 	
-	private XcaIG actor = Ig.getActor();
+	private XcaIG actor = null;
+	
+	public XcaRepository() {
+		try {
+			actor = Ig.getActor();
+		}catch(XdsInternalException e) {
+			logger.fatal("Internal Error getting XcaIG actor configuration: " + e.getMessage(), e);
+		}
+	}
 
 	protected void validateRequest(OMElement rdsr, RegistryErrorList rel)
 	throws XdsValidationException {

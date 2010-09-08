@@ -19,18 +19,23 @@ import gov.nist.registry.ws.AdhocQueryRequest;
 import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.ConnectionUtil;
-import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openxds.XdsConstants;
 import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 
@@ -43,7 +48,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	static {
 		homeProperty = PropertyFacade.getString("home.community.id");
 	}
-    IConnectionDescription connection = null;
+    IActorDescription actorDescription = null;
     IConnectionDescription registryClientConnection = null;
     IConnectionDescription repositoryClientConnection = null;
 
@@ -57,26 +62,21 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 
 	public RGAbstract() {
 		home = homeProperty;  // allows sub-classes to override
-		IheHTTPServer httpServer = (IheHTTPServer)getMessageContext().getTransportIn().getReceiver();
 		try {
-			IheActor actor = httpServer.getIheActor();
+			XcaRG actor = getRGActor();
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XcaRG actor configuration.");			
 			}
-			connection = actor.getConnection();
-			if (connection == null) {
-				throw new XdsInternalException("Cannot find XcaRG connection configuration.");			
-			}
-			registryClientConnection = ((XcaRG)actor).getRegistryClientConnection();
+			registryClientConnection = actor.getRegistryClientConnection();
 			if (registryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XcaRG XdsRegistryClient connection configuration.");			
 			}
-			repositoryClientConnection = ((XcaRG)actor).getRepositoryClientConnection();
+			repositoryClientConnection = actor.getRepositoryClientConnection();
 			if (repositoryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XcaRG XdsRepositoryClient connection configuration.");			
 			}
 		} catch (XdsInternalException e) {
-			logger.fatal("Internal Error getting XcaRG actor configuration: " + e.getMessage());
+			logger.fatal("Internal Error getting XcaRG actor configuration: " + e.getMessage(), e);
 		}
 	}
 
@@ -441,5 +441,32 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 		}
 	}
 
+	protected XcaRG getRGActor() throws XdsInternalException {
+		AxisServlet server = (AxisServlet)getMessageContext().getTransportIn().getReceiver();
+		Collection<XcaRG> actors = (Collection<XcaRG>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.RG_ACTORS);
+
+		if (actors == null || actors.isEmpty() ) {
+			throw new XdsInternalException("No XcaRG Actor is configured.");
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XcaRG ret = null;
+		for (XcaRG actor : actors) {
+			boolean isRegistrySecure = actor.getRegistryClientConnection() instanceof SecureConnection;
+			boolean isReposiotrySecure = actor.getRepositoryClientConnection() instanceof SecureConnection;
+			//TODO: revisit the logics to verify the secure actor
+			boolean isSecureActor = isRegistrySecure && isReposiotrySecure;
+			ret = actor;
+			if ( is_secure && isSecureActor ||
+			  	!is_secure && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
 
 }

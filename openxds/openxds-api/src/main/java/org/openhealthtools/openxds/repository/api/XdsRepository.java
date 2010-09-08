@@ -38,4 +38,12 @@ public interface XdsRepository extends IheActor {
 	 * @return the client side Registry connection
 	 */
 	public IConnectionDescription getRegistryClientConnection();	
+
+	/**
+	 * Gets the web service end point of this Repository.
+	 * 
+	 * @param isSecure whether to get secure end point or not.
+	 * @return
+	 */
+	public String getServiceEndpoint(boolean isSecure);
 }

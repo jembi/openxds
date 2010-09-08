@@ -174,6 +174,16 @@
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-core</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty</artifactId>
+                </exclusion>	
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jsp-2.1-jetty</artifactId>
+                </exclusion>	
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
@@ -186,7 +196,6 @@
             	</exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
     <build>
         <finalName>openxds-web</finalName>
@@ -194,8 +203,15 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.9</version>
+                <version>6.1.24</version>
                 <configuration>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8890</port>
+                            <maxIdleTime>30000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                    <webAppSourceDirectory>${basedir}/src/main/webapp</webAppSourceDirectory>
                     <contextPath>/</contextPath>
                     <scanIntervalSeconds>3</scanIntervalSeconds>
                     <scanTargetPatterns>
@@ -218,37 +234,6 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0.2</version>
-				<configuration>
-					<dependentWarExcludes>
-						**/web.xml,WEB-INF/classes/META-INF/**
-			        </dependentWarExcludes>
-					<webResources>
-						<resource>
-              				<!-- this is relative to the pom.xml directory 
-							if openxds-web/pom.xml <directory>../lib</directory>
-							if from root pom.xml <directory>./lib</directory>-->
-              				<directory>./lib</directory>
-              				<targetPath>WEB-INF/lib</targetPath>
-              				<includes>
-               				 <include>*.mar</include>
-             				</includes>
-            			</resource>
-						<resource>
-							<!-- this is relative to the pom.xml directory 
-							if openxds-web/pom.xml <directory>../../build</directory>
-							if from root pom.xml <directory>../build</directory>-->
-							<directory>../build</directory>
-							<!-- the destination directory for this resources -->
-							<targetPath>WEB-INF/classes</targetPath>
-							<excludes>
-								<exclude>lib/</exclude>
-								<exclude>*.jar</exclude>
-								<exclude>*.log</exclude>
-								<exclude>*.txt</exclude>
-							</excludes>
-						</resource>
-					</webResources>
-				</configuration>
 			</plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -275,7 +260,26 @@
                     </warpathExcludes>
                 </configuration>
             </plugin>
-            
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<id>ant1</id>
+						<phase>install</phase>
+						<configuration>
+							<tasks>
+								<property name="project.version" value="${project.version}" />
+								<ant dir="../" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
 
     </build>

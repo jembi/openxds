@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 
 
 public class RepositoryAccess  {
@@ -18,9 +18,9 @@ public class RepositoryAccess  {
 	File dir;
 	String ext;
 
-	public RepositoryAccess(String doc_id, File dir, IConnectionDescription connection) throws XdsInternalException {
+	public RepositoryAccess(String doc_id, File dir, IActorDescription actorDescription) throws XdsInternalException {
 		this.doc_id = doc_id;
-		file_types = (new DocumentTypes(connection)).getFileTypes();
+		file_types = (new DocumentTypes(actorDescription)).getFileTypes();
 		this.dir = dir;
 		this.ext = null;
 	}

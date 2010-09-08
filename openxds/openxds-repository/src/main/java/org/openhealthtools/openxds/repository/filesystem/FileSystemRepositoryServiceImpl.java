@@ -31,6 +31,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.utils.Pair;
@@ -100,8 +101,8 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 	 */
 	public void insert(XdsRepositoryItem item, RepositoryRequestContext context)
 			throws RepositoryException {
-		IConnectionDescription connection = context.getConnection();
-		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
+		IActorDescription actorDescription = context.getActorDescription();
+		CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");		
 		if (mimeTypeCodeSet == null) throw new RepositoryException("Configuration Error: Cannot find mime type table");
 		
 		try {
@@ -169,12 +170,12 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 		// Strip off the "urn:uuid:"
 		documentUniqueId = Utility.getInstance().stripId(documentUniqueId);		
 		try {
-			IConnectionDescription connection = context.getConnection();
-			if (connection == null) {
-				throw new RepositoryException("Missing required ConnectionDescription in RepositoryRequestContext");
+			IActorDescription actorDescription = context.getActorDescription();
+			if (actorDescription == null) {
+				throw new RepositoryException("Missing required ActorDescription in RepositoryRequestContext");
 			}
 			
-			CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");
+			CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");
 			Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 			String targetFileMimeType = null;
 			File targetFile = null;
@@ -195,9 +196,7 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 			}
 
 			if (targetFile == null) {
-				String errmsg = "Cannot find the repository file with document id:" + documentUniqueId;
-				log.error(errmsg);
-				throw new RepositoryException(errmsg);
+				return null;
 			}
 
 			DataHandler contentDataHandler = new DataHandler(
@@ -243,12 +242,12 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 	public void delete(String documentUniqueId, RepositoryRequestContext context) throws RepositoryException {
 		String id = Utility.getInstance().stripId(documentUniqueId);
 
-		IConnectionDescription connection = context.getConnection();
-		if (connection == null) {
-			throw new RepositoryException("Missing required ConnectionDescription in RepositoryRequestContext");
+		IActorDescription actorDescription = context.getActorDescription();
+		if (actorDescription == null) {
+			throw new RepositoryException("Missing required ActorDescription in RepositoryRequestContext");
 		}
 
-		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");
+		CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");
 		Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 		File targetFile = null;
 		

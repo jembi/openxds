@@ -4,7 +4,6 @@ import gov.nist.registry.common2.exception.XdsErrorCodeException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.AdhocQueryResponse;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryErrorList;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RetrieveMultipleResponse;
@@ -26,6 +25,7 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.transport.http.TransportHeaders;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.log.Log;
@@ -106,7 +106,7 @@ public class XdsService extends AppendixV {
 				return start_up_error(request, null, actor, "Request body is null");
 			}
 
-            HashMap transportHeaders = (HashMap)getMessageContext().getProperty("TRANSPORT_HEADERS");
+			TransportHeaders transportHeaders = (TransportHeaders)getMessageContext().getProperty("TRANSPORT_HEADERS");
 			for (Object o_key : transportHeaders.keySet()) {
 				String key = (String) o_key;
 				String value = (String) transportHeaders.get(key);

@@ -21,6 +21,7 @@
 package org.openhealthtools.openxds;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -30,6 +31,8 @@ import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.xca.api.XcaIG;
 import org.openhealthtools.openxds.xca.api.XcaRG;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This class presents a single global <code>XdsBroker</code>
@@ -74,7 +77,24 @@ public class XdsBroker   {
 		return singleton;
 	}
  	
-       
+	/**
+	 * Gets a collection of XDS Registry actors
+	 * 
+	 * @return the XdsRegistry Collection
+	 */
+	public Collection<XdsRegistry> getXdsRegistries(){
+		return Collections.unmodifiableCollection(this.xdsRegistries);
+	}
+	
+	/**
+	 * Gets a collection of XDS Repository actors
+	 * 
+	 * @return the XdsRepository Collection
+	 */
+	public Collection<XdsRepository> getXdsRepositories(){
+		return Collections.unmodifiableCollection(this.xdsRepositories);
+	}
+	
     /**
 	 * Registers a new XDS Registry.  This method
 	 * is typically called when an XDS Registry server is started.

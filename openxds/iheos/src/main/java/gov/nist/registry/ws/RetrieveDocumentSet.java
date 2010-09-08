@@ -25,9 +25,6 @@ import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.ihe.IheActor;
-import org.openhealthtools.common.ws.server.IheHTTPServer;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
@@ -39,6 +36,7 @@ import org.openhealthtools.openxds.log.LogMessage;
 import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxua.api.XuaException;
@@ -46,9 +44,8 @@ import org.openhealthtools.openxua.api.XuaException;
 public class RetrieveDocumentSet extends XdsCommon {
     ContentValidationService validater;
     String registry_endpoint = null;
-    MessageContext messageContext;
     boolean optimize = true;
-    IConnectionDescription connection = null;
+	private XdsRepository actor = null;
     /* The IHE Audit Trail for this actor. */
     private IheAuditTrail auditLog = null;
     private final static Log logger = LogFactory.getLog(RetrieveDocumentSet.class);
@@ -57,21 +54,16 @@ public class RetrieveDocumentSet extends XdsCommon {
         this.log_message = log_message;
         this.messageContext = messageContext;
 		transaction_type = RET_transaction;
-		IheHTTPServer httpServer = (IheHTTPServer) messageContext.getTransportIn().getReceiver();
-        try {
-            IheActor actor = httpServer.getIheActor();
-            if (actor == null) {
-                throw new XdsInternalException("Cannot find XdsRepository actor configuration.");
-            }
-            connection = actor.getConnection();
-            if (connection == null) {
-                throw new XdsInternalException("Cannot find Server connection configuration.");
-            }
+
+		try {
+    		actor = getRepositoryActor(); 
+    		if (actor == null) {
+    			throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
+    		}
+    		
             auditLog = actor.getAuditTrail();
             init(new RetrieveMultipleResponse(), xds_version, messageContext);
-        }
-
-        catch (XdsInternalException e) {
+        } catch (XdsInternalException e) {
             logger.fatal(logger_exception_details(e));
             response.add_error("XDSRepositoryError", e.getMessage(), ExceptionUtil.exception_details(e), log_message);
         }
@@ -204,7 +196,7 @@ public class RetrieveDocumentSet extends XdsCommon {
         
         try {
             RepositoryRequestContext context = new RepositoryRequestContext();
-            context.setConnection(connection);
+            context.setActorDescription(actor.getActorDescription());
             repositoryItem = rm.getRepositoryItem(doc_id, context);
         } catch (RepositoryException e) {
             throw new XdsException("Cannot find repository item for document id, " + doc_id);
@@ -269,8 +261,7 @@ public class RetrieveDocumentSet extends XdsCommon {
         
         ActiveParticipant dest = new ActiveParticipant();
         dest.setAccessPointId(localIP);
-        //TODO: Needs to be improved
-        String userid = "http://" + connection.getHostname() + ":" + connection.getPort() + "/axis2/services/xdsrepositoryb";
+        String userid = actor.getServiceEndpoint(isHttps());
         dest.setUserId(userid);
         //Document Info
         Collection<ParticipantObject> docs = new ArrayList<ParticipantObject>();

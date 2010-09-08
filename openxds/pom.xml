@@ -35,8 +35,8 @@
     </scm>
 
     <issueManagement>
-        <system />
-        <url />
+        <system/>
+        <url/>
     </issueManagement>
 
     <developers>
@@ -362,7 +362,6 @@
     <modules>
         <module>apache-axis2</module>
         <module>common-utils</module>
-        <module>common-ws</module>
         <module>openxds-config</module>
         <module>openxds-log</module>
         <module>iheos</module>
@@ -372,7 +371,7 @@
         <module>openxds-repository</module>
         <module>openxds-web</module>
     	<module>openxds-registry-patient-lightweight</module>
-  </modules>
+    </modules>
 
     <reporting>
         <plugins>
@@ -451,7 +450,7 @@
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:h2:${java.io.tmpdir}/openxds]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password />
+                <jdbc.password/>
             </properties>
         </profile>
         <profile>
@@ -465,7 +464,7 @@
                 <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:hsqldb:${java.io.tmpdir}/openxds;shutdown=true]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password />
+                <jdbc.password/>
             </properties>
         </profile>
         <profile>
@@ -613,13 +612,14 @@
         <xfire.version>1.2.6</xfire.version>
         
         <!-- Properties defined by OpenXDS -->
-        <openexchange.version>1.0</openexchange.version>
+        <openexchange.version>1.0.1-SNAPSHOT</openexchange.version>
         <openpixpdq.version>1.0</openpixpdq.version>
         <braid.version>1.2.2</braid.version>
+        <jetty.version>6.1.24</jetty.version>
         <hapi.version>0.5.1</hapi.version>
         <omar.version>3.1</omar.version>
   		<oasis.version>1.0</oasis.version> 
-  		<axis2.version>1.5</axis2.version>
+  		<axis2.version>1.5.1</axis2.version>
   		<build.lib.dir>../lib</build.lib.dir>
     </properties>
 </project>

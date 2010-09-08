@@ -19,15 +19,24 @@
  */
 package org.openhealthtools.openxds.webapp.servlet;
 
-import javax.servlet.ServletException;
+import java.io.File;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openhealthexchange.openpixpdq.ihe.PatientBroker;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.transport.http.AxisServlet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openxds.XdsBroker;
+import org.openhealthtools.openxds.XdsConstants;
+import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**
  *The starting servlet.Main functionality is load properties
@@ -35,7 +44,7 @@ import org.openhealthtools.openexchange.config.PropertyFacade;
  *@author <a href="mailto:anilkumar.reddy@misys.com">Anil</a>
  */
  public class ConfigServlet extends HttpServlet  {
-   static final long serialVersionUID = 1L;
+	private static Log log = LogFactory.getLog(ConfigServlet.class);   
    
 	public ConfigServlet() {
 	} 
@@ -44,17 +53,64 @@ import org.openhealthtools.openexchange.config.PropertyFacade;
 	 * Destroys all Actors 
 	 */
 	public void destroy() {
-
-	}   	 	  	  	  
-	public void init() throws ServletException {
+		try {
+			XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
+			loader.resetConfiguration(null);
+		} catch (IheConfigurationException e) {
+			log.error("Failed to destroy OpenXDS actor configuration.", e);
+		}
+	}   	
+	
+	public void init() {
+		configProperties();
+		configActors();
+	}   
+	
+	private void configProperties() {
+//		if (PropertyFacade.isPropertyConfiged()) 
+//			return;
+	
 		try {
 			String[] propertyFiles = BootStrapProperties.getPropertyFiles(new String[]{"openxds.properties"});
 			PropertyFacade.loadProperties(propertyFiles);
 		}catch(ConfigurationException e) {
-			e.printStackTrace();
-			throw new ServletException(e);
+			log.error("Failed to load OpenXDS properties.", e);
 		}
-	}   
+	}
+	
+	private void configActors() {
+  		String actorDir = PropertyFacade.getString(XdsConstants.IHE_ACTORS_DIR);
+   	    String actorFile = null; 
+        File dir = new File(actorDir); dir.getAbsolutePath();
+        if (dir.exists()) {
+        	actorFile = dir.getAbsolutePath();
+        	//remove the current . folder from the path
+        	actorFile = actorFile.replace(File.separator+"."+File.separator, File.separator);
+        	actorFile = actorFile + File.separator + "IheActors.xml";
+        } 
+        
+       try {
+    	    if (actorFile == null)
+    	    	actorFile = System.getProperty(XdsConstants.IHE_ACTORS_FILE);
+    	    
+			if(actorFile != null){
+			    //Start up the actors
+				XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
+
+				loader.loadConfiguration(actorFile, true);
+			}
+        }catch (IheConfigurationException e) {
+           log.fatal("Failed to load OpenXDS actor configuration", e);
+		}catch (Exception e) {
+           log.fatal("Failed to load OpenXDS actor configuration", e);
+		}
+		
+		//register the actors with the servlet container. 
+		getServletContext().setAttribute(XdsConstants.REGISTRY_ACTORS, 
+				XdsBroker.getInstance().getXdsRegistries());
+		getServletContext().setAttribute(XdsConstants.REPOSITORY_ACTORS, 
+				XdsBroker.getInstance().getXdsRepositories());
+	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		doPost(request, response);
