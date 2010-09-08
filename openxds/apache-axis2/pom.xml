@@ -70,7 +70,7 @@
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
 	    <artifactId>axis2-transport-http</artifactId>
-	    <version>1.5a</version>
+	    <version>${axis2.version}</version>
 	</dependency> 
 	<dependency>
 	    <groupId>org.apache.axis2</groupId>
