@@ -33,7 +33,6 @@
         <copy todir="${build.conf.dir}">
             <fileset dir="${openxds.dir}/openxds-core/target/classes/">
 				<include name="actors/**" />
-				<include name="axis2repository/**" />
             </fileset>
             <fileset dir="${openxds.dir}/iheos/target/classes/">
 				<include name="schema/**" />
