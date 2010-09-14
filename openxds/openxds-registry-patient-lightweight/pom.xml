@@ -89,6 +89,12 @@
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>openexchange-log</artifactId>
+            		<groupId>org.openhealthtools.openexchange</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 	<dependency>
 		<groupId>org.aspectj</groupId>

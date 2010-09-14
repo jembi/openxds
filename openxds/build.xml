@@ -23,7 +23,7 @@
             <fileset dir="${openxds.dir}/lib/">
         	    <include name="**/ant*.jar"/>
         	    <include name="**/jetty*.jar"/>
-        	    <include name="**/commons*.jar"/>
+        	    <include name="**/commons-l*.jar"/>
         	    <include name="**/log4j*.jar"/>
         	    <include name="**/openexchange*.jar"/>
         	    <include name="**/jsp*.jar"/>

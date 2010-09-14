@@ -60,6 +60,12 @@
 			<groupId>org.openhealthtools.openexchange</groupId>
 			<artifactId>openexchange-audit</artifactId>
 			<version>${openexchange.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>openexchange-log</artifactId>
+					<groupId>org.openhealthtools.openexchange</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.openhealthexchange.openpixpdq</groupId>
