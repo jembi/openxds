@@ -68,8 +68,16 @@
         <copy todir="${build.web.dir}">
             <fileset dir="${openxds.dir}/openxds-web/target/openxds-web/">
 				<include name="**/*" />
+            	<include name="WEB-INF/classes/app*.properties" />
+            	<include name="WEB-INF/classes/log*.properties" />
+            	<include name="WEB-INF/classes/struts.xml" />
+            	<!--exclude-->
 				<exclude name="WEB-INF/lib/jsp*" />
 				<exclude name="WEB-INF/lib/jetty*" />
+            	<exclude name="WEB-INF/classes/actors/**" />
+            	<exclude name="WEB-INF/classes/schema/**" />
+            	<exclude name="WEB-INF/classes/*.properties" />
+				<exclude name="WEB-INF/classes/*.xml" />
             </fileset>
         </copy> 	
     	<!-- OpenXDS Extension-->

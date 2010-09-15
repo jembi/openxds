@@ -234,6 +234,54 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0.2</version>
+				<configuration>
+					<dependentWarExcludes>
+						**/web.xml,WEB-INF/classes/META-INF/**
+			        </dependentWarExcludes>
+					<webResources>
+						<resource>
+              				 this is relative to the pom.xml directory 
+							if openxds-web/pom.xml <directory>../lib</directory>
+							if from root pom.xml <directory>./lib</directory>
+              				<directory>./lib</directory>
+              				<targetPath>WEB-INF/lib</targetPath>
+              				<includes>
+               				 <include>*.mar</include>
+             				</includes>
+            			</resource>
+						<resource>
+							<directory>./openxds-config/target/classes/</directory>
+							<!-- the destination directory for this resources -->
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+				                <include>*.properties</include>
+				                <include>*.xml</include>
+				            </includes>			
+						</resource>
+						<resource>
+							<directory>./openxds-registry-adapter-omar/target/classes/</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+				                <include>omar.properties</include>
+				                <include>repository.jdbc.cfg.xml</include>
+				            </includes>		
+						</resource>
+						<resource>
+							<directory>./iheos/target/classes/</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+				                <include>schema/</include>
+				            </includes>		
+						</resource>
+						<resource>
+							<directory>./openxds-core/target/classes/</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+				                <include>actors/</include>
+				            </includes>		
+						</resource>
+					</webResources>
+				</configuration>
 			</plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
