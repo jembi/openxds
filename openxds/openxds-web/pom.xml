@@ -268,14 +268,14 @@
 						</resource>
 						<resource>
 							<directory>./iheos/target/classes/</directory>
-							<targetPath>WEB-INF/classes</targetPath>
+							<targetPath>WEB-INF/classes/conf</targetPath>
 							<includes>
 				                <include>schema/</include>
 				            </includes>		
 						</resource>
 						<resource>
 							<directory>./openxds-core/target/classes/</directory>
-							<targetPath>WEB-INF/classes</targetPath>
+							<targetPath>WEB-INF/classes/conf</targetPath>
 							<includes>
 				                <include>actors/</include>
 				            </includes>		
