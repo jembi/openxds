@@ -528,6 +528,7 @@ public abstract class XdsTest {
 	    options.setProperty(WSDL2Constants.ATTRIBUTE_MUST_UNDERSTAND,"1");
 	    options.setTo( new EndpointReference(url) );
 		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+		options.setTimeOutInMilliSeconds(60000);
 //		try {
 //			String from = InetAddress.getLocalHost().getHostAddress();	
 //			options.setFrom(new EndpointReference(from));
