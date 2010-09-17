@@ -147,6 +147,8 @@ public class Soap implements SoapInterface {
 			if (serviceClient == null)
 				serviceClient = new ServiceClient();
 
+			serviceClient.getOptions().setTimeOutInMilliSeconds(60000);
+
 			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
 
 			if (System.getenv("XDSHTTP10") != null) {
@@ -185,7 +187,7 @@ public class Soap implements SoapInterface {
 
 			if ( async && !serviceClient.getOptions().isUseSeparateListener())
 				serviceClient.getOptions().setUseSeparateListener(async);
-
+			
 			if (logger.isInfoEnabled()) {
 				logger.info("Call " + endpoint);
 				logger.info("Action " + action);
