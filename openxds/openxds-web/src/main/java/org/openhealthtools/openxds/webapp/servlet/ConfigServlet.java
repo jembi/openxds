@@ -67,9 +67,6 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 	}   
 	
 	private void configProperties() {
-//		if (PropertyFacade.isPropertyConfiged()) 
-//			return;
-	
 		try {
 			String[] propertyFiles = BootStrapProperties.getPropertyFiles(new String[]{"openxds.properties"});
 			PropertyFacade.loadProperties(propertyFiles);
@@ -81,13 +78,15 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 	private void configActors() {
   		String actorDir = PropertyFacade.getString(XdsConstants.IHE_ACTORS_DIR);
    	    String actorFile = null; 
-        File dir = new File(actorDir); dir.getAbsolutePath();
+        File dir = new File(actorDir);
         if (dir.exists()) {
         	actorFile = dir.getAbsolutePath();
         	//remove the current . folder from the path
         	actorFile = actorFile.replace(File.separator+"."+File.separator, File.separator);
         	actorFile = actorFile + File.separator + "IheActors.xml";
-        } 
+        } else {
+        	log.info(XdsConstants.IHE_ACTORS_DIR + " does not exist: " + actorDir);
+        }
         
        try {
     	    if (actorFile == null)
@@ -97,6 +96,8 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 			    //Start up the actors
 				XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
 
+	        	log.info("Loading actor configuration from " + actorFile);
+	        	
 				loader.loadConfiguration(actorFile, true);
 			}
         }catch (IheConfigurationException e) {
