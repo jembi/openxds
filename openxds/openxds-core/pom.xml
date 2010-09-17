@@ -116,12 +116,6 @@
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>commons-fileupload</artifactId>
-            		<groupId>commons-fileupload</groupId>
-            	</exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
