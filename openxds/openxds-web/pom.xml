@@ -240,9 +240,6 @@
 			        </dependentWarExcludes>
 					<webResources>
 						<resource>
-              				 this is relative to the pom.xml directory 
-							if openxds-web/pom.xml <directory>../lib</directory>
-							if from root pom.xml <directory>./lib</directory>
               				<directory>./lib</directory>
               				<targetPath>WEB-INF/lib</targetPath>
               				<includes>
@@ -256,7 +253,10 @@
 							<includes>
 				                <include>*.properties</include>
 				                <include>*.xml</include>
-				            </includes>			
+				            </includes>
+				            <excludes>
+				            	<exclude>jetty.properties</exclude>
+				            </excludes>			
 						</resource>
 						<resource>
 							<directory>./openxds-registry-adapter-omar/target/classes/</directory>

@@ -194,7 +194,7 @@ public class Soap implements SoapInterface {
 			}
 			OMElement result = serviceClient.sendReceive(body);
 
-			if (async)
+			//if (async)
 				serviceClient.cleanupTransport();
 
 			Object in = serviceClient.getServiceContext().getLastOperationContext().getMessageContexts().get("In");

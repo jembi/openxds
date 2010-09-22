@@ -26,7 +26,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,9 +43,7 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.client.ServiceClient;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
 import org.w3c.dom.Document;
@@ -462,6 +461,36 @@ public class RegistrytStoredQueryTest extends XdsTest {
 		System.out.println("Result:\n" +result);
 	}
 	
+	@Test
+	public void testFindDocumentsForMultiplePatients() throws Exception {
+		List<String> patientIds = new ArrayList<String>();
+		
+		//1. Submit a document first for a random patientId
+		String patientId1 = generateAPatientId();
+		String uuid1 = submitOneDocument(patientId);
+		if(uuid1 != null) patientIds.add(patientId1);
+		String patientId2 = generateAPatientId();
+		String uuid2 = submitOneDocument(patientId);
+		if(uuid2 != null) patientIds.add(patientId2);
+		
+		//2. Generate StoredQuery request message
+		String message = FindDocumentsForMultiplePatients(patientIds, "Approved");
+		OMElement request = OMUtil.xmlStringToOM(message);			
+		System.out.println("Request:\n" +request);
+
+		//3. Send a StoredQuery
+		ServiceClient sender = getMPQRegistryServiceClient();															 
+		OMElement response = sender.sendReceive( request );
+		assertNotNull(response); 
+
+		//4. Verify the response is correct
+		OMAttribute status = response.getAttribute(new QName("status"));
+		assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
+		
+		String result = response.toString();
+		System.out.println("Result:\n" +result);
+	}
+	
 	//Search the ExternalIdentifier for the given patientId
 	private NodeList getPatientIdNodes(OMElement response, String patientId, String type) 
 	throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
@@ -490,6 +519,37 @@ public class RegistrytStoredQueryTest extends XdsTest {
 //	        System.out.println(nodes.item(i)); 
 //	    }
 		return nodes;
+	}
+	
+	public String FindDocumentsForMultiplePatients(List<String> patientIds, String status){
+		String request = "<query:AdhocQueryRequest xsi:schemaLocation=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0 ../schema/ebRS/query.xsd\" xmlns:query=\"urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:rim=\"urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0\" xmlns:rs=\"urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0\">\n"+
+		              	 " <query:ResponseOption returnComposedObjects=\"true\" returnType=\"LeafClass\"/>\n"+
+		              	 "  <rim:AdhocQuery id=\"urn:uuid:3d1bdb10-39a2-11de-89c2-2f44d94eaa9f\">\n";
+		if (patientIds != null) {
+			String patientId = getPatientId(patientIds).toString();
+			
+			request +=   "   <rim:Slot name=\"$XDSDocumentEntryPatientId\">\n"+
+			         	 "     <rim:ValueList>\n" + 
+			             "       <rim:Value>"+patientId+"</rim:Value>\n" +
+			             "     </rim:ValueList>\n"+
+			             "   </rim:Slot>\n";
+		}
+		if (status != null) {
+			request +=   "   <rim:Slot name=\"$XDSDocumentEntryStatus\">\n" +
+						 "     <rim:ValueList>\n" + 
+						 "       <rim:Value>('urn:oasis:names:tc:ebxml-regrep:StatusType:"+status+"')</rim:Value>\n" +
+						 "     </rim:ValueList>\n" +
+						 "   </rim:Slot>\n";	
+		}
+			request +=   "   <rim:Slot name=\"$XDSDocumentEntryClassCode\"> \n"+
+						 "	   <rim:ValueList> \n"+
+						 "		 <rim:Value>'Transfer summarization^^Connect-a-thon classCodes'</rim:Value> \n"+
+						 "	   </rim:ValueList> \n"+
+						 "   </rim:Slot> \n"+
+						 "  </rim:AdhocQuery>\n" +
+                         "</query:AdhocQueryRequest>";
+		
+		return request;
 	}
 	
 	public String findDocumentsQuery(String patientId, String status){
@@ -786,5 +846,20 @@ public class RegistrytStoredQueryTest extends XdsTest {
                          "</query:AdhocQueryRequest>";
 		
 		return request;
+	}
+	
+	public StringBuffer getPatientId(List<String> patlist){
+		StringBuffer patientId = new StringBuffer(); 
+		patientId.append("(");
+		boolean first_time = true;
+		for (String pat : patlist) {
+			if ( !first_time) 
+				patientId.append(",");
+			
+			patientId.append("'" + pat + "'");
+			first_time = false;
+		}
+		patientId.append(")");
+		return patientId;
 	}
 }

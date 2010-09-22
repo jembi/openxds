@@ -20,6 +20,7 @@
 package org.openhealthtools.openxds.webapp.servlet;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -77,22 +78,28 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 	
 	private void configActors() {
   		String actorDir = PropertyFacade.getString(XdsConstants.IHE_ACTORS_DIR);
-   	    String actorFile = null; 
-        File dir = new File(actorDir);
-        if (dir.exists()) {
+   	    String actorFile = null;
+   	    File dir = new File(actorDir);
+        URL repoPath = this.getClass().getClassLoader().getResource(actorDir);
+        if (repoPath != null) {
+       	    actorFile = repoPath.getPath();
+        }else  if (dir.exists()) {
         	actorFile = dir.getAbsolutePath();
-        	//remove the current . folder from the path
-        	actorFile = actorFile.replace(File.separator+"."+File.separator, File.separator);
-        	actorFile = actorFile + File.separator + "IheActors.xml";
         } else {
         	log.info(XdsConstants.IHE_ACTORS_DIR + " does not exist: " + actorDir);
         }
         
        try {
-    	    if (actorFile == null)
-    	    	actorFile = System.getProperty(XdsConstants.IHE_ACTORS_FILE);
+    	   	if (actorFile != null){
+		    	 //remove the current . folder from the path
+		       	actorFile = actorFile.replace(File.separator+"."+File.separator, File.separator);
+		       	actorFile = actorFile + File.separator + "IheActors.xml";
+    	   	}else{
+    		   actorFile = System.getProperty(XdsConstants.IHE_ACTORS_FILE);
+    	   	}
     	    
 			if(actorFile != null){
+				
 			    //Start up the actors
 				XdsConfigurationLoader loader = XdsConfigurationLoader.getInstance();
 

@@ -459,6 +459,16 @@ public abstract class XdsTest {
 		sender.engageModule("addressing");				
 		return sender;
 	}
+	
+	protected ServiceClient getMPQRegistryServiceClient() throws AxisFault {
+        ConfigurationContext configctx = getContext();
+		ServiceClient sender = new ServiceClient(configctx,null);
+		String action = "urn:ihe:iti:2009:MultiPatientStoredQuery";
+		boolean enableMTOM = false;
+		sender.setOptions(getOptions(action, enableMTOM, registryUrl));
+		sender.engageModule("addressing");				
+		return sender;
+	}
 
 	protected ServiceClient getRetrieveDocumentServiceClient() throws AxisFault{
 		ConfigurationContext configctx = getContext();
@@ -511,10 +521,10 @@ public abstract class XdsTest {
 	
 	private ConfigurationContext getContext() throws AxisFault {
 		//String repository = "c:\\tools\\axis2-1.5\\repository\\modules\\addressing-1.5.mar";        
-//		String repository = "c:\\tools\\axis2-1.5\\repository";        
-//		String axis2xml = "c:\\tools\\axis2-1.5\\conf\\axis2.xml";        
-//      ConfigurationContext configctx = ConfigurationContextFactory
-//      .createConfigurationContextFromFileSystem(repository, axis2xml);
+	/*	String repository = "E:\\tools\\axis2-1.5.1\\repository";        
+		String axis2xml = "E:\\tools\\axis2-1.5.1\\conf\\axis2.xml";        
+      ConfigurationContext configctx = ConfigurationContextFactory
+      .createConfigurationContextFromFileSystem(repository, axis2xml);*/
         URL axis2repo = XdsTest.class.getResource("/axis2repository");
         URL axis2testxml = XdsTest.class.getResource("/axis2_test.xml");
          ConfigurationContext configctx = ConfigurationContextFactory
