@@ -81,11 +81,11 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
    	    String actorFile = null;
    	    File dir = new File(actorDir);
         URL repoPath = this.getClass().getClassLoader().getResource(actorDir);
-        if (repoPath != null) {
-       	    actorFile = repoPath.getPath();
-        }else  if (dir.exists()) {
+        if (dir.exists()) {
         	actorFile = dir.getAbsolutePath();
-        } else {
+        }else if (repoPath != null) {
+       	    actorFile = repoPath.getPath();
+        }else {
         	log.info(XdsConstants.IHE_ACTORS_DIR + " does not exist: " + actorDir);
         }
         

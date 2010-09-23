@@ -58,11 +58,20 @@ public class ViewAction extends BaseAction {
 	String cntl = null;
 	protected transient final Log log = LogFactory.getLog(getClass());
 	//private static final String repositoryUrl = "http://localhost:8020/axis2/services/xdsrepositoryb";
-	private static final String registryUrl = "http://localhost:8010/axis2/services/xdsregistryb";
+	private static String registryUrl = null;
 	
 	public String execute() throws Exception {
+		StringBuffer reqURL = getRequest().getRequestURL();
+		int index = 0;
+		if(reqURL != null)
+			index = reqURL.lastIndexOf("/");
+		
+        if (index != -1) {
+        	registryUrl = reqURL.substring(0 , index + 1)+ "services/xdsregistryb";
+        }
 		return SUCCESS;
 	}
+
 	
 	public String query() throws Exception{
 		if(getAction()=="" && getId() =="" || getAction()== null && getId() == null){
