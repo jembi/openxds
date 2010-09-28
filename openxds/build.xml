@@ -6,10 +6,10 @@
 	<property file="./build.properties" />
 	
     <target name="init" depends="clean">
-        <mkdir dir="${build.conf.dir}"/>
+       <!-- <mkdir dir="${build.conf.dir}"/>-->
         <mkdir dir="${build.lib.dir}"/>
     	<mkdir dir="${build.licenses.dir}"/>
-    	<mkdir dir="${build.misc.dir}"/>
+    	<mkdir dir="${build.sql.dir}"/>
     	<mkdir dir="${build.web.dir}"/>
     	<mkdir dir="${openxds.dist.dir}"/>
     </target>
@@ -30,27 +30,24 @@
         	    <include name="**/servlet*.jar"/>
             </fileset>
          </copy> 	
-        <copy todir="${build.conf.dir}">
+       <!-- <copy todir="${build.conf.dir}">
             <fileset dir="${openxds.dir}/openxds-core/target/classes/">
 				<include name="actors/**" />
             </fileset>
             <fileset dir="${openxds.dir}/iheos/target/classes/">
 				<include name="schema/**" />
             </fileset>
-        </copy> 	
+        </copy>--> 	
         <copy flatten="true" todir="${build.dir}">
             <fileset dir="${openxds.dir}/openxds-config/target/classes/">
 				<include name="commons-logging.properties" />
 				<include name="log4j.xml" />
-				<include name="bootstrap.properties" />
 				<include name="jetty.properties" />
-				<include name="openxds*.properties" />
-				<include name="*applicationContext.xml" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+            <!--<fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
 				<include name="omar.properties" />
 				<include name="repository.jdbc.cfg.xml" />
-            </fileset>
+            </fileset>-->
         	<fileset dir="${openxds.dir}">
         		<include name="*.txt" />        		
         	</fileset>        	
@@ -60,7 +57,7 @@
     	  			<include name="**/*" />
     	   		</fileset>
     	</copy>
-		<copy todir="${build.misc.dir}" >
+		<copy todir="${build.sql.dir}" >
 			<fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
 				<include name="*.sql" />
 			</fileset>
@@ -68,16 +65,9 @@
         <copy todir="${build.web.dir}">
             <fileset dir="${openxds.dir}/openxds-web/target/openxds-web/">
 				<include name="**/*" />
-            	<include name="WEB-INF/classes/app*.properties" />
-            	<include name="WEB-INF/classes/log*.properties" />
-            	<include name="WEB-INF/classes/struts.xml" />
             	<!--exclude-->
 				<exclude name="WEB-INF/lib/jsp*" />
 				<exclude name="WEB-INF/lib/jetty*" />
-            	<exclude name="WEB-INF/classes/actors/**" />
-            	<exclude name="WEB-INF/classes/schema/**" />
-            	<exclude name="WEB-INF/classes/*.properties" />
-				<exclude name="WEB-INF/classes/*.xml" />
             </fileset>
         </copy> 	
     	<!-- OpenXDS Extension-->
@@ -151,11 +141,11 @@
     </target>
 	
 	<target name="dist" depends="create_run_jar">
-		<copy todir="${build.misc.dir}" >
+	<!--	<copy todir="${build.misc.dir}" >
 			<fileset dir="${openxds.dir}/openxds-web/target">
 				<include name="*.war" />
 			</fileset>
-		</copy>    	
+		</copy>-->    	
 		<zip destfile="${openxds.dist.dir}/${project.name}-${project.version}.zip" basedir="${build.dir}" update="true" />
 		<tar destfile="${openxds.dist.dir}/${project.name}-${project.version}.tar.gz" basedir="${build.dir}" compression="gzip"/>
 	</target>
