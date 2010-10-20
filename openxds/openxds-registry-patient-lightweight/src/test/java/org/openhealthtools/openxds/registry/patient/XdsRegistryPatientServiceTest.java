@@ -78,13 +78,13 @@ public class XdsRegistryPatientServiceTest {
 
 	}
 
-	/*@Test
+	@Test
 	public void testUnMergePatient() throws Exception {
 		patientService.unmergePatients(getPatient(patientId),
 				getPatient(mergepatienId), null);
 		System.out.println("successfully merged");
 
-	}*/
+	}
 
 	private Patient getPatient(String patientId) {
 		Patient patient = new Patient();
