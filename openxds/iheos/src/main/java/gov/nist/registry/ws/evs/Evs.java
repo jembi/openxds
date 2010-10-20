@@ -13,8 +13,8 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.log.LoggerException;
-import org.openhealthtools.openxds.log.Message;
+import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openexchange.syslog.Message;
 
 
 public class Evs extends XdsService {

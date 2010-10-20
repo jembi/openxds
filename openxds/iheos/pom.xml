@@ -48,9 +48,9 @@
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
-		<groupId>org.openhealthtools.openxds</groupId>
-		<artifactId>openxds-log</artifactId>
-		<version>${project.version}</version>
+		<groupId>org.openhealthtools.openexchange</groupId>
+		<artifactId>openexchange-syslog</artifactId>
+		<version>${openexchange.version}</version>
 	</dependency>
 	<!-- <dependency>
 		<groupId>com.misys.hieportal</groupId>

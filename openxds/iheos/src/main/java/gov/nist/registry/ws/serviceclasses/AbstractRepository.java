@@ -16,17 +16,10 @@ import gov.nist.registry.ws.ContentValidationService;
 import gov.nist.registry.ws.ProvideAndRegisterDocumentSet;
 import gov.nist.registry.ws.RetrieveDocumentSet;
 
-import java.util.Collection;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.transport.http.AxisServlet;
-import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
-import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
-import org.openhealthtools.openxds.XdsConstants;
-import org.openhealthtools.openxds.log.LoggerException;
-import org.openhealthtools.openxds.repository.api.XdsRepository;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 abstract public class AbstractRepository extends XdsService  implements ContentValidationService {
 	boolean optimize_retrieve = true;

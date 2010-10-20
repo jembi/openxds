@@ -8,7 +8,8 @@ import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.ws.sq.GetAssociations;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
+
 
 /**
  * Implementation specific class for FindDocuments stored query. 

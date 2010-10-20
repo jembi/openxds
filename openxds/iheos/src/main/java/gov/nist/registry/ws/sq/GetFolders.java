@@ -6,12 +6,11 @@ import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.Metadata;
-import gov.nist.registry.common2.registry.Response;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
 Generic implementation of GetFolders Stored Query. This class knows how to parse a 

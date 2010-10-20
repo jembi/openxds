@@ -14,7 +14,7 @@ import gov.nist.registry.ws.config.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
  * This class offers short-cut methods for using Stored Queries within the XDS registry front end.  It uses the generic

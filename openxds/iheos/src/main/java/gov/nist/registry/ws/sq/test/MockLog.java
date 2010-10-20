@@ -4,8 +4,8 @@ import gov.nist.registry.common2.exception.ExceptionUtil;
 
 import java.sql.Timestamp;
 
-import org.openhealthtools.openxds.log.LogMessage;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class MockLog implements LogMessage {
 

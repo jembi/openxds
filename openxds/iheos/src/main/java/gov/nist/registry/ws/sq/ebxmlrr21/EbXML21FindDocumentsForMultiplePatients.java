@@ -1,17 +1,16 @@
 package gov.nist.registry.ws.sq.ebxmlrr21;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.log.LoggerException;
-
 import gov.nist.registry.common2.exception.MetadataException;
 import gov.nist.registry.common2.exception.MetadataValidationException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
-import gov.nist.registry.ws.evs.Evs;
 import gov.nist.registry.ws.sq.FindDocumentsForMultiplePatients;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
  * Implementation specific class for FindDocuments stored query. 

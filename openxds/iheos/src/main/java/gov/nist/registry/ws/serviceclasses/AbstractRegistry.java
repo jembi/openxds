@@ -17,7 +17,7 @@ import gov.nist.registry.ws.SubmitObjectsRequest;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public abstract class AbstractRegistry extends XdsService implements
 ContentValidationService {

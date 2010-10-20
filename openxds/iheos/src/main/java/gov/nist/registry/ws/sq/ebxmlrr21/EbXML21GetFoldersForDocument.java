@@ -9,7 +9,7 @@ import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.ws.sq.GetFoldersForDocument;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
  * Implementation specific class for GetFoldersForDocument stored query. 

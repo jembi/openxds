@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
 Generic implementation of GetSubmissionSets Stored Query. This class knows how to parse a 

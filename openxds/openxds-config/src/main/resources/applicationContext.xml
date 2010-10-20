@@ -164,22 +164,22 @@
         <property name="annotatedClasses">
 			<list>
 				<value>
-					org.openhealthtools.openxds.log.Message
+					org.openhealthtools.openexchange.syslog.Message
 				</value>
 				<value>
-					org.openhealthtools.openxds.log.CompanyDetails
+					org.openhealthtools.openexchange.syslog.CompanyDetails
 				</value>
 				<value>
-					org.openhealthtools.openxds.log.ErrorMessage
+					org.openhealthtools.openexchange.syslog.ErrorMessage
 				</value>
 				<value>
-					org.openhealthtools.openxds.log.HttpMessage
+					org.openhealthtools.openexchange.syslog.HttpMessage
 				</value>
 				<value>
-					org.openhealthtools.openxds.log.OtherMessage
+					org.openhealthtools.openexchange.syslog.OtherMessage
 				</value>
 				<value>
-					org.openhealthtools.openxds.log.SoapMessage
+					org.openhealthtools.openexchange.syslog.SoapMessage
 				</value>
 			</list>
 		</property>
@@ -193,7 +193,7 @@
 	</bean>  
 	
 	<bean id="logsService"
-		class="org.openhealthtools.openxds.log.LogImpl" lazy-init="true">
+		class="org.openhealthtools.openexchange.syslog.LogImpl" lazy-init="true">
 		<property name="sessionFactory">
 			<ref local="logssessionFactory" />
 		</property>

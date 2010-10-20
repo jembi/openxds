@@ -7,7 +7,7 @@ import gov.nist.registry.common2.registry.Metadata;
 
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
  * Local queries needed to be supported for the internal operation of the registry.

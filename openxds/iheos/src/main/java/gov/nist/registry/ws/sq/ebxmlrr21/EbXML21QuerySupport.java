@@ -16,7 +16,6 @@ import gov.nist.registry.common2.registry.SQCodeAnd;
 import gov.nist.registry.common2.registry.SQCodeOr;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
-import gov.nist.registry.ws.evs.Evs;
 import gov.nist.registry.ws.sq.RegistryValidations;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.List;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class EbXML21QuerySupport implements RegistryValidations {
 	private static final Log logger = LogFactory.getLog(EbXML21QuerySupport.class);

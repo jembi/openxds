@@ -10,7 +10,7 @@ import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
 Generic implementation of GetDocumentsAndAssociations Stored Query. This class knows how to parse a 

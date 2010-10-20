@@ -19,7 +19,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.RetrieveAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;

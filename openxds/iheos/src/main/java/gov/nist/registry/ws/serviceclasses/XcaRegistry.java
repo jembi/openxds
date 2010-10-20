@@ -20,7 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.QueryAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;

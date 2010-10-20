@@ -7,14 +7,13 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
+
 
 /**
 Generic implementation of FindDocuments Stored Query. This class knows how to parse a 

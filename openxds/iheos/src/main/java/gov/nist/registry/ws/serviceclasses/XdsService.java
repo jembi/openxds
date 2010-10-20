@@ -28,8 +28,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.TransportHeaders;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.XdsFactory;
-import org.openhealthtools.openxds.log.Log;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.Log;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class XdsService extends AppendixV {
 	protected Log log = null;

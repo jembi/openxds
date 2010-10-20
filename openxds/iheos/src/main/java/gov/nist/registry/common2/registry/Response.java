@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openexchange.syslog.LogMessage;
 
 public abstract class Response implements ErrorLogger {
 	public final static short version_2 = 2;

@@ -12,8 +12,8 @@ import java.io.PrintStream;
 
 import org.apache.axiom.om.OMElement;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
-import org.openhealthtools.openxds.log.LogMessage;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class RegistryUtility {
 

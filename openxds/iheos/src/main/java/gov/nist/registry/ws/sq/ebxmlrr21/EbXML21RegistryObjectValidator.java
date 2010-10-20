@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  {
 	StoredQuerySupport sqs;

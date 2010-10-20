@@ -2,8 +2,8 @@ package gov.nist.registry.ws.sq.test;
 
 import gov.nist.registry.common2.registry.ErrorLogger;
 
-import org.openhealthtools.openxds.log.LogMessage;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public class TestBase  implements ErrorLogger {
 	protected LogMessage log = null;

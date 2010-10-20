@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openexchange.syslog.LogMessage;
 
 public class StoredQuerySupport {
 	private static final Log log = LogFactory.getLog(StoredQuerySupport.class);

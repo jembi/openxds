@@ -27,15 +27,13 @@ import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.ihe.IheActor;
 import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openxds.XdsConstants;
-import org.openhealthtools.openxds.log.LoggerException;
-import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 

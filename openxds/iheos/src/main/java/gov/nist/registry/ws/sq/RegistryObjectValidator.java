@@ -3,10 +3,9 @@ package gov.nist.registry.ws.sq;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.registry.Metadata;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 public interface RegistryObjectValidator {
 

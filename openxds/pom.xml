@@ -363,7 +363,6 @@
         <module>apache-axis2</module>
         <module>common-utils</module>
         <module>openxds-config</module>
-        <module>openxds-log</module>
         <module>iheos</module>
         <module>openxds-api</module>
         <module>openxds-core</module>

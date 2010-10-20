@@ -9,8 +9,7 @@ import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
-import org.apache.log4j.Logger;
-import org.openhealthtools.openxds.log.LoggerException;
+import org.openhealthtools.openexchange.syslog.LoggerException;
 
 /**
 Generic implementation of GetAssociations Stored Query. This class knows how to parse a 

@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openexchange.syslog.LogMessage;
 
 public class XdsTest extends TestCase {
 

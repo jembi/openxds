@@ -4,7 +4,7 @@ import gov.nist.registry.common2.registry.ErrorLogger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openexchange.syslog.LogMessage;
 
 public class TestErrorLogger implements ErrorLogger {
 	private final static Log logger = LogFactory.getLog(TestErrorLogger.class);
