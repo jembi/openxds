@@ -22,10 +22,10 @@ package org.openhealthtools.openxds.registry.patient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthexchange.openpixpdq.data.Patient;
+import org.openhealthtools.openexchange.datamodel.Patient;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openxds.dao.XdsRegistryPatientDao;
 import org.openhealthtools.openxds.registry.PersonIdentifier;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
@@ -65,7 +65,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	public void createPatient(Patient patient, RegistryPatientContext context) throws RegistryPatientException {
 		try {
 		for (PatientIdentifier pid : patient.getPatientIds()) {
-			PersonIdentifier identifier = getPersonIdentifier(pid,patient.isDeathIndicator());
+			PersonIdentifier identifier = getPersonIdentifier(pid,patient.getDeathIndicator());
 			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
 			if(personIdentifier != null){
 				if(personIdentifier.getMerge().equals("Y")){
@@ -87,7 +87,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		for (PatientIdentifier pid : patient.getPatientIds()) {
 			PersonIdentifier identifier = getPersonIdentifier(pid);	
 			PersonIdentifier personIdentifier = xdsRegistryPatientDao.getPersonById(identifier);
-			PersonIdentifier updateidentifier = getPersonIdentifier(personIdentifier,pid,patient.isDeathIndicator());			
+			PersonIdentifier updateidentifier = getPersonIdentifier(personIdentifier,pid,patient.getDeathIndicator());			
 		try {
 			xdsRegistryPatientDao.updatePersonIdentifier(updateidentifier);
 		} catch (Exception e) {
@@ -153,9 +153,9 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 	public void setXdsRegistryPatientDao(XdsRegistryPatientDao xdsRegistryPatientDao) {
 		this.xdsRegistryPatientDao = xdsRegistryPatientDao;
 	}
-	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier,boolean deleted) {
+	public static PersonIdentifier getPersonIdentifier(PatientIdentifier patientIdentifier, String deleted) {
 		PersonIdentifier pi = getPersonIdentifier(patientIdentifier);		
-		pi.setDelete(deleted ? "Y" : "N");
+		pi.setDelete(deleted);
 		pi.setMerge("N");
 		return pi;
 	}
@@ -166,11 +166,11 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		pi.setAssigningAuthority(assignAuth);
 		return pi;		
 	}
-	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,boolean deleted) {
+	public static PersonIdentifier getPersonIdentifier(PersonIdentifier pi, PatientIdentifier patientIdentifier,String deleted) {
 		pi.setPatientId(patientIdentifier.getId());
 		String assignAuth = getAssigningAuthority(patientIdentifier);
 		pi.setAssigningAuthority(assignAuth);	
-		pi.setDelete(deleted ? "Y" : "N");
+		pi.setDelete(deleted);
 		return pi;
 	}
 	

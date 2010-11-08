@@ -15,8 +15,7 @@ import java.util.List;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openexchange.patient.data.Identifier;
+import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 

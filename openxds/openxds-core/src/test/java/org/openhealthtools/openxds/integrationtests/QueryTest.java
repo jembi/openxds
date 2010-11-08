@@ -37,7 +37,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 
 /**
  * This class is an temporary convenient test for IHE transaction ITI-18, namely,

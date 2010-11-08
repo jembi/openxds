@@ -146,14 +146,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.openhealthexchange.openpixpdq</groupId>
-            <artifactId>openpixpdq</artifactId>
+            <groupId>org.openhealthtools.openpixpdq</groupId>
+            <artifactId>openpixpdq-api</artifactId>
             <version>${openpixpdq.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.misys.braid</groupId>
-            <artifactId>braid-base</artifactId>
-            <version>${braid.version}</version>
+            <groupId>org.openhealthtools.openpixpdq</groupId>
+            <artifactId>openpixpdq-impl-v2</artifactId>
+            <version>${openpixpdq.version}</version>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi</groupId>

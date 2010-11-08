@@ -22,10 +22,9 @@ package org.openhealthtools.common.utils;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-
-import com.misyshealthcare.connect.net.Identifier;
-
+import org.openhealthtools.openexchange.datamodel.Identifier;
 
 /**
  * This class contains the utility methods for 
@@ -46,24 +45,40 @@ public class AssigningAuthorityUtil {
      *
      * @param authority The authority
      * @param connection
-     * @param adapter the adapter from where to get the domains
      * @return The authority according the configuration
      */
     public static Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
-        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-        for (org.openhealthtools.openexchange.patient.data.Identifier idNew : identifiers) {
-    
-        	//TODO: Fix the Identifier type
-        	//Temporary conversion during the library migration
-        	Identifier idOld = new Identifier(idNew.getNamespaceId(), idNew.getUniversalId(), idNew.getUniversalIdType()); 
-            if ( idOld.equals(authority) ) {
-                return idOld;
+        List<Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+        for (Identifier identifier : identifiers) {
+            if ( identifier.equals(authority) ) {
+                return identifier;
             }
         }
         //no identifier is found, just return the original authority
         return authority;
     }
     
+    /**
+     * Reconciles authority with the ActorDescritpion configuration. An authority
+     * can have NameSpace and/or UniversalId/UniversalIdType. For example, in the data source such as
+     * database, if an authority is represented by NameSpace only, while in the xml configuration, the authority is configured
+     * with both NameSpace and UnviersalId/UniversalIdType. The authority in the datasource has to be mapped
+     * to the authority configured in the XML files.
+     *
+     * @param authority The authority
+     * @param actorDescription the actor description
+     * @return The authority according the configuration
+     */
+    public static Identifier reconcileIdentifier(Identifier authority, IActorDescription actorDescription) {
+        List<Identifier> identifiers = actorDescription.getAllIdentifiersByType("domain");
+        for (Identifier id : identifiers) {
+            if ( id.equals(authority) ) {
+                return id;
+            }
+        }
+        //no identifier is found, just return the original authority
+        return authority;
+    }
 
     /**
      * Validates whether an ID domain is valid against the connection configuration.
@@ -76,13 +91,10 @@ public class AssigningAuthorityUtil {
     public static boolean validateDomain(Identifier id, IConnectionDescription connection) {
          if (id == null) return  false;
 
-         List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-         for (org.openhealthtools.openexchange.patient.data.Identifier idNew : identifiers) {
+         List<Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+         for (Identifier identifier : identifiers) {
         	    
-         	//TODO: Fix the Identifier type
-         	//Temporary conversion during the library migration
-         	Identifier idOld = new Identifier(idNew.getNamespaceId(), idNew.getUniversalId(), idNew.getUniversalIdType()); 
-             if ( idOld.equals(id) ) {
+             if ( identifier.equals(id) ) {
                 return true;
              }
          }
@@ -90,7 +102,7 @@ public class AssigningAuthorityUtil {
 	         log.info("Failed to validate domain: "+ id.getNamespaceId() + "," +
 	                 id.getUniversalId() + "," + id.getUniversalIdType());
 	         log.info("List of known domains:");
-	         for (org.openhealthtools.openexchange.patient.data.Identifier identifier : identifiers) {
+	         for (Identifier identifier : identifiers) {
 	             log.info("  Domain: "+ identifier.getNamespaceId() + "," +
 	                 identifier.getUniversalId() + "," + identifier.getUniversalIdType());
 	         }

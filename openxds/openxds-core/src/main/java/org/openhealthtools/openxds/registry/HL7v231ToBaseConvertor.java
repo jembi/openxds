@@ -24,18 +24,29 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.openhealthexchange.openpixpdq.data.DriversLicense;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthexchange.openpixpdq.data.PersonName;
-import org.openhealthexchange.openpixpdq.util.DateUtil;
 import org.openhealthtools.common.utils.AssigningAuthorityUtil;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.datamodel.Address;
+import org.openhealthtools.openexchange.datamodel.DriversLicense;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
+import org.openhealthtools.openexchange.datamodel.PersonName;
+import org.openhealthtools.openexchange.datamodel.PhoneNumber;
+import org.openhealthtools.openexchange.datamodel.Problem;
+import org.openhealthtools.openexchange.datamodel.Provider;
+import org.openhealthtools.openexchange.datamodel.SharedEnums;
+import org.openhealthtools.openexchange.datamodel.Visit;
+import org.openhealthtools.openexchange.datamodel.SharedEnums.AddressType;
+import org.openhealthtools.openexchange.datamodel.SharedEnums.SexType;
+import org.openhealthtools.openexchange.utils.DateUtil;
+import org.openhealthtools.openexchange.utils.StringUtil;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v231.datatype.CX;
 import ca.uhn.hl7v2.model.v231.datatype.XAD;
 import ca.uhn.hl7v2.model.v231.datatype.XCN;
+import ca.uhn.hl7v2.model.v231.datatype.XPN;
 import ca.uhn.hl7v2.model.v231.datatype.XTN;
 import ca.uhn.hl7v2.model.v231.group.ADT_A39_PIDPD1MRGPV1;
 import ca.uhn.hl7v2.model.v231.message.ADT_A39;
@@ -47,16 +58,6 @@ import ca.uhn.hl7v2.model.v231.segment.PID;
 import ca.uhn.hl7v2.model.v231.segment.PV1;
 import ca.uhn.hl7v2.model.v231.segment.PV2;
 
-import com.misyshealthcare.connect.base.SharedEnums;
-import com.misyshealthcare.connect.base.SharedEnums.AddressType;
-import com.misyshealthcare.connect.base.SharedEnums.SexType;
-import com.misyshealthcare.connect.base.clinicaldata.Problem;
-import com.misyshealthcare.connect.base.clinicaldata.Provider;
-import com.misyshealthcare.connect.base.clinicaldata.Visit;
-import com.misyshealthcare.connect.base.demographicdata.Address;
-import com.misyshealthcare.connect.base.demographicdata.PhoneNumber;
-import com.misyshealthcare.connect.net.Identifier;
-import com.misyshealthcare.connect.util.StringUtil;
 
 
 /**
@@ -319,17 +320,25 @@ public class HL7v231ToBaseConvertor{
 	 *
 	 * @return the patient alias name
 	 */
-    public PersonName getPatientAliasName() throws HL7Exception {
-    	PersonName aName=new PersonName();
-		aName.setLastName(pid.getPatientAlias(0).getFamilyLastName().getFamilyName().getValue());
-		aName.setSecondName(pid.getPatientAlias(0).getMiddleInitialOrName().getValue());
-		aName.setFirstName(pid.getPatientAlias(0).getGivenName().getValue());
-		aName.setPrefix(pid.getPatientAlias(0).getPrefixEgDR().getValue());
-		aName.setSuffix(pid.getPatientAlias(0).getSuffixEgJRorIII().getValue());
-		aName.setDegree(pid.getPatientAlias(0).getDegreeEgMD().getValue());
-		aName.setNameTypeCode(pid.getPatientAlias(0).getNameTypeCode().getValue());
-		aName.setNameRepresentationCode(pid.getPatientAlias(0).getNameRepresentationCode().getValue());
-		return aName;
+    public List<PersonName> getPatientAliases() throws HL7Exception {
+        XPN[] aliases = pid.getPatientAlias();
+        List<PersonName> aNames = null;
+        if (aliases != null && aliases.length > 0) {
+            aNames = new ArrayList<PersonName>(aliases.length);
+            for (XPN alias : aliases) {
+                PersonName aName=new PersonName();
+                aName.setLastName(alias.getFamilyLastName().getFamilyName().getValue());
+                aName.setSecondName(alias.getMiddleInitialOrName().getValue());
+                aName.setFirstName(alias.getGivenName().getValue());
+                aName.setPrefix(alias.getPrefixEgDR().getValue());
+                aName.setSuffix(alias.getSuffixEgJRorIII().getValue());
+                aName.setDegree(alias.getDegreeEgMD().getValue());
+                aName.setNameTypeCode(alias.getNameTypeCode().getValue());
+                aName.setNameRepresentationCode(alias.getNameRepresentationCode().getValue());
+                aNames.add(aName);
+            }
+        }
+		return aNames;
     }
 
     /**
@@ -515,8 +524,6 @@ public class HL7v231ToBaseConvertor{
             //generate one if null
         }
         Visit visit = new Visit(systemId, visitId);
-        visit.setProblemList(getProblemList());
-        visit.setProviderList(getProviderList());
         visit.setReason(getVisitReason());
         visit.setVisitEndTimestamp(getEndDate());
         Date startDate = getStartDate();
@@ -539,8 +546,6 @@ public class HL7v231ToBaseConvertor{
             //generate one if null
         }
         Visit visit = new Visit(systemId, visitId);
-        visit.setProblemList(getProblemList());
-        visit.setProviderList(getProviderList());
         visit.setReason(getVisitReason());
         visit.setVisitEndTimestamp(getEndDate());
         Date startDate = getStartDate();

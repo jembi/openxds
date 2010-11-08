@@ -112,8 +112,8 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 	    <dependency>
-            <groupId>org.openhealthexchange.openpixpdq</groupId>
-            <artifactId>openpixpdq</artifactId>
+            <groupId>org.openhealthtools.openpixpdq</groupId>
+            <artifactId>openpixpdq-api</artifactId>
             <version>${openpixpdq.version}</version>
         </dependency>
         <dependency>

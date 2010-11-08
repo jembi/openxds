@@ -20,18 +20,19 @@
 
 package org.openhealthtools.openxds.registry.patient;
 
-import java.util.List;
-import org.openhealthtools.common.utils.IdGenerator;
-import org.junit.Before;
-import org.junit.Test;
-import org.openhealthexchange.openpixpdq.data.Patient;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
-import com.misyshealthcare.connect.net.Identifier;
 import static org.junit.Assert.assertEquals;
+
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import org.openhealthtools.openxds.registry.patient.ModuleManager;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.Patient;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
+import org.openhealthtools.openexchange.utils.IdGenerator;
+import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
 /**
  * This class used to test the Xds patient manager.
@@ -91,7 +92,7 @@ public class XdsRegistryPatientServiceTest {
 		List<PatientIdentifier> patientIdentifiers = new ArrayList();
 		patientIdentifiers.add(getPatientIdentifier(patientId));
 		patient.setPatientIds(patientIdentifiers);
-		patient.setDeathIndicator(false);
+		patient.setDeathIndicator("N");
 		return patient;
 	}
 

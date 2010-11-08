@@ -24,15 +24,16 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthexchange.openpixpdq.data.MessageHeader;
-import org.openhealthexchange.openpixpdq.data.Patient;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
-import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Header;
-import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7v231;
-import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
-import org.openhealthexchange.openpixpdq.util.ExceptionUtil;
 import org.openhealthtools.common.utils.AssigningAuthorityUtil;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.MessageHeader;
+import org.openhealthtools.openexchange.datamodel.Patient;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
+import org.openhealthtools.openexchange.utils.ExceptionUtil;
+import org.openhealthtools.openpixpdq.api.MessageStore;
+import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7Header;
+import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7v231;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
@@ -54,8 +55,6 @@ import ca.uhn.hl7v2.model.v231.message.ADT_A08;
 import ca.uhn.hl7v2.model.v231.message.ADT_A39;
 import ca.uhn.hl7v2.model.v231.segment.MRG;
 import ca.uhn.hl7v2.model.v231.segment.PID;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 
 /**
@@ -592,10 +591,10 @@ class PixFeedHandler extends BaseHandler implements Application {
 		Patient patientDesc = new Patient();
 		patientDesc.setPatientIds(convertor.getPatientIds());
 		patientDesc.setPatientName(convertor.getPatientName());
-		patientDesc.setMonthersMaidenName(convertor.getMotherMaidenName());
+		patientDesc.setMothersMaidenName(convertor.getMotherMaidenName());
 		patientDesc.setBirthDateTime(convertor.getBirthDate());
 		patientDesc.setAdministrativeSex(convertor.getSexType());
-		patientDesc.setPatientAlias(convertor.getPatientAliasName());
+		patientDesc.setPatientAliases(convertor.getPatientAliases());
 		patientDesc.setRace(convertor.getRace());
 		patientDesc.setPrimaryLanguage(convertor.getPrimaryLanguage());
 		patientDesc.setMaritalStatus(convertor.getMartialStatus());
@@ -603,13 +602,13 @@ class PixFeedHandler extends BaseHandler implements Application {
 		patientDesc.setPatientAccountNumber(convertor.getpatientAccountNumber());
 		patientDesc.setSsn(convertor.getSsn());
 		patientDesc.setDriversLicense(convertor.getDriversLicense());
-		patientDesc.setMonthersId(convertor.getMonthersId());
+		patientDesc.setMothersId(convertor.getMonthersId());
 		patientDesc.setEthnicGroup(convertor.getEthnicGroup());
 		patientDesc.setBirthPlace(convertor.getBirthPlace());
 		patientDesc.setBirthOrder(convertor.getBirthOrder());
 		patientDesc.setCitizenship(convertor.getCitizenShip());
 		patientDesc.setDeathDate(convertor.getDeathDate());		
-//TODO: patientDesc.setDeathIndicator(convertor.getDeathIndicator());
+        patientDesc.setDeathIndicator(convertor.getDeathIndicator());
 		patientDesc.setPhoneNumbers(convertor.getPhoneList());
 		patientDesc.setAddresses(convertor.getAddressList());
 		patientDesc.setVisits(convertor.getVisitList());

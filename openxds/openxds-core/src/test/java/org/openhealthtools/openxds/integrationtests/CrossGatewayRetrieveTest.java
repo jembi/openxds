@@ -23,14 +23,12 @@ package org.openhealthtools.openxds.integrationtests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import gov.nist.registry.common2.registry.MetadataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import gov.nist.registry.common2.registry.MetadataSupport;
-import gov.nist.registry.common2.registry.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,14 +40,13 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.client.ServiceClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.w3c.dom.Document;

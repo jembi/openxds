@@ -20,25 +20,13 @@
 
 package org.openhealthtools.openxds.xca;
 
-import java.io.File;
-import java.net.URL;
-
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.description.TransportInDescription;
-import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.utils.UnZip;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
-import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.BaseIheActor;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
-import org.openhealthtools.openxds.registry.XdsRegistryImpl;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 

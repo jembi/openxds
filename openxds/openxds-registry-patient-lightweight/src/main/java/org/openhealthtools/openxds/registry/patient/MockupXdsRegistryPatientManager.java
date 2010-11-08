@@ -20,7 +20,8 @@
 
 package org.openhealthtools.openxds.registry.patient;
 
-import org.openhealthexchange.openpixpdq.data.Patient;
+import org.openhealthtools.openexchange.datamodel.Patient;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
@@ -35,7 +36,7 @@ public class MockupXdsRegistryPatientManager implements
 	}
 
 	public boolean isValidPatient(
-			org.openhealthexchange.openpixpdq.data.PatientIdentifier pid,
+			PatientIdentifier pid,
 			RegistryPatientContext context) throws RegistryPatientException {
 		// TODO Auto-generated method stub
 		return false;

@@ -26,12 +26,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
@@ -61,9 +57,10 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthexchange.openpixpdq.ihe.registry.HL7;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
+import org.openhealthtools.openexchange.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.hl7.HL7;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
@@ -74,8 +71,6 @@ import ca.uhn.hl7v2.llp.MinLowerLayerProtocol;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v231.segment.MSA;
 import ca.uhn.hl7v2.parser.PipeParser;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 /**
  * The base class of all XDS TestCases.

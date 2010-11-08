@@ -20,8 +20,8 @@
 
 package org.openhealthtools.openxds.registry.api;
 
-import org.openhealthexchange.openpixpdq.data.Patient;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
+import org.openhealthtools.openexchange.datamodel.Patient;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 
 
 /**

@@ -37,7 +37,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 
 import ca.uhn.hl7v2.app.Connection;
 import ca.uhn.hl7v2.app.ConnectionHub;

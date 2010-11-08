@@ -19,7 +19,7 @@ import org.apache.axiom.om.OMText;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 
 /**
  * 

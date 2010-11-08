@@ -44,17 +44,19 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.common.utils.HL7;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.common.utils.AssigningAuthorityUtil;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openexchange.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.hl7.HL7;
 import org.openhealthtools.openxds.XdsConstants;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
@@ -63,8 +65,6 @@ import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 
 public class SubmitObjectsRequest extends XdsCommon {
@@ -569,7 +569,7 @@ public class SubmitObjectsRequest extends XdsCommon {
    		String patId = HL7.getIdFromCX(patientId);
    	
     	Identifier assigningAuthority = HL7.getAssigningAuthorityFromCX(patientId);
-    	Identifier aa = reconcileIdentifier(assigningAuthority, actor.getActorDescription());
+    	Identifier aa = AssigningAuthorityUtil.reconcileIdentifier(assigningAuthority, actor.getActorDescription());
 
     	PatientIdentifier pid = new PatientIdentifier();
     	pid.setId(patId);

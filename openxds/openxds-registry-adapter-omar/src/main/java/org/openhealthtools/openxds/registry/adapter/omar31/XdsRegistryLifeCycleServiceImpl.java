@@ -33,17 +33,14 @@ import org.freebxml.omar.common.spi.RequestContext;
 import org.freebxml.omar.server.security.authentication.AuthenticationServiceImpl;
 import org.oasis.ebxml.registry.bindings.rs.RegistryRequestType;
 import org.oasis.ebxml.registry.bindings.rs.RegistryResponse;
-import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
-import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.dao.MergePatientDao;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 /**
  * This class adapts to the freebXML Omar 3.1 registry and 

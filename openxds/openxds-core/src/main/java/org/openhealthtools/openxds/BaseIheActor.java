@@ -20,12 +20,11 @@
 
 package org.openhealthtools.openxds;
 
-import org.openhealthexchange.openpixpdq.ihe.impl_v2.hl7.HL7Util;
-import org.openhealthexchange.openpixpdq.ihe.log.IMessageStoreLogger;
-import org.openhealthexchange.openpixpdq.ihe.log.MessageStore;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
+import org.openhealthtools.openpixpdq.api.IMessageStoreLogger;
+import org.openhealthtools.openpixpdq.api.MessageStore;
+import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7Util;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;

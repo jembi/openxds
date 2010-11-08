@@ -34,7 +34,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 

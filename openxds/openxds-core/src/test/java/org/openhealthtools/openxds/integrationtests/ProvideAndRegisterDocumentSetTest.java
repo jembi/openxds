@@ -24,8 +24,6 @@ package org.openhealthtools.openxds.integrationtests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.UUID;
-
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAttribute;
@@ -35,7 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 
 /**
  * This class is an integrated test for IHE transaction ITI-41, namely,

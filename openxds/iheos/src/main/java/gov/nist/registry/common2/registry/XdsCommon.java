@@ -10,26 +10,23 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
-import org.openhealthtools.openxds.XdsConstants;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.XdsConstants;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.registry.api.ResourceingFilter;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxua.api.AssertionException;
 import org.openhealthtools.openxua.api.XServiceProvider;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 public class XdsCommon  {
 
@@ -220,47 +217,6 @@ public class XdsCommon  {
 		
 		return metadata;
 	}
-
-    /**
-     * Reconciles authority with the ConnectionDescritpion configuration. An authority
-     * can have NameSpace and/or UniversalId/UniversalIdType. For example, in the data source such as
-     * database, if an authority is represented by NameSpace only, while in the xml configuration, the authority is configured
-     * with both NameSpace and UnviersalId/UniversalIdType. The authority in the datasource has to be mapped
-     * to the authority configured in the XML files.
-     *
-     * @param authority The authority
-     * @param connection
-     * @param adapter the adapter from where to get the domains
-     * @return The authority according the configuration
-     */
-    protected Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
-        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = connection.getAllIdentifiersByType("domain");
-        for (org.openhealthtools.openexchange.patient.data.Identifier id : identifiers) {
-    
-        	//TODO: Fix the Identifier type
-        	//Temporary conversion during the library migration
-        	Identifier identifier = new Identifier(id.getNamespaceId(), id.getUniversalId(), id.getUniversalIdType()); 
-            if ( identifier.equals(authority) ) {
-                return identifier;
-            }
-        }
-        //no identifier is found, just return the original authority
-        return authority;
-    }
-    protected Identifier reconcileIdentifier(Identifier authority, IActorDescription actorDescription) {
-        List<org.openhealthtools.openexchange.patient.data.Identifier> identifiers = actorDescription.getAllIdentifiersByType("domain");
-        for (org.openhealthtools.openexchange.patient.data.Identifier id : identifiers) {
-    
-        	//TODO: Fix the Identifier type
-        	//Temporary conversion during the library migration
-        	Identifier identifier = new Identifier(id.getNamespaceId(), id.getUniversalId(), id.getUniversalIdType()); 
-            if ( identifier.equals(authority) ) {
-                return identifier;
-            }
-        }
-        //no identifier is found, just return the original authority
-        return authority;
-    }
 
 	protected XdsRepository getRepositoryActor() throws XdsInternalException {
 		AxisServlet server = (AxisServlet)this.messageContext.getTransportIn().getReceiver();

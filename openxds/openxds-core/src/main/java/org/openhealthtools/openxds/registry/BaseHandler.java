@@ -22,12 +22,11 @@ package org.openhealthtools.openxds.registry;
 
 import java.net.InetAddress;
 
-import org.openhealthexchange.openpixpdq.ihe.configuration.IheConfigurationException;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.datamodel.Identifier;
 
 import ca.uhn.hl7v2.app.ApplicationException;
-
-import com.misyshealthcare.connect.net.Identifier;
 
 
 /**
@@ -138,16 +137,13 @@ public class BaseHandler {
 			throw new IheConfigurationException("Invalid connection description (NULL)");
 		if (name == null)
 			throw new IheConfigurationException("Invalid identifier name (NULL)");
-		org.openhealthtools.openexchange.patient.data.Identifier identifier = connection.getIdentifier(name);
+		Identifier identifier = connection.getIdentifier(name);
 		
 		if ((identifier == null) && isRequired) {
 			throw new IheConfigurationException("No identifier '" + name + "' defined for connection \"" + connection.getDescription() + "\"");
 		}
 		
-     	//TODO: Fix the Identifier type
-     	//Temporary conversion during the library migration
-     	Identifier idOld = new Identifier(identifier.getNamespaceId(), identifier.getUniversalId(), identifier.getUniversalIdType()); 
-		return idOld;
+		return identifier;
 	}
 	
 }

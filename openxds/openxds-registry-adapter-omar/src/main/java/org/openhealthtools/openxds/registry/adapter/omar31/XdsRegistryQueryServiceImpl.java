@@ -42,7 +42,7 @@ import org.freebxml.omar.server.security.authentication.AuthenticationServiceImp
 import org.oasis.ebxml.registry.bindings.query.AdhocQueryRequest;
 import org.oasis.ebxml.registry.bindings.query.AdhocQueryResponse;
 import org.oasis.ebxml.registry.bindings.rim.RegistryObjectListType;
-import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openxds.registry.api.RegistryQueryException;
 import org.openhealthtools.openxds.registry.api.RegistrySQLQueryContext;
 import org.openhealthtools.openxds.registry.api.RegistryStoredQueryContext;

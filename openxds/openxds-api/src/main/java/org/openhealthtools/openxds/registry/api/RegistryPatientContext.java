@@ -20,7 +20,7 @@
 
 package org.openhealthtools.openxds.registry.api;
 
-import org.openhealthexchange.openpixpdq.data.MessageHeader;
+import org.openhealthtools.openexchange.datamodel.MessageHeader;
 
 /**
  * This classes defines a registry patient context that are required for

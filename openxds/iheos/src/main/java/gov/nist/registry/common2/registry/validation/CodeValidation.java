@@ -16,8 +16,7 @@ import java.util.Set;
 import org.apache.axiom.om.OMElement;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openexchange.patient.data.Identifier;
+import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.utils.Pair;
 
 
