@@ -36,14 +36,19 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements XdsRegistryPatientDao{
 	private static final Log log = LogFactory.getLog(xdsRegistryPatientDaoImpl.class);
 	
-
+	@Override
 	public PersonIdentifier getPersonById(PersonIdentifier patientId) throws RegistryPatientException{
+		return	getPersonById(patientId, false);
+	}
+
+	@Override
+	public PersonIdentifier getPersonById(PersonIdentifier patientId, boolean merged) throws RegistryPatientException{
 		List list = new ArrayList();
 		PersonIdentifier personIdentifier = null;
 		String personId = patientId.getPatientId();
 		String assigningAuthority = patientId.getAssigningAuthority();
 		String deletePatient = "N";
-		String mergedPatient = "N";
+		String mergedPatient = (merged) ? "Y" : "N";
 		try{
 		list = this.getHibernateTemplate().find(
 				"from PersonIdentifier where patientid = '"+ personId +"' and assigningauthority ='" + assigningAuthority + "' and deleted ='" + deletePatient + "' and merged ='" + mergedPatient + "'");
@@ -55,17 +60,9 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		if (list.size() > 0)
 			personIdentifier = (PersonIdentifier) list.get(0);
 		return personIdentifier;
+	}
 	
-	}
-
-	public void mergePersonIdentifier(PersonIdentifier mergePersonIdentifier) throws RegistryPatientException{
-		try {
-			 this.getHibernateTemplate().update(mergePersonIdentifier);
-		} catch (Exception e) {
-			throw new RegistryPatientException(e);
-		}		
-	}
-
+	@Override
 	public void savePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			  this.getHibernateTemplate().save(identifier);
@@ -75,6 +72,7 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		
 	}
 
+	@Override
 	public void updatePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			 this.getHibernateTemplate().update(identifier);

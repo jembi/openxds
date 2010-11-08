@@ -111,7 +111,7 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		retiredPersonId.setSurvivingPatientId(survivingPersonId.getPatientId());
 		retiredPersonId.setMerge("Y");
 		try {
-			xdsRegistryPatientDao.mergePersonIdentifier(retiredPersonId);
+			xdsRegistryPatientDao.updatePersonIdentifier(retiredPersonId);
 		} catch (Exception e) {
 			log.error("Failed while trying to merge two patient records in the patient registry." + e, e);
 			throw new RegistryPatientException(e.getMessage());
@@ -119,30 +119,34 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 		}
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void unmergePatients(Patient survivingPatient, Patient mergePatient, RegistryPatientContext context) throws RegistryPatientException {
+	public void unmergePatients(Patient survivingPatient, Patient mergedPatient, RegistryPatientContext context) throws RegistryPatientException {
 		PatientIdentifier survivingId = survivingPatient.getPatientIds().get(0);
 		PersonIdentifier personIdentifier = getPersonIdentifier(survivingId);	
 		PersonIdentifier survivingPersonId = xdsRegistryPatientDao.getPersonById(personIdentifier);
-		for (PatientIdentifier pid : mergePatient.getPatientIds()) {
+		for (PatientIdentifier pid : mergedPatient.getPatientIds()) {
 			PersonIdentifier retiredId = getPersonIdentifier(pid);		
-			PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(retiredId);
-		if (retiredPersonId == null ||  survivingPersonId == null) {
-			log.error("Unable to locate one of the two patient records that need to be unmerged.");
-			throw new RegistryPatientException("Unable to identify the two patient records that need to be unmerged.");
-		}
-		if(retiredPersonId.getSurvivingPatientId().equals(survivingPersonId.getPatientId())){
-			retiredPersonId.setSurvivingPatientId("");
-			retiredPersonId.setMerge("N");
-		}else{
-			log.error("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
-			throw new RegistryPatientException("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
-		}
-		try {
-			xdsRegistryPatientDao.mergePersonIdentifier(retiredPersonId);
-		} catch (Exception e) {
-			log.error("Failed while trying to unmerge two patient records in the patient registry." + e, e);
-			throw new RegistryPatientException(e.getMessage());
-		}
+			PersonIdentifier retiredPersonId = xdsRegistryPatientDao.getPersonById(retiredId, true);
+			if (retiredPersonId == null) {
+				log.error("Unable to locate the merged patient record that needs to be unmerged.");
+				throw new RegistryPatientException("Unable to identify the merged patient record that needs to be unmerged.");
+			}
+			if (survivingPersonId == null) {
+				log.error("Unable to locate the surviving patient record that needs to be unmerged.");
+				throw new RegistryPatientException("Unable to identify the surviving patient record that needs to be unmerged.");
+			}
+			if(retiredPersonId.getSurvivingPatientId().equals(survivingPersonId.getPatientId())){
+				retiredPersonId.setSurvivingPatientId("");
+				retiredPersonId.setMerge("N");
+			}else{
+				log.error("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
+				throw new RegistryPatientException("Unable to unmerge the patient because surviving_patient_id of merge patient is not matched with surviving patient");
+			}
+			try {
+				xdsRegistryPatientDao.updatePersonIdentifier(retiredPersonId);
+			} catch (Exception e) {
+				log.error("Failed while trying to unmerge two patient records in the patient registry." + e, e);
+				throw new RegistryPatientException(e.getMessage());
+			}
 		}
 	}
 

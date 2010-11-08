@@ -31,25 +31,40 @@ import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 public interface XdsRegistryPatientDao {
 	
 
-	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#isValidPatient()
+	/**
+	 * Gets PersonIdentifier of a patient neither deleted nor merged.
+	 * 
+	 * @param personId
+	 * @return the PersonIdentifier
+	 * @throws RegistryPatientException
 	 */
 	public PersonIdentifier getPersonById(PersonIdentifier personId) throws RegistryPatientException;
 	
+	/**
+	 * Gets PersonIdentifier of a patient not deleted, but may or may not merged.
+	 * 
+	 * @param personId 
+	 * @param merged whether the patiented is merged or not
+	 * @return the PersonIdentifier
+	 * @throws RegistryPatientException
+	 */
+	public PersonIdentifier getPersonById(PersonIdentifier personId, boolean merged) throws RegistryPatientException;
 		
-	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#createPatient()
+	/**
+	 * Saves the PersonIdentifier to the database
+	 *  
+	 * @param newPersonIdentifier the PersonIdentifier to be saved
+	 * @throws RegistryPatientException
 	 */
 	public void savePersonIdentifier(PersonIdentifier newPersonIdentifier) throws RegistryPatientException;
 	
-	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#updatePatient()
+
+	/**
+	 * Updated the PersonIdentifier in the database
+	 * 
+	 * @param updatePersonIdentifier
+	 * @throws RegistryPatientException
 	 */
 	public void updatePersonIdentifier(PersonIdentifier updatePersonIdentifier) throws RegistryPatientException;
-	
-	/* (non-Javadoc)
-	 * @see org.openhealthtools.openxds.registry.api.XdsRegistryPatientService#mergePatients()
-	 */	
-	public void mergePersonIdentifier(PersonIdentifier mergePersonIdentifier) throws RegistryPatientException;
 	
 }
