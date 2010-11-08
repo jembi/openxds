@@ -36,12 +36,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements XdsRegistryPatientDao{
 	private static final Log log = LogFactory.getLog(xdsRegistryPatientDaoImpl.class);
 	
-	@Override
 	public PersonIdentifier getPersonById(PersonIdentifier patientId) throws RegistryPatientException{
 		return	getPersonById(patientId, false);
 	}
 
-	@Override
 	public PersonIdentifier getPersonById(PersonIdentifier patientId, boolean merged) throws RegistryPatientException{
 		List list = new ArrayList();
 		PersonIdentifier personIdentifier = null;
@@ -62,7 +60,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		return personIdentifier;
 	}
 	
-	@Override
 	public void savePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			  this.getHibernateTemplate().save(identifier);
@@ -72,7 +69,6 @@ public class xdsRegistryPatientDaoImpl extends HibernateDaoSupport implements Xd
 		
 	}
 
-	@Override
 	public void updatePersonIdentifier(PersonIdentifier identifier) throws RegistryPatientException {
 		try {
 			 this.getHibernateTemplate().update(identifier);
