@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -317,8 +317,21 @@
             		<artifactId>ant</artifactId>
             		<groupId>ant</groupId>
             	</exclusion>
+            	<exclusion>
+                    <groupId>org.eclipse.jdt</groupId>
+                    <artifactId>core</artifactId>
+                </exclusion>
+            	<exclusion>
+				    <groupId>org.eclipse.jdt.core.compiler</groupId>
+				    <artifactId>ecj</artifactId>
+                </exclusion>
             </exclusions>            
 	     </dependency>
+         <dependency>
+             <groupId>tomcat</groupId>
+             <artifactId>jasper-compiler</artifactId>
+             <version>5.5.23</version>
+         </dependency>
         <!--@Custom dependencies go here@-->
     </dependencies>
 </project>

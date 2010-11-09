@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>openxds-web</artifactId>
     <packaging>war</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <name>OpenXDS - Web Application (Struts 2)</name>
 
 
@@ -139,11 +139,6 @@
             		<groupId>xml-apis</groupId>
             	</exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.misys.braid</groupId>
-            <artifactId>braid-base</artifactId>
-            <version>${braid.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>

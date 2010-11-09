@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.openhealthtools.openxds</groupId>
         <artifactId>openxds</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -143,11 +143,6 @@
             <groupId>org.openhealthtools.openxds</groupId>
             <artifactId>openxds-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.misys.braid</groupId>
-            <artifactId>braid-base</artifactId>
-            <version>${braid.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

@@ -12,7 +12,7 @@
     <groupId>org.openhealthtools.openxds</groupId>
     <artifactId>openxds</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <name>OpenXDS Parent</name>
     <description>Implements the IHE XDS profile - XDS Repository and Registry actors</description>
     <url>https://openxds.projects.openhealthtools.org</url>
@@ -265,7 +265,8 @@
 		</pluginRepository>
     </pluginRepositories>
 
-    <!-- Dependencies calculated by AppFuse when running full-source plugin -->
+    <!-- Dependencies calculated by AppFuse when running full-source plugin
+-->
     <dependencies>
         <dependency>
             <groupId>${jdbc.groupId}</groupId>
@@ -412,7 +413,8 @@
             <id>prod</id>
             <build>
                 <plugins>
-                    <!-- Override location of data file for DbUnit to load (doesn't have negative keys) -->
+                    <!-- Override location of data file for DbUnit to load (doesn't have negative keys)
+-->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>dbunit-maven-plugin</artifactId>
@@ -495,7 +497,8 @@
             </properties>
         </profile>
         <profile>
-            <!-- You need to enable TCP/IP Connections for SQL Server 2005 after installing. -->
+            <!-- You need to enable TCP/IP Connections for SQL Server 2005 after installing.
+-->
             <!-- http://www.mattwoodward.com/blog/index.cfm?commentID=211 -->
             <id>sqlserver</id>
             <properties>
@@ -580,7 +583,8 @@
         <jdbc.username>openxds</jdbc.username>
         <jdbc.password>openxds</jdbc.password>
     
-        <!-- Properties calculated by AppFuse when running full-source plugin -->
+        <!-- Properties calculated by AppFuse when running full-source plugin
+-->
         <aspectj.version>1.6.1</aspectj.version>
         <clickstream.version>1.0.2</clickstream.version>
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
@@ -611,9 +615,8 @@
         <xfire.version>1.2.6</xfire.version>
         
         <!-- Properties defined by OpenXDS -->
-        <openexchange.version>1.0.1-SNAPSHOT</openexchange.version>
+        <openexchange.version>1.2-SNAPSHOT</openexchange.version>
         <openpixpdq.version>1.2-SNAPSHOT</openpixpdq.version>
-        <braid.version>1.2.2</braid.version>
         <jetty.version>6.1.24</jetty.version>
         <hapi.version>0.5.1</hapi.version>
         <omar.version>3.1</omar.version>
