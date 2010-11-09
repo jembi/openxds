@@ -470,17 +470,23 @@
         </profile>
         <profile>
             <id>oracle</id>
+            <repositories>
+                <repository>
+                    <id>jahia</id>
+                    <url>http://maven.jahia.org/maven2/</url>
+                </repository>
+            </repositories>
             <properties>
                 <dbunit.dataTypeFactoryName>org.dbunit.ext.oracle.OracleDataTypeFactory</dbunit.dataTypeFactoryName>
                 <dbunit.schema>SYSTEM</dbunit.schema> <!-- Make sure to capitalize the schema name -->
                 <hibernate.dialect>org.hibernate.dialect.Oracle9Dialect</hibernate.dialect>
                 <jdbc.groupId>com.oracle</jdbc.groupId>
-                <jdbc.artifactId>ojdbc14</jdbc.artifactId>
-                <jdbc.version>10.2.0.2.0</jdbc.version>
+                <jdbc.artifactId>ojdbc5</jdbc.artifactId>
+                <jdbc.version>11.1.0.7.0</jdbc.version>
                 <jdbc.driverClassName>oracle.jdbc.OracleDriver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:oracle:thin:@localhost:1521:XE]]></jdbc.url>
-                <jdbc.username>system</jdbc.username>
-                <jdbc.password>system</jdbc.password>
+                <jdbc.username>openxds</jdbc.username>
+                <jdbc.password>openxds</jdbc.password>
             </properties>
         </profile>
         <profile>
