@@ -48,10 +48,10 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 	}
 	
 	public OMElement SubmitObjectsRequest(OMElement sor) throws AxisFault {
-		return ProvideAndRegisterDocumentSetRequest(sor);
+		return DocumentRepository_ProvideAndRegisterDocumentSet_b(sor);
 	}
 
-	public OMElement ProvideAndRegisterDocumentSetRequest(OMElement sor) throws AxisFault {
+	public OMElement DocumentRepository_ProvideAndRegisterDocumentSet_b(OMElement sor) throws AxisFault {
 		try {
 			OMElement startup_error = beginTransaction(getPnRTransactionName(), sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
@@ -83,7 +83,7 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 		}
 	}
 	
-	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) throws AxisFault {
+	public OMElement DocumentRepository_RetrieveDocumentSet(OMElement rdsr) throws AxisFault {
 		try {
 			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)

@@ -29,13 +29,13 @@ public class Ig {
 	public OMElement AdhocQueryRequest(OMElement ahqr) throws AxisFault {
 		XcaRegistry reg = new XcaRegistry();
 		
-		return reg.AdhocQueryRequest(ahqr);
+		return reg.DocumentRegistry_RegistryStoredQuery(ahqr);
 	}
 	
 	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) throws AxisFault {
 		XcaRepository rep = new XcaRepository();
 		
-		return rep.RetrieveDocumentSetRequest(rdsr);
+		return rep.DocumentRepository_RetrieveDocumentSet(rdsr);
 	}
 	
 	public void setMessageContextIn(MessageContext inMessage) {

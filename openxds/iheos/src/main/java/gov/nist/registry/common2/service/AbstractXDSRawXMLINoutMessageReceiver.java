@@ -34,7 +34,7 @@ AbstractInOutMessageReceiver {
 			return method;
 
 		String methodName = op.getName().getLocalPart();
-
+		methodName = methodName.replaceAll("-", "_");
 		try {
 
 			// Looking for a method of the form "OMElement method(OMElement)"
