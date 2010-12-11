@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openpixpdq.common.PixPdqException;
 
 import ca.uhn.hl7v2.app.ApplicationException;
 
@@ -62,13 +63,13 @@ public class BaseHandler {
 	 * @return the application name of this PIX/PDQ server
 	 * @throws ApplicationException
 	 */
-	protected Identifier getServerApplication() throws ApplicationException {
+	protected Identifier getServerApplication() throws PixPdqException {
 		Identifier ret = null;
 		try {
 			ret = getIdentifier(connection,
 					"ReceivingApplication", true);
 		} catch (IheConfigurationException e) {
-			throw new ApplicationException(
+			throw new PixPdqException(
 					"Missing receivingApplication for connection "
 							+ connection.getDescription(), e);
 		}
@@ -83,13 +84,13 @@ public class BaseHandler {
 	 * @return the facility name of this PIX/PDQ server
 	 * @throws ApplicationException
 	 */
-	protected Identifier getServerFacility() throws ApplicationException {
+	protected Identifier getServerFacility() throws PixPdqException {
 		Identifier ret = null;
 		try {
 			ret = getIdentifier(connection,
 					"ReceivingFacility", true);
 		} catch (IheConfigurationException e) {
-			throw new ApplicationException(
+			throw new PixPdqException(
 					"Missing ReceivingFacility for connection "
 							+ connection.getDescription(), e);
 		}

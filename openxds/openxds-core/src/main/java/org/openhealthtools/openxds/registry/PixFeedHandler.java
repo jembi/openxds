@@ -32,6 +32,7 @@ import org.openhealthtools.openexchange.datamodel.Patient;
 import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openexchange.utils.ExceptionUtil;
 import org.openhealthtools.openpixpdq.api.MessageStore;
+import org.openhealthtools.openpixpdq.common.PixPdqException;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7Header;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7v231;
 import org.openhealthtools.openxds.XdsFactory;
@@ -133,9 +134,9 @@ class PixFeedHandler extends BaseHandler implements Application {
 				String errorMsg = "Unexpected request to PIX Manager server. " 
 					+ "Valid message types are ADT^A01, ADT^A04, ADT^A05, ADT^A08 and ADT^A40";
 
-				throw new ApplicationException(errorMsg);
+				throw new PixPdqException(errorMsg);
 			}
-		} catch (ApplicationException e) {
+		} catch (PixPdqException e) {
 			if (store !=null) { 
 				store.setErrorMessage( e.getMessage() );
 			}
@@ -164,7 +165,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @throws HL7Exception if something is wrong with HL7 message 
 	 */
 	private Message processCreate(Message msgIn) 
-	throws ApplicationException, HL7Exception {
+	throws PixPdqException, HL7Exception {
 
 		assert msgIn instanceof ADT_A01 || 
 			   msgIn instanceof ADT_A04 || 
@@ -195,7 +196,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 			patientManager.createPatient(patient, context);
 			
 		}catch (RegistryPatientException e) {
-			throw new ApplicationException(e);
+			throw new PixPdqException(e);
 		} 
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
 
@@ -215,7 +216,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @throws ApplicationException If Application has trouble
 	 * @throws HL7Exception if something is wrong with HL7 message 
 	 */
-	private Message processUpdate(Message msgIn) throws ApplicationException,
+	private Message processUpdate(Message msgIn) throws PixPdqException,
 			HL7Exception {
 		assert msgIn instanceof ADT_A01 ||
 			   msgIn instanceof ADT_A08 ;
@@ -239,7 +240,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 			//Update Patient
 			patientManager.updatePatient(patient, context);			
 		} catch (RegistryPatientException e) {
-			throw new ApplicationException(e);
+			throw new PixPdqException(e);
 		}
     	
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
@@ -260,7 +261,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @throws HL7Exception if something is wrong with HL7 message 
 	 */
 	private Message processMerge(Message msgIn) 
-	throws ApplicationException, HL7Exception {
+	throws PixPdqException, HL7Exception {
 
 		assert msgIn instanceof ADT_A39;
 		
@@ -286,7 +287,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 			patientManager.mergePatients(patient, mrgPatient, context);
 
 		}catch (RegistryPatientException e) {
-			throw new ApplicationException(e);
+			throw new PixPdqException(e);
 		}
 		String survivingPatient = getPatientIdentifier(patient.getPatientIds());
 		String mergePatient = getPatientIdentifier(mrgPatient.getPatientIds());
@@ -297,10 +298,10 @@ class PixFeedHandler extends BaseHandler implements Application {
 			try{	 
 				patientManager.unmergePatients(patient, mrgPatient, context);
 			}catch (Exception e1) {
-				throw new ApplicationException(e1);
+				throw new PixPdqException(e1);
 			}
 			log.error("error while merging patient document in xds regsitry");
-			throw new ApplicationException(e);
+			throw new PixPdqException(e);
 		}
 		HL7v231.populateMSA(reply.getMSA(), "AA", hl7Header.getMessageControlId());
 
@@ -392,7 +393,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @throws HL7Exception if something is wrong with HL7 message 
 	 * @throws ApplicationException If Application has trouble
 	 */
-	private ACK initAcknowledgment(HL7Header hl7Header) throws HL7Exception, ApplicationException {
+	private ACK initAcknowledgment(HL7Header hl7Header) throws HL7Exception, PixPdqException {
 		//Send Response
 		ACK reply = new ACK();
 		
@@ -409,7 +410,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 			HL7v231.populateMSH(reply.getMSH(), "ACK", event, getMessageControlId(), 
 				serverApplication, serverFacility, sendingApplication, sendingFacility);
 		} catch (IheConfigurationException e) {
-			throw new ApplicationException("Error populate message header", e);
+			throw new PixPdqException("Error populate message header", e);
 		}
 		
 		return reply;
@@ -457,7 +458,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	private boolean validateReceivingFacilityApplication(ACK reply, Identifier receivingApplication,
 			Identifier receivingFacility, Identifier expectedApplication, Identifier expectedFacility,
 			String incomingMessageId) 
-		    throws HL7Exception, ApplicationException
+		    throws HL7Exception, PixPdqException
 	{
 		//In case of tests, don't validate receiving application and facility,
 		//It is not easy to switch to different receiving applications and facilities
@@ -504,7 +505,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @throws ApplicationException if something is wrong with the application
 	 */
 	private boolean validateMessage(ACK reply, HL7Header hl7Header, PatientIdentifier patientId, PatientIdentifier mrgPatientId, boolean isPixCreate) 
-	throws HL7Exception, ApplicationException {
+	throws HL7Exception, PixPdqException {
 		Identifier serverApplication = getServerApplication();
 		Identifier serverFacility = getServerFacility();
 		Identifier receivingApplication = hl7Header.getReceivingApplication();
@@ -551,13 +552,13 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 */
 	private boolean validatePatientId(ACK reply, PatientIdentifier patientId, 
 			MessageHeader header, boolean isMrgPatientId, String incomingMessageId)
-	throws HL7Exception, ApplicationException{
+	throws HL7Exception, PixPdqException{
 		boolean validPatient;
 		RegistryPatientContext context = new RegistryPatientContext(header);
 		try {
 			validPatient = patientManager.isValidPatient(patientId, context);
 		} catch (RegistryPatientException e) {
-			throw new ApplicationException(e);
+			throw new PixPdqException(e);
 		}
 		if (!validPatient) {
 			HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
@@ -581,12 +582,12 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @return a {@link Patient} object
 	 * @throws ApplicationException if something is wrong with the application
 	 */
-	private Patient getPatient(Message msgIn) throws ApplicationException,HL7Exception {
+	private Patient getPatient(Message msgIn) throws PixPdqException,HL7Exception {
 		HL7v231ToBaseConvertor convertor = null;
 		if (msgIn.getVersion().equals("2.3.1")) {
 			convertor = new HL7v231ToBaseConvertor(msgIn, connection);
 		} else {
-			throw new ApplicationException("Unexpected HL7 version");
+			throw new PixPdqException("Unexpected HL7 version");
 		}
 		Patient patientDesc = new Patient();
 		patientDesc.setPatientIds(convertor.getPatientIds());
@@ -624,7 +625,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 * @return a {@link Patient} object that represents the merge patient
 	 * @throws ApplicationException if something is wrong with the application
 	 */
-	private Patient getMrgPatient(Message msgIn) throws ApplicationException, HL7Exception {
+	private Patient getMrgPatient(Message msgIn) throws PixPdqException, HL7Exception {
 		HL7v231ToBaseConvertor convertor = null;		
 		convertor = new HL7v231ToBaseConvertor(msgIn, connection);
 		Patient patientDesc = new Patient();
