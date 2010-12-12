@@ -34,9 +34,9 @@
 		<!--The port-->
 		<Port>8031</Port>
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -51,9 +51,9 @@
 		<Port>8011</Port>
 		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	<StandardConnection name="local-repository">
@@ -66,9 +66,9 @@
 		<Port>8021</Port>
 		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -97,9 +97,9 @@
 		<Port>8181</Port>
 		<UrlPath>/axis2/services/xcarg</UrlPath>				
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -123,9 +123,9 @@
 		<Port>18081</Port>		
 		<UrlPath>/XCA/responding</UrlPath>				
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -147,9 +147,9 @@
 		<Port>9443</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	<StandardConnection name="ibm-rg-retrieve">
@@ -170,9 +170,9 @@
 		<Port>9443</Port>
 		<UrlPath>XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -186,9 +186,9 @@
 		<Port>7081</Port>
 		<UrlPath>/</UrlPath>
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -213,9 +213,9 @@
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	<StandardConnection name="icw-rg-retrieve">
@@ -228,9 +228,9 @@
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -244,9 +244,9 @@
 		<Port>443</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>				
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -260,9 +260,9 @@
 		<Port>443</Port>
 		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>				
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	

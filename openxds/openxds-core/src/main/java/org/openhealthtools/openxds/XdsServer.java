@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.bio.SocketConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
@@ -62,10 +63,10 @@ public class XdsServer {
             System.exit(1);
         }
 
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(xdsServer));
 	}
 
-    public void startContainer() throws Exception {
+    private void startContainer() throws Exception {
     	if (server != null)
     		return ;
     	
@@ -83,6 +84,9 @@ public class XdsServer {
         Connector connector = createNonSecureConnector();
         connectors.add(connector);
 
+        Connector secureConnector = createSecureConnector();
+        connectors.add(secureConnector);
+        
         server.setConnectors(connectors.toArray(new Connector[connectors.size()]));
 
         String context = PropertyFacade.getString(XdsConstants.WEB_APP_CONTEXT);
@@ -108,16 +112,49 @@ public class XdsServer {
         return connector;
     }
 
+    private Connector createSecureConnector() {
+        String hostname = PropertyFacade.getString("host", "localhost");
+        int tlsPort = PropertyFacade.getInteger("tls.port");
+        String keyStore = PropertyFacade.getString("key.store");
+        String keyPassword = PropertyFacade.getString("key.store.password");
+        String trustStore = PropertyFacade.getString("trust.store");
+        String trustPassword = PropertyFacade.getString("trust.store.password");
+
+        SslSocketConnector secureconnector = new SslSocketConnector();
+        secureconnector.setHost(hostname);
+        secureconnector.setPort(tlsPort);
+        secureconnector.setKeystore(keyStore);
+        secureconnector.setKeyPassword(keyPassword);
+        secureconnector.setTruststore(trustStore);
+        secureconnector.setPassword(trustPassword);
+
+        return secureconnector;
+    }
+    
+    public void stop() throws Exception {
+        if (server != null && server.isStarted()) {
+            try {
+                server.stop();
+            } catch (Exception e) {
+                log.error("Failed to stop jetty container.", e);
+            }
+        }
+    }
+
     private static class ShutdownHook extends Thread {
-		
-		public void run() {
-			if (server != null && server.isStarted()) {
-				try {
-					server.stop();
-				}catch(Exception e) {
-					log.error("Failed to stop Jetty container.", e);
-				}
-			}
-		}
-	}
+        private XdsServer server = null;
+
+        ShutdownHook(XdsServer server) {
+            this.server = server;
+        }
+
+        public void run() {
+            try {
+                this.server.stop();
+            } catch (Exception e) {
+                log.error("Failed to stop XDS Server.", e);
+            }
+        }
+    }
+
 }

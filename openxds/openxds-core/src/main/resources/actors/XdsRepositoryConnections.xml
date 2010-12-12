@@ -40,9 +40,9 @@
         <Includefile name="XdsCodes.xml" />		
 
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -64,9 +64,9 @@
 		<UrlPath>/openxds/services/DocumentRegistry</UrlPath>		
 
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -88,9 +88,9 @@
 		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
 
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -116,9 +116,9 @@
 		<Port>9448</Port>
 		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -132,9 +132,9 @@
 		<Port>9080</Port>
 		<UrlPath>/xdsservice/xdsregistry</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -148,9 +148,9 @@
 		<Port>8181</Port>
 		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -164,9 +164,9 @@
 		<Port>443</Port>
 		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -180,9 +180,9 @@
 		<Port>8443</Port>
 		<UrlPath>/XDS3/registry</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -196,9 +196,9 @@
 		<Port>443</Port>
 		<UrlPath>/registry/EnsLib.IHE.XDSb.Registry.Services.cls</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -212,9 +212,9 @@
 		<Port>443</Port>
 		<UrlPath>/XDSRegistry/services/xdsb</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -228,9 +228,9 @@
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/xdsb-registerdocuments</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -244,9 +244,9 @@
 		<Port>8443</Port>
 		<UrlPath>/Initiate-IHE/services/XDS_b_DocumentRegistry</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -262,9 +262,9 @@
 		<Port>84</Port>
 		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -278,9 +278,9 @@
 		<Port>51101</Port>
 		<UrlPath>/xds/registry</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>	
 	
@@ -294,9 +294,9 @@
 		<Port>9091</Port>
 		<UrlPath>/mosaix-iti42</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>	
 	
@@ -310,9 +310,9 @@
 		<Port>443</Port>
 		<UrlPath>/xds/xdsServerDllB.dll/register</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>	
 	

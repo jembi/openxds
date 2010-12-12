@@ -62,7 +62,8 @@
 	</StandardConnection>
 
 	<StandardConnection name="mesa_arr_udp">
-		<HostName>ihe-kudu.wustl.edu</HostName>
+		<!--HostName>ihe-kudu.wustl.edu</HostName-->
+		<HostName>localhost</HostName>
 		<Port>4001</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
@@ -71,15 +72,43 @@
 			<Entry name="IP" value="10.242.0.151" />
 			<Entry name="SITE" value="MISYS" />
 			<Entry name="SOURCE" value="MISYS" />
-			<Entry name="APPNAME" value="OpenXDS" />
+			<Entry name="APPNAME" value="OpenXDS1.2" />
 			<Entry name="FACILITY" value="MISYS" />
-			<!--Entry value="AENAME=ER_MISYS" name="AENAME"/-->
 		</PropertySet>
 		<PropertySet name="ParticipantObject">
 			<Entry name="PatientNameEncoding" value="HL7" />
 			<Entry name="PatientIdEncoding" value="HL7" />
 		</PropertySet>
 	</StandardConnection>
+	<SecureConnection name="mesa_arr_tls">
+		<HostName>localhost</HostName>
+		<Port>4003</Port>
+		<Property name="TYPE" value="TLS SYSLOG" />
+		<PropertySet name="localhost">
+			<Entry name="MACHINENAME" value="misys1" />
+			<Entry name="HOSTNAME" value="misys1" />
+			<Entry name="IP" value="10.243.0.151" />
+			<Entry name="SITE" value="MISYS" />
+			<Entry name="SOURCE" value="MISYS" />
+			<Entry name="APPNAME" value="OpenXDS1.2" />
+			<Entry name="FACILITY" value="MISYS" />
+		</PropertySet>
+		<PropertySet name="ParticipantObject">
+			<Entry name="PatientNameEncoding" value="HL7" />
+			<Entry name="PatientIdEncoding" value="HL7" />
+		</PropertySet>
+		<PropertySet name="MessageTransmission">
+		    <!--Defines message transmission mode: Asynchronous, Synchronous--> 
+			<Entry name="Asynchronous" value="true" />
+		    <!--Defines the time interval between two transmissions in milliseconds --> 
+			<Entry name="TransmissionInterval" value="10000" /> 
+		</PropertySet>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>		
+	</SecureConnection>
 	
 	<StandardConnection name="ibm_arr_udp">
 		<HostName>ibm1</HostName>
@@ -145,9 +174,9 @@
 			<Entry name="TransmissionInterval" value="10000" /> 
 		</PropertySet>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>		
 	</SecureConnection>
 	
@@ -211,31 +240,5 @@
 			<Entry name="PatientIdEncoding" value="HL7" />
 		</PropertySet>
 	</StandardConnection>
-
-	<SecureConnection name="ALLSCRIPTS-SECURE">
-		<HostName>localhost</HostName>
-		<Port>4300</Port>
-		<Property name="NAME" value="mesa-test" />
-		<Property name="URLPATH" value="./index" />
-		<PropertySet name="localhost">
-			<Entry name="MACHINENAME" value="misys1" />
-			<Entry name="HOSTNAME" value="misys1" />
-			<Entry name="IP" value="10.242.0.51" />
-			<Entry name="SITE" value="MISYS" />
-			<Entry name="SOURCE" value="MISYS" />
-			<Entry name="APPNAME" value="OpenXDS" />
-			<Entry name="FACILITY" value="MISYS" />
-		</PropertySet>
-		<PropertySet name="ParticipantObject">
-			<Entry name="PatientNameEncoding" value="HL7" />
-			<Entry name="PatientIdEncoding" value="HL7" />
-		</PropertySet>
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/mesa_keystore1_2009.p12</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/mesa_truststore_2009.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
 
 </Configuration>

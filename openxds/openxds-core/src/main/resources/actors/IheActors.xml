@@ -97,11 +97,13 @@
 	</Actor-->
 	
 	<!-- Audit Repository Actor -->
+	<!-- 
 	<Actor name="localaudit" type="SecureNode">
 		<Description>LOCAL AUDIT</Description>
 		<AuditTrail name="log4j_audittrail" />
-		<AuditTrail name="misys_arr_udp" />
+		<AuditTrail name="mesa_arr_udp" />
+		<AuditTrail name="mesa_arr_tls" />
 	</Actor>
-	
+	 -->
 
 </Configuration>

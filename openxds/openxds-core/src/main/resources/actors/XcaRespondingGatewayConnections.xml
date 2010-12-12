@@ -34,9 +34,9 @@
 		<!--The port-->
 		<Port>8041</Port>
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
@@ -62,9 +62,9 @@
 		<Port>443</Port>
 		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -79,9 +79,9 @@
 		<Port>4444</Port>		
 		<UrlPath>/XDS/xdsrepositoryb_Soap12</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -96,9 +96,9 @@
 		<Port>8443</Port>
 		<UrlPath>/ehealth/webservices/rev6/xdsb-storedquery</UrlPath>		
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
@@ -120,9 +120,9 @@
 		<Port>8090</Port>
 		<UrlPath>/axis2/services/DocumentRepositoryService</UrlPath>	
 		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
