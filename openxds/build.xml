@@ -76,6 +76,22 @@
         		<include name="openxds.*" />        		
         	</fileset>        	
         </copy> 
+		
+		<mkdir dir="${build.lib.dir}/temp"/>
+    	<unzip src="${build.web.dir}/WEB-INF/lib/openexchange-syslog-1.2-SNAPSHOT.jar" dest="${build.lib.dir}/temp">
+    	    <patternset>
+    	    	<include name="**/*.properties" />    
+    	    	<include name="**/*.xml"/>
+    	    </patternset>
+  		</unzip>
+ 				
+		<copy flatten="true" todir="${build.web.dir}/WEB-INF/classes" failonerror="false">
+        	<fileset dir="${build.lib.dir}/temp">
+        		<include name="logs*.properties" />    
+        		<include name="logs*.xml"/>
+        	</fileset>        	
+		</copy>
+    	<delete dir="${build.lib.dir}/temp"/>
     </target>
 	
 	<target name="create_run_jar" depends="copy_files">
