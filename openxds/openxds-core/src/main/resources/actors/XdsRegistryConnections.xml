@@ -22,45 +22,6 @@
 -->
 <!-- The XDS Registry Actor Connections -->
 <Configuration>
-	<StandardConnection name="xds-registry">
-		<!--The host name of the Registry Server-->
-		<HostName>localhost</HostName>
-		<!--The port-->
-		<Port>8010</Port>
-		
-		<Property name="sourceIds" value="1.3.6.1.4.1.21367.2010.1.2, 1.3.6.1.4.1.21367.2009.1.2"/>
-	
-        <Includefile name="XdsCodes.xml" />		
-		
-        <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHENA</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
-			<UniversalIdType>ISO</UniversalIdType>
-        </Identifier>
-	</StandardConnection>
-	<SecureConnection name="secure-xds-registry">
-		<!--The host name of the XDS Registry Server-->
-		<HostName>localhost</HostName>
-		<!--The port for TLS transaction-->
-		<Port>8011</Port>
-
-   		<Property name="sourceIds" value="1.3.6.1.4.1.21367.2010.1.2"/>
-   
-        <Includefile name="XdsCodes.xml" />		
-
-        <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHENA</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
-			<UniversalIdType>ISO</UniversalIdType>
-        </Identifier>
-
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
     <StandardConnection name="pix-registry">
         <!--The host name of the PIX Registry Server-->
         <HostName>localhost</HostName>
@@ -80,8 +41,8 @@
         <Property name="test" value="true"/>
 
         <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHENA</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
+			<NamespaceId>IHEBLUE</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.13.20.3000</UniversalId>
 			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>
 
@@ -103,9 +64,9 @@
              and receiving facility validation -->
         <Property name="test" value="true"/>
 
-	    <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHENA</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.2010.1.2.300</UniversalId>
+        <Identifier type="domain" name="GLOBAL">
+			<NamespaceId>IHEBLUE</NamespaceId>
+			<UniversalId>1.3.6.1.4.1.21367.13.20.3000</UniversalId>
 			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>
 

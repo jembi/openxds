@@ -22,30 +22,6 @@
 -->
 <!-- The XDS Repository Actor Connections -->
 <Configuration>
-	<StandardConnection name="xds-repository">
-		<!--The host name of the XDS Repository Server-->
-		<HostName>localhost</HostName>
-		<!--The port-->
-		<Port>8020</Port>
-       
-        <Includefile name="XdsCodes.xml" />		
-	</StandardConnection>
-
-	<SecureConnection name="secure-xds-repository">
-		<!--The host name of the XDS Repository Server-->
-		<HostName>localhost</HostName>
-		<!--The port for TLS transaction-->
-		<Port>8021</Port>
-
-        <Includefile name="XdsCodes.xml" />		
-
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
 	<StandardConnection name="xds-registry-client">
 		<!--The host name of the XDS Registry Server-->
 		<HostName>localhost</HostName>
