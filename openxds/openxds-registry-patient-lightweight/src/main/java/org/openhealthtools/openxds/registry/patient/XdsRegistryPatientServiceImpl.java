@@ -73,6 +73,9 @@ public class XdsRegistryPatientServiceImpl implements XdsRegistryPatientService
 					xdsRegistryPatientDao.updatePersonIdentifier(personIdentifier);
 				}
 			}else{
+				//Save a new patient, 
+				identifier.setDelete("N");
+				identifier.setMerge("N");
 				xdsRegistryPatientDao.savePersonIdentifier(identifier);
 			} 
 		}
