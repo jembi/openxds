@@ -26,9 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
@@ -118,6 +115,10 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 				XdsBroker.getInstance().getXdsRegistries());
 		getServletContext().setAttribute(XdsConstants.REPOSITORY_ACTORS, 
 				XdsBroker.getInstance().getXdsRepositories());
+		getServletContext().setAttribute(XdsConstants.RG_ACTORS, 
+				XdsBroker.getInstance().getXcaRG());
+		getServletContext().setAttribute(XdsConstants.IG_ACTORS, 
+				XdsBroker.getInstance().getXcaIG());
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {

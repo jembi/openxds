@@ -95,6 +95,23 @@ public class XdsBroker   {
 		return Collections.unmodifiableCollection(this.xdsRepositories);
 	}
 	
+	/**
+	 * Gets a collection of XCA Responding Gateway actors
+	 * 
+	 * @return the XCA Responding Gateway Collection
+	 */
+	public Collection<XdsRegistry> getXcaRG(){
+		return Collections.unmodifiableCollection(this.xcaRGs);
+	}
+	
+	/**
+	 * Gets a collection of XCA Initiating Gateway actors
+	 * 
+	 * @return the XCA Initiating Gateway Collection
+	 */
+	public Collection<XdsRepository> getXcaIG(){
+		return Collections.unmodifiableCollection(this.xcaIGs);
+	}
     /**
 	 * Registers a new XDS Registry.  This method
 	 * is typically called when an XDS Registry server is started.
