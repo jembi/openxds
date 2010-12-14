@@ -20,15 +20,24 @@
 
 package org.openhealthtools.openxds;
 
+
+import java.util.Collection;
+
+import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.SpringFacade;
+import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
+import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
+import org.openhealthtools.openxds.xca.api.XcaIG;
+import org.openhealthtools.openxds.xca.api.XcaRG;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -126,4 +135,142 @@ public class XdsFactory {
 		return (XdsRepositoryItem)getInstance().getBean("repositoryItem");
 	}
 
+	/**
+	 * Gets an appropriate repository actor.
+	 * 
+	 * @return
+	 */
+	public static XdsRepository getRepositoryActor() {
+		Collection<XdsRepository> actors = XdsBroker.getInstance().getXdsRepositories();
+		if (actors == null || actors.isEmpty()) {
+			return null;
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XdsRepository ret = null;
+		for (XdsRepository actor : actors) {
+			//The only client connection is Registry Connection
+			boolean isSecureActor = actor.getRegistryClientConnection() instanceof SecureConnection;
+			
+			ret = actor;
+			
+			boolean isSecure = isSecure();
+			if ( isSecure && isSecureActor ||
+			  	!isSecure && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
+	
+	/**
+	 * Gets an appropriate registry actor.
+	 * 
+	 * @param secure whether the registry actor needs to be secure
+	 * @return
+	 */
+	public static XdsRegistry getRegistryActor() {
+
+		Collection<XdsRegistry> actors = XdsBroker.getInstance().getXdsRegistries();
+		if (actors == null || actors.isEmpty()) {
+			return null;
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+		
+		//Select one that is most appropriate
+		XdsRegistry ret = null;
+		for (XdsRegistry actor : actors) {
+			
+			//The only client connection is PixRegistry Connection
+			boolean isSecureActor = actor.getPixRegistryConnection() instanceof SecureConnection;
+			
+			ret = actor;
+			
+			boolean isSecure = isSecure();
+			if ( isSecure && isSecureActor ||
+			  	!isSecure && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
+	
+	public static XcaRG getRGActor() {
+		Collection<XcaRG> actors = XdsBroker.getInstance().getXcaRG();
+
+		if (actors == null || actors.isEmpty() ) {
+			return null;
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XcaRG ret = null;
+		for (XcaRG actor : actors) {
+			boolean isRegistrySecure = actor.getRegistryClientConnection() instanceof SecureConnection;
+			boolean isReposiotrySecure = actor.getRepositoryClientConnection() instanceof SecureConnection;
+			//TODO: revisit the logics to verify the secure actor
+			boolean isSecureActor = isRegistrySecure && isReposiotrySecure;
+			
+			boolean isSecure = isSecure();
+			
+			ret = actor;
+			if ( isSecure && isSecureActor ||
+			  	!isSecure && !isSecureActor) {
+			    return actor;
+			}
+		} 
+		return ret;
+	}
+
+	public static XcaIG getIGActor() {
+		Collection<XcaIG> actors = XdsBroker.getInstance().getXcaIG();
+
+		if (actors == null || actors.isEmpty() ) {
+			return null;
+		}
+		
+		if (actors.size() == 1) { 
+			return actors.iterator().next();
+		}
+
+		//Select one that is most appropriate
+		XcaIG ret = null;
+		for (XcaIG actor : actors) {
+			boolean isRegistrySecure = actor.getRegistryClientConnection() instanceof SecureConnection;
+			boolean isReposiotrySecure = actor.getRepositoryClientConnection() instanceof SecureConnection;
+			//TODO: revisit the logics to verify the secure actor
+			boolean isSecureActor = isRegistrySecure && isReposiotrySecure;
+			
+			boolean isSecure = isSecure();
+
+			ret = actor;
+			if ( isSecure && isSecureActor ||
+				!isSecure && !isSecureActor) {
+				    return actor;
+				}
+		} 
+		return ret;
+	}
+	
+	private static boolean isSecure() {
+		boolean isSecure = MessageContext.getCurrentMessageContext().getTo()
+					.toString().indexOf("https://") != -1;		
+		
+		if (log.isInfoEnabled()) {
+			log.info(" is Secure = " + isSecure);
+		}
+		
+		return isSecure;
+	}
+	
 }

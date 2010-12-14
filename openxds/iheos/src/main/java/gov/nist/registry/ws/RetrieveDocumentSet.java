@@ -56,7 +56,7 @@ public class RetrieveDocumentSet extends XdsCommon {
 		transaction_type = RET_transaction;
 
 		try {
-    		actor = getRepositoryActor(); 
+			actor = XdsFactory.getRepositoryActor(); 
     		if (actor == null) {
     			throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
     		}

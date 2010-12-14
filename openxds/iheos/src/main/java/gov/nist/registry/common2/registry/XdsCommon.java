@@ -55,8 +55,8 @@ public class XdsCommon  {
 	
 	/**whether this transaction request is secure*/
 	protected boolean isHttps() {
-		String protocol = this.messageContext.getTransportIn().getName();
-		if (protocol.equalsIgnoreCase("https")) {
+		String protocol = this.messageContext.getIncomingTransportName();
+		if (protocol != null && protocol.equalsIgnoreCase("https")) {
 			return true;
 		} 
 		return false;
@@ -218,57 +218,5 @@ public class XdsCommon  {
 		return metadata;
 	}
 
-	protected XdsRepository getRepositoryActor() throws XdsInternalException {
-		AxisServlet server = (AxisServlet)this.messageContext.getTransportIn().getReceiver();
-		Collection<XdsRepository> actors = (Collection<XdsRepository>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.REPOSITORY_ACTORS);
-
-		if (actors == null || actors.isEmpty() ) {
-			throw new XdsInternalException("No XdsRepository Actor is configured.");
-		}
-		
-		if (actors.size() == 1) { 
-			return actors.iterator().next();
-		}
-
-		//Select one that is most appropriate
-		XdsRepository ret = null;
-		for (XdsRepository actor : actors) {
-			boolean isSecureActor = actor.getRegistryClientConnection() instanceof SecureConnection;
-			
-			ret = actor;
-			if ( isHttps() && isSecureActor ||
-			  	!isHttps() && !isSecureActor) {
-			    return actor;
-			}
-		} 
-		return ret;
-	}
- 
-	protected XdsRegistry getRegistryActor() throws XdsInternalException {
-		AxisServlet server = (AxisServlet)this.messageContext.getTransportIn().getReceiver();
-		Collection<XdsRegistry> actors = (Collection<XdsRegistry>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.REGISTRY_ACTORS);
-
-		if (actors == null || actors.isEmpty() ) {
-			throw new XdsInternalException("No XdsRepository Actor is configured.");
-		}
-		
-		if (actors.size() == 1) { 
-			return actors.iterator().next();
-		}
-
-		//Select one that is most appropriate
-		XdsRegistry ret = null;
-		for (XdsRegistry actor : actors) {
-			
-			boolean isSecureActor = actor.getPixRegistryConnection() instanceof SecureConnection;
-			
-			ret = actor;
-			if ( isHttps() && isSecureActor ||
-			  	!isHttps() && !isSecureActor) {
-			    return actor;
-			}
-		} 
-		return ret;
-	}
 	
 }

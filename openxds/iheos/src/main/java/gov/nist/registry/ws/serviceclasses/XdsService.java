@@ -49,7 +49,13 @@ public class XdsService extends AppendixV {
 			registerBEndpoint = "http://localhost:9080/" + XdsService.technicalFramework + "/services/xdsregistryb";
 	}
 
-	protected boolean isSecure() { return is_secure; }
+	protected boolean isSecure() { 
+		String protocol = getMessageContext().getIncomingTransportName();
+		if (protocol != null && protocol.equalsIgnoreCase("https")) {
+			return true;
+		} 
+		return false;
+	}
 
 	public void useXop() {
 		this.return_message_context = MessageContext.getCurrentMessageContext();

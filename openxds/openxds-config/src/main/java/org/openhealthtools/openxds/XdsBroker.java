@@ -22,6 +22,7 @@ package org.openhealthtools.openxds;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -32,7 +33,6 @@ import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.xca.api.XcaIG;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * This class presents a single global <code>XdsBroker</code>
@@ -100,7 +100,7 @@ public class XdsBroker   {
 	 * 
 	 * @return the XCA Responding Gateway Collection
 	 */
-	public Collection<XdsRegistry> getXcaRG(){
+	public Collection<XcaRG> getXcaRG(){
 		return Collections.unmodifiableCollection(this.xcaRGs);
 	}
 	
@@ -109,7 +109,7 @@ public class XdsBroker   {
 	 * 
 	 * @return the XCA Initiating Gateway Collection
 	 */
-	public Collection<XdsRepository> getXcaIG(){
+	public Collection<XcaIG> getXcaIG(){
 		return Collections.unmodifiableCollection(this.xcaIGs);
 	}
     /**

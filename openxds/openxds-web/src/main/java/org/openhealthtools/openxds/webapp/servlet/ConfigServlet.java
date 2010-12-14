@@ -110,15 +110,6 @@ import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
            log.fatal("Failed to load OpenXDS actor configuration", e);
 		}
 		
-		//register the actors with the servlet container. 
-		getServletContext().setAttribute(XdsConstants.REGISTRY_ACTORS, 
-				XdsBroker.getInstance().getXdsRegistries());
-		getServletContext().setAttribute(XdsConstants.REPOSITORY_ACTORS, 
-				XdsBroker.getInstance().getXdsRepositories());
-		getServletContext().setAttribute(XdsConstants.RG_ACTORS, 
-				XdsBroker.getInstance().getXcaRG());
-		getServletContext().setAttribute(XdsConstants.IG_ACTORS, 
-				XdsBroker.getInstance().getXcaIG());
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {

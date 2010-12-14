@@ -101,7 +101,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 		transaction_type = R_transaction;
 
 		try {
-			actor = getRegistryActor(); 
+			actor = XdsFactory.getRegistryActor(); 
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
 			}
