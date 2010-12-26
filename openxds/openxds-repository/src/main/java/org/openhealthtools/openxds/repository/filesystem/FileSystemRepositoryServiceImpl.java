@@ -176,13 +176,13 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 			}
 			
 			CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");
-			Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
+			Set<Pair<String,String>> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 			String targetFileMimeType = null;
 			File targetFile = null;
 			
 			//look up the file
-			for (Pair code : mimeTypes) {
-				String mimeType = (String)code._first;
+			for (Pair<String,String> code : mimeTypes) {
+				String mimeType = code.first;
 				String ext = mimeTypeCodeSet.getExt(mimeType, null);
 				File file = new File(repositoryRoot, documentUniqueId + "." + ext);
 				if (file.exists()) {
@@ -248,12 +248,12 @@ public class FileSystemRepositoryServiceImpl implements XdsRepositoryService {
 		}
 
 		CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");
-		Set<Pair> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
+		Set<Pair<String,String>> mimeTypes = mimeTypeCodeSet.getCodeSetKeys();
 		File targetFile = null;
 		
 		//look up the file
-		for (Pair code : mimeTypes) {
-			String mimeType = (String)code._first;
+		for (Pair<String,String> code : mimeTypes) {
+			String mimeType = code.first;
 			String ext = mimeTypeCodeSet.getExt(mimeType, null);
 			File file = new File(repositoryRoot, documentUniqueId + "." + ext);
 			if (file.exists()) {
