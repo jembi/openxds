@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
+import org.openhealthtools.openexchange.audit.TypeValuePair;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
@@ -424,7 +425,17 @@ public class AdhocQueryRequest extends XdsCommon {
 			queryObj.setQuery(aqr.toString());
 			if(isStoredQuery || isMPQ)
 				queryObj.setId(id);
-		
+			
+			//ITI CP 429
+			try {
+				String homeCommunityId = getHome(aqr);
+				if (homeCommunityId != null) {
+					queryObj.addDetail(new TypeValuePair("ihe:homeCommunityID", homeCommunityId));
+				}
+			}catch(Exception e) {
+				logger.error("Failed to get homeCommunityID", e);
+			}
+			
 			//Finally Log it.
 			auditLog.logRegistryQuery(source, dest, patientObjs, queryObj, isStoredQuery, isMPQ);
 	   }

@@ -82,12 +82,12 @@ public class CodeValidation {
 		mime_map = new HashMap<String, String>();
 		ext_map = new HashMap<String, String>();
 
-		Set<Pair> codes = mimeTypeCodeSet.getCodeSetKeys();
-		for (Pair code : codes) {
-			String ext = mimeTypeCodeSet.getExt((String)code._first, (String)code._second);
-			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + (String)code._first );
-			mime_map.put((String)code._first, ext);
-			ext_map.put(ext, (String)code._first);
+		Set<Pair<String,String>> codes = mimeTypeCodeSet.getCodeSetKeys();
+		for (Pair<String,String> code : codes) {
+			String ext = mimeTypeCodeSet.getExt(code.first, code.second);
+			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + code.first );
+			mime_map.put(code.first, ext);
+			ext_map.put(ext, code.first);
 		}
 	}
 
