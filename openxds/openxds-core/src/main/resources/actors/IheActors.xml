@@ -57,32 +57,27 @@
 	</Actor>
 
 	<!--The XCA Responding Gateway actor configuration-->
-	<!-- Actor name="xcarg" type="XcaRG">
+	<Actor name="xcarg" type="XcaRG">
 		<Description>XCA Responding Gateway</Description>
 		<Connection type="Registry" name="misys-registry"/>
 		<Connection type="Repository" name="misys-repository"/>
 	</Actor>
-	<Actor name="xcasrg" type="XcaRG">
+	<!-- Actor name="xcasrg" type="XcaRG">
 		<Description>Secure XCA Responding Gateway</Description>
 		<Connection type="Registry" name="misys-registry"/>
 		<Connection type="Repository" name="misys-repository"/>
 	</Actor-->
 	
 	<!--The XCA Initiating Gateway actor configuration-->
-	<!-- Actor name="xcaig" type="XcaIG">
+	<Actor name="xcaig" type="XcaIG">
 		<Description>XCA Initiating Gateway</Description>
 		<Connection type="Registry" name="local-registry"/>
 		<Connection type="Repository" name="local-repository"/>
 		<TransactionsSet type="RespondingGateway">
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-rg" retrieve="vangent-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-rg" retrieve="intel-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
+			<Transactions id="urn:oid:1.19.6.24.109.42.1.3" query="nist-rg-query" retrieve="nist-rg-retrieve"/>
 		</TransactionsSet>
 	</Actor>
-	<Actor name="xcasig" type="XcaIG">
+	<!-- Actor name="xcasig" type="XcaIG">
 		<Description>Secure XCA Initiating Gateway</Description>
 		<Connection type="Registry" name="local-secure-registry"/>
 		<Connection type="Repository" name="local-secure-repository"/>

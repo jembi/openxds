@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.XdsFactory;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.RetrieveAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;
@@ -31,10 +32,9 @@ public class XcaRepository extends RepositoryB {
 	private XcaIG actor = null;
 	
 	public XcaRepository() {
-		try {
-			actor = Ig.getActor();
-		}catch(XdsInternalException e) {
-			logger.fatal("Internal Error getting XcaIG actor configuration: " + e.getMessage(), e);
+		actor = XdsFactory.getIGActor();
+		if (actor == null) {
+			logger.fatal("Cannot find XcaIG actor configuration.");
 		}
 	}
 

@@ -41,33 +41,4 @@ public class Ig {
 	public void setMessageContextIn(MessageContext inMessage) {
 	}
 	
-	public static XcaIG getActor() throws XdsInternalException {
-		AxisServlet server = (AxisServlet)MessageContext.getCurrentMessageContext().getTransportIn().getReceiver();
-		Collection<XcaIG> actors = (Collection<XcaIG>)server.getServletConfig().getServletContext().getAttribute(XdsConstants.IG_ACTORS);
-
-		if (actors == null || actors.isEmpty() ) {
-			throw new XdsInternalException("No XcaIG Actor is configured.");
-		}
-		
-		if (actors.size() == 1) { 
-			return actors.iterator().next();
-		}
-
-		//Select one that is most appropriate
-		XcaIG ret = null;
-		for (XcaIG actor : actors) {
-			boolean isRegistrySecure = actor.getRegistryClientConnection() instanceof SecureConnection;
-			boolean isReposiotrySecure = actor.getRepositoryClientConnection() instanceof SecureConnection;
-			//TODO: revisit the logics to verify the secure actor
-			boolean isSecureActor = isRegistrySecure && isReposiotrySecure;
-			
-			boolean isSecure = MessageContext.getCurrentMessageContext().getTo().toString().indexOf("https://") != -1;
-			ret = actor;
-			if ( isSecure && isSecureActor ||
-				!isSecure && !isSecureActor) {
-				    return actor;
-				}
-		} 
-		return ret;
-	}
 }

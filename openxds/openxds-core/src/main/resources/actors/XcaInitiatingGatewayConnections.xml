@@ -22,34 +22,16 @@
 -->
 <!-- The XDS Initiating Gateway Actor Connections -->
 <Configuration>
-	<StandardConnection name="xca-ig">
-		<!--The host name of the initiating Gateway Server-->
-		<HostName>localhost</HostName>
-		<!--The port-->
-		<Port>8030</Port>
-	</StandardConnection>
-	<SecureConnection name="xca-secure-ig">
-		<!--The host name of the initiating Gateway Server-->
-		<HostName>localhost</HostName>
-		<!--The port-->
-		<Port>8031</Port>
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
 	<!-- The Registry and Repository in the local community -->
 	<StandardConnection name="local-registry">
 		<HostName>localhost</HostName>
 		<Port>8010</Port>
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<UrlPath>/openxds/services/DocumentRegistry</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="local-secure-registry">
 		<HostName>localhost</HostName>
 		<Port>8011</Port>
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<UrlPath>/openxds/services/DocumentRegistry</UrlPath>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -58,13 +40,13 @@
 	</SecureConnection>
 	<StandardConnection name="local-repository">
 		<HostName>localhost</HostName>
-		<Port>8020</Port>
-		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
+		<Port>8010</Port>
+		<UrlPath>/openxds/services/DocumentRepository</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="local-secure-repository">
 		<HostName>localhost</HostName>
-		<Port>8021</Port>
-		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
+		<Port>8011</Port>
+		<UrlPath>/openxds/services/DocumentRepository</UrlPath>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -72,13 +54,16 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
-	<StandardConnection name="xca-rg-client">
-		<!--The host name of the Responding Gateway Server-->
-		<HostName>198.160.211.53</HostName>
-		<!--The port-->
-		<Port>8040</Port>
-		<!--The URL of the XCA Responding Gateway web services -->
-		<UrlPath>/axis2/services/rg</UrlPath>				
+ 	<!-- NIST 12300 Test -->
+	<StandardConnection name="nist-rg-query">
+		<HostName>ihexds.nist.gov</HostName>
+		<Port>9080</Port>
+		<UrlPath>/tf6/services/test12300</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="nist-rg-retrieve">
+		<HostName>ihexds.nist.gov</HostName>
+		<Port>9080</Port>
+		<UrlPath>/tf6/services/test12300</UrlPath>		
 	</StandardConnection>
 	
 <!--=========================================================================-->

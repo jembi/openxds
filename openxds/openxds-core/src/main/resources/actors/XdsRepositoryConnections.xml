@@ -46,6 +46,29 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
+	<StandardConnection name="nist-xds-registry">
+		<!--The host name of the XDS Registry Server-->
+		<HostName>ihexds.nist.gov</HostName>
+		<!--The port-->
+		<Port>9080</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/tf6/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="secure-nist-xds-registry">
+		<!--The host name of the XDS Registry Server-->
+		<HostName>ihexds.nist.gov</HostName>
+		<!--The port-->
+		<Port>9085</Port>
+		<!--The URL of the XDS Registry web services -->
+		<UrlPath>/tf6/services/xdsregistryb</UrlPath>		
+
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
 	<StandardConnection name="ibm-xds-registry-client">
 		<!--The host name of the XDS Registry Server-->
 		<HostName>xds-ibm.lgs.com</HostName>
