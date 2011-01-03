@@ -4,7 +4,7 @@ import gov.nist.registry.common2.exception.XdsConfigurationException;
 import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 public class Repository {

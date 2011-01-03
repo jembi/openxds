@@ -35,7 +35,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.openexchange.utils.OMUtil;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 
 /**

@@ -27,7 +27,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.TransportHeaders;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openexchange.syslog.Log;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 

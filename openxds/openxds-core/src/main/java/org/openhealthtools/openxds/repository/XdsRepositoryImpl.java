@@ -27,7 +27,7 @@ import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openxds.BaseIheActor;
-import org.openhealthtools.openxds.XdsConstants;
+import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
 

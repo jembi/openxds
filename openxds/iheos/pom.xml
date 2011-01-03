@@ -6,7 +6,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
-  <artifactId>iheos</artifactId>
+  <artifactId>openxds-iheos</artifactId>
   <name>OpenXDS - NIST Iheos</name>
   <packaging>jar</packaging>
 
@@ -16,6 +16,11 @@
 	    <artifactId>servlet-api</artifactId>
 	    <version>${servlet.version}</version>
 	</dependency>  
+  	<dependency>
+  		<groupId>org.openhealthtools.openexchange</groupId>
+  		<artifactId>openexchange-audit</artifactId>
+		<version>${openexchange.version}</version>
+  	</dependency>
    	<dependency>
  		<groupId>org.openhealthtools.openxds</groupId>
  		<artifactId>openxds-api</artifactId>
@@ -23,28 +28,17 @@
  	</dependency>    
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>apache-axis2</artifactId>
-  		<version>${project.version}</version>
-  		<type>pom</type>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>common-utils</artifactId>
-  		<version>${project.version}</version>
-  	</dependency>
-	<dependency>
-  		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>openxds-repository</artifactId>
   		<version>${project.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>openxds-registry-adapter-omar</artifactId>
+  		<artifactId>openxds-registry-omaradapter</artifactId>
   		<version>${project.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>openxds-registry-patient-lightweight</artifactId>
+  		<artifactId>openxds-registry-patientlite</artifactId>
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>

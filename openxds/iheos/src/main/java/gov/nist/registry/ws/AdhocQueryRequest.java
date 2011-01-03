@@ -44,7 +44,7 @@ import org.openhealthtools.openexchange.audit.TypeValuePair;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxua.api.XuaException;
 
@@ -69,7 +69,7 @@ public class AdhocQueryRequest extends XdsCommon {
 				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
 			}
 			
-			auditLog = actor.getAuditTrail();	
+			auditLog = (IheAuditTrail)actor.getAuditTrail();	
 		} catch (XdsInternalException e) {
             logger.fatal(logger_exception_details(e));
 		} 

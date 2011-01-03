@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.openhealthtools.common.utils.AssigningAuthorityUtil;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.datamodel.Address;
 import org.openhealthtools.openexchange.datamodel.DriversLicense;
@@ -40,6 +39,7 @@ import org.openhealthtools.openexchange.datamodel.SharedEnums.AddressType;
 import org.openhealthtools.openexchange.datamodel.SharedEnums.SexType;
 import org.openhealthtools.openexchange.utils.DateUtil;
 import org.openhealthtools.openexchange.utils.StringUtil;
+import org.openhealthtools.openxds.common.AssigningAuthorityUtil;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;

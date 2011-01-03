@@ -7,7 +7,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openhealthtools.openxds</groupId>
-	<artifactId>openxds-config</artifactId>
+	<artifactId>openxds-common</artifactId>
 	<name>OpenXDS - Configuration</name>
 	<packaging>jar</packaging>
 	<dependencies>

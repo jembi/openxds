@@ -119,7 +119,7 @@
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
-            <artifactId>iheos</artifactId>
+            <artifactId>openxds-iheos</artifactId>
             <version>${project.version}</version>
             <exclusions>
             	<exclusion>
@@ -142,7 +142,7 @@
         </dependency>
         <dependency>
             <groupId>org.openhealthtools.openxds</groupId>
-            <artifactId>openxds-config</artifactId>
+            <artifactId>openxds-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -33,6 +33,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openxds.common.XdsConstants;
 
 /**
  * This class manages the stand alone XDS server startup.

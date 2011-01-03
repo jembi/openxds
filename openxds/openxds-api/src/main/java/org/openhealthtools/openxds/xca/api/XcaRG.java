@@ -20,7 +20,7 @@
 
 package org.openhealthtools.openxds.xca.api;
 
-import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.openexchange.actorconfig.IheActor;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 

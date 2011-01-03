@@ -44,7 +44,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.utils.AssigningAuthorityUtil;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
@@ -57,8 +56,9 @@ import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openexchange.utils.hl7.HL7;
-import org.openhealthtools.openxds.XdsConstants;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.AssigningAuthorityUtil;
+import org.openhealthtools.openxds.common.XdsConstants;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
@@ -106,7 +106,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
 			}
 			
-			auditLog = actor.getAuditTrail();	
+			auditLog = (IheAuditTrail)actor.getAuditTrail();	
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 			
 			loadSourceIds();

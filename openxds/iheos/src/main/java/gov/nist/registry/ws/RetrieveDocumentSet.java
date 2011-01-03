@@ -35,7 +35,7 @@ import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openexchange.utils.Pair;
 import org.openhealthtools.openexchange.utils.Triple;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
@@ -63,7 +63,7 @@ public class RetrieveDocumentSet extends XdsCommon {
     			throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
     		}
     		
-            auditLog = actor.getAuditTrail();
+            auditLog = (IheAuditTrail)actor.getAuditTrail();
             init(new RetrieveMultipleResponse(), xds_version, messageContext);
         } catch (XdsInternalException e) {
             logger.fatal(logger_exception_details(e));

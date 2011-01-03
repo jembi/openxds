@@ -17,7 +17,7 @@
  *    Misys Open Source Solutions - initial API and implementation
  *    -
  */
-package org.openhealthtools.openxds;
+package org.openhealthtools.openxds.common;
 
 /**
  * This class defines the constants for XDS.

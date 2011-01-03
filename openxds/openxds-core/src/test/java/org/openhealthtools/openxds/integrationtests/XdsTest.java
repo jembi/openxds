@@ -61,7 +61,7 @@ import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openexchange.utils.hl7.HL7;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
 import ca.uhn.hl7v2.app.Connection;

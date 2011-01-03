@@ -25,12 +25,12 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.ConnectionUtil;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
 

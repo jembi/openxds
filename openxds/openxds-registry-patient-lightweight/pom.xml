@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>openxds-registry-patient-lightweight</artifactId>
+    <artifactId>openxds-registry-patientlite</artifactId>
     <packaging>jar</packaging>
     <name>OpenXDS - Registry Light Weight Patient</name>
 
@@ -101,6 +101,16 @@
             	</exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openxds</groupId>
+            <artifactId>openxds-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	    <dependency>
+            <groupId>org.openhealthtools.openpixpdq</groupId>
+            <artifactId>openpixpdq-api</artifactId>
+            <version>${openpixpdq.version}</version>
+        </dependency>
 	<dependency>
 		<groupId>org.aspectj</groupId>
 		<artifactId>aspectjrt</artifactId>
@@ -116,11 +126,6 @@
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectj.version}</version>
 		</dependency>
-	    <dependency>
-            <groupId>org.openhealthtools.openpixpdq</groupId>
-            <artifactId>openpixpdq-api</artifactId>
-            <version>${openpixpdq.version}</version>
-        </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -217,16 +222,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openhealthtools.openxds</groupId>
-            <artifactId>openxds-config</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openhealthtools.openxds</groupId>
-            <artifactId>common-utils</artifactId>
-            <version>${project.version}</version>
         </dependency>
         
     </dependencies>

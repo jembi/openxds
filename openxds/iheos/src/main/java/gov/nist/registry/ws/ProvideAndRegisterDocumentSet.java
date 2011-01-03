@@ -40,7 +40,6 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
@@ -50,7 +49,8 @@ import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.LogMessage;
 import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.ConnectionUtil;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
 import org.openhealthtools.openxds.repository.api.RepositoryRequestContext;
 import org.openhealthtools.openxds.repository.api.XdsRepository;
@@ -90,7 +90,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 			if (registryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XdsRepository Registry connection configuration.");			
 			}
-			auditLog = actor.getAuditTrail();	
+			auditLog = (IheAuditTrail)actor.getAuditTrail();	
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
 		} catch (XdsInternalException e) {
             logger.fatal(logger_exception_details(e));

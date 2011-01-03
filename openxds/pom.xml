@@ -361,16 +361,14 @@
     </dependencies>
     
     <modules>
-        <module>apache-axis2</module>
-        <module>common-utils</module>
-        <module>openxds-config</module>
-        <module>iheos</module>
+        <module>openxds-common</module>
+        <module>openxds-iheos</module>
         <module>openxds-api</module>
         <module>openxds-core</module>
-        <module>openxds-registry-adapter-omar</module>
+        <module>openxds-registry-omaradapter</module>
         <module>openxds-repository</module>
         <module>openxds-web</module>
-    	<module>openxds-registry-patient-lightweight</module>
+    	<module>openxds-registry-patientlite</module>
     </modules>
 
     <reporting>

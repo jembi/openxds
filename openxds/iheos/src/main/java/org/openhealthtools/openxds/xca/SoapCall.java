@@ -26,8 +26,8 @@ import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openxds.common.ConnectionUtil;
 
 /**
  *

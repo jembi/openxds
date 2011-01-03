@@ -18,7 +18,7 @@
  *    -
  */
 
-package org.openhealthtools.openxds;
+package org.openhealthtools.openxds.common;
 
 
 import java.util.Collection;

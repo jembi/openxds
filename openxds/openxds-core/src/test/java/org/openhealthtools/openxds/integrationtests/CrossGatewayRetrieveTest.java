@@ -47,7 +47,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.utils.OMUtil;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

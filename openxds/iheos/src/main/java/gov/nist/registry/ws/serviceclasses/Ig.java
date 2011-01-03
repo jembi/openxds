@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.SecureConnection;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openxds.XdsConstants;
+import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.xca.api.XcaIG;
 

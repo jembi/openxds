@@ -14,9 +14,9 @@
   
   <dependencies>
   	<dependency>
-  		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>apache-axis2</artifactId>
-  		<version>${project.version}</version>
+  		<groupId>org.openhealthtools.openexchange</groupId>
+  		<artifactId>openexchange-axis2</artifactId>
+  		<version>${openexchange.version}</version>
   		<type>pom</type>
   		<exclusions>
   			<exclusion>
@@ -24,11 +24,6 @@
   				<groupId>javax.servlet</groupId>
   			</exclusion>
   		</exclusions>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>common-utils</artifactId>
-  		<version>${project.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.openhealthtools.openexchange</groupId>

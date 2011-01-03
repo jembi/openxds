@@ -32,8 +32,7 @@ import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openxds.XdsBroker;
-import org.openhealthtools.openxds.XdsConstants;
+import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.configuration.XdsConfigurationLoader;
 
 /**

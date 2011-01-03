@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.common.utils.AssigningAuthorityUtil;
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.datamodel.MessageHeader;
@@ -35,7 +34,8 @@ import org.openhealthtools.openpixpdq.api.MessageStore;
 import org.openhealthtools.openpixpdq.common.PixPdqException;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7Header;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7v231;
-import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.common.AssigningAuthorityUtil;
+import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientContext;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
