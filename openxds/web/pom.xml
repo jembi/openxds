@@ -236,7 +236,7 @@
              				</includes>
             			</resource>
 						<resource>
-							<directory>./openxds-config/target/classes/</directory>
+							<directory>./common/target/classes/</directory>
 							<!-- the destination directory for this resources -->
 							<targetPath>WEB-INF/classes</targetPath>
 							<includes>
@@ -248,7 +248,7 @@
 				            </excludes>			
 						</resource>
 						<resource>
-							<directory>./openxds-registry-adapter-omar/target/classes/</directory>
+							<directory>./registry-omaradapter/target/classes/</directory>
 							<targetPath>WEB-INF/classes</targetPath>
 							<includes>
 				                <include>omar.properties</include>
@@ -263,7 +263,7 @@
 				            </includes>		
 						</resource>
 						<resource>
-							<directory>./openxds-core/target/classes/</directory>
+							<directory>./core/target/classes/</directory>
 							<targetPath>WEB-INF/classes/conf</targetPath>
 							<includes>
 				                <include>actors/</include>

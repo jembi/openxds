@@ -31,7 +31,7 @@
             </fileset>
          </copy> 	
        <!-- <copy todir="${build.conf.dir}">
-            <fileset dir="${openxds.dir}/openxds-core/target/classes/">
+            <fileset dir="${openxds.dir}/core/target/classes/">
 				<include name="actors/**" />
             </fileset>
             <fileset dir="${openxds.dir}/iheos/target/classes/">
@@ -39,12 +39,12 @@
             </fileset>
         </copy>--> 	
         <copy flatten="true" todir="${build.dir}">
-            <fileset dir="${openxds.dir}/openxds-config/target/classes/">
+            <fileset dir="${openxds.dir}/common/target/classes/">
 				<include name="commons-logging.properties" />
 				<include name="log4j.xml" />
 				<include name="jetty.properties" />
             </fileset>
-            <!--<fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+            <!--<fileset dir="${openxds.dir}/registry-omaradapter/target/classes/">
 				<include name="omar.properties" />
 				<include name="repository.jdbc.cfg.xml" />
             </fileset>-->
@@ -58,12 +58,12 @@
     	   		</fileset>
     	</copy>
 		<copy todir="${build.sql.dir}" >
-			<fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+			<fileset dir="${openxds.dir}/registry-omaradapter/target/classes/">
 				<include name="*.sql" />
 			</fileset>
 		</copy>    	
         <copy todir="${build.web.dir}">
-            <fileset dir="${openxds.dir}/openxds-web/target/openxds-web/">
+            <fileset dir="${openxds.dir}/web/target/openxds-web/">
 				<include name="**/*" />
             	<!--exclude-->
 				<exclude name="WEB-INF/lib/jsp*" />
@@ -116,24 +116,21 @@
                 <attribute name="Main-Class" value="org.openhealthtools.openxds.XdsServer"/>
                 <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
             </manifest>
-            <fileset dir="${openxds.dir}/common-utils/target/classes">
-            	<include name="org/**" />
-            </fileset> 
             <fileset dir="${openxds.dir}/iheos/target/classes">
             	<include name="org/**" />
                 <include name="gov/**" />
             </fileset>
-		    <fileset dir="${openxds.dir}/openxds-api/target/classes">
+		    <fileset dir="${openxds.dir}/api/target/classes">
             	<include name="org/**" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-config/target/classes/">
+            <fileset dir="${openxds.dir}/common/target/classes/">
 				<include name="org/**" />
 				<include name="applicationContext.xml" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-core/target/classes/">
+            <fileset dir="${openxds.dir}/core/target/classes/">
 				<include name="org/**" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes">
+            <fileset dir="${openxds.dir}/registry-omaradapter/target/classes">
             	<include name="org/**" />
                 <include name="ehcache.xml" />
                 <include name="externalidentifier.hbm.xml" />
@@ -142,15 +139,15 @@
                 <include name="repository.datasource.cfg.xml" />
                 <include name="repository.hbm.xml" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-registry-patient-lightweight/target/classes">
+            <fileset dir="${openxds.dir}/registry-patientlite/target/classes">
             	<include name="org/**" />
                 <include name="personidentifier.hbm.xml" />
             </fileset>	
-            <fileset dir="${openxds.dir}/openxds-repository/target/classes">
+            <fileset dir="${openxds.dir}/repository/target/classes">
             	<include name="org/**" />
                 <include name="openxds.repository.hbm.xml" />
             </fileset>
-            <fileset dir="${openxds.dir}/openxds-web/target/classes/">
+            <fileset dir="${openxds.dir}/web/target/classes/">
 				<include name="org/**" />
             </fileset>
         </jar>
