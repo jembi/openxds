@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.openhealthtools.openexchange.actorconfig.IActorDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IBaseDescription;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 
@@ -37,18 +38,18 @@ public class AssigningAuthorityUtil {
     private static final Logger log = Logger.getLogger(AssigningAuthorityUtil.class);
 
     /**
-     * Reconciles authority with the ConnectionDescritpion configuration. An authority
+     * Reconciles authority with the ConnectionDescritpion or ActorDescription configuration. An authority
      * can have NameSpace and/or UniversalId/UniversalIdType. For example, in the data source such as
      * database, if an authority is represented by NameSpace only, while in the xml configuration, the authority is configured
      * with both NameSpace and UnviersalId/UniversalIdType. The authority in the datasource has to be mapped
      * to the authority configured in the XML files.
      *
      * @param authority The authority
-     * @param connection
+     * @param description
      * @return The authority according the configuration
      */
-    public static Identifier reconcileIdentifier(Identifier authority, IConnectionDescription connection) {
-        List<Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+    public static Identifier reconcileIdentifier(Identifier authority, IBaseDescription description) {
+        List<Identifier> identifiers = description.getAllIdentifiersByType("domain");
         for (Identifier identifier : identifiers) {
             if ( identifier.equals(authority) ) {
                 return identifier;
@@ -57,41 +58,18 @@ public class AssigningAuthorityUtil {
         //no identifier is found, just return the original authority
         return authority;
     }
-    
-    /**
-     * Reconciles authority with the ActorDescritpion configuration. An authority
-     * can have NameSpace and/or UniversalId/UniversalIdType. For example, in the data source such as
-     * database, if an authority is represented by NameSpace only, while in the xml configuration, the authority is configured
-     * with both NameSpace and UnviersalId/UniversalIdType. The authority in the datasource has to be mapped
-     * to the authority configured in the XML files.
-     *
-     * @param authority The authority
-     * @param actorDescription the actor description
-     * @return The authority according the configuration
-     */
-    public static Identifier reconcileIdentifier(Identifier authority, IActorDescription actorDescription) {
-        List<Identifier> identifiers = actorDescription.getAllIdentifiersByType("domain");
-        for (Identifier id : identifiers) {
-            if ( id.equals(authority) ) {
-                return id;
-            }
-        }
-        //no identifier is found, just return the original authority
-        return authority;
-    }
 
     /**
-     * Validates whether an ID domain is valid against the connection configuration.
+     * Validates whether an ID domain is valid against the actor/connection description configuration.
      *
      * @param id the feed or request ID domain to be validated
-     * @param connection
-     * @param adapter the adapter from where to get the domains
+     * @param description
      * @return <code>true</code> if the idDomain is valid.
      */
-    public static boolean validateDomain(Identifier id, IConnectionDescription connection) {
+    public static boolean validateDomain(Identifier id, IBaseDescription description) {
          if (id == null) return  false;
 
-         List<Identifier> identifiers = connection.getAllIdentifiersByType("domain");
+         List<Identifier> identifiers = description.getAllIdentifiersByType("domain");
          for (Identifier identifier : identifiers) {
         	    
              if ( identifier.equals(id) ) {

@@ -28,24 +28,16 @@
         <!--The port for PIX Feed transaction-->
         <Port>3602</Port>
         <Identifier name="ReceivingApplication">
-            <NamespaceId>PAT_IDENTITY_X_REF_MGR_MISYS</NamespaceId>
-            <!-- NamespaceId>MESA_XREF</NamespaceId-->
+            <NamespaceId>OpenXDS</NamespaceId>
         </Identifier>
         <Identifier name="ReceivingFacility">
-            <NamespaceId>ALLSCRIPTS</NamespaceId>
-            <!-- NamespaceId>XYZ_HOSPITAL</NamespaceId-->
-        </Identifier>
-     
-        <!-- If test is true, it will by pass the receiving application
-             and receiving facility validation -->
-        <Property name="test" value="true"/>
-
-        <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHEBLUE</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.13.20.3000</UniversalId>
-			<UniversalIdType>ISO</UniversalIdType>
+            <NamespaceId>MOSS</NamespaceId>
         </Identifier>
 
+		<PropertySet name="Validation">
+	        <Entry name="ValidateReceivingApplication" value="true"/>
+	        <Entry name="ValidateReceivingFacility" value="true"/>
+		</PropertySet>     
     </StandardConnection>
 
     <SecureConnection name="secure-pix-registry">
@@ -54,21 +46,16 @@
         <!--The port for PIX TLS transaction-->
         <Port>3612</Port>
         <Identifier name="ReceivingApplication">
-            <NamespaceId>PAT_IDENTITY_X_REF_MGR_MISYS_TLS</NamespaceId>
+            <NamespaceId>OpenXDS</NamespaceId>
         </Identifier>
         <Identifier name="ReceivingFacility">
-            <NamespaceId>ALLSCRIPTS</NamespaceId>
+            <NamespaceId>MOSS</NamespaceId>
         </Identifier>
      
-        <!-- If test is true, it will by pass some receiving application
-             and receiving facility validation -->
-        <Property name="test" value="true"/>
-
-        <Identifier type="domain" name="GLOBAL">
-			<NamespaceId>IHEBLUE</NamespaceId>
-			<UniversalId>1.3.6.1.4.1.21367.13.20.3000</UniversalId>
-			<UniversalIdType>ISO</UniversalIdType>
-        </Identifier>
+		<PropertySet name="Validation">
+	        <Entry name="ValidateReceivingApplication" value="true"/>
+	        <Entry name="ValidateReceivingFacility" value="true"/>
+		</PropertySet>     
 
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>

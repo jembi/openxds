@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openexchange.actorconfig.Configuration;
 import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.datamodel.MessageHeader;
@@ -430,7 +431,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	throws HL7Exception {
 		Identifier domain = patientId.getAssigningAuthority();
 		boolean domainOk = AssigningAuthorityUtil.validateDomain(
-				domain, connection);
+				domain, actor.getActorDescription());
 		if (!domainOk) {
 			HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
 			//segmentId=PID, sequence=1, fieldPosition=3, fieldRepetition=1,componentNubmer=4
@@ -460,28 +461,31 @@ class PixFeedHandler extends BaseHandler implements Application {
 			String incomingMessageId) 
 		    throws HL7Exception, PixPdqException
 	{
-		//In case of tests, don't validate receiving application and facility,
-		//It is not easy to switch to different receiving applications and facilities
-		boolean  isTest = Boolean.parseBoolean(connection.getProperty("test"));
-		if (isTest) return true;
-	
-		//We first need to validate ReceivingApplication and ReceivingFacility.
+		//Validate ReceivingApplication and ReceivingFacility.
 		//Currently we are not validating SendingApplication and SendingFacility
-		if (!receivingApplication.equals(expectedApplication)) {
-			HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
-			//segmentId=MSH, sequence=1, fieldPosition=5, fieldRepetition=1, componentNubmer=1
-			HL7v231.populateERR(reply.getERR(), "MSH", "1", "5", "1", "1",
-					null, "Unknown Receiving Application");
-			return false;
+		try {
+			String validateRecApp = Configuration.getPropertySetValue(connection, "Validation", "ValidateReceivingApplication", false);
+			boolean  isValidateRecApp = Boolean.parseBoolean(validateRecApp);
+			if (isValidateRecApp && !receivingApplication.equals(expectedApplication)) {
+				HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
+				//segmentId=MSH, sequence=1, fieldPosition=5, fieldRepetition=1, componentNubmer=1
+				HL7v231.populateERR(reply.getERR(), "MSH", "1", "5", "1", "1",
+						null, "Unknown Receiving Application");
+				return false;
+			}
+			
+			String validateRecFac = Configuration.getPropertySetValue(connection, "Validation", "ValidateReceivingFacility", false);
+			boolean  isValidateRecFac = Boolean.parseBoolean(validateRecFac);
+			if (isValidateRecFac && !receivingFacility.equals(expectedFacility)) {
+				HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
+				//segmentId=MSH, sequence=1, fieldPosition=6, fieldRepetition=1, componentNubmer=1
+				HL7v231.populateERR(reply.getERR(), "MSH", "1", "6", "1", "1",
+						null, "Unknown Receiving Facility");
+				return false;
+			}
+		}catch(IheConfigurationException e) {
+			throw new PixPdqException(e);
 		}
-		if (!receivingFacility.equals(expectedFacility)) {
-			HL7v231.populateMSA(reply.getMSA(), "AE", incomingMessageId);
-			//segmentId=MSH, sequence=1, fieldPosition=6, fieldRepetition=1, componentNubmer=1
-			HL7v231.populateERR(reply.getERR(), "MSH", "1", "6", "1", "1",
-					null, "Unknown Receiving Facility");
-			return false;
-		}
-		
 		return true;
 	}
 
@@ -585,7 +589,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	private Patient getPatient(Message msgIn) throws PixPdqException,HL7Exception {
 		HL7v231ToBaseConvertor convertor = null;
 		if (msgIn.getVersion().equals("2.3.1")) {
-			convertor = new HL7v231ToBaseConvertor(msgIn, connection);
+			convertor = new HL7v231ToBaseConvertor(msgIn, actor.getActorDescription());
 		} else {
 			throw new PixPdqException("Unexpected HL7 version");
 		}
@@ -627,7 +631,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 	 */
 	private Patient getMrgPatient(Message msgIn) throws PixPdqException, HL7Exception {
 		HL7v231ToBaseConvertor convertor = null;		
-		convertor = new HL7v231ToBaseConvertor(msgIn, connection);
+		convertor = new HL7v231ToBaseConvertor(msgIn, actor.getActorDescription());
 		Patient patientDesc = new Patient();
 		patientDesc.setPatientIds(convertor.getMrgPatientIds());
 		patientDesc.setPatientName(convertor.getMrgPatientName());

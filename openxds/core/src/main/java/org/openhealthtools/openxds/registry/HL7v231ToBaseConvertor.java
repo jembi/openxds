@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.datamodel.Address;
 import org.openhealthtools.openexchange.datamodel.DriversLicense;
 import org.openhealthtools.openexchange.datamodel.Identifier;
@@ -77,10 +77,10 @@ public class HL7v231ToBaseConvertor{
     private MRG mrg;
     private ADT_A39_PIDPD1MRGPV1 pidpd1mrgpv1;
 
-    IConnectionDescription connection;
+    IActorDescription description;
 
-    public HL7v231ToBaseConvertor(Message in, IConnectionDescription connection) {
-    	this.connection = connection;
+    public HL7v231ToBaseConvertor(Message in, IActorDescription description) {
+    	this.description = description;
     	try {
         	msh = (MSH)in.get("MSH");
 
@@ -158,7 +158,7 @@ public class HL7v231ToBaseConvertor{
     		Identifier assignAuth= new Identifier(cx.getAssigningAuthority().getNamespaceID().getValue(),cx.getAssigningAuthority().getUniversalID().getValue(),cx.getAssigningAuthority().getUniversalIDType().getValue());
             Identifier assignFac =new Identifier(cx.getAssigningFacility().getNamespaceID().getValue(),cx.getAssigningFacility().getUniversalID().getValue(),cx.getAssigningFacility().getUniversalIDType().getValue());
     		//Need to reconcile assigning authority to fill up any missing components
-            Identifier reconciledAssignAuth = AssigningAuthorityUtil.reconcileIdentifier(assignAuth, connection);
+            Identifier reconciledAssignAuth = AssigningAuthorityUtil.reconcileIdentifier(assignAuth, description);
             identifier.setAssigningAuthority(reconciledAssignAuth);
         	identifier.setAssigningFacility(assignFac);
     		identifier.setId(cx.getID().getValue());
@@ -185,7 +185,7 @@ public class HL7v231ToBaseConvertor{
             Identifier assignFac = new Identifier(cx.getAssigningFacility().getNamespaceID().getValue(),cx.getAssigningFacility().getUniversalID().getValue(),cx.getAssigningFacility().getUniversalIDType().getValue());
 
     		//Need to reconcile assigning authority to fill up any missing components
-            Identifier reconciledAssignAuth = AssigningAuthorityUtil.reconcileIdentifier(assignAuth, connection);
+            Identifier reconciledAssignAuth = AssigningAuthorityUtil.reconcileIdentifier(assignAuth, description);
             identifier.setAssigningAuthority(reconciledAssignAuth);
         	identifier.setAssigningFacility(assignFac);
     		identifier.setId(cx.getID().getValue());

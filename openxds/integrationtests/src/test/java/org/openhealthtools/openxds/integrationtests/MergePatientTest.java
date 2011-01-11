@@ -92,26 +92,27 @@ public class MergePatientTest extends XdsTest {
 		String id = Integer.toString(new Random().nextInt());
 		String survivingPatientId = "S" + id ;
 		String subsumedPatientId = "N" + id;
+		String aa = assigningAuthority.replace("&amp;", "&");
         //1. Registry a surviving patient
-		String msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|XDSb_REG_MISYS|MISYS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
+		String msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|OpenXDS|MOSS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
 	      "EVN||20090512132906-0300\r" +
-	      "PID|||"+survivingPatientId+"^^^" + assigningAuthority + "||IDENTITY^REGISTRY^S||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
+	      "PID|||"+survivingPatientId+"^^^" + aa + "||IDENTITY^REGISTRY^S||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
 	      "PV1||O|";
 		SendPIX (msg);
-		submitOneDocument(survivingPatientId + "^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO");
+		submitOneDocument(survivingPatientId + "^^^" + assigningAuthority);
 		//2. Registry a non-surviving patient
-		msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|XDSb_REG_MISYS|MISYS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
+		msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|OpenXDS|MOSS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
 	      "EVN||20090512132906-0300\r" +
-	      "PID|||"+subsumedPatientId+"^^^" + assigningAuthority + "||IDENTITY^REGISTRY^N||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
+	      "PID|||"+subsumedPatientId+"^^^" + aa + "||IDENTITY^REGISTRY^N||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
 	      "PV1||O|";
 		SendPIX (msg);
 		submitOneDocument(subsumedPatientId+"^^^" + assigningAuthority);
         
 		//3. Merge the both patients
-		msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|XDSb_REG_MISYS|MISYS|20090512132906-0300||ADT^A40^ADT_A39|4143361005927619863|P|2.3.1\r" + 
+		msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|OpenXDS|MOSS|20090512132906-0300||ADT^A40^ADT_A39|4143361005927619863|P|2.3.1\r" + 
 	      "EVN||20090512132906-0300\r" +
-	      "PID|||"+survivingPatientId+"^^^" + assigningAuthority + "||IDENTITY^REGISTRY^S||19781208|M|\r" +
-	      "MRG|"+subsumedPatientId+"^^^" + assigningAuthority + "\r" + 
+	      "PID|||"+survivingPatientId+"^^^" + aa + "||IDENTITY^REGISTRY^S||19781208|M|\r" +
+	      "MRG|"+subsumedPatientId+"^^^" + aa + "\r" + 
 	      "PV1||O|";
 		SendPIX (msg);
 
@@ -130,7 +131,7 @@ public class MergePatientTest extends XdsTest {
 		//replace document and submission set uniqueId variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$patientId", subsumedPatientId+"^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO");
+		message = message.replace("$patientId", subsumedPatientId+"^^^" + assigningAuthority);
 		//replace the document uuid.
 		String uuid = getUUID();
 		message = message.replace("$doc1", uuid);
@@ -168,7 +169,7 @@ public class MergePatientTest extends XdsTest {
     }
 	
 	public int verifyDocuments(String patientId) throws Exception {
-		String message = findDocumentsQuery(patientId + "^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO");
+		String message = findDocumentsQuery(patientId + "^^^" + assigningAuthority);
 		OMElement request = OMUtil.xmlStringToOM(message);			
 
 		ServiceClient sender = getRegistryServiceClient();															 

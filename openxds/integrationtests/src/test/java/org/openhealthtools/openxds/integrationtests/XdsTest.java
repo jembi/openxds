@@ -57,6 +57,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openexchange.utils.OMUtil;
@@ -87,6 +88,7 @@ public abstract class XdsTest {
 	protected static String patientId;
 	protected static String assigningAuthority;
 	protected static boolean validatePatient = false;
+	protected static String homeCommunityId;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -112,6 +114,8 @@ public abstract class XdsTest {
 		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
 		rgUrl = properties.getProperty("rgUrl");
 		igUrl = properties.getProperty("igUrl");
+		homeCommunityId = properties.getProperty("home.community.id");
+
 		//Initialize openEMPI 
 //		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
 //		XdsFactory.getInstance().getBean("context");
@@ -160,7 +164,7 @@ public abstract class XdsTest {
 		if (isValidPatient(patientId))
 			return; 
 		
-		String msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|PAT_IDENTITY_X_REF_MGR_MISYS|ALLSCRIPTS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
+		String msg = "MSH|^~\\&|OTHER_KIOSK|HIMSSSANDIEGO|OpenXDS|MOSS|20090512132906-0300||ADT^A04^ADT_A01|7723510070655179915|P|2.3.1\r" + 
 	      "EVN||20090512132906-0300\r" +
 	      "PID|||"+ patientId +"||FARNSWORTH^STEVE||19781208|M|||820 JORIE BLVD^^CHICAGO^IL^60523\r" +
 	      "PV1||O|";
