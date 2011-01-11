@@ -144,7 +144,11 @@
 				<include name="*.war" />
 			</fileset>
 		</copy>-->    	
-		<zip destfile="${openxds.dist.dir}/${project.name}-${project.version}.zip" basedir="${build.dir}" update="true" />
-		<tar destfile="${openxds.dist.dir}/${project.name}-${project.version}.tar.gz" basedir="${build.dir}" compression="gzip"/>
+		<zip destfile="${openxds.dist.dir}/${project.name}-${project.version}.zip"  update="true">
+		    <zipfileset dir="${build.dir}" prefix="openxds-${project.version}"/>
+		</zip>
+		<tar destfile="${openxds.dist.dir}/${project.name}-${project.version}.tar.gz" compression="gzip">
+    		<tarfileset dir="${build.dir}" prefix="openxds-${project.version}"/>
+		</tar>	
 	</target>
 </project>
