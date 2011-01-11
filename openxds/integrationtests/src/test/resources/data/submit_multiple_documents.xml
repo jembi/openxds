@@ -1,0 +1,357 @@
+<!--
+
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
+
+
+-->
+<axis2ns1:ProvideAndRegisterDocumentSetRequest xmlns:axis2ns1="urn:ihe:iti:xds-b:2007" xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0" xmlns:lcm="urn:oasis:names:tc:ebxml-regrep:xsd:lcm:3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xsi:schemaLocation="urn:ihe:iti:xds-b:2007 ../schema/IHE/XDS.b_DocumentRepository.xsd">
+    <lcm:SubmitObjectsRequest>
+        <rim:RegistryObjectList>
+            <rim:ExtrinsicObject id="$doc1" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" mimeType="text/xml">
+                <rim:Slot name="creationTime">
+                    <rim:ValueList>
+                        <rim:Value>20090805172839</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="languageCode">
+                    <rim:ValueList>
+                        <rim:Value>en-US</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="legalAuthenticator">
+                    <rim:ValueList>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="serviceStartTime">
+                    <rim:ValueList>
+                        <rim:Value>20090805172836</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="sourcePatientId">
+                    <rim:ValueList>
+                        <rim:Value>33334455^^^&amp;1.3.6.1.4.1.21367.2010.1.2.108&amp;ISO</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="sourcePatientInfo">
+                    <rim:ValueList>
+                        <rim:Value>PID-3|33334455^^^&amp;1.3.6.1.4.1.21367.2010.1.2.108&amp;ISO</rim:Value>
+                        <rim:Value>PID-5|DePinto^Susan^F^II^Mr.</rim:Value>
+                        <rim:Value>PID-8|M</rim:Value>
+                        <rim:Value>PID-7|20090805</rim:Value>
+                        <rim:Value>PID-11|700 Euclid Ave^^St. Louis^MO^63110^USA</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Name>
+                    <rim:LocalizedString value="My Test Referral Summary Document"/>
+                </rim:Name>
+                <rim:Description>
+                    <rim:LocalizedString value=""/>
+                </rim:Description>
+                <rim:Classification id="cl-$doc1-1" classificationScheme="urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d" classifiedObject="$doc1" nodeRepresentation="">
+                    <rim:Slot name="authorPerson">
+                        <rim:ValueList>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorInstitution">
+                        <rim:ValueList>
+                            <rim:Value>Great NC RHIO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorSpecialty">
+                        <rim:ValueList>
+                            <rim:Value>483</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-2" classificationScheme="urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" classifiedObject="$doc1" nodeRepresentation="Transfer summarization">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon classCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Transfer summarization"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-3" classificationScheme="urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d" classifiedObject="$doc1" nodeRepresentation="1.3.6.1.4.1.19376.1.5.3.1.1.2">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon formatCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="XDS-MS"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-4" classificationScheme="urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead" classifiedObject="$doc1" nodeRepresentation="Multidisciplinary">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon practiceSettingCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Multidisciplinary"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-5" classificationScheme="urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1" classifiedObject="$doc1" nodeRepresentation="Outpatient">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon healthcareFacilityTypeCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Outpatient"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-6" classificationScheme="urn:uuid:f0306f51-975f-434e-a61c-c59651d33983" classifiedObject="$doc1" nodeRepresentation="18761-7">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>LOINC</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Transfer Summarization Note"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc1-7" classificationScheme="urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f" classifiedObject="$doc1" nodeRepresentation="1.3.6.1.4.1.21367.2006.7.109">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon confidentialityCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Restricted VIP Sharing"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:ExternalIdentifier id="ei-$doc1-1" registryObject="$doc1" identificationScheme="urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427" value="$patientId">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSDocumentEntry.patientId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+                <rim:ExternalIdentifier id="ei-$doc1-2" registryObject="$doc1" identificationScheme="urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab" value="$XDSDocumentEntry.uniqueId">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSDocumentEntry.uniqueId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+            </rim:ExtrinsicObject>
+            <rim:ExtrinsicObject id="$doc2" objectType="urn:uuid:7edca82f-054d-47f2-a032-9b2a5b5186c1" mimeType="text/xml">
+                <rim:Slot name="creationTime">
+                    <rim:ValueList>
+                        <rim:Value>20090805172839</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="languageCode">
+                    <rim:ValueList>
+                        <rim:Value>en-US</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="legalAuthenticator">
+                    <rim:ValueList>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="serviceStartTime">
+                    <rim:ValueList>
+                        <rim:Value>20090805172836</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="sourcePatientId">
+                    <rim:ValueList>
+                        <rim:Value>33334^^^&amp;1.3.6.1.4.1.21367.2010.1.2.108&amp;ISO</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Slot name="sourcePatientInfo">
+                    <rim:ValueList>
+                        <rim:Value>PID-3|33334^^^&amp;1.3.6.1.4.1.21367.2010.1.2.108&amp;ISO</rim:Value>
+                        <rim:Value>PID-5|chris^dev^F^II^Mr.</rim:Value>
+                        <rim:Value>PID-8|M</rim:Value>
+                        <rim:Value>PID-7|20090811</rim:Value>
+                        <rim:Value>PID-11|700 Euc Av^^St. peter^MO^6310^USA</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Name>
+                    <rim:LocalizedString value="My Test Referral Summary Document"/>
+                </rim:Name>
+                <rim:Description>
+                    <rim:LocalizedString value=""/>
+                </rim:Description>
+                <rim:Classification id="cl-$doc2-1" classificationScheme="urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d" classifiedObject="$doc2" nodeRepresentation="">
+                    <rim:Slot name="authorPerson">
+                        <rim:ValueList>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorInstitution">
+                        <rim:ValueList>
+                            <rim:Value>Great NC RHIO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorSpecialty">
+                        <rim:ValueList>
+                            <rim:Value>483</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-2" classificationScheme="urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" classifiedObject="$doc2" nodeRepresentation="Transfer summarization">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon classCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Transfer summarization"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-3" classificationScheme="urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d" classifiedObject="$doc2" nodeRepresentation="1.3.6.1.4.1.19376.1.5.3.1.1.2">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon formatCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="XDS-MS"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-4" classificationScheme="urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead" classifiedObject="$doc2" nodeRepresentation="Multidisciplinary">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon practiceSettingCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Multidisciplinary"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-5" classificationScheme="urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1" classifiedObject="$doc2" nodeRepresentation="Outpatient">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon healthcareFacilityTypeCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Outpatient"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-6" classificationScheme="urn:uuid:f0306f51-975f-434e-a61c-c59651d33983" classifiedObject="$doc2" nodeRepresentation="18761-7">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>LOINC</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Transfer Summarization Note"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:Classification id="cl-$doc2-7" classificationScheme="urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f" classifiedObject="$doc2" nodeRepresentation="1.3.6.1.4.1.21367.2006.7.109">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon confidentialityCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Restricted VIP Sharing"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:ExternalIdentifier id="ei-$doc2-1" registryObject="$doc2" identificationScheme="urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427" value="$patientId">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSDocumentEntry.patientId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+                <rim:ExternalIdentifier id="ei-$doc2-2" registryObject="$doc2" identificationScheme="urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab" value="$XDSDocumentEntry.uniqueId1">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSDocumentEntry.uniqueId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+            </rim:ExtrinsicObject>
+            <rim:RegistryPackage id="SubmissionSet">
+                <rim:Slot name="submissionTime">
+                    <rim:ValueList>
+                        <rim:Value>20090805172846</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+                <rim:Name>
+                    <rim:LocalizedString value="Submission Set"/>
+                </rim:Name>
+                <rim:Description>
+                    <rim:LocalizedString value="Test submit one document"/>
+                </rim:Description>
+                <rim:Classification id="cl-ss1" classificationScheme="urn:uuid:a7058bb9-b4e4-4307-ba5b-e3f0ab85e12d" classifiedObject="SubmissionSet" nodeRepresentation="">
+                    <rim:Slot name="authorPerson">
+                        <rim:ValueList>
+                        <rim:Value>2.3.515.3.12345^DePinto^John^F^II^Mr.^^^IHENA&amp;1.3.6.1.4.1.21367.2010.1.2.300&amp;ISO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorInstitution">
+                        <rim:ValueList>
+                            <rim:Value>Great NC RHIO</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Slot name="authorSpecialty">
+                        <rim:ValueList>
+                            <rim:Value>483</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                </rim:Classification>
+                <rim:Classification id="cl-ss2" classificationScheme="urn:uuid:aa543740-bdda-424e-8c96-df4873be8500" classifiedObject="SubmissionSet" nodeRepresentation="Transfer summarization">
+                    <rim:Slot name="codingScheme">
+                        <rim:ValueList>
+                            <rim:Value>Connect-a-thon contentTypeCodes</rim:Value>
+                        </rim:ValueList>
+                    </rim:Slot>
+                    <rim:Name>
+                        <rim:LocalizedString value="Transfer summarization"/>
+                    </rim:Name>
+                </rim:Classification>
+                <rim:ExternalIdentifier id="ei-ss1" registryObject="SubmissionSet" identificationScheme="urn:uuid:6b5aea1a-874d-4603-a4bc-96a0a7b38446" value="$patientId">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSSubmissionSet.patientId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+                <rim:ExternalIdentifier id="ei-ss2" registryObject="SubmissionSet" identificationScheme="urn:uuid:554ac39e-e3fe-47fe-b233-965d2a147832" value="1.3.6.1.4.1.21367.2010.1.2.108">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSSubmissionSet.sourceId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+                <rim:ExternalIdentifier id="ei-ss3" registryObject="SubmissionSet" identificationScheme="urn:uuid:96fdda7c-d067-4183-912e-bf5ee74998a8" value="$XDSSubmissionSet.uniqueId">
+                    <rim:Name>
+                        <rim:LocalizedString value="XDSSubmissionSet.uniqueId"/>
+                    </rim:Name>
+                </rim:ExternalIdentifier>
+            </rim:RegistryPackage>
+            <rim:Classification id="cl-ss0" classifiedObject="SubmissionSet" classificationNode="urn:uuid:a54d6aa5-d40d-43f9-88c5-b4633d873bdd"/>
+            
+            <rim:Association id="$doc1sub" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="SubmissionSet" targetObject="$doc1">
+                <rim:Slot name="SubmissionSetStatus">
+                    <rim:ValueList>
+                        <rim:Value>Original</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+            </rim:Association>
+            <rim:Association id="$doc2sub" associationType="urn:oasis:names:tc:ebxml-regrep:AssociationType:HasMember" sourceObject="SubmissionSet" targetObject="$doc2">
+                <rim:Slot name="SubmissionSetStatus">
+                    <rim:ValueList>
+                        <rim:Value>Original</rim:Value>
+                    </rim:ValueList>
+                </rim:Slot>
+            </rim:Association>      
+            
+        </rim:RegistryObjectList>
+    </lcm:SubmitObjectsRequest>
+ </axis2ns1:ProvideAndRegisterDocumentSetRequest>
