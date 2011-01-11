@@ -21,6 +21,7 @@
 package org.openhealthtools.openxds;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -33,6 +34,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.openhealthtools.openexchange.config.BootStrapProperties;
 import org.openhealthtools.openexchange.config.ConfigurationException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
+import org.openhealthtools.openexchange.utils.CipherSuitesUtil;
 import org.openhealthtools.openxds.common.XdsConstants;
 
 /**
@@ -128,6 +130,7 @@ public class XdsServer {
         secureconnector.setKeyPassword(keyPassword);
         secureconnector.setTruststore(trustStore);
         secureconnector.setPassword(trustPassword);
+        secureconnector.setExcludeCipherSuites(getExcludeCipherSuites());
 
         return secureconnector;
     }
@@ -158,4 +161,18 @@ public class XdsServer {
         }
     }
 
+    private String[] getExcludeCipherSuites() {
+        String[] supportedCiperSuites = PropertyFacade.getStringArray("https.cipher.suites");
+        List<String> includes = Arrays.asList(supportedCiperSuites);
+
+    	List<String> excludes = new ArrayList<String>();
+        List<String> allCipherSuites = Arrays.asList(CipherSuitesUtil.allCipherSuites);
+    	for (String cipherSuite : allCipherSuites) {
+    		if (!includes.contains(cipherSuite)) {
+    			excludes.add(cipherSuite);
+    		}
+    	}
+    	
+    	return excludes.toArray(new String[excludes.size()]);
+    }
 }

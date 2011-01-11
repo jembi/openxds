@@ -41,7 +41,7 @@ public class XdsConstants {
 	public static final String TRUST_STORE     = "trust.store";
 	public static final String TRUST_STORE_PW  = "trust.store.password";
 	
-	public static final String WEB_APP_CONTEXT = "webapp.context";
+	public static final String WEB_APP_CONTEXT = "context.path";
 	public static final String WEB_APP_ROOT    = "webapp.root";
 	//Regitry properties
 	public static final String DOC_SOURCE_IDS    = "document.source.ids";
