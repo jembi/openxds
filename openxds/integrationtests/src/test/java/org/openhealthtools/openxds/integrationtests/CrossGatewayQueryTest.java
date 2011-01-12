@@ -54,14 +54,12 @@ import com.sun.xml.bind.StringInputStream;
 
 
 public class CrossGatewayQueryTest extends XdsTest{
-	static String homeProperty;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		PropertyFacade.loadProperties(new String[]{"openxds.properties"});
 	}
 
 	/**
@@ -71,10 +69,6 @@ public class CrossGatewayQueryTest extends XdsTest{
 	public void tearDown() throws Exception {
 	}
 	
-	static {
-		homeProperty = PropertyFacade.getString("home.community.id");
-	}
-
 	/**
 	 * This test initiate a FindDocuments Cross-Gateway Query (XGQ) to the XDS
 	 * 	Registry server's Responding Gateway for a pre-determined Patient ID.
@@ -155,7 +149,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 		String uuids = submitMultipleDocuments(patientId);
 		
 		//2. Generate StoredQuery request message
-		String message = GetDocumentsQuery(uuids, false, homeProperty);
+		String message = GetDocumentsQuery(uuids, false, homeCommunityId);
 		OMElement request = OMUtil.xmlStringToOM(message);			
 		System.out.println("Request:\n" +request);
 
@@ -305,7 +299,7 @@ public class CrossGatewayQueryTest extends XdsTest{
 		String uuids = submitMultipleDocuments(patientId);
 		
 		//2. Generate StoredQuery request message
-		String message = GetDocumentsQuery(uuids, false, homeProperty);
+		String message = GetDocumentsQuery(uuids, false, homeCommunityId);
 		OMElement request = OMUtil.xmlStringToOM(message);			
 		System.out.println("Request:\n" +request);
 

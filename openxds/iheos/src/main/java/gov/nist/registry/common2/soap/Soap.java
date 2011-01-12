@@ -208,9 +208,9 @@ public class Soap implements SoapInterface {
 				logger.info("Call " + endpoint);
 				logger.info("Action " + action);
 			}
-			OMElement result = serviceClient.sendReceive(body);
+			OMElement temp = serviceClient.sendReceive(body);
+			result = Util.deep_copy(temp);
 			
-
 			//if (async)
 				serviceClient.cleanupTransport();
 

@@ -58,14 +58,11 @@ import com.sun.xml.bind.StringInputStream;
 
 public class CrossGatewayRetrieveTest extends XdsTest{
 
-	static String homeProperty;
-
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		PropertyFacade.loadProperties(new String[]{"openxds.properties"});
 	}
 
 	/**
@@ -73,10 +70,6 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 	 */
 	@After
 	public void tearDown() throws Exception {
-	}
-	
-	static {
-		homeProperty = PropertyFacade.getString("home.community.id");
 	}
 	
 	/**
@@ -108,7 +101,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 		String reposiotryUniqueId = xdsService.getRepositoryUniqueId();
 
 		//6. Generate Retrieve document request message
-		String retrieveDoc = retrieveDocuments(reposiotryUniqueId, ids.get(0), homeProperty);
+		String retrieveDoc = retrieveDocuments(reposiotryUniqueId, ids.get(0), homeCommunityId);
 		OMElement retrieveDocRequest = OMUtil.xmlStringToOM(retrieveDoc);
 		System.out.println("Request:\n" +retrieveDoc);
 		
@@ -177,7 +170,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 		String reposiotryUniqueId = xdsService.getRepositoryUniqueId();
 
 		//6. Generate Retrieve document request message
-		String retrieveDoc = retrieveDocuments(reposiotryUniqueId, ids, homeProperty);
+		String retrieveDoc = retrieveDocuments(reposiotryUniqueId, ids, homeCommunityId);
 		OMElement retrieveDocRequest = OMUtil.xmlStringToOM(retrieveDoc);
 		System.out.println("Request:\n" +retrieveDoc);
 		
@@ -253,7 +246,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 		List<String> ids = new ArrayList<String>();
 		//Add the documents from the local community repository
 		for (String docId : docIds) {
-			ids.add(homeProperty);
+			ids.add(homeCommunityId);
 			ids.add(reposiotryUniqueId);
 			ids.add(docId);
 		}		
@@ -264,14 +257,14 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 //// docId - hard coded for now
 //ids.add("2.16.840.1.113883.3.65.2.1262392348530");
 		
-		//Add the documents from a remote community (in the 198.160.211.53 server)
-		//remote home id
+//		//Add the documents from a remote community (in the 198.160.211.53 server)
+//		//remote home id
 		String remoteHomeId = "urn:oid:1.3.6.1.4.1.21367.2010.1.2.2800";
-		ids.add(remoteHomeId); 
-		//use the same repository as in the local community. In the real world, it should not be the same.
-		ids.add(reposiotryUniqueId);
-		// docId - hard coded for now
-		ids.add("2.16.840.1.113883.3.65.2.1262451539643");
+//		ids.add(remoteHomeId); 
+//		//use the same repository as in the local community. In the real world, it should not be the same.
+//		ids.add(reposiotryUniqueId);
+//		// docId - hard coded for now
+//		ids.add("2.16.840.1.113883.3.65.2.1262451539643");
 		
 		String retrieveDoc = retrieveDocuments(ids);
 		OMElement retrieveDocRequest = OMUtil.xmlStringToOM(retrieveDoc);
@@ -305,7 +298,7 @@ public class CrossGatewayRetrieveTest extends XdsTest{
 			assertNotNull (homeElem);
 			String home = homeElem.getText();
 			assertNotNull (home);
-			assertTrue(home.equals(homeProperty) || home.equals(remoteHomeId));
+			assertTrue(home.equals(homeCommunityId) || home.equals(remoteHomeId));
 		}
 		assertTrue(docRequests.size() >= 1); 
 		

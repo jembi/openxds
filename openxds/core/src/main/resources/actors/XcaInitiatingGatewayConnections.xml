@@ -54,6 +54,17 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
+	<StandardConnection name="local-rg-query">
+		<HostName>localhost</HostName>
+		<Port>8010</Port>
+		<UrlPath>/openxds/services/rg</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="local-rg-retrieve">
+		<HostName>localhost</HostName>
+		<Port>8010</Port>
+		<UrlPath>/openxds/services/rg</UrlPath>		
+	</StandardConnection>
+	
  	<!-- NIST 12300 Test -->
 	<StandardConnection name="nist-rg-query">
 		<HostName>ihexds.nist.gov</HostName>

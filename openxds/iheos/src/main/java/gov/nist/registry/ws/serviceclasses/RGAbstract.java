@@ -30,6 +30,7 @@ import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openxds.common.ConnectionUtil;
+import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.xca.api.XcaRG;
 
@@ -37,12 +38,8 @@ import org.openhealthtools.openxds.xca.api.XcaRG;
 public abstract class RGAbstract extends XdsService implements ContentValidationService {
 	private final static Log logger = LogFactory.getLog(RGAbstract.class);
 	boolean optimize = true;
-	static String homeProperty;
 	String home;
 
-	static {
-		homeProperty = PropertyFacade.getString("home.community.id");
-	}
     IActorDescription actorDescription = null;
     IConnectionDescription registryClientConnection = null;
     IConnectionDescription repositoryClientConnection = null;
@@ -56,8 +53,9 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 	abstract protected String getRetTransactionName();
 
 	public RGAbstract() {
-		home = homeProperty;  // allows sub-classes to override
 		try {
+			home = PropertyFacade.getString(XdsConstants.HOME_COMMUNITY_ID, true);  // allows sub-classes to override
+			
 			XcaRG actor = XdsFactory.getRGActor();
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XcaRG actor configuration.");			
@@ -70,7 +68,7 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			if (repositoryClientConnection == null) {
 				throw new XdsInternalException("Cannot find XcaRG XdsRepositoryClient connection configuration.");			
 			}
-		} catch (XdsInternalException e) {
+		} catch (Exception e) {
 			logger.fatal("Internal Error getting XcaRG actor configuration: " + e.getMessage(), e);
 		}
 	}

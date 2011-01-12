@@ -370,6 +370,7 @@
         <module>web</module>
     	<module>registry-patientlite</module>
         <module>integrationtests</module>
+        <module>jettyembedded</module>
         <module>build</module>
   </modules>
 
