@@ -51,7 +51,6 @@
 	<!--The XDS Repository actor configuration-->
 	<Actor name="xdsrep" type="XdsRepository">
 		<Description>XDS Repository</Description>
-        <Includefile name="XdsCodes.xml" />		
 		<Connection type="Registry" name="xds-registry-client"/>
 	</Actor>
 
