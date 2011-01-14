@@ -35,8 +35,8 @@
         </Identifier>
 
 		<PropertySet name="Validation">
-	        <Entry name="ValidateReceivingApplication" value="true"/>
-	        <Entry name="ValidateReceivingFacility" value="true"/>
+	        <Entry name="ValidateReceivingApplication" value="false"/>
+	        <Entry name="ValidateReceivingFacility" value="false"/>
 		</PropertySet>     
     </StandardConnection>
 
@@ -53,8 +53,8 @@
         </Identifier>
      
 		<PropertySet name="Validation">
-	        <Entry name="ValidateReceivingApplication" value="true"/>
-	        <Entry name="ValidateReceivingFacility" value="true"/>
+	        <Entry name="ValidateReceivingApplication" value="false"/>
+	        <Entry name="ValidateReceivingFacility" value="false"/>
 		</PropertySet>     
 
 		<!-- Trust and Keystore -->

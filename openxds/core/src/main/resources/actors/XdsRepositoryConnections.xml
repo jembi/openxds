@@ -69,51 +69,19 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
-	<StandardConnection name="ibm-xds-registry-client">
-		<!--The host name of the XDS Registry Server-->
-		<HostName>xds-ibm.lgs.com</HostName>
-		<!--The port-->
-		<Port>9080</Port>
-		<!--The URL of the XDS Registry web services -->
-		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
-	</StandardConnection>
-
-	<SecureConnection name="ibm-secure-xds-registry-client">
-		<!--The host name of the XDS Registry Server-->
-		<HostName>xds-ibm.lgs.com</HostName>
-		<!--The port-->
-		<Port>9443</Port>
-		<!--The URL of the XDS Registry web services -->
-		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
-
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-	
 <!--================================================================-->
 <!-- The XDS Registry connections to which this Repository connects -->
 <!-- All the connections below are used for Connecatathon NA 2010   -->
 <!--================================================================-->
-	<StandardConnection name="ibm-registry">
-		<!-- 
-		<HostName>xds-ibm.lgs.com</HostName>
-		<Port>9080</Port>
-		-->
-		<HostName>ibm1</HostName>
-		<Port>9085</Port>
-		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+	<StandardConnection name="allscripts-registry">
+		<HostName>allscripts3.ihe.net</HostName>
+		<Port>5558</Port>
+		<UrlPath>/EnterpriseRepository/DocumentRegistry/Unsecure</UrlPath>		
 	</StandardConnection>
-	<SecureConnection name="ibm-secure-registry">
-		<!-- 
-		<HostName>xds-ibm.lgs.com</HostName>
-		<Port>9443</Port>
-		-->
-		<HostName>ibm1</HostName>
-		<Port>9448</Port>
-		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+	<SecureConnection name="allscripts-secure-registry">
+		<HostName>allscripts3.ihe.net</HostName>
+		<Port>5557</Port>
+		<UrlPath>/EnterpriseRepository/DocumentRegistry</UrlPath>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -121,31 +89,15 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
-	<StandardConnection name="microsoft-registry">
-		<HostName>microsoft2</HostName>
-		<Port>1025</Port>
-		<UrlPath>/xdsservice/xdsregistry</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="microsoft-secure-registry">
-		<HostName>microsoft2</HostName>
-		<Port>9080</Port>
-		<UrlPath>/xdsservice/xdsregistry</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
-	<StandardConnection name="vangent-registry">
-		<HostName>vangent1</HostName>
+	<StandardConnection name="alert-registry">
+		<HostName>alert7.ihe.net</HostName>
 		<Port>8080</Port>
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<UrlPath>/XDSRegistry/services/xdsb</UrlPath>		
 	</StandardConnection>
-	<SecureConnection name="vangent-secure-registry">
-		<HostName>vangent1</HostName>
-		<Port>8181</Port>
-		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	<SecureConnection name="alert-secure-registry">
+		<HostName>alert7.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/XDSRegistry/services/xdsb</UrlPath>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -154,12 +106,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="axolotl-registry">
-		<HostName>axolotl1</HostName>
+		<HostName>axolotl0.ihe.net</HostName>
 		<Port>80</Port>
-		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
+		<UrlPath>/xds/services/DocumentRegistry_Service</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="axolotl-secure-registry">
-		<HostName>axolotl1</HostName>
+		<HostName>axolotl0.ihe.net</HostName>
 		<Port>443</Port>
 		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
 		<!-- Trust and Keystore -->
@@ -168,14 +120,250 @@
 		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
+	
+	<StandardConnection name="careevolution-registry">
+		<HostName>careevolution0.ihe.net</HostName>
+		<Port>80</Port>
+		<UrlPath>/Connectathon/IheAdapter/XdsRegistryService/XdsRegistryService</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="careevolution-secure-registry">
+		<HostName>careevolution0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/Connectathon/IheAdapter/XdsRegistryService/XdsRegistryService</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 
+	<StandardConnection name="carefx-registry">
+		<HostName>carefx0.ihe.net</HostName> 
+		<Port>7070</Port>
+		<UrlPath>/registry/services/DocumentRegistryService</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="carefx-secure-registry">
+		<HostName>carefx0.ihe.net</HostName> 
+		<Port>7443</Port>
+		<UrlPath>/registry/services/DocumentRegistryService</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="dbmotion-registry">
+		<HostName>dbmotion1.ihe.net</HostName>
+		<Port>80</Port>
+		<UrlPath>/xds/registry</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="dbmotion-secure-registry">
+		<HostName>dbmotion1.ihe.net</HostName>
+		<Port>443</Port>
+		<UrlPath>/xds/registry</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>	
+	
+	<StandardConnection name="ecw-registry">
+		<HostName>ecw0.ihe.net</HostName>
+		<Port>8010</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ecw-secure-registry">
+		<HostName>ecw0.ihe.net</HostName>
+		<Port>8011</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>	
+	
+	<StandardConnection name="emc-registry">
+		<HostName>emc-0.ihe.net</HostName>
+		<Port>9180</Port>
+		<UrlPath>/mosaix-iti42</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="emc-secure-registry">
+		<HostName>emc-0.ihe.net</HostName>
+		<Port>9181</Port>
+		<UrlPath>/mosaix-iti42</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>	
+	
+	<SecureConnection name="forcare-secure-registry">
+		<HostName>forcare2.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/index/services/registry</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="ge-registry">
+		<HostName>ge17.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/pxs-vmr-assembly/unsecured_webservices/rev6/xdsb-registerdocuments</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ge-secure-registry">
+		<HostName>ge17.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/pxs-vmr-assembly/unsecured_webservices/rev6/xdsb-registerdocuments</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	http://gsihealth0.ihe.net:8080/DocumentRegistry_Service/XDSRegistryService	
+	<StandardConnection name="ge-registry">
+		<HostName>gsihealth0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/DocumentRegistry_Service/XDSRegistryService</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ge-secure-registry">
+		<HostName>gsihealth0.ihe.net</HostName>
+		<Port>8081</Port>
+		<UrlPath>/DocumentRegistry_Service/XDSRegistryService</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="ibm-registry">
+		<!-- 
+		<HostName>xds-ibm.lgs.com</HostName>
+		-->
+		<HostName>ibm0.ihe.net</HostName>
+		<Port>9080</Port>
+		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ibm-secure-registry">
+		<!-- 
+		<HostName>xds-ibm.lgs.com</HostName>
+		-->
+		<HostName>ibm0.ihe.net</HostName>
+		<Port>9443</Port>
+		<UrlPath>/IBMXDSRegistry/XDSb/SOAP12/Registry</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="ica-registry">
+		<HostName>ica1.ihe.net</HostName>
+		<Port>20012</Port>
+		<UrlPath>/ihe-ws/soap12/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ica-secure-registry">
+		<HostName>ica1.ihe.net</HostName>
+		<Port>24042</Port>
+		<UrlPath>/ihe-ws/soap12/xdsregistryb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="intersystems-registry">
+		<HostName>isc2.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/csp/registry/EnsLib.IHE.XDSb.Registry.Services.cls</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="intersystems-secure-registry">
+		<HostName>isc2.ihe.net</HostName>
+		<Port>8181</Port>
+		<UrlPath>/csp/registry/EnsLib.IHE.XDSb.Registry.Services.cls</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="medecision-registry">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ihe/registry/xdsb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="medecision-secure-registry">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ihe/registry/xdsb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="microsoft-registry">
+		<HostName>msft1.ihe.net</HostName>
+		<Port>1025</Port>
+		<UrlPath>/XDSService/xdsregistry</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="microsoft-registry-async">
+		<HostName>msft1.ihe.net</HostName>
+    	<Port>8731</Port>
+		<UrlPath>/XDSAsyncService/Microsoft.IHE.XDS.AsyncApp.Registry/XDSRegistryAsync</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="microsoft-secure-registry">
+		<HostName>msft1.ihe.net</HostName>
+		<Port>9080</Port>
+		<UrlPath>/XDSService/xdsregistry</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="oracle-registry">
+		<HostName>oracle0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="oracle-registry-async">
+		<HostName>oracle0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/axis2/services/xdsregistrybas</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="oracle-secure-registry">
+		<HostName>oracle0.ihe.net</HostName>
+		<Port>8181</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>	
+	
 	<StandardConnection name="spirit-registry">
-		<HostName>spirit6</HostName>
+		<HostName>tiani-cisco10.ihe.net</HostName>
 		<Port>8081</Port>
 		<UrlPath>/XDS3/registry</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="spirit-secure-registry">
-		<HostName>spirit6</HostName>
+		<HostName>tiani-cisco10.ihe.net</HostName>
 		<Port>8443</Port>
 		<UrlPath>/XDS3/registry</UrlPath>		
 		<!-- Trust and Keystore -->
@@ -185,15 +373,20 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
-	<StandardConnection name="intersystems-registry">
-		<HostName>intersystems1</HostName>
-		<Port>80</Port>
-		<UrlPath>/csp/registry/EnsLib.IHE.XDSb.Registry.Services.cls</UrlPath>		
+	<StandardConnection name="vangent-registry">
+		<HostName>vangent0.ihe.net</HostName>
+		<Port>8091</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 	</StandardConnection>
-	<SecureConnection name="intersystems-secure-registry">
-		<HostName>intersystems1</HostName>
-		<Port>443</Port>
-		<UrlPath>/registry/EnsLib.IHE.XDSb.Registry.Services.cls</UrlPath>		
+	<StandardConnection name="vangent-registry-async">
+		<HostName>vangent0.ihe.net</HostName>
+		<Port>8091</Port>
+		<UrlPath>/axis2/services/xdsregistrybas</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="vangent-secure-registry">
+		<HostName>vangent0.ihe.net</HostName>
+		<Port>8192</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -201,21 +394,6 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	
-	<StandardConnection name="alert-registry">
-		<HostName>alert5</HostName>
-		<Port>8080</Port>
-		<UrlPath>/XDSRegistry/services/xdsb</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="alert-secure-registry">
-		<HostName>alert5</HostName>
-		<Port>443</Port>
-		<UrlPath>/XDSRegistry/services/xdsb</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
 	
 	<StandardConnection name="icw-registry">
 		<HostName>icw2</HostName>
@@ -233,86 +411,4 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
-	<StandardConnection name="initiate-registry">
-		<HostName>initiate1</HostName>
-		<Port>8080</Port>
-		<UrlPath>/Initiate-IHE/services/XDS_b_DocumentRegistry</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="initiate-secure-registry">
-		<HostName>initiate1</HostName>
-		<Port>8443</Port>
-		<UrlPath>/Initiate-IHE/services/XDS_b_DocumentRegistry</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
-	<StandardConnection name="carefx-registry">
-		<!-- HostName>carefx1</HostName--> 
-		<HostName>xdstest.carefx.com</HostName> 
-		<Port>86</Port>
-		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="carefx-secure-registry">
-		<!-- HostName>carefx1</HostName--> 
-		<HostName>xdstest.carefx.com</HostName> 
-		<Port>84</Port>
-		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>
-
-	<StandardConnection name="dbmotion-registry">
-		<HostName>dbmotion1</HostName>
-		<Port>51100</Port>
-		<UrlPath>/xds/registry</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="dbmotion-secure-registry">
-		<HostName>dbmotion1</HostName>
-		<Port>51101</Port>
-		<UrlPath>/xds/registry</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>	
-	
-	<StandardConnection name="emc-registry">
-		<HostName>emc_ihe1</HostName>
-		<Port>9092</Port>
-		<UrlPath>/mosaix-iti42</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="emc-secure-registry">
-		<HostName>emc_ihe1</HostName>
-		<Port>9091</Port>
-		<UrlPath>/mosaix-iti42</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>	
-	
-	<StandardConnection name="ebmtech-registry">
-		<HostName>ebmtech2</HostName>
-		<Port>80</Port>
-		<UrlPath>/xds/xdsServerDllB.dll/register</UrlPath>		
-	</StandardConnection>
-	<SecureConnection name="ebmtech-secure-registry">
-		<HostName>ebmtech2</HostName>
-		<Port>443</Port>
-		<UrlPath>/xds/xdsServerDllB.dll/register</UrlPath>		
-		<!-- Trust and Keystore -->
-		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
-		<KeyPass>password</KeyPass>
-		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
-		<TrustPass>password</TrustPass>
-	</SecureConnection>	
-	
 </Configuration>

@@ -38,6 +38,7 @@
 		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
+	
 	<StandardConnection name="local-repository">
 		<HostName>localhost</HostName>
 		<Port>8010</Port>
@@ -54,16 +55,21 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
-	<StandardConnection name="local-rg-query">
+	<StandardConnection name="local-rg">
 		<HostName>localhost</HostName>
-		<Port>8010</Port>
+		<Port>8030</Port>
 		<UrlPath>/openxds/services/rg</UrlPath>		
 	</StandardConnection>
-	<StandardConnection name="local-rg-retrieve">
+	<SecureConnection name="local-secure-rg">
 		<HostName>localhost</HostName>
-		<Port>8010</Port>
-		<UrlPath>/openxds/services/rg</UrlPath>		
-	</StandardConnection>
+		<Port>8031</Port>
+		<UrlPath>/XCAGateway/services/rg</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 	
  	<!-- NIST 12300 Test -->
 	<StandardConnection name="nist-rg-query">
@@ -79,19 +85,17 @@
 	
 <!--=========================================================================-->
 <!-- The XDS Registry connections to which this Reposonding Gateway connects -->
-<!-- All the connections below are used for Connecatathon NA 2010            -->
+<!-- All the connections below are used for Connecatathon NA 2011            -->
 <!--=========================================================================-->	
-	<StandardConnection name="vangent-rg">
-		<!-- HostName>vangent1</HostName-->
-		<HostName>208.81.185.143</HostName>
+	<StandardConnection name="alert8-rg">
+		<HostName>alert8</HostName>
 		<Port>8080</Port>
-		<UrlPath>/axis2/services/xcarg</UrlPath>
+		<UrlPath>/XCAGateway/services/rg</UrlPath>
 	</StandardConnection>
-	<SecureConnection name="vangent-secure-rg">
-		<!-- HostName>vangent1</HostName-->
-		<HostName>208.81.185.143</HostName>
-		<Port>8181</Port>
-		<UrlPath>/axis2/services/xcarg</UrlPath>				
+	<SecureConnection name="alert8-secure-rg">
+		<HostName>alert8</HostName>
+		<Port>8443</Port>
+		<UrlPath>/XCAGateway/services/rg</UrlPath>				
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -99,25 +103,82 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 
-	<StandardConnection name="hxti-rg">
-		<HostName>hx-registry.hxti.net</HostName>
-		<Port>8080</Port>
-		<UrlPath>/XCAGateway/respond</UrlPath>
+	<StandardConnection name="axolotl-rg-query">
+		<HostName>axolotl0.ihe.net</HostName>
+		<Port>80</Port>
+		<UrlPath>/shinny_services/services/RespondingGatewayQuery_Service</UrlPath>						
+	</StandardConnection>	
+	<SecureConnection name="axolotl-secure-rg-query">
+		<HostName>axolotl0.ihe.net</HostName>
+		<Port>443</Port>
+		<UrlPath>/shinny_services/services/RespondingGatewayQuery_Service</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="axolotl-rg-retrieve">
+		<HostName>axolotl0.ihe.net</HostName>
+		<Port>80</Port>
+		<UrlPath>/shinny_services/services/RespondingGatewayRetrieve_Service</UrlPath>		
 	</StandardConnection>
+	<SecureConnection name="axolotl-secure-rg-retrieve">
+		<HostName>axolotl0.ihe.net</HostName>
+		<Port>443</Port>
+		<UrlPath>/shinny_services/services/RespondingGatewayRetrieve_Service</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
 
-	<StandardConnection name="spirit-rg">
-		<HostName>80.122.119.94</HostName>
-		<Port>18081</Port>		
-		<UrlPath>/XCA/responding</UrlPath>				
+	<StandardConnection name="emc-rg-query">
+		<HostName>emc-2.ihe.net</HostName>
+		<Port>9160</Port>
+		<UrlPath>/xca-iti38</UrlPath>						
+	</StandardConnection>	
+	<SecureConnection name="emc-secure-rg-query">
+		<HostName>emc-2.ihe.net</HostName>
+		<Port>9161</Port>
+		<UrlPath>/xca-iti38</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="emc-rg-retrieve">
+		<HostName>emc-2.ihe.net</HostName>
+		<Port>9160</Port>
+		<UrlPath>/xca-iti39</UrlPath>		
 	</StandardConnection>
-	<SecureConnection name="spirit-secure-rg">
-		<!-- 
-		<HostName>spirit7</HostName>
+	<SecureConnection name="emc-secure-rg-retrieve">
+		<HostName>emc-2.ihe.net</HostName>
+		<Port>9161</Port>
+		<UrlPath>/xca-iti39</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<SecureConnection name="forcare-secure-rg-query">
+		<HostName>forcare2.ihe.net</HostName>
 		<Port>8443</Port>
-		-->
-		<HostName>80.122.119.94</HostName>
-		<Port>18081</Port>		
-		<UrlPath>/XCA/responding</UrlPath>				
+		<UrlPath>/xca/services/respondingGateway/query</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<SecureConnection name="forcare-secure-rg-retrieve">
+		<HostName>forcare2.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/xca/services/respondingGateway/retrieve</UrlPath>						
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>
@@ -126,20 +187,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="ibm-rg-query">
-		<!-- 
-		<HostName>ibm1</HostName>
-		<Port>9085</Port>
-		-->
-		<HostName>xds-ibm.lgs.com</HostName>
+		<HostName>ibm0.ihe.net</HostName>
 		<Port>9080</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
 	</StandardConnection>	
 	<SecureConnection name="ibm-secure-rg-query">
-		<!-- 
-		<HostName>ibm1</HostName>
-		<Port>9448</Port>
-		-->
-		<HostName>xds-ibm.lgs.com</HostName>
+		<HostName>ibm0.ihe.net</HostName>
 		<Port>9443</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
 		<!-- Trust and Keystore -->
@@ -149,22 +202,135 @@
 		<TrustPass>password</TrustPass>
 	</SecureConnection>
 	<StandardConnection name="ibm-rg-retrieve">
-		<!-- 
-		<HostName>ibm1</HostName>
-		<Port>9085</Port>
-		-->
-		<HostName>xds-ibm.lgs.com</HostName>
+		<HostName>ibm0.ihe.net</HostName>
 		<Port>9080</Port>
 		<UrlPath>/XGatewayWS/RespondingGatewayRetrieve</UrlPath>		
 	</StandardConnection>
 	<SecureConnection name="ibm-secure-rg-retrieve">
-		<!-- 
-		<HostName>ibm1</HostName>
-		<Port>9448</Port>
-		-->
-		<HostName>xds-ibm.lgs.com</HostName>
+		<HostName>ibm0.ihe.net</HostName>
 		<Port>9443</Port>
-		<UrlPath>XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
+		<UrlPath>/XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="lawson-rg-query">
+		<HostName>lawson0.ihe.net</HostName>
+		<Port>30320</Port>
+		<UrlPath>/RespondingGateway/Query</UrlPath>						
+	</StandardConnection>	
+	<SecureConnection name="lawson-secure-rg-query">
+		<HostName>lawson0.ihe.net</HostName>
+		<Port>30323</Port>
+		<UrlPath>/RespondingGateway/Query</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="lawson-rg-retrieve">
+		<HostName>lawson0.ihe.net</HostName>
+		<Port>30320</Port>
+		<UrlPath>/RespondingGateway/Retrieve</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="lawson-secure-rg-retrieve">
+		<HostName>lawson0.ihe.net</HostName>
+		<Port>30323</Port>
+		<UrlPath>/RespondingGateway/Retrieve</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="medecision-rg-query">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/CrossCommunityAccessServiceImpl/respond/query</UrlPath>						
+	</StandardConnection>	
+	<SecureConnection name="medecision-secure-rg-query">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/CrossCommunityAccessServiceImpl/respond/query</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="medecision-rg-retrieve">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/CrossCommunityAccessServiceImpl/respond/retrieve</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="medecision-secure-rg-retrieve">
+		<HostName>medecision0.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/CrossCommunityAccessServiceImpl/respond/retrieve</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="medicity-rg">
+		<HostName>medicity0.ihe.net</HostName>
+		<Port>5000</Port>
+		<UrlPath>/xca</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="medicity-secure-rg">
+		<HostName>medicity0.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/xca</UrlPath>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="siemens-rg">
+		<HostName>ith-icoserve7.ihe.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/XCommunityBridge/services/InitiatingGatewayService</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="siemens-secure-rg">
+		<HostName>ith-icoserve7.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/XCommunityBridge/services/InitiatingGatewayService</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<SecureConnection name="tiani-secure-rg">
+		<HostName>tiani-cisco7.ihe.net</HostName>
+		<Port>8443</Port>
+		<UrlPath>/XCA/responding</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="vangent-rg">
+		<HostName>vangent0.ihe.net</HostName>
+		<Port>8091</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="vangent-secure-rg">
+		<HostName>vangent0.ihe.net</HostName>
+		<Port>8192</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>				
 		<!-- Trust and Keystore -->
 		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
 		<KeyPass>password</KeyPass>

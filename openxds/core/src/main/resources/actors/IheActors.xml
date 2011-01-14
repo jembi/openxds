@@ -60,11 +60,6 @@
 		<Connection type="Registry" name="misys-registry"/>
 		<Connection type="Repository" name="misys-repository"/>
 	</Actor>
-	<!-- Actor name="xcasrg" type="XcaRG">
-		<Description>Secure XCA Responding Gateway</Description>
-		<Connection type="Registry" name="misys-registry"/>
-		<Connection type="Repository" name="misys-repository"/>
-	</Actor-->
 	
 	<!--The XCA Initiating Gateway actor configuration-->
 	<Actor name="xcaig" type="XcaIG">
@@ -72,7 +67,18 @@
 		<Connection type="Registry" name="local-registry"/>
 		<Connection type="Repository" name="local-repository"/>
 		<TransactionsSet type="RespondingGateway">
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3050" query="local-rg-query" retrieve="local-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3000" query="alert-rg" retrieve="alert-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3005" query="axolotl-rg-query" retrieve="axolotl-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3010" query="emc-rg-query" retrieve="emc-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3017" query="forcare-secure-rg-query" retrieve="forcare-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3025" query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3030" query="siemens-rg" retrieve="siemens-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3035" query="lawson-rg-query" retrieve="lawson-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3040" query="medecision-rg-query" retrieve="medecision-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3045" query="medicity-rg" retrieve="medicity-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3050" query="local-rg" retrieve="local-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3065" query="tiani-secure-rg" retrieve="tiani-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3070" query="vangent-rg" retrieve="vangent-rg"/>
 		</TransactionsSet>
 	</Actor>
 	<!-- Actor name="xcasig" type="XcaIG">
@@ -80,23 +86,65 @@
 		<Connection type="Registry" name="local-secure-registry"/>
 		<Connection type="Repository" name="local-secure-repository"/>
 		<TransactionsSet type="RespondingGateway">
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-secure-rg" retrieve="intel-secure-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
-			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3000" query="alert-secure-rg" retrieve="alert-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3005" query="axolotl-secure-rg-query" retrieve="axolotl-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3010" query="emc-secure-rg-query" retrieve="emc-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3017" query="forcare-secure-rg-query" retrieve="forcare-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3025" query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3030" query="siemens-secure-rg" retrieve="siemens-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3035" query="lawson-secure-rg-query" retrieve="lawson-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3040" query="medecision-secure-rg-query" retrieve="medecision-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3045" query="medicity-secure-rg" retrieve="medicity-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3050" query="local-secure-rg" retrieve="local-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3065" query="tiani-secure-rg" retrieve="tiani-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.13.3070" query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
 		</TransactionsSet>
 	</Actor-->
 	
-	<!-- Audit Repository Actor -->
-	<!-- 
-	<Actor name="localaudit" type="SecureNode">
-		<Description>LOCAL AUDIT</Description>
-		<AuditTrail name="log4j_audittrail" />
-		<AuditTrail name="mesa_arr_udp" />
-		<AuditTrail name="mesa_arr_tls" />
-	</Actor>
+    <!--=========================================================-->     
+ 	<!-- Audit Record Repository Configuration                   -->
+    <!--=========================================================-->     
+	<!-- 	
+    <Actor name="auditlog" type="SecureNode">
+		<Description>Audit Record Repository</Description>
+      	<AuditTrail name="log4j_audittrail" />
+		<AuditTrail name="moss_arr_udp" />	
+		<AuditTrail name="moss_arr_tls" />	
+		
+		<AuditTrail name="allscripts_arr_udp" />	
+		<AuditTrail name="allscripts_arr_tls" />
+		
+		<AuditTrail name="forcare_arr_udp" />	
+		<AuditTrail name="forcare_arr_tls" />
+		
+		<AuditTrail name="medecision_arr_udp" />	
+		<AuditTrail name="medecision_arr_tls" />
+
+		<AuditTrail name="medicity_arr_udp" />	
+		<AuditTrail name="medicity_arr_tls" />
+
+		<AuditTrail name="ibm_arr_udp" />	
+		<AuditTrail name="ibm_arr_tls" />
+
+		<AuditTrail name="ith-icoserve_arr_udp" />	
+		<AuditTrail name="ith-icoserve_arr_tls" />
+			
+		<AuditTrail name="karos_arr_udp" />	
+		<AuditTrail name="karos_arr_tls" />
+
+		<AuditTrail name="oracle_ehr_arr_udp" />	
+		<AuditTrail name="oracle_ehr_arr_tls" />	
+		<AuditTrail name="oracle_pix_arr_udp" />	
+		<AuditTrail name="oracle_pix_arr_tls" />	
+		
+		<AuditTrail name="tiani_ehr_arr_udp" />	
+		<AuditTrail name="tiani_ehr_arr_tls" />	
+		<AuditTrail name="tiani_pacs_arr_udp" />	
+		<AuditTrail name="tiani_pacs_arr_tls" />	
+		
+		<AuditTrail name="vangent_arr_udp" />	
+		<AuditTrail name="vangent_arr_tls" />
+    </Actor>
 	 -->
 
 </Configuration>
