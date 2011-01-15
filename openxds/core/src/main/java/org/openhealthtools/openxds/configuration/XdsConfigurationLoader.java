@@ -37,6 +37,7 @@ import org.openhealthtools.openexchange.actorconfig.TransactionsSet;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.log.IMesaLogger;
+import org.openhealthtools.openexchange.utils.StringUtil;
 import org.openhealthtools.openxds.common.XdsBroker;
 import org.openhealthtools.openxds.common.XdsFactory;
 import org.openhealthtools.openxds.registry.XdsRegistryImpl;
@@ -130,10 +131,12 @@ public class XdsConfigurationLoader extends ActorConfigurationLoader {
 			
 			if (respondingGatewaySet != null) {
 				for (Transactions transactions : respondingGatewaySet.getAllTransactions() ) {
+					if (!StringUtil.goodString(transactions.getId()))
+						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + ID + "' attribute");
 					if (transactions.getQuery() == null)
-						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + QUERY + "' attribute");
+						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + QUERY + "' Connection for id " + transactions.getId());
 					if (transactions.getRetrieve() == null)
-						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + RETRIEVE + "' attribute");
+						throw new IheConfigurationException("RespondingGateway Transactions must specify a valid '" + RETRIEVE + "' Connection for id " + transactions.getId());
 				}	
 			}
 		}
