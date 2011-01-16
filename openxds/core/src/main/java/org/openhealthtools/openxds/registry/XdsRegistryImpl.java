@@ -162,7 +162,7 @@ public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
 			sb.append("https://");
 			sb.append(host);
 			sb.append(":");
-			int port = PropertyFacade.getInteger(XdsConstants.TLS_PORT, 8443);
+			int port = PropertyFacade.getInteger(XdsConstants.TLS_PORT, 8011);
 			sb.append(port);
 		} else {
 			sb.append("http://");
@@ -175,7 +175,7 @@ public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
 		sb.append("/");
 		String context = PropertyFacade.getString(XdsConstants.WEB_APP_CONTEXT, "openxds");
 		sb.append(context);
-		sb.append("/services/xdsregistryb");
+		sb.append("/services/DocumentRegistry");
 
 		return sb.toString();
 	}

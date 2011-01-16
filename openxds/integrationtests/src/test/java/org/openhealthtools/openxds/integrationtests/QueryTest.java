@@ -53,36 +53,6 @@ import org.openhealthtools.openexchange.utils.OMUtil;
  * @author <a href="mailto:wenzhi.li@misys.com">Wenzhi Li</a>
  */
 public class QueryTest extends XdsTest {
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		InputStream is = XdsTest.class.getClassLoader().getResourceAsStream("test.properties");
-		if (is == null) { 
-			throw new Exception("Cannot load test.propertises"); 
-		}
-		Properties properties = new java.util.Properties();
-		try {
-			properties.load(is);
-		}
-		catch (Exception e) {
-			throw new Exception("Cannot load test.properties", e); 
-		}
-		hostName = properties.getProperty("pixRegistryHostName");
-		repositoryUrl = properties.getProperty("repositoryUrl");
-		registryUrl = properties.getProperty("registryUrl");
-		pixRegistryPort = Integer.parseInt(properties.getProperty("pixRegistryPort"));
-		patientId = properties.getProperty("patientId");
-		assigningAuthority = properties.getProperty("assigningAuthority");
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	/**
 	 * @throws java.lang.Exception

@@ -16,11 +16,6 @@
 	    <artifactId>servlet-api</artifactId>
 	    <version>${servlet.version}</version>
 	</dependency>  
-  	<dependency>
-  		<groupId>org.openhealthtools.openexchange</groupId>
-  		<artifactId>openexchange-audit</artifactId>
-		<version>${openexchange.version}</version>
-  	</dependency>
    	<dependency>
  		<groupId>org.openhealthtools.openxds</groupId>
  		<artifactId>openxds-api</artifactId>
@@ -42,9 +37,19 @@
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
+  		<groupId>org.openhealthtools.openexchange</groupId>
+  		<artifactId>openexchange-audit</artifactId>
+		<version>${openexchange.version}</version>
+  	</dependency>
+  	<dependency>
 		<groupId>org.openhealthtools.openexchange</groupId>
 		<artifactId>openexchange-syslog</artifactId>
 		<version>${openexchange.version}</version>
+	</dependency>
+  	<dependency>
+		<groupId>org.openhealthtools.opendsub</groupId>
+		<artifactId>opendsub-core</artifactId>
+		<version>${opendsub.version}</version>
 	</dependency>
 	<!-- <dependency>
 		<groupId>com.misys.hieportal</groupId>

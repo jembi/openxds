@@ -52,11 +52,15 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.openhealthtools.openexchange.actorconfig.net.SecureConnectionDescription;
+import org.openhealthtools.openexchange.actorconfig.net.SecureSocketFactory;
 import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
@@ -89,39 +93,37 @@ public abstract class XdsTest {
 	protected static String assigningAuthority;
 	protected static boolean validatePatient = false;
 	protected static String homeCommunityId;
+	
+	protected static String tlsRepositoryUrl;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		InputStream is = XdsTest.class.getClassLoader().getResourceAsStream("test.properties");
-		if (is == null) { 
-			throw new Exception("Cannot load test.propertises"); 
-		}
-		Properties properties = new java.util.Properties();
-		try {
-			properties.load(is);
-		}
-		catch (Exception e) {
-			throw new Exception("Cannot load test.properties", e); 
-		}
-		hostName = properties.getProperty("pixRegistryHostName");
-		repositoryUrl = properties.getProperty("repositoryUrl");
-		registryUrl = properties.getProperty("registryUrl");
-		pixRegistryPort = Integer.parseInt(properties.getProperty("pixRegistryPort"));
-		patientId = properties.getProperty("patientId");
-		assigningAuthority = properties.getProperty("assigningAuthority");
-		validatePatient = (properties.getProperty("validatePatient").equals("false")) ? false : true;
-		rgUrl = properties.getProperty("rgUrl");
-		igUrl = properties.getProperty("igUrl");
-		homeCommunityId = properties.getProperty("home.community.id");
-
-		//Initialize openEMPI 
-//		XdsRegistryPatientService ps = XdsFactory.getXdsRegistryPatientService();
-//		XdsFactory.getInstance().getBean("context");
-//		org.openhie.openempi.context.Context.startup();
-//		org.openhie.openempi.context.Context.authenticate("admin", "admin");
-
+		PropertyFacade.loadProperties(new String[]{"test.properties"});
+//		InputStream is = XdsTest.class.getClassLoader().getResourceAsStream("test.properties");
+//		if (is == null) { 
+//			throw new Exception("Cannot load test.propertises"); 
+//		}
+//		Properties properties = new java.util.Properties();
+//		try {
+//			properties.load(is);
+//		}
+//		catch (Exception e) {
+//			throw new Exception("Cannot load test.properties", e); 
+//		}
+		hostName = PropertyFacade.getString("pixRegistryHostName");
+		repositoryUrl = PropertyFacade.getString("repositoryUrl");
+		registryUrl = PropertyFacade.getString("registryUrl");
+		pixRegistryPort = PropertyFacade.getInteger("pixRegistryPort");
+		patientId = PropertyFacade.getString("patientId");
+		assigningAuthority = PropertyFacade.getString("assigningAuthority");
+		validatePatient = PropertyFacade.getBoolean("validatePatient");
+		rgUrl = PropertyFacade.getString("rgUrl");
+		igUrl = PropertyFacade.getString("igUrl");
+		homeCommunityId = PropertyFacade.getString("home.community.id");
+	
 	}
 
 	/**
@@ -538,6 +540,38 @@ public abstract class XdsTest {
 	    options.setTo( new EndpointReference(url) );
 		options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
 		options.setTimeOutInMilliSeconds(60000);
+		
+		//Set secure protocol
+	    if (url.startsWith("https://")) {
+	    	options.setTransportInProtocol(Constants.TRANSPORT_HTTPS);
+	    	SecureConnectionDescription cd = new SecureConnectionDescription();
+	    	
+    		String temp = url.substring("https://".length());
+    		int cindex = temp.indexOf(":");
+    		int sindex = temp.indexOf("/");
+    
+    		String host = temp.substring(0, cindex);
+    		int port = Integer.parseInt(temp.substring(cindex+1, sindex));
+    		String urlPath = temp.substring(sindex);
+    		cd.setHostname(host);
+    		cd.setPort(port);
+    		cd.setUrlPath(urlPath);
+    		String keyStore = PropertyFacade.getString("client.keystore");
+    		cd.setKeyStore(keyStore);
+    		String keyPassword = PropertyFacade.getString("client.keystore.password");
+    		cd.setKeyStorePassword(keyPassword);
+    		String trustStore = PropertyFacade.getString("client.truststore");
+    		cd.setTrustStore(trustStore);
+    		String trustPassword = PropertyFacade.getString("client.truststore.password");
+    		cd.setTrustStorePassword(trustPassword);
+    	
+	    	SecureSocketFactory ssf = new SecureSocketFactory(cd);
+	    	Protocol protocol = new Protocol("https", ssf, port);			
+	
+			options.setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, protocol);
+	    } else {
+	    	options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+	    }
 //		try {
 //			String from = InetAddress.getLocalHost().getHostAddress();	
 //			options.setFrom(new EndpointReference(from));

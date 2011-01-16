@@ -600,8 +600,6 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		String remoteIP = (String)getMessageContext().getProperty(MessageContext.REMOTE_ADDR);
 		String localIP = (String)getMessageContext().getProperty(MessageContext.TRANSPORT_ADDR);
 
-	
-		
 		ParticipantObject set = new ParticipantObject("SubmissionSet",  meatdata.getSubmissionSetUniqueId());
 		ParticipantObject patientObj = new ParticipantObject("PatientIdentifier", meatdata.getSubmissionSetPatientId());
 		if(isITI41){

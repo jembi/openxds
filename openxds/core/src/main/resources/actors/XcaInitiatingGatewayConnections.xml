@@ -87,12 +87,12 @@
 <!-- The XDS Registry connections to which this Reposonding Gateway connects -->
 <!-- All the connections below are used for Connecatathon NA 2011            -->
 <!--=========================================================================-->	
-	<StandardConnection name="alert8-rg">
+	<StandardConnection name="alert-rg">
 		<HostName>alert8</HostName>
 		<Port>8080</Port>
 		<UrlPath>/XCAGateway/services/rg</UrlPath>
 	</StandardConnection>
-	<SecureConnection name="alert8-secure-rg">
+	<SecureConnection name="alert-secure-rg">
 		<HostName>alert8</HostName>
 		<Port>8443</Port>
 		<UrlPath>/XCAGateway/services/rg</UrlPath>				
