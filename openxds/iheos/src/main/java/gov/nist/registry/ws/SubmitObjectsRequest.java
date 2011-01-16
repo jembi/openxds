@@ -44,6 +44,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.opendsub.DsubException;
+import org.openhealthtools.opendsub.producer.DsubPublisher;
+import org.openhealthtools.openexchange.actorconfig.Configuration;
+import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
@@ -57,14 +62,18 @@ import org.openhealthtools.openexchange.syslog.LoggerException;
 import org.openhealthtools.openexchange.utils.OMUtil;
 import org.openhealthtools.openexchange.utils.hl7.HL7;
 import org.openhealthtools.openxds.common.AssigningAuthorityUtil;
+import org.openhealthtools.openxds.common.ConnectionUtil;
 import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.common.XdsFactory;
+import org.openhealthtools.openxds.dsub.Publisher;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
 import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
+
+import proto.notification.wsa.EndpointReference;
 
 
 public class SubmitObjectsRequest extends XdsCommon {
@@ -214,21 +223,13 @@ public class SubmitObjectsRequest extends XdsCommon {
 		// Notify document submission to subscribers
 		if (!response.has_errors()) {
 			//todo: remove hardcoded url
-//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/http://localhost:8885/opendsub/services/NotificationBroker");
-//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/axis2/services/xdsregistryb");
+//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/NotificationBroker");
+//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/openxds/services/DocumentRegistry");
 //			NotificationProducer producer = new DocumentMetadataProducer(endpoint, );
 //			LocalDsubPublisher publisher = new LocalDsubPublisher(endpoint); 
-			
-//			
-//			//todo: remove hardcoded url
-//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/http://localhost:8885/opendsub/services/NotificationBroker");
-//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/axis2/services/xdsregistryb");
-//			DsubPublisher publisher = new DsubPublisher(endpoint, producerEndpoint);
-//			try {
-//				publisher.receive(sor);
-//			}catch(DsubException e) {
-//				logger.error("Failed to publish to DocumentMetadataNotificationBroker" , e);
-//			}
+
+			//Document Metadata Publish
+			Publisher.getInstance().publish(sor, actor);
 		}
 		
 		// return test log message id only if request from internal Repository

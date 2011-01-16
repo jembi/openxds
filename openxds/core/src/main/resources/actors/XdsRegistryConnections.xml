@@ -64,4 +64,21 @@
 		<TrustPass>password</TrustPass>
     </SecureConnection>
 
+    <StandardConnection name="local-broker">
+		<HostName>localhost</HostName>
+		<Port>8885</Port>
+		<UrlPath>/opendsub/services/opendsub/services/NotificationBroker</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="secure-local-broker">
+		<HostName>localhost</HostName>
+		<Port>8895</Port>
+		<UrlPath>/opendsub/services/opendsub/services/NotificationBroker</UrlPath>		
+
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2011_Keystore.jks</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2011_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
 </Configuration>
