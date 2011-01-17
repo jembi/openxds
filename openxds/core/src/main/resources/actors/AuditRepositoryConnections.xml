@@ -25,7 +25,7 @@
 
 <Configuration>
 	<StandardConnection name="nist-arr-bsd">
-		<HostName>nist1.ihe.net</HostName>
+		<HostName>nist1</HostName>
 		<Port>8087</Port>
 		<Property name="TYPE" value="BSD SYSLOG" />
 		<PropertySet name="localhost">
@@ -47,7 +47,7 @@
 		<Property name="TYPE" value="LOG4J LOGGER" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
             <Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -67,7 +67,7 @@
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -85,7 +85,7 @@
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -110,12 +110,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="moss_arr_udp">
-		<HostName>moss2.ihe.net</HostName>
+		<HostName>moss2</HostName>
 		<Port>2861</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -128,12 +128,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="moss_arr_tls">
-		<HostName>moss2.ihe.net</HostName>
+		<HostName>moss2</HostName>
 		<Port>2862</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -158,12 +158,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="allscripts_arr_udp">
-		<HostName>allscripts6.ihe.net</HostName>
+		<HostName>allscripts6</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -176,12 +176,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="allscripts_arr_tls">
-		<HostName>allscripts6.ihe.net</HostName>
+		<HostName>allscripts6</HostName>
 		<Port>5554</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -206,12 +206,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="forcare_arr_udp">
-		<HostName>forcare2.ihe.net</HostName>
+		<HostName>forcare2</HostName>
 		<Port>8514</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -224,12 +224,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="forcare_arr_tls">
-		<HostName>forcare2.ihe.net</HostName>
+		<HostName>forcare2</HostName>
 		<Port>6514</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -254,12 +254,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="medecision_arr_udp">
-		<HostName>medecision0.ihe.net</HostName>
+		<HostName>medecision0</HostName>
 		<Port>4000</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -272,12 +272,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="medecision_arr_tls">
-		<HostName>medecision0.ihe.net</HostName>
+		<HostName>medecision0</HostName>
 		<Port>4002</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -302,12 +302,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="medicity_arr_udp">
-		<HostName>medicity0.ihe.net</HostName>
+		<HostName>medicity0</HostName>
 		<Port>4001</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -320,12 +320,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="medicity_arr_tls">
-		<HostName>medicity0.ihe.net</HostName>
+		<HostName>medicity0</HostName>
 		<Port>4003</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -350,12 +350,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="ibm_arr_udp">
-		<HostName>ibm0.ihe.net</HostName>
+		<HostName>ibm0</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -368,12 +368,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="ibm_arr_tls">
-		<HostName>ibm0.ihe.net</HostName>
+		<HostName>ibm0</HostName>
 		<Port>4450</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -398,12 +398,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="ith-icoserve_arr_udp">
-		<HostName>ith-icoserve7.ihe.net</HostName>
+		<HostName>ith-icoserve7</HostName>
 		<Port>5002</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -416,12 +416,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="ith-icoserve_arr_tls">
-		<HostName>ith-icoserve7.ihe.net</HostName>
+		<HostName>ith-icoserve7</HostName>
 		<Port>5001</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -446,12 +446,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="karos_arr_udp">
-		<HostName>karos2.ihe.net</HostName>
+		<HostName>karos2</HostName>
 		<Port>4000</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -464,12 +464,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="karos_arr_tls">
-		<HostName>karos2.ihe.net</HostName>
+		<HostName>karos2</HostName>
 		<Port>4000</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -494,12 +494,12 @@
 	</SecureConnection>
 	
 	<StandardConnection name="oracle_ehr_arr_udp">
-		<HostName>oracle3.ihe.net</HostName>
+		<HostName>oracle3</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -512,12 +512,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="oracle_ehr_arr_tls">
-		<HostName>oracle3.ihe.net</HostName>
+		<HostName>oracle3</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -542,12 +542,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="oracle_pix_arr_udp">
-		<HostName>oracle2.ihe.net</HostName>
+		<HostName>oracle2</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -560,12 +560,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="oracle_pix_arr_tls">
-		<HostName>oracle2.ihe.net</HostName>
+		<HostName>oracle2</HostName>
 		<Port>514</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -590,12 +590,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="tiani_ehr_arr_udp">
-		<HostName>tiani-cisco6.ihe.net</HostName>
+		<HostName>tiani-cisco6</HostName>
 		<Port>5555</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -608,12 +608,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="tiani_ehr_arr_tls">
-		<HostName>tiani-cisco6.ihe.net</HostName>
+		<HostName>tiani-cisco6</HostName>
 		<Port>6514</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -638,12 +638,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="tiani_pacs_arr_udp">
-		<HostName>tiani-cisco11.ihe.net</HostName>
+		<HostName>tiani-cisco11</HostName>
 		<Port>5555</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -656,12 +656,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="tiani_pacs_arr_tls">
-		<HostName>tiani-cisco11.ihe.net</HostName>
+		<HostName>tiani-cisco11</HostName>
 		<Port>6514</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -686,12 +686,12 @@
 	</SecureConnection>
 
 	<StandardConnection name="vangent_arr_udp">
-		<HostName>vangent1.ihe.net</HostName>
+		<HostName>vangent1</HostName>
 		<Port>3110</Port>
 		<Property name="TYPE" value="UDP SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
@@ -704,12 +704,12 @@
 		</PropertySet>
 	</StandardConnection>
 	<SecureConnection name="vangent_arr_tls">
-		<HostName>vangent1.ihe.net</HostName>
+		<HostName>vangent1</HostName>
 		<Port>3100</Port>
 		<Property name="TYPE" value="TLS SYSLOG" />
 		<PropertySet name="localhost">
 			<Entry name="MACHINENAME" value="moss0" />
-			<Entry name="HOSTNAME" value="moss0.ihe.net" />
+			<Entry name="HOSTNAME" value="moss0" />
 			<Entry name="IP" value="10.242.10.60" />
 			<Entry name="SITE" value="MOSS" />
 			<Entry name="SOURCE" value="MOSS" />
