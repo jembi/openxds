@@ -125,7 +125,8 @@ abstract public class StoredQueryFactory {
 			log_message.addOtherParam("Parameters", params.toString());
 
 		if (response == null) {
-			log_message.addOtherParam("XXXX Allocating new Response!!!!", "");
+			if (log_message != null)
+				log_message.addOtherParam("XXXX Allocating new Response!!!!", "");
 			response = new AdhocQueryResponse(Response.version_3);
 		}
 

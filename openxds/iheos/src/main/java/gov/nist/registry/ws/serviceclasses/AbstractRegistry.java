@@ -59,7 +59,8 @@ ContentValidationService {
 			OMElement startup_error = beginTransaction(getRTransactionName(sor), sor, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(getRTransactionName(sor));
+			if(log_message != null)
+				log_message.setTestMessage(getRTransactionName(sor));
 
 			validateWS(false);
 
@@ -80,7 +81,8 @@ ContentValidationService {
 		OMElement startup_error = beginTransaction(getRTransactionName(ahqr), ahqr, AppendixV.REGISTRY_ACTOR);
 		if (startup_error != null)
 			return startup_error;
-		log_message.setTestMessage(getRTransactionName(ahqr));
+		if(log_message != null)
+			log_message.setTestMessage(getRTransactionName(ahqr));
 
 		String type = getRTransactionName(ahqr);
 

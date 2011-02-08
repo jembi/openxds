@@ -86,7 +86,7 @@ public class XdsCommon  {
 	protected void log_status() {
 		try {
 			String e_and_w = response.getErrorsAndWarnings();
-			if (e_and_w != null && !e_and_w.equals(""))
+			if (e_and_w != null && !e_and_w.equals("") && log_message != null)
 				log_message.addErrorParam("Error", e_and_w);
 		} catch (Exception e) {
 			response.error("Internal Error: cannot set final status in test log on transaction");
@@ -108,18 +108,20 @@ public class XdsCommon  {
 		
 		generateAuditLog(response);
 		
-		if (log_message == null) {
+		/*if (log_message == null) {
 			logger.fatal("\nFATAL ERROR: XdsCommon.log_response(): log_message is null\n");
 			return;
-		}
+		}*/
 		try {
-			if (response.has_errors()) {
-				log_message.setPass(false);
-				log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
-			} else
-				log_message.setPass(true);
-
-			log_message.addOtherParam("Response", response.getResponse().toString());
+			if (log_message != null){
+				if (response.has_errors()) {
+					log_message.setPass(false);
+					log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
+				} else
+					log_message.setPass(true);
+	
+				log_message.addOtherParam("Response", response.getResponse().toString());
+			}
 		}
 		catch (LoggerException e) {
 			logger.error("**************ERROR: Logger exception attempting to return to user");

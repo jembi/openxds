@@ -235,7 +235,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 		// return test log message id only if request from internal Repository
 		if (returnTestLogId() && "127.0.0.1".equals(clientIPAddress)) {
 			logger.info("Adding testLogId");
-			res.addAttribute("testLogId", log_message.getMessageID(), null);
+			String msgID = null;
+			if (log_message != null)
+				 msgID = log_message.getMessageID();
+			res.addAttribute("testLogId", msgID, null);
 		}
 		if (logger.isInfoEnabled()){
 			logger.info("response is " + res.toString());
@@ -294,7 +297,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 
 		String patient_id = m.getSubmissionSetPatientId();
-		log_message.addOtherParam("Patient ID", patient_id);
+		if (log_message != null)
+			log_message.addOtherParam("Patient ID", patient_id);
 
 		validate_patient_id(patient_id);
 
@@ -357,8 +361,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		// submit to backend registry
 		String to_backend = m.getV3SubmitObjectsRequest().toString();
-
-		log_message.addOtherParam("From Registry Adaptor", to_backend);
+		if (log_message != null)
+			log_message.addOtherParam("From Registry Adaptor", to_backend);
 
 		status = submit_to_backend_registry(to_backend);
 		if (!status) {
@@ -373,8 +377,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 		if (approvable_object_ids.size() > 0) {
 
 			OMElement approve = ra.getApproveObjectsRequest(approvable_object_ids);
-
-			log_message.addOtherParam("Approve", approve.toString());
+			if (log_message != null)
+				log_message.addOtherParam("Approve", approve.toString());
 
 			submit_to_backend_registry(approve.toString());
 		}
@@ -395,8 +399,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 
 			OMElement deprecate = ra.getDeprecateObjectsRequest(deprecatable_object_ids);
-
-			log_message.addOtherParam("Deprecate", deprecate.toString());
+			if (log_message != null)
+				log_message.addOtherParam("Deprecate", deprecate.toString());
 
 			submit_to_backend_registry(deprecate.toString());
 		}
@@ -426,20 +430,24 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private void updateFolderTimes(Metadata m) throws MetadataException,
 	LoggerException, XdsException, XdsInternalException,
 	XMLParserException, MetadataValidationException {
-		log_message.addOtherParam("start update folder","");
+		if (log_message != null)
+			log_message.addOtherParam("start update folder","");
 		for (OMElement assoc : m.getAssociations()) {
-			log_message.addOtherParam("assoc type is ", m.getSimpleAssocType(assoc));
+			if (log_message != null)
+				log_message.addOtherParam("assoc type is ", m.getSimpleAssocType(assoc));
 			if ( !m.getSimpleAssocType(assoc).equals("HasMember")) 
 				continue;
 			String sourceId = m.getAssocSource(assoc);
-			log_message.addOtherParam("sourceid  ", sourceId);
+			if (log_message != null)
+				log_message.addOtherParam("sourceid  ", sourceId);
 			if (m.getSubmissionSetId().equals(sourceId))
 				continue;  // sourceObject is SS
 			if (m.getFolderIds().contains(sourceId))
 				continue;  // sourceObject is folder in submission - handled elsewhere
 
 			// sourceObject must be folder in registry, no other possibilities
-			log_message.addOtherParam("Adding to Registry Folder ", sourceId);
+			if (log_message != null)
+				log_message.addOtherParam("Adding to Registry Folder ", sourceId);
 			Metadata fm = fetchFolderbyId(sourceId);
 			if (fm.getFolders().size() == 0)
 				throw new XdsException("Adding to folder, sourceObject, " + sourceId + ", is not a folder in submission or in Registry");
@@ -487,14 +495,15 @@ public class SubmitObjectsRequest extends XdsCommon {
 				rplcToOrigIds.put(m.getAssocSource(assoc), m.getAssocTarget(assoc));
 			}
 		}
-
-		log_message.addOtherParam("RPLC assocs", rplcToOrigIds.toString());
+		if (log_message != null)
+			log_message.addOtherParam("RPLC assocs", rplcToOrigIds.toString());
 		for (String replacementDocumentId : rplcToOrigIds.keySet()) {
 			String originalDocumentId = rplcToOrigIds.get(replacementDocumentId);
 			// for each original document, find the collection of folders it belongs to
 			Metadata me = new SQFactory(this).findFoldersForDocumentByUuid(originalDocumentId, false /*LeafClass*/);
 			List<String> folderIds = me.getObjectIds(me.getObjectRefs());
-			log_message.addOtherParam("RPLC containing folders=", folderIds.toString());
+			if (log_message != null)
+				log_message.addOtherParam("RPLC containing folders=", folderIds.toString());
 			// for each folder, add an association placing replacement in that folder
 			for (String fid : folderIds) {
 				OMElement assoc = m.add_association(m.mkAssociation("HasMember", fid, replacementDocumentId));
@@ -504,7 +513,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 	}
 
 	private void logIds(Metadata m) throws LoggerException, MetadataException {
-		log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
+		if (log_message != null)
+			log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
 
 		List<String> doc_uids = new ArrayList<String>();
 		for (String id : m.getExtrinsicObjectIds()) {
@@ -512,7 +522,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 			if (uid != null && !uid.equals(""))
 				doc_uids.add(uid);
 		}
-		log_message.addOtherParam("DOCuids", doc_uids.toString());
+		if (log_message != null)
+			log_message.addOtherParam("DOCuids", doc_uids.toString());
 
 		List<String> fol_uids = new ArrayList<String>();
 		for (String id : m.getFolderIds()) {
@@ -520,8 +531,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 			if (uid != null && !uid.equals(""))
 				fol_uids.add(uid);
 		}
-		log_message.addOtherParam("FOLuids", fol_uids.toString());
-		log_message.addOtherParam("Structure", m.structure());
+		if (log_message != null){
+			log_message.addOtherParam("FOLuids", fol_uids.toString());
+			log_message.addOtherParam("Structure", m.structure());
+		}	
 	}
 
 	private void validateSourceId(Metadata m) throws MetadataException,

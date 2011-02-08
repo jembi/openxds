@@ -68,8 +68,8 @@ public class EbXML21GetFolderAndContents extends GetFolderAndContents {
 
 			fol_uuid = metadata.getFolder(0).getAttributeValue(MetadataSupport.id_qname);
 		}
-		
-		sqs.log_message.addOtherParam("Folder id", fol_uuid);
+		if (sqs.log_message != null)
+			sqs.log_message.addOtherParam("Folder id", fol_uuid);
 
 		List<String> folder_ids = new ArrayList<String>();
 		folder_ids.add(fol_uuid);
@@ -84,8 +84,8 @@ public class EbXML21GetFolderAndContents extends GetFolderAndContents {
 		metadata.addMetadata(doc_metadata);
 		List<String> docIds = eb.getIdsFromAdhocQueryResponse(doc_metadata); 
 		content_ids.addAll(docIds);
-
-		sqs.log_message.addOtherParam("Doc ids", docIds.toString());
+		if (sqs.log_message != null)
+			sqs.log_message.addOtherParam("Doc ids", docIds.toString());
 
 		
 
@@ -94,10 +94,11 @@ public class EbXML21GetFolderAndContents extends GetFolderAndContents {
 		if (content_ids.size() > 0 && folder_ids.size() > 0) {
 			OMElement assoc_metadata = eb.getRegistryPackageAssocs(folder_ids, content_ids);
 			assocIds = eb.getIdsFromAdhocQueryResponse(assoc_metadata);
+			if (sqs.log_message != null)
 			sqs.log_message.addOtherParam("Assoc ids", assocIds.toString());
 			metadata.addMetadata(assoc_metadata);
 		}
-
+		if (sqs.log_message != null)
 		sqs.log_message.addOtherParam("Assoc ids", "None");
 
 		return metadata;

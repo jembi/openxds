@@ -27,7 +27,9 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.TransportHeaders;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.openxds.common.XdsConstants;
 import org.openhealthtools.openxds.common.XdsFactory;
+import org.openhealthtools.openexchange.config.PropertyFacade;
 import org.openhealthtools.openexchange.syslog.Log;
 import org.openhealthtools.openexchange.syslog.LoggerException;
 
@@ -100,6 +102,7 @@ public class XdsService extends AppendixV {
 //				log_message = log.createMessage(getMessageContext().getFrom().getAddress());
 				log_message = log.createMessage(incoming_ip_address);
 			}
+			if(log_message != null){
 			log_message.addOtherParam(Fields.service, service_name);
 			is_secure = getMessageContext().getTo().toString().indexOf("https://") != -1;
 			log_message.addHTTPParam(Fields.isSecure, (is_secure) ? "true" : "false");
@@ -145,8 +148,9 @@ public class XdsService extends AppendixV {
 //			log_message.addHTTPParam(Fields.fromIpAddress , getMessageContext().getFrom().getAddress() ) ;  
 			log_message.addHTTPParam(Fields.fromIpAddress , incoming_ip_address ) ;  			
 			log_message.addHTTPParam(Fields.endpoint , getMessageContext().getTo().toString() ) ; 
-
-			return null;  // no error
+			}
+			return null; // no error
+			
 		} catch (LoggerException e) {
 			logger.error("LoggerException: new Log: " + e.getMessage());
 			e.printStackTrace();
@@ -267,7 +271,8 @@ public class XdsService extends AppendixV {
 	}
 
 	protected void startTransactionLog() throws LoggerException {
-		if (log == null) {
+		String enableSysLog = PropertyFacade.getString(XdsConstants.ENABLE_SYSLOG);
+		if (log == null && "true".equalsIgnoreCase(enableSysLog)) {
 			logger.info("+++++++++++++++++++++ start transaction log");
 			try {
 				log = (Log) XdsFactory.getInstance().getBean("logsService");
@@ -328,27 +333,31 @@ public class XdsService extends AppendixV {
 
 		try 
 		{
-			log_message.addHTTPParam( title , buffer.toString() ) ;
+			if (log_message != null)
+				log_message.addHTTPParam( title , buffer.toString() ) ;
 		} catch (LoggerException e) {}
 	}
 	private void addSoap ( String t , String s )
 	{
 		try {
-			log_message.addSoapParam( t , s ) ;
+			if (log_message != null)
+				log_message.addSoapParam( t , s ) ;
 		} catch (LoggerException e) {}
 	}
 
 	protected void addError ( String s )
 	{
 		try {
-			log_message.addErrorParam( "Error" , s ) ;
+			if (log_message != null)
+				log_message.addErrorParam( "Error" , s ) ;
 		} catch (LoggerException e) {}
 	}
 
 	protected void addOther ( String name, String s )
 	{
 		try {
-			log_message.addOtherParam( name , s ) ;
+			if (log_message != null)
+				log_message.addOtherParam( name , s ) ;
 		} catch (LoggerException e) {}
 	}
 

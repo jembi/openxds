@@ -62,7 +62,8 @@ public class EbXML21GetDocumentsAndAssociations extends GetDocumentsAndAssociati
 		}
 		
 		// for documents, get associations
-		sqs.log_message.addOtherParam("Doc count", Integer.toString(doc_ids.size()));
+		if (sqs.log_message != null)
+			sqs.log_message.addOtherParam("Doc count", Integer.toString(doc_ids.size()));
 		if (doc_ids.size() == 0)
 			return metadata;
 		

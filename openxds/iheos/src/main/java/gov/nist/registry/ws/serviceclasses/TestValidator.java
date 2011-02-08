@@ -23,8 +23,8 @@ public class TestValidator extends XdsService {
 	public OMElement ValidateTestRequest(OMElement request) {
 
 		this.beginTransaction("TestValidator", request, REGISTRY_ACTOR);
-
-		log_message.setTestMessage("TestValidator");
+		if (log_message != null)
+			log_message.setTestMessage("TestValidator");
 
 		return  validate(request);
 	}
@@ -68,7 +68,7 @@ public class TestValidator extends XdsService {
 			}
 		}
 		try {
-			if (log)
+			if (log && log_message != null)
 				log_message.addOtherParam("testnum", test_str);
 		} catch (LoggerException e) {}
 
@@ -243,7 +243,7 @@ public class TestValidator extends XdsService {
 		res.setNotImplemented();
 		if (log)
 			this.addOther("status", Response.status_notimplemented);
-		if (log)
+		if (log && log_message != null)
 			log_message.setPass(true);
 		if (log)
 			this.endTransaction(true);
@@ -255,7 +255,7 @@ public class TestValidator extends XdsService {
 		Response res = new Response();
 		if (log)
 			this.addOther("status", Response.status_success);
-		if (log)
+		if (log && log_message != null)
 			log_message.setPass(true);
 		if (log)
 			this.endTransaction(true);

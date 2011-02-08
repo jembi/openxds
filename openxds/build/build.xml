@@ -64,7 +64,7 @@
         	</fileset>        	
         </copy> 
 		
-		<mkdir dir="${build.lib.dir}/temp"/>
+		<!--<mkdir dir="${build.lib.dir}/temp"/>
     	<unzip src="${build.web.dir}/WEB-INF/lib/openexchange-syslog-1.2-SNAPSHOT.jar" dest="${build.lib.dir}/temp">
     	    <patternset>
     	    	<include name="**/*.properties" />    
@@ -78,7 +78,7 @@
         		<include name="logs*.xml"/>
         	</fileset>        	
 		</copy>
-    	<delete dir="${build.lib.dir}/temp"/>
+    	<delete dir="${build.lib.dir}/temp"/>-->
     </target>
 	
 	<target name="-prepare-manifest">

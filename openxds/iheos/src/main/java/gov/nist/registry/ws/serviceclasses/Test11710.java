@@ -14,8 +14,8 @@ public class Test11710 extends XdsService {
 			OMElement startup_error = beginTransaction("11710", sor, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-
-			log_message.setTestMessage("Test 11710");
+			if (log_message != null)
+				log_message.setTestMessage("Test 11710");
 
 			
 			TestImpl11710 ti = new TestImpl11710(log_message, AppendixV.REGISTRY_ACTOR, getMessageContext());

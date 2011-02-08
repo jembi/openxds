@@ -91,10 +91,10 @@ public class EbXML21GetRelatedDocuments extends GetRelatedDocuments {
 		} else {
 			originalDocId = uuid;
 		}
-		
-		sqs.log_message.addOtherParam("originalDocId", originalDocId);
-		sqs.log_message.addOtherParam("structure", result_metadata.structure());
-		
+		if (sqs.log_message != null){
+			sqs.log_message.addOtherParam("originalDocId", originalDocId);
+			sqs.log_message.addOtherParam("structure", result_metadata.structure());
+		}
 		// at this point result_metadata contains either a single ObjectRef or a single
 		// ExtrinsicObject representing the target document.  originalDocId has its
 		// id
@@ -117,7 +117,7 @@ public class EbXML21GetRelatedDocuments extends GetRelatedDocuments {
 		
 		// add associations to final result
 		result_metadata.addToMetadata(association_metadata.getLeafClassObjects(), true);
-		
+		if (sqs.log_message != null)
 		sqs.log_message.addOtherParam("with Associations", result_metadata.structure());
 
 		// discover ids (potentially for documents) that are referenced by the associations

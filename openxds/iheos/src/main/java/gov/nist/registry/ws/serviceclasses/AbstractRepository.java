@@ -56,8 +56,8 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 			OMElement startup_error = beginTransaction(getPnRTransactionName(), sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-
-			log_message.setTestMessage(getPnRTransactionName());
+			if(log_message != null)	
+				log_message.setTestMessage(getPnRTransactionName());
 
 			validateWS();
 
@@ -88,7 +88,8 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(getRetTransactionName());
+			if(log_message != null)
+				log_message.setTestMessage(getRetTransactionName());
 			
 			validateWS();
 			

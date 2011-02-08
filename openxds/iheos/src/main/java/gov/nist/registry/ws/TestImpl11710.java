@@ -51,8 +51,8 @@ public class TestImpl11710  extends XdsCommon {
 			}
 			
 			String ip = messageContext.getFrom().getAddress();
-			
-			log_message.setCompany(vendor);
+			if (log_message != null)
+				log_message.setCompany(vendor);
 			
 			this.log_response();
 			

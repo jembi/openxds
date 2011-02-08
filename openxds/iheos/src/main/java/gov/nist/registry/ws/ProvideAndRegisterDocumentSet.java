@@ -176,7 +176,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		} catch (XdsInternalException e) {
 			logger.error("Error generating response");
 			try {
-				log_message.addErrorParam("Internal Error", "Error generating response from PnR");
+				if (log_message != null)
+					log_message.addErrorParam("Internal Error", "Error generating response from PnR");
 			}
 			catch (LoggerException e1) {
 
@@ -230,9 +231,10 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		
 		generateAuditLog(m);
 
-		log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
-		log_message.addOtherParam("Structure", m.structure());
-
+		if(log_message != null){
+			log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
+			log_message.addOtherParam("Structure", m.structure());
+		}	
 		if (xds_version == xds_b)
 			this.validate_docs_and_metadata_b(pnr, m);
 
@@ -317,11 +319,10 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		String epr = registry_endpoint();
 
 		Protocol protocol = ConnectionUtil.getProtocol(registryClientConnection);
-
-		log_message.addOtherParam("Register transaction endpoint", epr);
-
-		log_message.addOtherParam("Register transaction", register_transaction.toString());
-
+		if (log_message != null){
+			log_message.addOtherParam("Register transaction endpoint", epr);
+			log_message.addOtherParam("Register transaction", register_transaction.toString());
+		}	
 		boolean success = false;
 		Soap soap = new Soap();
 		try {
@@ -342,7 +343,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 				QName testlogid = new QName("testLogId");
 				String registryTestLogId = result.getAttributeValue(testlogid);
 				if (registryTestLogId != null) {
-					log_message.addOtherParam("Registry Test Log ID", registryTestLogId);
+					if (log_message != null)
+						log_message.addOtherParam("Registry Test Log ID", registryTestLogId);
 					// remove attribute - just private communitication
 					OMAttribute tlidA = result.getAttribute(testlogid);
 					if (tlidA != null)
@@ -353,9 +355,11 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 
 			if (result == null) {
 				response.add_error(MetadataSupport.XDSRepositoryError, "Null response message from Registry", "ProvideAndRegistryDocumentSet.java", log_message);
-				log_message.addOtherParam("Register transaction response", "null");
+				if (log_message != null)
+					log_message.addOtherParam("Register transaction response", "null");
 			} else {
-				log_message.addOtherParam("Register transaction response", result.toString());
+				if (log_message != null)
+					log_message.addOtherParam("Register transaction response", result.toString());
 
 				String status = result.getAttributeValue(MetadataSupport.status_qname);
 				if (status == null) {
@@ -428,8 +432,10 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 	void log_headers(Soap soap) throws LoggerException, XdsInternalException {
 		OMElement in_hdr = soap.getInHeader();
 		OMElement out_hdr = soap.getOutHeader();
-		log_message.addSoapParam("Header sent to Registry", (out_hdr == null) ? "Null" : out_hdr.toString());
-		log_message.addSoapParam("Header received from Registry", (in_hdr == null) ? "Null" : in_hdr.toString());
+		if (log_message != null){
+			log_message.addSoapParam("Header sent to Registry", (out_hdr == null) ? "Null" : out_hdr.toString());
+			log_message.addSoapParam("Header received from Registry", (in_hdr == null) ? "Null" : in_hdr.toString());
+		}	
 	}
 
 

@@ -111,6 +111,7 @@ public abstract class Aggregator {
     	
     	for (String homeId : results.keySet()) {
     		OMElement result = results.get(homeId);
+    		if (logMessage != null)
 			logMessage.addOtherParam("Response from " + homeId, result.toString()) ;
     		
     		String error = checkNullResult( result );

@@ -883,9 +883,10 @@ public class EbXML21QuerySupport implements RegistryValidations {
 		HashMap<String, OMElement> dup_objects = m.getUidMap();
 		dup_uids.addAll(dup_objects.keySet());
 
-
-		sqs.log_message.addOtherParam("dup uuids", uuids.toString());
-		sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
+		if (sqs.log_message != null){
+			sqs.log_message.addOtherParam("dup uuids", uuids.toString());
+			sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
+		}	
 
 		// Generate error messages that are object type specific
 		dupUidErrorException(metadata, 

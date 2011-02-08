@@ -33,7 +33,6 @@
         <property name="locations">
             <list>
               <value>classpath*:/openxds.properties</value>
-              <value>classpath*:/logs.properties</value>
             </list>
         </property>
     </bean>
@@ -100,7 +99,7 @@
   	    <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
-    <!-- DataSource and Transaction configuration for logs
+    <!-- DataSource and Transaction configuration for logs-->
     
     <bean id="logsdataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${logs.db.driver}"/>
@@ -115,7 +114,7 @@
     
     <bean id="logshibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
   	    <property name="sessionFactory" ref="logssessionFactory" />
-    </bean> -->
+    </bean> 
   
     <!-- Enable @Transactional support -->
 	<tx:annotation-driven/>
@@ -161,7 +160,7 @@
         </property>
 	</bean>
 	
-	<!-- <bean id="logssessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+	<bean id="logssessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
     	<property name="dataSource" ref="logsdataSource" />
         <property name="annotatedClasses">
 			<list>
@@ -199,5 +198,5 @@
 		<property name="sessionFactory">
 			<ref local="logssessionFactory" />
 		</property>
-	</bean> -->
+	</bean> 
 </beans>    

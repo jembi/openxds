@@ -120,7 +120,8 @@ public class RetrieveDocumentSet extends XdsCommon {
         } catch (XdsInternalException e) {
             logger.fatal(logger_exception_details(e));
             try {
-                log_message.addErrorParam("Internal Error", "Error generating response from Ret.b");
+            	if (log_message != null)
+            		log_message.addErrorParam("Internal Error", "Error generating response from Ret.b");
             }
             catch (LoggerException e1) {
                 logger.fatal(logger_exception_details(e1));

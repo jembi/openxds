@@ -206,7 +206,8 @@ public class AdhocQueryRequest extends XdsCommon {
 			String ele_name = ele.getLocalName();
 
 			if (ele_name.equals("SQLQuery")) {
-				log_message.setTestMessage("SQL");
+				if (log_message != null)
+					log_message.setTestMessage("SQL");
 				RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_Q);
 				found_query=true;
 				OMElement result =  sql_query(ahqr);
@@ -222,7 +223,8 @@ public class AdhocQueryRequest extends XdsCommon {
 					}
 				}
 			} else if (ele_name.equals("AdhocQuery")) {
-				log_message.setTestMessage(service_name);
+				if (log_message != null)
+					log_message.setTestMessage(service_name);
 
 				RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_SQ);
 				found_query = true;

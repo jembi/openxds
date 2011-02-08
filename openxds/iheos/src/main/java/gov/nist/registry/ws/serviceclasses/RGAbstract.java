@@ -87,7 +87,9 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement startup_error = beginTransaction(getQueryTransactionName(), ahqr, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(getQueryTransactionName());
+			
+			if (log_message != null)
+				log_message.setTestMessage(getQueryTransactionName());
 			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
 			if (ahq == null) {
 				endTransaction(false);
@@ -144,7 +146,9 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(getRetTransactionName());
+			
+			if (log_message != null)
+				log_message.setTestMessage(getRetTransactionName());
 
 			validateWS();
 
@@ -220,8 +224,10 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return response;
 		} else {
 			setHomeOnRetResponse(result);
-			log_message.addOtherParam("Result", result.toString());
-			log_message.setPass(true);
+			if (log_message != null){
+				log_message.addOtherParam("Result", result.toString());
+				log_message.setPass(true);
+			}	
 			endTransaction(true);
 			return result;
 		}		
@@ -266,8 +272,10 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			return response;
 		} else {
 			setHomeOnSQResponse(result, home);
-			log_message.addOtherParam("Result", result.toString());
-			log_message.setPass(true);
+			if (log_message != null){
+				log_message.addOtherParam("Result", result.toString());
+				log_message.setPass(true);
+			}	
 			endTransaction(true);
 			return result;
 		}		
@@ -294,7 +302,8 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement startup_error = beginTransaction(service_name, ahqr, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(service_name);
+			if (log_message != null)
+				log_message.setTestMessage(service_name);
 			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
 			if (ahq == null) {
 				endTransaction(false);
@@ -334,7 +343,8 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement startup_error = beginTransaction(service_name, ahqr, AppendixV.REGISTRY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(service_name);
+			if (log_message != null)
+				log_message.setTestMessage(service_name);
 			OMElement ahq = MetadataSupport.firstChildWithLocalName(ahqr, "AdhocQuery") ;
 			if (ahq == null) {
 				endTransaction(false);
@@ -374,7 +384,8 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			log_message.setTestMessage(getRetTransactionName());
+			if (log_message != null)
+				log_message.setTestMessage(getRetTransactionName());
 
 			validateWS();
 
@@ -407,8 +418,8 @@ public abstract class RGAbstract extends XdsService implements ContentValidation
 			OMElement result = s.retrieveDocumentSet(rdsr, this, optimize /* optimize */, this);
 
 			setHomeOnRetResponse(result);
-
-			log_message.addOtherParam("Result", result.toString());
+			if (log_message != null)
+				log_message.addOtherParam("Result", result.toString());
 
 			endTransaction(s.getStatus());
 			return result;

@@ -58,4 +58,10 @@ public class XdsConstants {
 	public static final String RG_ACTORS         = "XCA_RG_ACTORS";
 	public static final String IG_ACTORS         = "XCA_IG_ACTORS";
 	
+	
+	//Othert Constants
+	
+	public static final String ENABLE_SYSLOG = "enableSysLog";
+	
+	
 }

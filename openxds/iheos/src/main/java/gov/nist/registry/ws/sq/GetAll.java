@@ -19,6 +19,7 @@
 //public class GetAll extends StoredQuery {
 //
 //	public GetAll(HashMap params, boolean return_objects, Response response, LogMessage log_message, boolean is_secure) {
+//		if (sqs.log_message != null)
 //		super(params, return_objects, response, log_message,  is_secure);
 //
 //		//                         param name,                             required?, multiple?, is string?,   same size as,    alternative

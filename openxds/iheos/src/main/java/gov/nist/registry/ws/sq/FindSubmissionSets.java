@@ -54,7 +54,8 @@ abstract public class FindSubmissionSets extends StoredQuery {
 
 	public Metadata runSpecific() throws XdsInternalException, XdsException, LoggerException {
 		
-		sqs.log_message.addOtherParam("SqParams", sqs.params.toString());
+		if (sqs.log_message != null)
+			sqs.log_message.addOtherParam("SqParams", sqs.params.toString());
 		
 		validateParameters();
 

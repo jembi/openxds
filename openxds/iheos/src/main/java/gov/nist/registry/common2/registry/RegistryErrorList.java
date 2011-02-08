@@ -132,7 +132,8 @@ public class RegistryErrorList implements ErrorLogger {
 
 		if (log) {
 			try {
-				log_message.addErrorParam("Warning", msg);
+				if (log_message != null)
+					log_message.addErrorParam("Warning", msg);
 			} catch (Exception e) {
 				// oh well - can't fix it from here
 			}

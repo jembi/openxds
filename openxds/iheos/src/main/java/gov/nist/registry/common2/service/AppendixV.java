@@ -123,18 +123,20 @@ public abstract class AppendixV {
 		
 //		generateAuditLog(response);
 		
-		if (log_message == null) {
+		/*if (log_message == null) {
 			logger.fatal("\nFATAL ERROR: AppendixV.log_response(): log_message is null\n");
 			return;
-		}
+		}*/
 		try {
-			if (response.has_errors()) {
-				log_message.setPass(false);
-				log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
-			} else
-				log_message.setPass(true);
-
-			log_message.addOtherParam("Response", response.getResponse().toString());
+			if (log_message != null){
+				if (response.has_errors()) {
+					log_message.setPass(false);
+					log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
+				} else
+					log_message.setPass(true);
+	
+				log_message.addOtherParam("Response", response.getResponse().toString());
+			}	
 		}
 		catch (LoggerException e) {
 			logger.error("**************ERROR: Logger exception attempting to return to user");

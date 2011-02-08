@@ -118,13 +118,14 @@ public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  
 		HashMap<String, OMElement> dup_objects = m.getUidMap();
 		dup_uids.addAll(dup_objects.keySet());
 		
-		
-		sqs.log_message.addOtherParam("dup uuids", uuids.toString());
-		sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
-		
+		if (sqs.log_message != null){
+			sqs.log_message.addOtherParam("dup uuids", uuids.toString());
+			sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
+		}
 		for (String suuid : metadata.getSubmissionSetIds()) {
 			String sid = metadata.getExternalIdentifierValue(suuid, MetadataSupport.XDSSubmissionSet_uniqueid_uuid);
-			sqs.log_message.addOtherParam("ssuid", sid);
+			if (sqs.log_message != null)
+				sqs.log_message.addOtherParam("ssuid", sid);
 			if (dup_uids.contains(sid)) {
 				throw new MetadataValidationException("SubmissionSet uniqueId " + 
 						sid + 
@@ -136,7 +137,8 @@ public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  
 		
 		for (String fuuid : metadata.getFolderIds()) {
 			String fuid = metadata.getExternalIdentifierValue(fuuid, MetadataSupport.XDSFolder_uniqueid_uuid);
-			sqs.log_message.addOtherParam("fuid", fuid);
+			if (sqs.log_message != null)
+				sqs.log_message.addOtherParam("fuid", fuid);
 			if (dup_uids.contains(fuid)) {
 				throw new MetadataValidationException("Folder uniqueId " + 
 						fuid + 
