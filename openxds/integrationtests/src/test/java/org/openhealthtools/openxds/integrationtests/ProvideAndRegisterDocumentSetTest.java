@@ -185,7 +185,7 @@ public class ProvideAndRegisterDocumentSetTest extends XdsTest {
 		//replace document , submission set variables with actual uniqueIds. 
 		message = message.replace("$XDSDocumentEntry.uniqueId", "2.16.840.1.113883.3.65.2." + System.currentTimeMillis());
 		message = message.replace("$XDSSubmissionSet.uniqueId", "1.3.6.1.4.1.21367.2009.1.2.108." + System.currentTimeMillis());
-		message = message.replace("$patientId", "20110112113623^^^&1.3.6.1.4.1.21367.13.20.3000&ISO");//patientId);
+		message = message.replace("$patientId", patientId);
 		//populate the document uuid to be appended.
 		message = message.replace("$appendum_doc_uuid", doc_uuid);
 		
