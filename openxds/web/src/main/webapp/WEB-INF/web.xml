@@ -33,7 +33,6 @@
 	</servlet>
     <servlet>
         <servlet-name>AxisServlet</servlet-name>
-        <display-name>Apache-Axis Servlet</display-name>
         <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
         <!--<init-param>-->
         <!--<param-name>axis2.xml.path</param-name>-->
@@ -49,7 +48,6 @@
     </servlet>
     <servlet>
         <servlet-name>AxisAdminServlet</servlet-name>
-        <display-name>Apache-Axis AxisAdmin Servlet (Web Admin)</display-name>
         <servlet-class>
             org.apache.axis2.webapp.AxisAdminServlet</servlet-class>
     </servlet>

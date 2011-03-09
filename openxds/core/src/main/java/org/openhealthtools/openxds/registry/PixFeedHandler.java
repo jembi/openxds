@@ -31,7 +31,6 @@ import org.openhealthtools.openexchange.datamodel.MessageHeader;
 import org.openhealthtools.openexchange.datamodel.Patient;
 import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
 import org.openhealthtools.openexchange.utils.ExceptionUtil;
-import org.openhealthtools.openpixpdq.api.MessageStore;
 import org.openhealthtools.openpixpdq.common.PixPdqException;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7Header;
 import org.openhealthtools.openpixpdq.impl.v2.hl7.HL7v231;
@@ -114,14 +113,12 @@ class PixFeedHandler extends BaseHandler implements Application {
 	public Message processMessage(Message msgIn) throws ApplicationException,
 			HL7Exception {		
 		Message retMessage = null;
-		MessageStore store = actor.initMessageStore(msgIn, true);
 		//String encodedMessage = HapiUtil.encodeMessage(msgIn);
 		//log.info("Received message:\n" + encodedMessage + "\n\n");
 		try {
 			HL7Header hl7Header = new HL7Header(msgIn);			
 
 			//Populate MessageStore to persist the message
-			hl7Header.populateMessageStore(store);
 
 			if (msgIn instanceof ADT_A01 || //Admission of in-patient into a facility
 				msgIn instanceof ADT_A04 || //Registration of an outpatient for a visit of the facility
@@ -138,20 +135,10 @@ class PixFeedHandler extends BaseHandler implements Application {
 				throw new PixPdqException(errorMsg);
 			}
 		} catch (PixPdqException e) {
-			if (store !=null) { 
-				store.setErrorMessage( e.getMessage() );
-			}
 			throw new ApplicationException(ExceptionUtil.strip(e.getMessage()), e);		
 		} catch (HL7Exception e) {
-			if (store !=null) {
-				store.setErrorMessage( e.getMessage() );
-			}			
 			throw new HL7Exception(ExceptionUtil.strip(e.getMessage()), e);
 		} finally {
-			//Persist the message
-			if (store !=null) { 
-				actor.saveMessageStore(retMessage, false, store);			
-			}						
 		}
 
 		return retMessage;

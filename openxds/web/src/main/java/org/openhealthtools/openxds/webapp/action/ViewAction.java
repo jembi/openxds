@@ -67,7 +67,7 @@ public class ViewAction extends BaseAction {
 			index = reqURL.lastIndexOf("/");
 		
         if (index != -1) {
-        	registryUrl = reqURL.substring(0 , index + 1)+ "services/xdsregistryb";
+        	registryUrl = reqURL.substring(0 , index + 1)+ "services/DocumentRegistry";
         }
 		return SUCCESS;
 	}
