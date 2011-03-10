@@ -26,7 +26,7 @@
 <head>
 <link rel="stylesheet" href="<c:url value='/css/tabs.css'/>" type="text/css" />
 <link rel="stylesheet" href="<c:url value='/css/table.css'/>" type="text/css" />
-<link rel="stylesheet" href="<c:url value='/css/jmesa.css'/>" type="text/css"/>
+
 
 <script type="text/javascript" src="<c:url value="/scripts/grid.js"/>"></script>
 <script type="text/javascript" src="<c:url value='/scripts/jmesa.js'/>"></script>

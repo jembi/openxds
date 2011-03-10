@@ -25,7 +25,7 @@
 <%@ page import="java.util.LinkedList"%>
 <%@ page import="org.openhealthtools.openexchange.actorconfig.*"%>
 <html>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/styles/table.css" type="text/css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/table.css" type="text/css" />
 <body>
 <table class="TableTS" cellpadding="0" cellspacing="0">
 <tr><td>
@@ -66,7 +66,7 @@
     	if (lActors != null && lActors.size() > 0) {
     		String sType = ((IActorDescription) lActors.get(0)).getHumanReadableType();
     %>
-    <div class="Table">
+    <div class="Table1">
 	 <table class = "TableCON">
   		<thead class = "TableTH">
   			<th colspan="3" class = "TableTH"> 

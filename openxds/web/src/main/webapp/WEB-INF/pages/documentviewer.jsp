@@ -42,7 +42,7 @@
 }
 </style>
 
-<link rel="stylesheet" href="<%= request.getContextPath() %>/styles/table.css" type="text/css" />
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/table.css" type="text/css" />
 </head>
 <body>
 

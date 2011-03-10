@@ -18,21 +18,21 @@
  *    -
  */
 
-
 body { 
 overflow:hidden;
 height: auto;
 width: auto;
 padding: 0px;
 margin: 0px;
+background-color: #dcdcd6;
 }
-
-.body {
+.body1 {
 	width: 100%;
 	height: 100%;
 	padding-top: 0px;
 	background-color: #dcdcd6;
 }
+
 .Table{
 	height: 100%;
 	width: 100%;
@@ -46,17 +46,17 @@ margin: 0px;
 	background-color: #dcdcd6;
 }
 	
-TABLE.TableBODY{
-height: 101%;
+.TableBODY{
+height: 100%;
 width: 100%;
 background-color: #dcdcd6; 
 }
-TR.TableBODY{
+.bodyTR{
 	background-color: #dcdcd6;
 }
-TD.TableBODY{
+.bodyTD{
 	background-color: #dcdcd6;
-}	
+}		
 
 TABLE.TableJMESA{
 	width: 100%;
@@ -84,7 +84,7 @@ TH.TableTS {
 	font-family: verdana, arial, helvetica, sans-serif;
 	color: white;
 	margin-top: 0px; 
-	padding-top: 0px;
+	padding-top: 10px;
 	padding-left:20px;
 	border-left: 0px #406679;
 	border-top: 0px #406679;
@@ -108,17 +108,7 @@ TD.TableTS {
 	font-weight: bold;
 	font-size: 12px;
 	padding-left: 20px;
-	padding-top: 5px;
-}
-TD.TableRG {
-	font-family: verdana, arial, helvetica, sans-serif;
-	border-right: 0px solid silver;
-	border-bottom: 0px solid silver;
-	cursor: default;
-	font-weight: bold;
-	font-size: 12px;
-	padding-left: 20px;
-	padding-top: 20px;
+	padding-top: 15px;
 }
 TR.lock-header {
 	background-color: white;
@@ -160,40 +150,6 @@ TABLE.TableList {
 	font-size: 11px;
 }
 
-/*Registarion Page*/
-
-TABLE.TableRG {
-	width: 70%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	padding-left: 20px;
-}
-TABLE.TablePIX {
-	width: 100%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 11px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	padding-left: 20px;
-}
-TABLE.TablePDQ {
-	width: 100%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 11px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	padding-left: 20px;
-}
-TABLE.TableMS{
-	width: 100%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 11px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	padding-left: 20px;
-}
 TABLE.TableCON{
 	width: 100%;
 	font-family: verdana, arial, helvetica, sans-serif;
@@ -227,42 +183,4 @@ TH.TableTH {
 	border-right: 0px #406679;
 	font-weight: bold;
 }
-/*Message store*/
 
-DIV.tabletag {
-	width:100%;
-	height:100%;
-	background-color: #dcdcd6;
-}
-.search {
-	background-color: #dcdcd6;
-}
-
-.search TABLE{
-	width: 100%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 11px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	padding-left: 20px;
-}
-TABLE.search {
-	width: 100%;
-	height: 100%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #dcdcd6;
-	margin-top: 0px;
-	padding-top: 0px;
-}
-TD.search {
-	font-family: verdana, arial, helvetica, sans-serif;
-	border-right: 0px solid silver;
-	border-bottom: 0px solid silver;
-	cursor: default;
-	font-weight: bold;
-	font-size: 12px;
-	padding-left: 20px;
-	padding-top: 20px;
-}
