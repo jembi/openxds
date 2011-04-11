@@ -166,7 +166,7 @@
 	                </mapping> 
 	                <useDefaultMapping>true</useDefaultMapping> 
 					<properties>
-						<year>2009-2010</year>
+						<year>2009-2011</year>
 						<company>Misys Open Source Solutions (MOSS) and others</company>
 						<contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
 						<contributor2>-</contributor2>
@@ -176,6 +176,7 @@
 						<exclude>**/README.txt</exclude>
 						<exclude>**/*.log</exclude>
 						<exclude>**/*.xml</exclude>
+						<exclude>**/*.txt</exclude>
 						<exclude>**/*.xsd</exclude>
 						<exclude>**/*.properties</exclude>
 						<exclude>**/*.bat</exclude>
