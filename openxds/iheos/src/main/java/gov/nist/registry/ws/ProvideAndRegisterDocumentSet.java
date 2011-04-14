@@ -57,6 +57,7 @@ import org.openhealthtools.openxds.repository.api.XdsRepository;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryItem;
 import org.openhealthtools.openxds.repository.api.XdsRepositoryService;
 import org.openhealthtools.openxua.api.XuaException;
+import javax.mail.util.ByteArrayDataSource;
 
 
 public class ProvideAndRegisterDocumentSet extends XdsCommon {
@@ -552,8 +553,9 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		if (mime_type == null || mime_type.equals(""))
 			throw new MetadataException("ExtrinsicObject " + id + " does not have a mimeType");
 
-        DataHandler dataHandler = new DataHandler(new String(bytes), mime_type);
-
+        ByteArrayDataSource ds = new ByteArrayDataSource(bytes, mime_type);
+        DataHandler dataHandler = new DataHandler(ds);
+        
 		String size_str = Integer.toString(bytes.length);
 		String hash_value = null;
 		try {
