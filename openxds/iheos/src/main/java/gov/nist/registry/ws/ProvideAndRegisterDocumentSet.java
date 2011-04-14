@@ -477,7 +477,8 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		XdsRepositoryItem item = XdsFactory.getXdsReposiotryItem();
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler);
-		
+		item.setExtrinsicObject(extrinsic_object);
+
 		String mime_type = extrinsic_object.getAttributeValue(MetadataSupport.mime_type_qname);
 
 		int isize = -1; 
@@ -571,6 +572,7 @@ public class ProvideAndRegisterDocumentSet extends XdsCommon {
 		item.setDocumentUniqueId(uid);
 		item.setDataHandler(dataHandler); 
 		item.setMimeType(mime_type);
+		item.setExtrinsicObject(extrinsic_object);
 		try {
 			RepositoryRequestContext context = new RepositoryRequestContext();
 			context.setActorDescription(actor.getActorDescription());

@@ -21,6 +21,7 @@
 package org.openhealthtools.openxds.repository.api;
 
 import javax.activation.DataHandler;
+import org.apache.axiom.om.OMElement;
 
 /**
  * This class represents a document or repository item in the 
@@ -97,4 +98,21 @@ public interface XdsRepositoryItem {
      * @param dataHandler the <code>DataHandler</code>.
      */
     public void setDataHandler(DataHandler dataHandler);
+    
+    /**
+     * Gets the document extrinsic object.
+     * The extrinsic object is only available during provide and register
+     * 
+     * @return the extrinsic object
+     */
+    public OMElement getExtrinsicObject();
+        
+    /**
+     * Sets the extrinsic object.
+     * The extrinsic object is only needed during provide and register
+     * 
+     * @param extrinsic object of the document to be set
+     */
+    public void setExtrinsicObject(OMElement metadata);
+    
 }

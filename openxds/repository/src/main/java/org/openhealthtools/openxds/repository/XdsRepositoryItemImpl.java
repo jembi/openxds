@@ -27,6 +27,7 @@ import java.security.MessageDigest;
 
 import javax.activation.DataHandler;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openxds.repository.api.RepositoryException;
@@ -46,6 +47,7 @@ public class XdsRepositoryItemImpl implements XdsRepositoryItem {
     private String id;
     private DataHandler handler;
     private String mimeType;
+    private OMElement metadata;
     
     public XdsRepositoryItemImpl(){   	
     }
@@ -163,6 +165,13 @@ public class XdsRepositoryItemImpl implements XdsRepositoryItem {
 		this.mimeType = mimeType;
 	}
 	
+	public OMElement getExtrinsicObject() {
+	    return metadata;
+	}
+		 
+    public void setExtrinsicObject(OMElement metadata) {
+    	this.metadata = metadata;
+	}	
 	
 
 }
