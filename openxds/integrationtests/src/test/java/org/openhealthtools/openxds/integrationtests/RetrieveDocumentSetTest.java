@@ -21,6 +21,8 @@
 package org.openhealthtools.openxds.integrationtests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
@@ -82,6 +84,8 @@ public class RetrieveDocumentSetTest extends XdsTest {
 
 		//4. Get DocumentUniqueId from the response.
 		List extrinsicObjects = getExtrinsicObjects(response);
+		assertNotSame("Stored query does not return a valid document", 0, extrinsicObjects.size());
+		
 		String documentUniqueId = getDocumentId(extrinsicObjects);
 
 		//5. Get RepositoryUniqueId from the response.
