@@ -213,7 +213,7 @@ public class XdsCommon  {
 			throw e;
 		}
 		catch(Exception e){
-			logger.error("Exception filtering metadata");
+			logger.error("Exception filtering metadata", e);
 			throw e;
 		}
 		
