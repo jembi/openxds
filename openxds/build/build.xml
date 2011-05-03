@@ -27,6 +27,7 @@
         	    <include name="**/openexchange*.jar"/>
         	    <include name="**/jsp*.jar"/>
         	    <include name="**/servlet*.jar"/>
+				<include name="**/ecj*.jar"/>
             </fileset>
          </copy> 	
         <copy flatten="true" todir="${build.dir}">
