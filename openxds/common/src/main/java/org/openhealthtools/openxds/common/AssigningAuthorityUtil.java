@@ -20,12 +20,11 @@
 
 package org.openhealthtools.openxds.common;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.openhealthtools.openexchange.actorconfig.IActorDescription;
+import org.openhealthtools.openexchange.actorconfig.Configuration;
 import org.openhealthtools.openexchange.actorconfig.net.IBaseDescription;
-import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.datamodel.Identifier;
 
 /**
@@ -50,12 +49,13 @@ public class AssigningAuthorityUtil {
      * @return The authority according the configuration
      */
     public static Identifier reconcileIdentifier(Identifier authority, IBaseDescription description) {
-        List<Identifier> identifiers = description.getAllIdentifiersByType("domain");
-        for (Identifier identifier : identifiers) {
+		Set<Identifier> domains = Configuration.getAllDomains(description);			
+        for (Identifier identifier : domains) {
             if ( identifier.equals(authority) ) {
                 return identifier;
             }
         }
+
         //no identifier is found, just return the original authority
         return authority;
     }
@@ -68,25 +68,24 @@ public class AssigningAuthorityUtil {
      * @return <code>true</code> if the idDomain is valid.
      */
     public static boolean validateDomain(Identifier id, IBaseDescription description) {
-         if (id == null) return  false;
+        if (id == null) return  false;
 
-         List<Identifier> identifiers = description.getAllIdentifiersByType("domain");
-         for (Identifier identifier : identifiers) {
-        	    
-             if ( identifier.equals(id) ) {
-                return true;
-             }
-         }
-         if (log.isDebugEnabled()) {
+        Set<Identifier> domains = Configuration.getAllDomains(description);
+        for (Identifier identifier : domains) {
+            if (identifier.equals(id))
+               return true;
+        }
+        if (log.isDebugEnabled()) {
 	         log.debug("Failed to validate domain: "+ id.getNamespaceId() + "," +
 	                 id.getUniversalId() + "," + id.getUniversalIdType());
 	         log.debug("List of known domains:");
-	         for (Identifier identifier : identifiers) {
+	         for (Identifier identifier : domains) {
 	             log.debug("  Domain: "+ identifier.getNamespaceId() + "," +
 	                 identifier.getUniversalId() + "," + identifier.getUniversalIdType());
 	         }
-         }
-         return false;
+        }
+    	
+        return false;
     }
     
 }

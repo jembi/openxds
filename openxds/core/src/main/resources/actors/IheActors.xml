@@ -42,9 +42,9 @@
 		<Description>XDS Registry</Description>
 		<Connection type="PixServer" name="pix-registry"/>
 		<!-- Uncomment to enable DSUB publish transaction to DSUB broker -->
-		<!-- <Connection type="DsubBroker" name="local-broker"/>  -->
+	    <!-- <Connection type="DsubBroker" name="local-broker"/>    -->
         <Includefile name="XdsCodes.xml" />		
-        <Identifier type="domain" name="GLOBAL">
+        <Identifier type="globalDomain" name="GLOBAL">
 			<UniversalId>1.3.6.1.4.1.21367.13.20.3000</UniversalId>
 			<UniversalIdType>ISO</UniversalIdType>
         </Identifier>

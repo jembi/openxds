@@ -72,6 +72,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 
     private static Log log = LogFactory.getLog(PixFeedHandler.class);
 	private XdsRegistryImpl actor = null;
+	private Identifier global = null;
 	
     /** The XDS Registry Patient Manager*/
     private XdsRegistryPatientService patientManager = null;
@@ -87,6 +88,12 @@ class PixFeedHandler extends BaseHandler implements Application {
 		this.patientManager = actor.getPatientManager();
 		assert this.connection != null;
 		assert this.patientManager != null;
+		
+		try {
+			global = Configuration.getGlobalDomain(actor.getActorDescription(), true);
+		}catch(IheConfigurationException e) {
+			log.error("Missing global domain configuration in actor " + actor.getActorDescription().getDescription());
+ 		}
 	}
 
     /**
@@ -642,10 +649,17 @@ class PixFeedHandler extends BaseHandler implements Application {
 					.getNamespaceID().getValue(), cx.getAssigningAuthority()
 					.getUniversalID().getValue(), cx.getAssigningAuthority()
 					.getUniversalIDType().getValue());
+			
+			//only interested in the patient id in the global domain
+			if (!assignAuth.equals(global)) {
+				continue;
+			}
+			
 			Identifier assignFac = new Identifier(cx.getAssigningFacility()
 					.getNamespaceID().getValue(), cx.getAssigningFacility()
 					.getUniversalID().getValue(), cx.getAssigningFacility()
 					.getUniversalIDType().getValue());
+			
 			identifier.setAssigningAuthority(AssigningAuthorityUtil.reconcileIdentifier(assignAuth, connection));
 			identifier.setAssigningFacility(assignFac);
 			identifier.setId(cx.getID().getValue());
@@ -669,6 +683,12 @@ class PixFeedHandler extends BaseHandler implements Application {
 					.getNamespaceID().getValue(), cx.getAssigningAuthority()
 					.getUniversalID().getValue(), cx.getAssigningAuthority()
 					.getUniversalIDType().getValue());
+			
+			//only interested in the patient id in the global domain
+			if (!assignAuth.equals(global)) {
+				continue;
+			}
+			
 			Identifier assignFac = new Identifier(cx.getAssigningFacility()
 					.getNamespaceID().getValue(), cx.getAssigningFacility()
 					.getUniversalID().getValue(), cx.getAssigningFacility()
