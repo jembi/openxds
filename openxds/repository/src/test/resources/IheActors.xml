@@ -26,13 +26,13 @@
 <!--Each configuration file has a root Configuration tag-->
 <Configuration>
 
-	<!--Defines the configuration of XDS Repository-->
-	<ConnectionFile file="XdsRepositoryConnections.xml" />
+	<!--Defines the test configuration of XDS Repository
+	<ConnectionFile file="XdsRepositoryConnectionsTest.xml" />-->
+	
 
 	<!--The XDS Repository actor configuration-->
 	<Actor name="xdsrep" type="XdsRepository">
-		<Description>XDS Repository</Description>
-        <Includefile name="XdsCodesTest.xml" />		
+		<Description>XDS Repository</Description>	
+		<Includefile name="XdsCodesTest.xml" />			
 	</Actor>
-
 </Configuration>
