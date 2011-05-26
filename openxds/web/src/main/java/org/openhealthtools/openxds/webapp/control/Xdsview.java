@@ -43,6 +43,7 @@ public class Xdsview {
 	private Metadata m;
 	private HttpUtils oc;
 	HashMap<String, String> symbolic_ids = new HashMap<String, String>(); // uuid -> symbolic
+	private String contextpath = null;
 
 
 	public Xdsview(Metadata m, HttpUtils oc) {
@@ -54,6 +55,18 @@ public class Xdsview {
 	public Xdsview(HttpUtils oc)  {
 		this.oc = oc;
 		this.m = new Metadata();
+	}
+	
+	public Xdsview(Metadata m, HttpUtils oc, String context) {
+		this.oc = oc;
+		this.m = m;
+		this.contextpath = context;
+	}
+	
+	public Xdsview(HttpUtils oc, String context) {
+		this.oc = oc;
+		this.m = new Metadata();
+		this.contextpath = context;
 	}
 
 	public HttpUtils h() { return oc; }
@@ -116,64 +129,64 @@ public class Xdsview {
 	}
 
 	String build_ssac_link(String id) {
-		return build_link("/openxds-web/query1.action?verb=ssac&id=" + id,"left", symbolic(id));
+		return build_link(contextpath + "/query1.action?verb=ssac&id=" + id,"left", symbolic(id));
 	}
 
 	String build_sscontents_link(String id) {
-		return build_link("/openxds-web/query1.action?verb=ssac&id=" + id, "left","SSandcontents");
+		return build_link(contextpath +"/query1.action?verb=ssac&id=" + id, "left","SSandcontents");
 	}
 
 	String build_details_link(String id, String cntl) {
 		if (cntl == null)
-			return build_link("/openxds-web/innerquery.action?verb=details&id=" + id,"content", symbolic(id));
+			return build_link(contextpath +"/innerquery.action?verb=details&id=" + id,"content", symbolic(id));
 		else
-			return build_link("/openxds-web/innerquery.action?verb=details&id=" + id + "&cntl=" + cntl,"content", symbolic(id));
+			return build_link(contextpath +"/innerquery.action?verb=details&id=" + id + "&cntl=" + cntl,"content", symbolic(id));
 	}
 
 	String build_related_link(String id) {
-		return build_link("/openxds-web/query1.action?verb=related&id=" + id, "left","related");
+		return build_link(contextpath +"/query1.action?verb=related&id=" + id, "left","related");
 	}
 
 
 	String build_display_doc_link(String cntl, String id) {
-		return build_link("/openxds-web/query1.action?action=display_doc&cntl=" + cntl + "&id=" + id, "_new", "display");
+		return build_link(contextpath +"/query1.action?action=display_doc&cntl=" + cntl + "&id=" + id, "_new", "display");
 	}
 
 	String build_ss_link(String id) {
-		return build_link("/openxds-web/query1.action?verb=ss&id=" + id,"left", "ss");
+		return build_link(contextpath + "/query1.action?verb=ss&id=" + id,"left", "ss");
 	}
 
 	String build_assoc_link(String id, String type, String cntl) {
 		if (cntl == null)
-			return build_link("/openxds-web/innerquery.action?verb=xml&id=" + id,"content", type);
+			return build_link(contextpath +"/innerquery.action?verb=xml&id=" + id,"content", type);
 		else 
-			return build_link("/openxds-web/innerquery.action?verb=xml&id=" + id + "&cntl=" + cntl,"content", type);
+			return build_link(contextpath +"/innerquery.action?verb=xml&id=" + id + "&cntl=" + cntl,"content", type);
 	}
 
 	String build_xml_link(String id, String cntl) {
 		if (cntl == null)
-			return build_link("/openxds-web/innerquery.action?verb=xml&id=" + id, "content","xml");
+			return build_link(contextpath +"/innerquery.action?verb=xml&id=" + id, "content","xml");
 		else
-			return build_link("/openxds-web/innerquery.action?verb=xml&id=" + id + "&cntl=" + cntl,"content", "xml");
+			return build_link(contextpath +"/innerquery.action?verb=xml&id=" + id + "&cntl=" + cntl,"content", "xml");
 	}
 
 	String build_headers_link(String id, String cntl) {
 		if (cntl == null)
-			return build_link("/openxds-web/innerquery.action?verb=display_headers&id=" + id, "headers");
+			return build_link(contextpath +"/innerquery.action?verb=display_headers&id=" + id, "headers");
 		else
-			return build_link("/openxds-web/innerquery.action?verb=display_headers&id=" + id + "&cntl=" + cntl, "headers");
+			return build_link(contextpath +"/innerquery.action?verb=display_headers&id=" + id + "&cntl=" + cntl, "headers");
 	}
 
 	String build_query_results_xml_link(String index) {
-		return build_link("/openxds-web/innerquery.action?verb=queryresponsexml&cntl=" + index,"content", "RawResult");
+		return build_link(contextpath +"/innerquery.action?verb=queryresponsexml&cntl=" + index,"content", "RawResult");
 	}
 
 	String build_query_request_xml_link(String index) {
-		return build_link("/openxds-web/innerquery.action?verb=queryrequestxml&cntl=" + index,"content", "RawRequest");
+		return build_link(contextpath +"/innerquery.action?verb=queryrequestxml&cntl=" + index,"content", "RawRequest");
 	}
 
-	static String build_next_page_link(String index) {
-		return build_link("/openxds-web/query1.action?action=nextpage&cntl=" + index,"left", "next");
+	String build_next_page_link(String index) {
+		return build_link(contextpath +"/query1.action?action=nextpage&cntl=" + index,"left", "next");
 	}
 
 

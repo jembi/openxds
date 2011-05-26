@@ -492,7 +492,7 @@ public class QueryControl {
 		return metadata;
 	}
 
-	public Xdsview displayDetail(String verb, Map<String, String[]> parms, HttpUtils h) {
+	public Xdsview displayDetail(String verb, Map<String, String[]> parms, HttpUtils h, String context) {
 		String localid = getParm(parms, "id");
 		String cntl = getParm(parms, "cntl");
 		int cntl_i = 0;
@@ -511,7 +511,7 @@ public class QueryControl {
 				System.out.println("verb " + verb);
 				System.out.println("id " + localid);
 				System.out.println("docids " + m.getExtrinsicObjectIds());
-				Xdsview xv = new Xdsview(m, h);
+				Xdsview xv = new Xdsview(m, h, context);
 				xv.start();
 				if (verb.equals("details")) {
 					xv.displayRegistryObject(m, localid);
