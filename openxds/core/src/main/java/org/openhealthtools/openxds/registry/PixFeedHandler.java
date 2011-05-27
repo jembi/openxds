@@ -660,7 +660,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 					.getUniversalID().getValue(), cx.getAssigningFacility()
 					.getUniversalIDType().getValue());
 			
-			identifier.setAssigningAuthority(AssigningAuthorityUtil.reconcileIdentifier(assignAuth, connection));
+			identifier.setAssigningAuthority(AssigningAuthorityUtil.reconcileIdentifier(assignAuth, actor.getActorDescription()));
 			identifier.setAssigningFacility(assignFac);
 			identifier.setId(cx.getID().getValue());
 			identifier.setIdentifierTypeCode(cx.getIdentifierTypeCode()
@@ -693,7 +693,7 @@ class PixFeedHandler extends BaseHandler implements Application {
 					.getNamespaceID().getValue(), cx.getAssigningFacility()
 					.getUniversalID().getValue(), cx.getAssigningFacility()
 					.getUniversalIDType().getValue());
-			identifier.setAssigningAuthority(AssigningAuthorityUtil.reconcileIdentifier(assignAuth, connection));
+			identifier.setAssigningAuthority(AssigningAuthorityUtil.reconcileIdentifier(assignAuth, actor.getActorDescription()));
 			identifier.setAssigningFacility(assignFac);
 			identifier.setId(cx.getID().getValue());
 			identifier.setIdentifierTypeCode(cx.getIdentifierTypeCode()
