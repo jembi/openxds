@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2RC</version>
   </parent>
   <groupId>org.openhealthtools.openxds</groupId>
   <artifactId>openxds-build</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2RC</version>
   <packaging>pom</packaging>
   <name>OpenXDS - Build</name>
   <url>https://openxds.projects.openhealthtools.org</url>
@@ -29,8 +28,8 @@
                               <phase>install</phase>
                               <configuration>
                                   <tasks>
-                                      <property name="project.version" value="${project.version}"/>
-                                      <ant dir="." target="build"/>
+                                      <property name="project.version" value="${project.version}" />
+                                      <ant dir="." target="build" />
                                   </tasks>
                               </configuration>
                               <goals>
@@ -42,8 +41,8 @@
                               <phase>clean</phase>
                               <configuration>
                                   <tasks>
-                                      <property name="project.version" value="${project.version}"/>
-                                      <ant dir="." target="clean"/>
+                                      <property name="project.version" value="${project.version}" />
+                                      <ant dir="." target="clean" />
                                   </tasks>
                               </configuration>
                               <goals>
@@ -69,8 +68,8 @@
                               <phase>install</phase>
                               <configuration>
                                   <tasks>
-                                      <property name="project.version" value="${project.version}"/>
-                                      <ant dir="." target="dist"/>
+                                      <property name="project.version" value="${project.version}" />
+                                      <ant dir="." target="dist" />
                                   </tasks>
                               </configuration>
                               <goals>
@@ -82,8 +81,8 @@
                               <phase>clean</phase>
                               <configuration>
                                   <tasks>
-                                      <property name="project.version" value="${project.version}"/>
-                                      <ant dir="." target="clean"/>
+                                      <property name="project.version" value="${project.version}" />
+                                      <ant dir="." target="clean" />
                                   </tasks>
                               </configuration>
                               <goals>

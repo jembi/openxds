@@ -12,7 +12,7 @@
     <groupId>org.openhealthtools.openxds</groupId>
     <artifactId>openxds</artifactId>
     <packaging>pom</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2RC</version>
     <name>OpenXDS Parent</name>
     <description>Implements the IHE XDS profile - XDS Repository and Registry actors</description>
     <url>https://openxds.projects.openhealthtools.org</url>
@@ -29,14 +29,14 @@
     </licenses>
 
     <scm>
-    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk/openxds</connection>
-    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk/openxds</developerConnection>
-    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds</url>
+    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/tags/openxds-1.2RC</connection>
+    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/tags/openxds-1.2RC</developerConnection>
+    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds/tags/openxds-1.2RC</url>
     </scm>
 
     <issueManagement>
-        <system/>
-        <url/>
+        <system />
+        <url />
     </issueManagement>
 
     <developers>
@@ -453,7 +453,7 @@
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:h2:${java.io.tmpdir}/openxds]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password/>
+                <jdbc.password />
             </properties>
         </profile>
         <profile>
@@ -467,7 +467,7 @@
                 <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
                 <jdbc.url><![CDATA[jdbc:hsqldb:${java.io.tmpdir}/openxds;shutdown=true]]></jdbc.url>
                 <jdbc.username>sa</jdbc.username>
-                <jdbc.password/>
+                <jdbc.password />
             </properties>
         </profile>
         <profile>
