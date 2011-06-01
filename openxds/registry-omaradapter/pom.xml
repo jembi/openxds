@@ -4,7 +4,7 @@
     <parent>
         <artifactId>openxds</artifactId>
         <groupId>org.openhealthtools.openxds</groupId>
-        <version>1.2RC</version>
+        <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
