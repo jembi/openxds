@@ -86,12 +86,22 @@ public class  XcaIGImpl extends BaseIheActor implements XcaIG {
 	public void start() {
         //call the super one to initiate standard start process
         super.start();
+
+        //Now the XCA IG actor is started
+        if(log.isInfoEnabled()) {
+        	log.info("Started XCA Initiating Gateway: " + actorDescription.getName() );
+        }
     }
     
     @Override
     public void stop() {
         //call the super one to initiate standard stop process
         super.stop();
+        
+        //Now the XCA IG actor is stopped
+        if(log.isInfoEnabled()) {
+        	log.info("Stopped XCA Initiating Gateway: " + actorDescription.getName() );
+        }
     }
 
 	public Map<String, IConnectionDescription> getRGQueryClientConnections() {

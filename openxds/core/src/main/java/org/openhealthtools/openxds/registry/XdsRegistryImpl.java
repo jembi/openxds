@@ -70,10 +70,15 @@ public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
         super.start();
 
         //start the PIX Registry server
-        if (initPixRegistry()) 
-            log.info("PIX Registry started: " + pixRegistryConnection.getDescription() );        	
+        if (initPixRegistry() && log.isInfoEnabled()) 
+            log.info("Started PIX Registry: " + pixRegistryConnection.getDescription() );        	
         else
-            log.fatal("PIX Registry failed to start: " + pixRegistryConnection.getDescription() );        	
+            log.fatal("Failed to start PIX Registry: " + pixRegistryConnection.getDescription() );        
+        
+        //Now the XDS Registry actor is started
+        if(log.isInfoEnabled()) {
+        	log.info("Started XDS Registry: " + actorDescription.getName() );
+        }
     }
 
 	/**
@@ -118,11 +123,16 @@ public class XdsRegistryImpl extends BaseIheActor implements XdsRegistry {
     public void stop() {
         //stop the PIX Server first
         pixServer.stop();
-        log.info("PIX Registry stopped: " + pixRegistryConnection.getDescription() );
-
+        if(log.isInfoEnabled()) {
+        	log.info("Stopped PIX Registy: " + pixRegistryConnection.getDescription() );
+        }
         //call the super one to initiate standard stop process 
         super.stop();
 
+        //Now the XDS Registry actor is stopped
+        if(log.isInfoEnabled()) {
+        	log.info("Stopped XDS Registry: " + actorDescription.getName() );
+        }
     }
 
     /**

@@ -59,12 +59,22 @@ public class XdsRepositoryImpl extends BaseIheActor implements XdsRepository {
 	public void start() {
         //call the super one to initiate standard start process
         super.start();
+
+        //Now the XDS Repository actor is started
+        if(log.isInfoEnabled()) {
+        	log.info("Started XDS Repository: " + actorDescription.getName() );
+        }
     }
     
     @Override
     public void stop() {
         //call the super one to initiate standard stop process
         super.stop();
+ 
+        //Now the XDS Repository actor is stopped
+        if(log.isInfoEnabled()) {
+        	log.info("Stopped XDS Repository: " + actorDescription.getName() );
+        }
     }
     
 	/**

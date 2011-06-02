@@ -59,12 +59,22 @@ public class XcaRGImpl extends BaseIheActor implements XcaRG {
 	public void start() {
         //call the super one to initiate standard start process
         super.start();
+        
+        //Now the XCA RG actor is started
+        if(log.isInfoEnabled()) {
+        	log.info("Started XCA Responding Gateway: " + actorDescription.getName() );
+        }
     }
     
     @Override
     public void stop() {
         //call the super one to initiate standard stop process
         super.stop();
+
+        //Now the XCA RG actor is stopped
+        if(log.isInfoEnabled()) {
+        	log.info("Stopped XCA Responding Gateway: " + actorDescription.getName() );
+        }
     }
 
 	/**
