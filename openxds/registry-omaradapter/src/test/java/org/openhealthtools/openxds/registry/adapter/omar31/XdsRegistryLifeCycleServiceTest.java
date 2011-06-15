@@ -20,12 +20,17 @@
 
 package org.openhealthtools.openxds.registry.adapter.omar31;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
@@ -88,12 +93,18 @@ public class XdsRegistryLifeCycleServiceTest extends TestCase{
 				//OMElement request = Util.parse_xml(new File("D:\\XDS\\schema\\RegisterDocumentSet-bRequest.xml"));
 				OMElement request = getsubmitObjectsRequest();
 				registryResponse = registryManager.submitObjects(request, context);
-				InputStream is = new ByteArrayInputStream(registryResponse.toString().getBytes("UTF-8"));
+				assertNotNull(registryResponse); 
+				/*InputStream is = new ByteArrayInputStream(registryResponse.toString().getBytes("UTF-8"));
 				Object response =helper.getUnmarsheller().unmarshal(is);
+				assertNotNull(response); 
 				if (response instanceof RegistryResponse) {
 					 res = (RegistryResponse) response;
-				}
-				System.out.println("final result " + bu.marshalObject(res));
+					
+				}*/
+				
+				OMAttribute status = registryResponse.getAttribute(new QName("status"));
+				assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
+				//System.out.println("final result " + bu.marshalObject(res));
 			} 
 			catch (Exception e) {
 				log.debug(e.getMessage());
@@ -112,13 +123,17 @@ public class XdsRegistryLifeCycleServiceTest extends TestCase{
 			try {
 				OMElement request = getApproveObjectsRequest();
 				response = registryManager.approveObjects(request, context);
-				InputStream is = new ByteArrayInputStream(response.toString().getBytes("UTF-8"));
+				/*InputStream is = new ByteArrayInputStream(response.toString().getBytes("UTF-8"));
 				Object temp =helper.getUnmarsheller().unmarshal(is);
 				if (temp instanceof RegistryResponse) {
 					 res = (RegistryResponse) temp;
 				}
-				System.out.println("final result " + bu.marshalObject(res));
-				
+				System.out.println("final result " + bu.marshalObject(res));*/
+				assertNotNull(response); 
+
+				// Verify the response is correct
+				OMAttribute status = response.getAttribute(new QName("status"));
+				assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			} 
 			catch (Exception e) {
 				log.debug(e.getMessage());
@@ -137,12 +152,17 @@ public class XdsRegistryLifeCycleServiceTest extends TestCase{
 			try {
 				OMElement request = getDeprecateObjectsRequest();
 				response = registryManager.deprecateObjects(request, context);
-				InputStream is = new ByteArrayInputStream(response.toString().getBytes("UTF-8"));
+				/*InputStream is = new ByteArrayInputStream(response.toString().getBytes("UTF-8"));
 				Object temp =helper.getUnmarsheller().unmarshal(is);
 				if (temp instanceof RegistryResponse) {
 					 res = (RegistryResponse) temp;
 				}
-				System.out.println("final result " + bu.marshalObject(res));
+				System.out.println("final result " + bu.marshalObject(res));*/
+				assertNotNull(response); 
+
+				//Verify the response is correct
+				OMAttribute status = response.getAttribute(new QName("status"));
+				assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 				
 			} 
 			catch (Exception e) {

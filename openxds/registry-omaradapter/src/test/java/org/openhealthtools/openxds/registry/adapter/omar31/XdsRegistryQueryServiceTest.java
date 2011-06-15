@@ -20,13 +20,14 @@
 
 package org.openhealthtools.openxds.registry.adapter.omar31;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,10 +72,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+			/*InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -96,10 +102,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			queryParameters.put("$XDSFolderStatus", "urn:oasis:names:tc:ebxml-regrep:StatusType:Approved");//R
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement queryResponse = queryManager.storedQuery(context);
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+		/*	InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -123,10 +134,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, true);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+		/*	InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -173,10 +189,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, true);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+			/*InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -197,10 +218,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+		/*	InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -218,10 +244,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+/*			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -263,10 +294,15 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, true);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+			/*InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
@@ -339,10 +375,16 @@ import org.openhealthtools.openxds.registry.api.XdsRegistryQueryService;
 			RegistryStoredQueryContext context = new RegistryStoredQueryContext(id, queryParameters, false);
 			OMElement queryResponse = queryManager.storedQuery(context);
 		
-			InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
+		/*	InputStream is = new ByteArrayInputStream(queryResponse.toString().getBytes("UTF-8"));
 			Object response = helper.getUnmarsheller().unmarshal(is);
 		
-			System.out.println("final result " + bu.marshalObject(response));
+			System.out.println("final result " + bu.marshalObject(response));*/
+			assertNotNull(queryResponse); 
+
+			//4. Verify the response is correct
+			OMAttribute status = queryResponse.getAttribute(new QName("status"));
+			assertEquals("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success", status.getAttributeValue()); 
+			
 			}catch (Exception e) {
 			 log.debug(e.getMessage());
 		}
