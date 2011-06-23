@@ -67,12 +67,10 @@
         <property name="xdsRepositoryManagerDao" ref="repositoryManagerDao" />    
     </bean>
 
-    <!--bean id="repositoryService" class="org.openhealthtools.openxds.repository.FileSystemRepositoryServiceImpl">
-		<property name="repositoryUniqueId" value="${repository.uniqueId}"/>
-		
-		<repositoryRoot is required by FileSystemRepository>
+    <!-- bean id="repositoryService" class="org.openhealthtools.openxds.repository.filesystem.FileSystemRepositoryServiceImpl">
+		<property name="repositoryUniqueId" value="${repository.uniqueId}"/>		
    	    <property name="repositoryRoot" value="${file.system.repository.base.dir}" />
-    </bean-->
+    </bean -->
   
     <bean id="repositoryManagerDao" class="org.openhealthtools.openxds.repository.dao.XdsRepositoryManagerDaoImpl">
  	    <property name="sessionFactory" ref="sessionFactory"/>
