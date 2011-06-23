@@ -30,7 +30,7 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:openxdsTest.properties</value>
+                <value>classpath:openxds.properties</value>
             </list>
         </property>
     </bean>
