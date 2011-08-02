@@ -624,8 +624,8 @@
         
         <!-- Properties defined by OpenXDS -->
         <openexchange.version>1.2</openexchange.version>
-        <openpixpdq.version>1.2RC</openpixpdq.version>
-        <opendsub.version>1.2RC</opendsub.version>
+        <openpixpdq.version>1.2</openpixpdq.version>
+        <opendsub.version>1.2</opendsub.version>
         <jetty.version>6.1.24</jetty.version>
         <hapi.version>0.5.1</hapi.version>
         <omar.version>3.1</omar.version>
