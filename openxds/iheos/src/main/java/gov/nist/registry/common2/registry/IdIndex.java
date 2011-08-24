@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
-import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class IdIndex {
 	Metadata m;

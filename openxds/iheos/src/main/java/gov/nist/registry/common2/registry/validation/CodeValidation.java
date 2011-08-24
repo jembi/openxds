@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.actorconfig.IActorDescription;
 import org.openhealthtools.openexchange.actorconfig.net.CodeSet;
-import org.openhealthtools.openexchange.datamodel.Identifier;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.patient.data.Identifier;
 import org.openhealthtools.openexchange.utils.Pair;
 
 
@@ -27,34 +27,34 @@ public class CodeValidation {
 	RegistryErrorList rel;
 	boolean is_submit;
 	boolean xds_b;
-	IActorDescription actorDescription;
+	IConnectionDescription connection;
 
 	List<Identifier> assigning_authorities;
 	HashMap<String, String> mime_map;  // mime => ext
 	HashMap<String, String> ext_map;   // ext => mime
 
 	public CodeValidation(Metadata m, boolean is_submit, boolean xds_b, 
-			RegistryErrorList rel, IActorDescription actorDescription) 
+			RegistryErrorList rel, IConnectionDescription connection) 
 	throws XdsInternalException {
 		this.m = m;
 		this.rel = rel;
 		this.is_submit = is_submit;
 		this.xds_b = xds_b;
-		this.actorDescription = actorDescription;
+		this.connection = connection;
 
 		loadCodes();
 	}
 
 	// this is used for easy access to mime lookup
-	public CodeValidation(IActorDescription actorDescription) throws XdsInternalException {
-		this.actorDescription = actorDescription;
+	public CodeValidation(IConnectionDescription connection) throws XdsInternalException {
+		this.connection = connection;
 		loadCodes();
 	}
 
 
 	void loadCodes() throws XdsInternalException {
 		assigning_authorities = new ArrayList<Identifier>();
-		Identifier aa = actorDescription.getIdentifier("AssigningAuthority");
+		Identifier aa = connection.getIdentifier("AssigningAuthority");
 		this.assigning_authorities.add(aa);
 		build_mime_map();
 	}
@@ -76,18 +76,18 @@ public class CodeValidation {
 	}
 
 	private void build_mime_map() throws XdsInternalException {
-		CodeSet mimeTypeCodeSet = actorDescription.getCodeSet("mimeType");		
+		CodeSet mimeTypeCodeSet = connection.getCodeSet("mimeType");		
 		if (mimeTypeCodeSet == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find mime type table");
 
 		mime_map = new HashMap<String, String>();
 		ext_map = new HashMap<String, String>();
 
-		Set<Pair<String,String>> codes = mimeTypeCodeSet.getCodeSetKeys();
-		for (Pair<String,String> code : codes) {
-			String ext = mimeTypeCodeSet.getExt(code.first, code.second);
-			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + code.first );
-			mime_map.put(code.first, ext);
-			ext_map.put(ext, code.first);
+		Set<Pair> codes = mimeTypeCodeSet.getCodeSetKeys();
+		for (Pair code : codes) {
+			String ext = mimeTypeCodeSet.getExt((String)code._first, (String)code._second);
+			if (ext == null) throw new XdsInternalException("CodeValidation.java: Configuration Error: Cannot find ext for mime type:" + (String)code._first );
+			mime_map.put((String)code._first, ext);
+			ext_map.put(ext, (String)code._first);
 		}
 	}
 
@@ -195,8 +195,8 @@ public class CodeValidation {
 			err("codingScheme (Slot codingScheme) missing", cl);
 			return;
 		}
-		for ( String codeType : actorDescription.getAllCodeTypeNames()){
-			CodeSet codeSet = actorDescription.getCodeSet(codeType);
+		for ( String codeType : connection.getAllCodeTypeNames()){
+			CodeSet codeSet = connection.getCodeSet(codeType);
 			if (codeSet.containsCode(code, coding_scheme))
 		    {
 				val("Coding of " + coding_scheme, null);

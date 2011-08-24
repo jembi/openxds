@@ -5,17 +5,17 @@ import gov.nist.registry.common2.registry.validation.CodeValidation;
 
 import java.util.Collection;
 
-import org.openhealthtools.openexchange.actorconfig.IActorDescription;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 
 public class DocumentTypes {
 	CodeValidation cv;
-	IActorDescription actorDescription;
+	IConnectionDescription connection;
 
 	// the values in the class must also exist in tomcat1/conf/war.xml
 	// documentation exists in xdsref/codes/codes.xml
 	
-	public DocumentTypes(IActorDescription actorDescription) throws XdsInternalException {
-		cv = new CodeValidation(actorDescription);
+	public DocumentTypes(IConnectionDescription connection) throws XdsInternalException {
+		cv = new CodeValidation(connection);
 	}
 
 	public String mimeType(String file_ext)  {

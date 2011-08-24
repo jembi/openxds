@@ -8,8 +8,9 @@ import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import gov.nist.registry.ws.sq.FindFoldersForMultiplePatients;
 
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import java.util.ArrayList;
 
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * Implementation specific class for FindDocuments stored query. 

@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  *
@@ -111,7 +111,6 @@ public abstract class Aggregator {
     	
     	for (String homeId : results.keySet()) {
     		OMElement result = results.get(homeId);
-    		if (logMessage != null)
 			logMessage.addOtherParam("Response from " + homeId, result.toString()) ;
     		
     		String error = checkNullResult( result );

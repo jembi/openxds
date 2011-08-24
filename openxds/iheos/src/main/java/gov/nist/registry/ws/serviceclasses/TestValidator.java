@@ -13,7 +13,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class TestValidator extends XdsService {
 	boolean log;
@@ -23,8 +23,8 @@ public class TestValidator extends XdsService {
 	public OMElement ValidateTestRequest(OMElement request) {
 
 		this.beginTransaction("TestValidator", request, REGISTRY_ACTOR);
-		if (log_message != null)
-			log_message.setTestMessage("TestValidator");
+
+		log_message.setTestMessage("TestValidator");
 
 		return  validate(request);
 	}
@@ -68,7 +68,7 @@ public class TestValidator extends XdsService {
 			}
 		}
 		try {
-			if (log && log_message != null)
+			if (log)
 				log_message.addOtherParam("testnum", test_str);
 		} catch (LoggerException e) {}
 
@@ -243,7 +243,7 @@ public class TestValidator extends XdsService {
 		res.setNotImplemented();
 		if (log)
 			this.addOther("status", Response.status_notimplemented);
-		if (log && log_message != null)
+		if (log)
 			log_message.setPass(true);
 		if (log)
 			this.endTransaction(true);
@@ -255,7 +255,7 @@ public class TestValidator extends XdsService {
 		Response res = new Response();
 		if (log)
 			this.addOther("status", Response.status_success);
-		if (log && log_message != null)
+		if (log)
 			log_message.setPass(true);
 		if (log)
 			this.endTransaction(true);

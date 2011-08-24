@@ -1,0 +1,147 @@
+/**
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  Contributors:
+ *    Misys Open Source Solutions - initial API and implementation
+ *    -
+ */
+
+
+TR.wholePage {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+		
+}
+TR.wholePageTR{
+ background-color: #dcdcd6;
+ margin-top: -2px;
+ padding-top: -2px;
+ 
+		}
+.tabs {
+	float: left;
+	width: 100%;
+	background: #406679;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: normal;
+	white-space: nowrap;
+	font-family: Verdana, Arial;
+	padding-top: 30px;
+}
+
+.tabs ul {
+	margin: 0;
+	padding: 10px 10px 0;
+	list-style: none;
+	white-space: nowrap;
+}
+
+.tabs li {
+	float: left;
+	background: url("../images/tab_left.gif") no-repeat left top;
+	margin: 1px;
+	padding: 0 0 0 9px;
+}
+
+.tabs a {
+	float: left;
+	display: block;
+	background: url("../images/tab_right.gif") no-repeat right top;
+	padding: 5px 15px 4px 6px;
+	text-decoration: none;
+	font-weight: bold;
+	color: black;
+}
+
+/* Commented Backslash Hack
+   hides rule from IE5-Mac \*/
+.tabs a {
+	float: none;
+}
+
+/* End IE5-Mac hack */
+.tabs a:hover {
+	color: black;
+}
+
+.tabs li.active {
+	background-image: url("../images/tab_left_on.gif");
+	border-width: 0;
+}
+
+.tabs li.active a {
+	background-image: url("../images/tab_right_on.gif");
+	color: black;
+	padding-bottom: 5px;
+}
+
+.tabs li.inaccessible {
+	background-image: url("../images/tab_left.gif");
+	border-width: 0;
+}
+
+.tabs li.inaccessible a {
+	background-image: url("../images/tab_right.gif");
+	color: #999999;
+	padding-bottom: 5px;
+}
+
+.encounterTabs .tabs ul {
+	padding: 1px;
+}
+
+.encounterTabs .tabs li.active {
+	background-image: url("../images/tab_left_on_encounter.gif");
+}
+
+.encounterTabs .tabs li.active a {
+	background-image: url("../images/tab_right_on_encounter.gif");
+	color: white;
+}
+
+.header {
+	float: left;
+	width: 100%;
+	background: #406679 no-repeat;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: normal;
+	white-space: nowrap;
+	font-family: Verdana, Arial;
+}
+
+.name {
+	text-align : top;
+	vertical-align: top;
+	float: left;
+	color: #FFFFFF;
+	background: #406679;
+	font-size: 14 px;
+	font-weight: bold;
+	line-height: normal;
+	white-space: nowrap;
+	font-family: Verdana, Arial;
+	padding-top: 10px;
+	padding-left: 3px;
+}
+.logo {
+	text-align : top;
+	vertical-align: top;	
+	line-height: normal;
+	white-space: nowrap;
+	padding-top: 10px;
+	padding-right: 3px;
+}

@@ -2,11 +2,11 @@
   <parent>
     <artifactId>openxds</artifactId>
     <groupId>org.openhealthtools.openxds</groupId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openhealthtools.openxds</groupId>
-  <artifactId>openxds-iheos</artifactId>
+  <artifactId>iheos</artifactId>
   <name>OpenXDS - NIST Iheos</name>
   <packaging>jar</packaging>
 
@@ -23,33 +23,39 @@
  	</dependency>    
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>apache-axis2</artifactId>
+  		<version>${project.version}</version>
+  		<type>pom</type>
+  	</dependency>
+	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>common-ws</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>common-utils</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
   		<artifactId>openxds-repository</artifactId>
   		<version>${project.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>openxds-registry-omaradapter</artifactId>
+  		<artifactId>openxds-registry-adapter-omar</artifactId>
   		<version>${project.version}</version>
   	</dependency>
 	<dependency>
   		<groupId>org.openhealthtools.openxds</groupId>
-  		<artifactId>openxds-registry-patientlite</artifactId>
+  		<artifactId>openxds-registry-patient-lightweight</artifactId>
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.openhealthtools.openexchange</groupId>
-  		<artifactId>openexchange-audit</artifactId>
-		<version>${openexchange.version}</version>
-  	</dependency>
-  	<dependency>
-		<groupId>org.openhealthtools.openexchange</groupId>
-		<artifactId>openexchange-syslog</artifactId>
-		<version>${openexchange.version}</version>
-	</dependency>
-  	<dependency>
-		<groupId>org.openhealthtools.opendsub</groupId>
-		<artifactId>opendsub-core</artifactId>
-		<version>${opendsub.version}</version>
+		<groupId>org.openhealthtools.openxds</groupId>
+		<artifactId>openxds-log</artifactId>
+		<version>${project.version}</version>
 	</dependency>
 	<!-- <dependency>
 		<groupId>com.misys.hieportal</groupId>
@@ -61,6 +67,11 @@
 		<artifactId>xds-filter</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</dependency>  -->
+   	<dependency>
+  		<groupId>com.misys.braid</groupId>
+  		<artifactId>braid-base</artifactId>
+  		<version>${braid.version}</version>
+  	</dependency>
 	<dependency>
 	    <groupId>soap</groupId>
 	    <artifactId>soap</artifactId>

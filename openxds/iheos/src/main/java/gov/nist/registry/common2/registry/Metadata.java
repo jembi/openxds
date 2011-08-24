@@ -21,7 +21,7 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openxds.log.LogMessage;
 
 public class Metadata {
 	protected OMFactory fac;

@@ -9,9 +9,10 @@ import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
 Generic implementation of FindSubmissionSets Stored Query. This class knows how to parse a 
@@ -54,8 +55,7 @@ abstract public class FindSubmissionSets extends StoredQuery {
 
 	public Metadata runSpecific() throws XdsInternalException, XdsException, LoggerException {
 		
-		if (sqs.log_message != null)
-			sqs.log_message.addOtherParam("SqParams", sqs.params.toString());
+		sqs.log_message.addOtherParam("SqParams", sqs.params.toString());
 		
 		validateParameters();
 

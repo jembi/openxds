@@ -16,6 +16,7 @@ import gov.nist.registry.common2.registry.SQCodeAnd;
 import gov.nist.registry.common2.registry.SQCodeOr;
 import gov.nist.registry.common2.registry.SQCodedTerm;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
+import gov.nist.registry.ws.evs.Evs;
 import gov.nist.registry.ws.sq.RegistryValidations;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.List;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class EbXML21QuerySupport implements RegistryValidations {
 	private static final Log logger = LogFactory.getLog(EbXML21QuerySupport.class);
@@ -883,10 +884,9 @@ public class EbXML21QuerySupport implements RegistryValidations {
 		HashMap<String, OMElement> dup_objects = m.getUidMap();
 		dup_uids.addAll(dup_objects.keySet());
 
-		if (sqs.log_message != null){
-			sqs.log_message.addOtherParam("dup uuids", uuids.toString());
-			sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
-		}	
+
+		sqs.log_message.addOtherParam("dup uuids", uuids.toString());
+		sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
 
 		// Generate error messages that are object type specific
 		dupUidErrorException(metadata, 

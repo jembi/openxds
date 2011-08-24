@@ -5,7 +5,7 @@ import gov.nist.registry.common2.exception.XdsException;
 import java.util.List;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public interface QueryManager {
 

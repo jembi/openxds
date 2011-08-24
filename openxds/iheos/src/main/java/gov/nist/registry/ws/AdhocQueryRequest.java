@@ -37,21 +37,22 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.common.ws.server.IheHTTPServer;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
-import org.openhealthtools.openexchange.audit.TypeValuePair;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.common.XdsFactory;
-import org.openhealthtools.openxds.registry.api.XdsRegistry;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxua.api.XuaException;
 
 public class AdhocQueryRequest extends XdsCommon {
+	MessageContext messageContext;
 	String service_name = "";
 	boolean is_secure;
-	private XdsRegistry actor = null;
+	IConnectionDescription connection = null;
 	/* The IHE Audit Trail for this actor. */
 	private IheAuditTrail auditLog = null;
 	private final static Log logger = LogFactory.getLog(AdhocQueryRequest.class);
@@ -63,16 +64,21 @@ public class AdhocQueryRequest extends XdsCommon {
 		this.is_secure = is_secure;
 		this.xds_version = xds_version;
 		
+		IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+
 		try {
-			actor = XdsFactory.getRegistryActor(); 
+			IheActor actor = httpServer.getIheActor();
 			if (actor == null) {
-				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
+				throw new XdsInternalException("Cannot find XdsRepository actor configuration.");			
 			}
-			
-			auditLog = (IheAuditTrail)actor.getAuditTrail();	
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find Server connection configuration.");			
+			}
+			auditLog = actor.getAuditTrail();
 		} catch (XdsInternalException e) {
-            logger.fatal(logger_exception_details(e));
-		} 
+			logger.fatal("Internal Error " + e.getMessage());
+		}
 	}
 	
 	public void setServiceName(String service_name) {
@@ -206,8 +212,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			String ele_name = ele.getLocalName();
 
 			if (ele_name.equals("SQLQuery")) {
-				if (log_message != null)
-					log_message.setTestMessage("SQL");
+				log_message.setTestMessage("SQL");
 				RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_Q);
 				found_query=true;
 				OMElement result =  sql_query(ahqr);
@@ -223,8 +228,7 @@ public class AdhocQueryRequest extends XdsCommon {
 					}
 				}
 			} else if (ele_name.equals("AdhocQuery")) {
-				if (log_message != null)
-					log_message.setTestMessage(service_name);
+				log_message.setTestMessage(service_name);
 
 				RegistryUtility.schema_validate_local(ahqr, MetadataTypes.METADATA_TYPE_SQ);
 				found_query = true;
@@ -397,7 +401,8 @@ public class AdhocQueryRequest extends XdsCommon {
 	       ActiveParticipant source = new ActiveParticipant();
 			source.setUserId(replyto);
 			source.setAccessPointId(remoteIP);
-			String userid = actor.getServiceEndpoint(isHttps()); 
+			//TODO: Needs to be improved
+			String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
 			ActiveParticipant dest = new ActiveParticipant();
 			dest.setUserId(userid);
 			dest.setAccessPointId(localIP);
@@ -427,17 +432,7 @@ public class AdhocQueryRequest extends XdsCommon {
 			queryObj.setQuery(aqr.toString());
 			if(isStoredQuery || isMPQ)
 				queryObj.setId(id);
-			
-			//ITI CP 429
-			try {
-				String homeCommunityId = getHome(aqr);
-				if (homeCommunityId != null) {
-					queryObj.addDetail(new TypeValuePair("ihe:homeCommunityID", homeCommunityId));
-				}
-			}catch(Exception e) {
-				logger.error("Failed to get homeCommunityID", e);
-			}
-			
+		
 			//Finally Log it.
 			auditLog.logRegistryQuery(source, dest, patientObjs, queryObj, isStoredQuery, isMPQ);
 	   }

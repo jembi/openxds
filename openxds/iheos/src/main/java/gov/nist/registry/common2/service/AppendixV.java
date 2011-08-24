@@ -14,8 +14,8 @@ import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public abstract class AppendixV {
 	private static final Log logger = LogFactory.getLog(AppendixV.class);
@@ -123,20 +123,18 @@ public abstract class AppendixV {
 		
 //		generateAuditLog(response);
 		
-		/*if (log_message == null) {
+		if (log_message == null) {
 			logger.fatal("\nFATAL ERROR: AppendixV.log_response(): log_message is null\n");
 			return;
-		}*/
+		}
 		try {
-			if (log_message != null){
-				if (response.has_errors()) {
-					log_message.setPass(false);
-					log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
-				} else
-					log_message.setPass(true);
-	
-				log_message.addOtherParam("Response", response.getResponse().toString());
-			}	
+			if (response.has_errors()) {
+				log_message.setPass(false);
+				log_message.addErrorParam("Errors", response.getErrorsAndWarnings());
+			} else
+				log_message.setPass(true);
+
+			log_message.addOtherParam("Response", response.getResponse().toString());
 		}
 		catch (LoggerException e) {
 			logger.error("**************ERROR: Logger exception attempting to return to user");

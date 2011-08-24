@@ -11,9 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.actorconfig.IActorDescription;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class RegistryUtility {
 
@@ -29,10 +29,10 @@ public class RegistryUtility {
 			throw new SchemaValidationException("Input did not validate against schema:" + schema_messages);
 	}
 
- 	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit, boolean isPnR, IActorDescription actorDescription) throws XdsException {
+ 	static public RegistryErrorList metadata_validator(Metadata m, boolean is_submit, boolean isPnR, IConnectionDescription connection) throws XdsException {
 		RegistryErrorList rel = new RegistryErrorList((m.isVersion2() ? RegistryErrorList.version_2 : RegistryErrorList.version_3));
 		try {
-			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (LogMessage)null, isPnR, actorDescription);
+			Validator v = new Validator(m, rel, is_submit, !m.isVersion2(), (LogMessage)null, isPnR, connection);
 			v.run();
 			return rel;
 		} catch (LoggerException e) {

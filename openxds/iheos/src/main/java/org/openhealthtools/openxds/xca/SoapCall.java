@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009-2011 Misys Open Source Solutions (MOSS) and others
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import gov.nist.registry.ws.serviceclasses.XdsService;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.openhealthtools.common.utils.ConnectionUtil;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openxds.common.ConnectionUtil;
 
 /**
  *

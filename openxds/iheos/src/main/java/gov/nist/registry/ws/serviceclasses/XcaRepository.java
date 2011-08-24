@@ -1,7 +1,6 @@
 package gov.nist.registry.ws.serviceclasses;
 
 import gov.nist.registry.common2.exception.XdsException;
-import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.exception.XdsValidationException;
 import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.RegistryErrorList;
@@ -19,8 +18,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.common.XdsFactory;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.RetrieveAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;
@@ -29,14 +27,7 @@ import org.openhealthtools.openxds.xca.api.XcaIG;
 public class XcaRepository extends RepositoryB {
 	private final static Log logger = LogFactory.getLog(XcaRepository.class);
 	
-	private XcaIG actor = null;
-	
-	public XcaRepository() {
-		actor = XdsFactory.getIGActor();
-		if (actor == null) {
-			logger.fatal("Cannot find XcaIG actor configuration.");
-		}
-	}
+	private XcaIG actor = Ig.getActor();
 
 	protected void validateRequest(OMElement rdsr, RegistryErrorList rel)
 	throws XdsValidationException {

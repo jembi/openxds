@@ -20,25 +20,16 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
-import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openxds.common.XdsFactory;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.xca.Aggregator;
 import org.openhealthtools.openxds.xca.QueryAggregator;
 import org.openhealthtools.openxds.xca.SoapCall;
 import org.openhealthtools.openxds.xca.api.XcaIG;
-import org.openhealthtools.openxds.xca.api.XcaRG;
 
 public class XcaRegistry extends RegistryB {
 	private final static Log logger = LogFactory.getLog(XcaRegistry.class);
 	
-	private XcaIG actor = null;
-	
-	public XcaRegistry() {
-		actor = XdsFactory.getIGActor();
-		if (actor == null) {
-			logger.fatal("Cannot find XcaIG actor configuration.");
-		}
-	}
+	private XcaIG actor = Ig.getActor();
 		
 	protected void validateQueryInputDecoration(OMElement sor, AdhocQueryRequest a)
 	throws XdsValidationException {

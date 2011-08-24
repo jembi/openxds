@@ -18,7 +18,7 @@ public class RepositoryA extends AbstractRepository {
 		 return true;
 	 }
 
-	 public OMElement DocumentRepository_RetrieveDocumentSet(OMElement rdsr) {
+	 public OMElement RetrieveDocumentSetRequest(OMElement rdsr) {
 		 return null;
 	 }
 	 

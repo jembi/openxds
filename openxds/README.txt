@@ -18,17 +18,17 @@
   OpenExchange consists of open source projects that use Integrating the 
   Healthcare Enterprise (IHE.net) profiles as the set of fundamental 
   requirements. The core set of open source projects under OpenExchange 
-  include OpenPIXPDQ, OpenXDS (with XCA), OpenATNA and OpenDSUB.  
+  include OpenPIXPDQ, OpenXDS (with XCA), OpenATNA and OpenAuth.  
  
   OpenXDS, as a child project of OpenExchange, implements the Document 
   Repository and Document Registry actors of the Cross-Enterprise Document 
-  Sharing (XDS.b) profile and the Initiating Gateway and Responding Gateway
+  Sharing (XDS) profile and the Initiating Gateway and Responding Gateway
   actors of the Cross Community Access (XCA)profile specified by IHE.   
 
 
   Contributors
   ------------
-  The OpenExchange (OpenPIXPDQ, OpenXDS, OpenATNA and, OpenDSUB) development
+  The OpenExchange (OpenATNA, OpenAuth, OpenPIXPDQ and OpenXDS) developement
   has been led by Misys Open Source Solutions (MOSS) and University of Cardiff. 
   Other contributors include Sysnet International, Topicus Zorg and a number 
   of individuals. OpenXDS also contains software developed by freebXML.org 
@@ -42,20 +42,34 @@
 
     README.txt 	               This file
     LICENSE.txt	               Software license
-    NOTICE.txt                 Copyright and contribution Notice
+    NOTICE.txt	   		       Copyright and contribution Notice
+    applicationContext.xml     Spring context configuration file
     commons-logging.properties common-logging file
-    jetty.properties           jetty container configuration
     log4j.xml                  log4j configuration
-    openxds-<version>.jar      Main openxds executable file
-    lib/                       libs to run jetty container and start up OpenXDS
+    omar.properties            omar configuration 
+    openxds.jar                Main openxds executable file
+    openxds.properties         openxds configuration
+    repository.jdbc.cfg.xml    omar repository jdbc configuration
+    conf/actors/               All the actor configuration files
+    conf/actors/cert/          keystore and truststore 
+    conf/axis2repository/      Embedded axis2 repository
+    conf/axis2repository/module/
+                               Embedded axis2 modules
+    conf/axis2repository/services/
+                               Embedded axis2 services
+	conf/audit/healthcare-security-audit.xsd
+	                           Audit schema
+	conf/schema/v2/            ebxml v2 schema
+	conf/schema/v3/            ebxml v3 schema
+    lib/                       All the libs needed for running tje OpenXDS server
     licenses/	               All the third party license files 
-    openxds-web/               OpenXDS web application                   
-    sql/create_database_schema_mysql.sql                               
+    misc/create_database_schema_mysql.sql                               
     		    			   OpenXDS database creation script for MySQL 
-    sql/create_database_schema_postgres.sql                               
+    misc/create_database_schema_postgres.sql                               
     		    			   OpenXDS database creation script for Postgresql 
-    sql/create_database_schema_sqlserver2005.sql                               
+    misc/create_database_schema_sqlserver2005.sql                               
     		    			   OpenXDS database creation script for SQL Server 2005 
+    misc/openxds-web.war       OpenXDS web application file.
 
 
   Requirements
@@ -65,7 +79,7 @@
 	 OpenXDS supports JDK 1.6 or higher.   
 	     
      Databases
-     OpenXDS supports Postgresql, MySQL, SQL Server. Our tested databases are Postgresql & MySQL.
+     OpenXDS supports Postgresql, MySQL, SQL Server. Our tested database is Postgresql 8.3.
                 
 
   Installation and Configuration
@@ -103,20 +117,24 @@
 
   This software is licensed under the terms you may find in the file 
   named "LICENSE.txt" in this directory.
-
  
-  Release Notes:
-  --------------
-  Details of release notes can be found on the OpenXDS Project web site 
-  on Open Health Tools (OHT) 
-  <https://www.projects.openhealthtools.org/sf/go/page1172>.
-
  
   Support
   ---------
 
   For commercial support, please contact Kondayya.Mullapudi@misys.com. 
   
+  
+  Major changes in OpenXDS 1.0.1
+  ------------------------------
+    - Additional MySQL and SQL Server databases support
+    - Added audit log with TLS transaction
+    - Generic actor configuration refactoring
+    - Integrated with OpenExchange 
+    - Added property and spring configuration framework
+    - Added configuration pre and post processes interface  
+    - Provided OpenXDS extension hook
+    - Some bug fixes
     
   Thanks for using OpenExcange - OpenXDS.
 

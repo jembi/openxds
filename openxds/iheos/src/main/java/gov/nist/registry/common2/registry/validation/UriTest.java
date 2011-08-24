@@ -14,7 +14,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class UriTest extends TestCase {
 	RegistryErrorList rel;

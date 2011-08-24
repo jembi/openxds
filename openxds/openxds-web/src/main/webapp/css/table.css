@@ -1,0 +1,268 @@
+/**
+ *  Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  Contributors:
+ *    Misys Open Source Solutions - initial API and implementation
+ *    -
+ */
+
+
+body { 
+overflow:hidden;
+height: auto;
+width: auto;
+padding: 0px;
+margin: 0px;
+}
+
+.body {
+	width: 100%;
+	height: 100%;
+	padding-top: 0px;
+	background-color: #dcdcd6;
+}
+.Table{
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+	margin: 0px;
+	padding: 0px;
+}
+.DivRG{
+	height: 100%;
+	width: 100%;
+	background-color: #dcdcd6;
+}
+	
+TABLE.TableBODY{
+height: 101%;
+width: 100%;
+background-color: #dcdcd6; 
+}
+TR.TableBODY{
+	background-color: #dcdcd6;
+}
+TD.TableBODY{
+	background-color: #dcdcd6;
+}	
+
+TABLE.TableJMESA{
+	width: 100%;
+	font-size: 11px;
+}
+TABLE.TableTS {
+	width: 100%;
+	height: 98%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	margin-top: 0px;
+	padding-top: 0px;
+}
+THEAD.TableTS {
+	width: 100%;
+	height: 35px;
+	font-size: 14px;
+	background-color: #013741;
+	color: white;
+}
+TH.TableTS {
+	width: 100%; font-size : 12px;
+	font-family: verdana, arial, helvetica, sans-serif;
+	color: white;
+	margin-top: 0px; 
+	padding-top: 0px;
+	padding-left:20px;
+	border-left: 0px #406679;
+	border-top: 0px #406679;
+	border-right: 0px #406679;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+TR.TableTS {
+	width: 100%;
+	background-color: #dcdcd6;
+	padding-left: 0px;
+	height: 10px;
+}
+
+TD.TableTS {
+	font-family: verdana, arial, helvetica, sans-serif;
+	border-right: 0px solid silver;
+	border-bottom: 1px solid silver;
+	cursor: default;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 20px;
+	padding-top: 5px;
+}
+TD.TableRG {
+	font-family: verdana, arial, helvetica, sans-serif;
+	border-right: 0px solid silver;
+	border-bottom: 0px solid silver;
+	cursor: default;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 20px;
+	padding-top: 20px;
+}
+TR.lock-header {
+	background-color: white;
+	top: expression(getParentElementById(this, "tabletag") . scrollTop );
+	position: relative;
+}
+
+TH.lock-header {
+	top: expression(getParentElementById(this, "displayFormatting") . scrollTop );
+	position: relative;
+}
+TABLE.Message {
+	font-family: tahoma;
+	font-size: 16px;
+	border-left: 2px groove #013741;
+	border-top: 2px groove #013741;
+	border-right: 2px groove #013741;
+	border-bottom: 2px groove #013741;
+	background-color: white;
+}
+
+THEAD.Message {
+	background-color: black;
+}
+
+TH.Message {
+	font-size: 14px;
+	color: white;
+	font-weight: bold;
+}
+
+TR.Message {
+	background-color: white;
+}
+
+TABLE.TableList {
+	width: 100%;
+	font-family: tahoma;
+	font-size: 11px;
+}
+
+/*Registarion Page*/
+
+TABLE.TableRG {
+	width: 70%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+TABLE.TablePIX {
+	width: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+TABLE.TablePDQ {
+	width: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+TABLE.TableMS{
+	width: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+TABLE.TableCON{
+	width: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+.adminInputWidth{
+	width=200;
+	font-family: Verdana, Arial; 
+	font-size: 9pt;
+	align:left;
+}
+
+/* Config tab*/
+THEAD.TableTH {
+	width: 100%;
+	font-size: 14px;
+	background-color: #013741;
+	color: white;
+}
+
+TH.TableTH {
+	width: 100%;
+	font-size: 12px;
+	color: white;
+	padding: 2px;
+	border-left: 0px #406679;
+	border-top: 0px #406679;
+	border-right: 0px #406679;
+	font-weight: bold;
+}
+/*Message store*/
+
+DIV.tabletag {
+	width:100%;
+	height:100%;
+	background-color: #dcdcd6;
+}
+.search {
+	background-color: #dcdcd6;
+}
+
+.search TABLE{
+	width: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	padding-left: 20px;
+}
+TABLE.search {
+	width: 100%;
+	height: 100%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #dcdcd6;
+	margin-top: 0px;
+	padding-top: 0px;
+}
+TD.search {
+	font-family: verdana, arial, helvetica, sans-serif;
+	border-right: 0px solid silver;
+	border-bottom: 0px solid silver;
+	cursor: default;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 20px;
+	padding-top: 20px;
+}

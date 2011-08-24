@@ -20,8 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class RegistryErrorList implements ErrorLogger {
 	public final static short version_2 = 2;
@@ -132,8 +132,7 @@ public class RegistryErrorList implements ErrorLogger {
 
 		if (log) {
 			try {
-				if (log_message != null)
-					log_message.addErrorParam("Warning", msg);
+				log_message.addErrorParam("Warning", msg);
 			} catch (Exception e) {
 				// oh well - can't fix it from here
 			}

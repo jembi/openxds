@@ -10,8 +10,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class TestImpl11710  extends XdsCommon {
 	MessageContext messageContext;
@@ -51,8 +51,8 @@ public class TestImpl11710  extends XdsCommon {
 			}
 			
 			String ip = messageContext.getFrom().getAddress();
-			if (log_message != null)
-				log_message.setCompany(vendor);
+			
+			log_message.setCompany(vendor);
 			
 			this.log_response();
 			

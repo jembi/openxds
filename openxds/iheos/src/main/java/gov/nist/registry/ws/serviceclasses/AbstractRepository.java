@@ -19,7 +19,7 @@ import gov.nist.registry.ws.RetrieveDocumentSet;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 abstract public class AbstractRepository extends XdsService  implements ContentValidationService {
 	boolean optimize_retrieve = true;
@@ -48,16 +48,16 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 	}
 	
 	public OMElement SubmitObjectsRequest(OMElement sor) throws AxisFault {
-		return DocumentRepository_ProvideAndRegisterDocumentSet_b(sor);
+		return ProvideAndRegisterDocumentSetRequest(sor);
 	}
 
-	public OMElement DocumentRepository_ProvideAndRegisterDocumentSet_b(OMElement sor) throws AxisFault {
+	public OMElement ProvideAndRegisterDocumentSetRequest(OMElement sor) throws AxisFault {
 		try {
 			OMElement startup_error = beginTransaction(getPnRTransactionName(), sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			if(log_message != null)	
-				log_message.setTestMessage(getPnRTransactionName());
+
+			log_message.setTestMessage(getPnRTransactionName());
 
 			validateWS();
 
@@ -83,13 +83,12 @@ abstract public class AbstractRepository extends XdsService  implements ContentV
 		}
 	}
 	
-	public OMElement DocumentRepository_RetrieveDocumentSet(OMElement rdsr) throws AxisFault {
+	public OMElement RetrieveDocumentSetRequest(OMElement rdsr) throws AxisFault {
 		try {
 			OMElement startup_error = beginTransaction(getRetTransactionName(), rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			if(log_message != null)
-				log_message.setTestMessage(getRetTransactionName());
+			log_message.setTestMessage(getRetTransactionName());
 			
 			validateWS();
 			

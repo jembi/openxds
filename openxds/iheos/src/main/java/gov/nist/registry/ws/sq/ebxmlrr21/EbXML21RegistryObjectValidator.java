@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  {
 	StoredQuerySupport sqs;
@@ -118,14 +118,13 @@ public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  
 		HashMap<String, OMElement> dup_objects = m.getUidMap();
 		dup_uids.addAll(dup_objects.keySet());
 		
-		if (sqs.log_message != null){
-			sqs.log_message.addOtherParam("dup uuids", uuids.toString());
-			sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
-		}
+		
+		sqs.log_message.addOtherParam("dup uuids", uuids.toString());
+		sqs.log_message.addOtherParam("dup uids", dup_uids.toString());
+		
 		for (String suuid : metadata.getSubmissionSetIds()) {
 			String sid = metadata.getExternalIdentifierValue(suuid, MetadataSupport.XDSSubmissionSet_uniqueid_uuid);
-			if (sqs.log_message != null)
-				sqs.log_message.addOtherParam("ssuid", sid);
+			sqs.log_message.addOtherParam("ssuid", sid);
 			if (dup_uids.contains(sid)) {
 				throw new MetadataValidationException("SubmissionSet uniqueId " + 
 						sid + 
@@ -137,8 +136,7 @@ public class EbXML21RegistryObjectValidator implements RegistryObjectValidator  
 		
 		for (String fuuid : metadata.getFolderIds()) {
 			String fuid = metadata.getExternalIdentifierValue(fuuid, MetadataSupport.XDSFolder_uniqueid_uuid);
-			if (sqs.log_message != null)
-				sqs.log_message.addOtherParam("fuid", fuid);
+			sqs.log_message.addOtherParam("fuid", fuid);
 			if (dup_uids.contains(fuid)) {
 				throw new MetadataValidationException("Folder uniqueId " + 
 						fuid + 

@@ -170,7 +170,7 @@ public class Attribute {
 			String value = value_ele.getText();
 			List<String> errs = validate_XON(value);
 			for (String err : errs) {
-				err("authorInstitution: " + err);
+				err("authorInstituion: " + err);
 			}
 		}
 	}

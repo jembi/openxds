@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
+
+
+-->
+<!-- The XDS Initiating Gateway Actor Connections -->
+<Configuration>
+	<StandardConnection name="xca-ig">
+		<!--The host name of the initiating Gateway Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8030</Port>
+	</StandardConnection>
+	<SecureConnection name="xca-secure-ig">
+		<!--The host name of the initiating Gateway Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8031</Port>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<!-- The Registry and Repository in the local community -->
+	<StandardConnection name="local-registry">
+		<HostName>localhost</HostName>
+		<Port>8010</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="local-secure-registry">
+		<HostName>localhost</HostName>
+		<Port>8011</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="local-repository">
+		<HostName>localhost</HostName>
+		<Port>8020</Port>
+		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="local-secure-repository">
+		<HostName>localhost</HostName>
+		<Port>8021</Port>
+		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="xca-rg-client">
+		<!--The host name of the Responding Gateway Server-->
+		<HostName>198.160.211.53</HostName>
+		<!--The port-->
+		<Port>8040</Port>
+		<!--The URL of the XCA Responding Gateway web services -->
+		<UrlPath>/axis2/services/rg</UrlPath>				
+	</StandardConnection>
+	
+<!--=========================================================================-->
+<!-- The XDS Registry connections to which this Reposonding Gateway connects -->
+<!-- All the connections below are used for Connecatathon NA 2010            -->
+<!--=========================================================================-->	
+	<StandardConnection name="vangent-rg">
+		<!-- HostName>vangent1</HostName-->
+		<HostName>208.81.185.143</HostName>
+		<Port>8080</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="vangent-secure-rg">
+		<!-- HostName>vangent1</HostName-->
+		<HostName>208.81.185.143</HostName>
+		<Port>8181</Port>
+		<UrlPath>/axis2/services/xcarg</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="hxti-rg">
+		<HostName>hx-registry.hxti.net</HostName>
+		<Port>8080</Port>
+		<UrlPath>/XCAGateway/respond</UrlPath>
+	</StandardConnection>
+
+	<StandardConnection name="spirit-rg">
+		<HostName>80.122.119.94</HostName>
+		<Port>18081</Port>		
+		<UrlPath>/XCA/responding</UrlPath>				
+	</StandardConnection>
+	<SecureConnection name="spirit-secure-rg">
+		<!-- 
+		<HostName>spirit7</HostName>
+		<Port>8443</Port>
+		-->
+		<HostName>80.122.119.94</HostName>
+		<Port>18081</Port>		
+		<UrlPath>/XCA/responding</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="ibm-rg-query">
+		<!-- 
+		<HostName>ibm1</HostName>
+		<Port>9085</Port>
+		-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<Port>9080</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
+	</StandardConnection>	
+	<SecureConnection name="ibm-secure-rg-query">
+		<!-- 
+		<HostName>ibm1</HostName>
+		<Port>9448</Port>
+		-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<Port>9443</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayQuery</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="ibm-rg-retrieve">
+		<!-- 
+		<HostName>ibm1</HostName>
+		<Port>9085</Port>
+		-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<Port>9080</Port>
+		<UrlPath>/XGatewayWS/RespondingGatewayRetrieve</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="ibm-secure-rg-retrieve">
+		<!-- 
+		<HostName>ibm1</HostName>
+		<Port>9448</Port>
+		-->
+		<HostName>xds-ibm.lgs.com</HostName>
+		<Port>9443</Port>
+		<UrlPath>XGatewayWS/RespondingGatewayRetrieve</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="intel-rg">
+		<HostName>64.109.190.66</HostName>
+		<Port>7080</Port>
+		<UrlPath>/</UrlPath>
+	</StandardConnection>
+	<SecureConnection name="intel-secure-rg">
+		<HostName>64.109.190.66</HostName>
+		<Port>7081</Port>
+		<UrlPath>/</UrlPath>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="ge-rg-query">
+		<HostName>62.182.99.62</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+	</StandardConnection>
+	<StandardConnection name="ge-rg-retrieve">
+		<HostName>62.182.99.62</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+	</StandardConnection>
+
+	<StandardConnection name="icw-rg-query">
+		<HostName>icw2</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+	</StandardConnection>
+	<SecureConnection name="icw-secure-rg-query">
+		<HostName>icw2</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/query</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	<StandardConnection name="icw-rg-retrieve">
+		<HostName>icw2</HostName>
+		<Port>8080</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+	</StandardConnection>
+	<SecureConnection name="icw-secure-rg-retrieve">
+		<HostName>icw2</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/respondinggateway/retrieve</UrlPath>						
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="epic-rg-query">
+		<HostName>epic3</HostName>
+		<Port>80</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>						
+	</StandardConnection>
+	<SecureConnection name="epic-secure-rg-query">
+		<HostName>epic3</HostName>
+		<Port>443</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+	<StandardConnection name="epic-rg-retrieve">
+		<HostName>epic3</HostName>
+		<Port>80</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>						
+	</StandardConnection>
+	<SecureConnection name="epic-s-rg-retrieve">
+		<HostName>epic3</HostName>
+		<Port>443</Port>
+		<UrlPath>/ihe2010/wcf/epic.community.hie/respondinggateway.svc/mtom</UrlPath>				
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+</Configuration>

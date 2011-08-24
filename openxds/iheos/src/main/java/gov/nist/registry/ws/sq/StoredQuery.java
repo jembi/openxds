@@ -9,7 +9,7 @@ import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * 

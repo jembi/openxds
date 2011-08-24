@@ -21,8 +21,7 @@ abstract public class AbstractRegistryA extends XdsService implements
 				return startup_error;
 			
 			String service_label = this.getServiceName();
-			if (log_message != null)
-				log_message.setTestMessage(service_label);
+			log_message.setTestMessage(service_label);
 			
 			SubmitObjectsRequest s = new SubmitObjectsRequest(log_message, XdsCommon.xds_a, getMessageContext());
 			

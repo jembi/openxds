@@ -19,9 +19,8 @@ public class RepositoryBopt extends XdsService implements ContentValidationServi
 			OMElement startup_error = beginTransaction("PnR.b", sor, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			
-			if (log_message != null)
-				log_message.setTestMessage("PnR.b");
+
+			log_message.setTestMessage("PnR.b");
 
 			ProvideAndRegisterDocumentSet s = new ProvideAndRegisterDocumentSet(log_message, XdsCommon.xds_b, getMessageContext());
 			
@@ -39,8 +38,7 @@ public class RepositoryBopt extends XdsService implements ContentValidationServi
 			OMElement startup_error = beginTransaction("RET.b", rdsr, AppendixV.REPOSITORY_ACTOR);
 			if (startup_error != null)
 				return startup_error;
-			if (log_message != null)
-				log_message.setTestMessage("RET.b");
+			log_message.setTestMessage("RET.b");
 
 			OMNamespace ns = rdsr.getNamespace();
 			String ns_uri =  ns.getNamespaceURI();

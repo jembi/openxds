@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project openxds-core with libraries in sub-folder">
+    <description>
+    	A build file to build openxds.jar which can be run in a stand alone fashion
+    </description>
+	<property file="./build.properties" />
+	
+    <target name="init" depends="clean">
+        <mkdir dir="${build.conf.dir}"/>
+        <mkdir dir="${build.lib.dir}"/>
+    	<mkdir dir="${build.licenses.dir}"/>
+    	<mkdir dir="${build.misc.dir}"/>
+    	<mkdir dir="${openxds.dist.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+	
+    <target name="copy_files" depends="init">
+        <copy todir="${build.lib.dir}">
+            <fileset dir="${openxds.dir}/lib/">
+				<include name="**/*.jar" />
+				<include name="**/*.mar" />
+            </fileset>
+         </copy> 	
+        <copy todir="${build.conf.dir}">
+            <fileset dir="${openxds.dir}/openxds-core/target/classes/">
+				<include name="actors/**" />
+				<include name="axis2repository/**" />
+            </fileset>
+            <fileset dir="${openxds.dir}/iheos/target/classes/">
+				<include name="schema/**" />
+            </fileset>
+        </copy> 	
+        <copy flatten="true" todir="${build.dir}">
+            <fileset dir="${openxds.dir}/openxds-config/target/classes/">
+				<include name="commons-logging.properties" />
+				<include name="log4j.xml" />
+				<include name="bootstrap.properties" />
+				<include name="openxds*.properties" />
+				<include name="*applicationContext.xml" />
+            </fileset>
+            <fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+				<include name="omar.properties" />
+				<include name="repository.jdbc.cfg.xml" />
+            </fileset>
+        	<fileset dir="${openxds.dir}">
+        		<include name="*.txt" />        		
+        	</fileset>        	
+         </copy>	
+    	<copy todir="${build.licenses.dir}" >
+    	   		<fileset dir="${openxds.dir}/src/main/resources/licences">  
+    	  			<include name="**/*" />
+    	   		</fileset>
+    	</copy>
+		<copy todir="${build.misc.dir}" >
+			<fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes/">
+				<include name="*.sql" />
+			</fileset>
+		</copy>    	
+    	<!-- OpenXDS Extension-->
+        <copy flatten="true" todir="${build.dir}" failonerror="false">
+        	<fileset dir="${openxds.ext.dir}">
+        		<include name="openxds.*" />        		
+        	</fileset>        	
+        </copy> 
+    </target>
+	
+	<target name="create_run_jar" depends="copy_files">
+    	<path id="jar.class.path">
+    	  <fileset dir="${openxds.dir}/lib">
+    	    <include name="**/*.jar"/>
+    	    <include name="**/*.mar"/>
+    	  </fileset>
+    	</path>
+		<!--Convert class path to a manifest property -->
+        <manifestclasspath property="manifest.classpath.prop" jarfile="${output.jar.name}">
+          <classpath refid="jar.class.path" />
+        </manifestclasspath>
+		<!-- Make a jar file -->
+        <jar destfile="${build.dir}/${project.name}-${project.version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.openhealthtools.openxds.XdsServer"/>
+                <attribute name="Class-Path" value=". ./conf ${manifest.classpath.prop}"/>
+            </manifest>
+            <fileset dir="${openxds.dir}/common-utils/target/classes">
+            	<include name="org/**" />
+            </fileset> 
+            <fileset dir="${openxds.dir}/common-ws/target/classes">
+            	<include name="org/**" />
+            </fileset>
+            <fileset dir="${openxds.dir}/iheos/target/classes">
+            	<include name="org/**" />
+                <include name="gov/**" />
+            </fileset>
+		    <fileset dir="${openxds.dir}/openxds-api/target/classes">
+            	<include name="org/**" />
+            </fileset>
+            <fileset dir="${openxds.dir}/openxds-config/target/classes/">
+				<include name="org/**" />
+				<include name="applicationContext.xml" />
+            </fileset>
+            <fileset dir="${openxds.dir}/openxds-core/target/classes/">
+				<include name="org/**" />
+				<include name="axis2repository/**" />
+            </fileset>
+            <fileset dir="${openxds.dir}/openxds-registry-adapter-omar/target/classes">
+            	<include name="org/**" />
+                <include name="ehcache.xml" />
+                <include name="externalidentifier.hbm.xml" />
+                <include name="jaxr-ebxml.properties" />
+                <include name="omar-common.properties" />
+                <include name="repository.datasource.cfg.xml" />
+                <include name="repository.hbm.xml" />
+            </fileset>
+            <fileset dir="${openxds.dir}/openxds-registry-patient-lightweight/target/classes">
+            	<include name="org/**" />
+                <include name="personidentifier.hbm.xml" />
+            </fileset>	
+        	<!-- Disabled OpenEMPI adapter for patient registry -->
+            <!--fileset dir="${openxds.dir}/openxds-registry-patient/target/classes">
+            	<include name="org/**" />
+                <include name="META-INF/**" />
+                <include name="applicationContext-resources.xml" />
+                <include name="hibernate.cfg.xml" />
+                <include name="openempi.jdbc.properties" />
+				<include name="openempi.mail.properties" />
+                <include name="sql-map-config.xml" />
+            </fileset-->	
+            <fileset dir="${openxds.dir}/openxds-repository/target/classes">
+            	<include name="org/**" />
+                <include name="openxds.repository.hbm.xml" />
+            </fileset>
+        </jar>
+    </target>
+	
+	<target name="dist" depends="create_run_jar">
+		<copy todir="${build.misc.dir}" >
+			<fileset dir="${openxds.dir}/openxds-web/target">
+				<include name="*.war" />
+			</fileset>
+		</copy>    	
+		<zip destfile="${openxds.dist.dir}/${project.name}-${project.version}.zip" basedir="${build.dir}" update="true" />
+		<tar destfile="${openxds.dist.dir}/${project.name}-${project.version}.tar.gz" basedir="${build.dir}" compression="gzip"/>
+	</target>
+</project>

@@ -1,6 +1,6 @@
 package gov.nist.registry.common2.registry;
 
-import org.openhealthtools.openexchange.syslog.LogMessage;
+import org.openhealthtools.openxds.log.LogMessage;
 
 
 

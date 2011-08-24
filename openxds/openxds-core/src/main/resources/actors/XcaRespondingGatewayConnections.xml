@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
+
+
+-->
+<!-- The XDS Registry Actor Connections -->
+<Configuration>
+	<StandardConnection name="xca-rg">
+		<!--The host name of the Responding Gateway Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8040</Port>
+	</StandardConnection>
+	<SecureConnection name="xca-secure-rg">
+		<!--The host name of the Responding Gateway Server-->
+		<HostName>localhost</HostName>
+		<!--The port-->
+		<Port>8041</Port>
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+	
+	<StandardConnection name="misys-registry">
+		<HostName>localhost</HostName>
+		<Port>8010</Port>
+		<UrlPath>/axis2/services/xdsregistryb</UrlPath>		
+	</StandardConnection>
+	<StandardConnection name="misys-repository">
+		<HostName>localhost</HostName>
+		<Port>8020</Port>
+		<UrlPath>/axis2/services/xdsrepositoryb</UrlPath>		
+	</StandardConnection>
+
+    <!-- Axolotl Registry for HIMSS Vitual Testing -->
+	<StandardConnection name="axolotl-vt-registry">
+		<HostName>208.37.137.112</HostName>
+		<Port>80</Port>
+		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="axolotl-vt-secure-registry">
+		<HostName>208.37.137.112</HostName>
+		<Port>443</Port>
+		<UrlPath>/xds/DocumentRegistry_Service</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+    <!-- Oracle Repository for HIMSS Vitual Testing -->
+	<StandardConnection name="oracle-vt-repository">
+		<HostName>10.149.124.186</HostName>
+		<Port>7777</Port>
+		<UrlPath>/XDS/xdsrepositoryb_Soap12</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="oracle-vt-secure-repository">
+		<HostName>10.149.124.186</HostName>
+		<Port>4444</Port>		
+		<UrlPath>/XDS/xdsrepositoryb_Soap12</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+    <!-- ICW Registry for HIMSS Vitual Testing -->
+	<StandardConnection name="icw-vt-registry">
+		<HostName>62.182.99.61</HostName>
+		<Port>8080</Port>
+		<UrlPath>/pxs-vmr-assembly/webservices/rev6/xdsb-storedquery</UrlPath>		
+	</StandardConnection>
+	<SecureConnection name="icw-vt-secure-registry">
+		<HostName>62.182.99.61</HostName>
+		<Port>8443</Port>
+		<UrlPath>/ehealth/webservices/rev6/xdsb-storedquery</UrlPath>		
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+    <!-- Carefx Registry for HIMSS Vitual Testing -->
+	<StandardConnection name="carefx-vt-registry">
+		<HostName>xdstest.carefx.com</HostName>
+		<Port>86</Port>
+		<UrlPath>/axis2/services/DocumentRegistryService</UrlPath>		
+	</StandardConnection>
+
+    <!-- Carefx Repository for HIMSS Vitual Testing -->
+	<StandardConnection name="carefx-vt-repository">
+		<HostName>xdstest.carefx.com</HostName>
+		<Port>8083</Port>
+		<UrlPath>/axis2/services/DocumentRepositoryService</UrlPath>	
+	</StandardConnection>
+	<SecureConnection name="carefx-vt-secure-repository">
+		<HostName>xdstest.carefx.com</HostName>
+		<Port>8090</Port>
+		<UrlPath>/axis2/services/DocumentRepositoryService</UrlPath>	
+		<!-- Trust and Keystore -->
+		<KeyStore>certs/OpenXDS_2010_Keystore.p12</KeyStore>
+		<KeyPass>password</KeyPass>
+		<TrustStore>certs/OpenXDS_2010_Truststore.jks</TrustStore>
+		<TrustPass>password</TrustPass>
+	</SecureConnection>
+
+</Configuration>

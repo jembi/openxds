@@ -16,10 +16,10 @@ import java.net.URL;
 import org.apache.axiom.om.OMElement;
 import org.apache.xerces.parsers.DOMParser;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.utils.StringUtil;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.misyshealthcare.connect.util.StringUtil;
 
 public class SchemaValidation implements MetadataTypes {
 

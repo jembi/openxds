@@ -12,7 +12,7 @@ import gov.nist.registry.ws.config.Registry;
 import gov.nist.registry.ws.sq.StoredQueryFactory;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.Message;
+import org.openhealthtools.openxds.log.Message;
 
 public class Test12307  extends RG {
 

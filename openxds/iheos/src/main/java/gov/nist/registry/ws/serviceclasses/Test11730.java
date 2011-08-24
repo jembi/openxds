@@ -28,8 +28,7 @@ public class Test11730  extends AbstractRepositoryA {
 				return startup_error;
 			
 			String service_label = this.getServiceName();
-			if (log_message != null)
-				log_message.setTestMessage(service_label);
+			log_message.setTestMessage(service_label);
 			
 			ProvideAndRegisterDocumentSet s = new ProvideAndRegisterDocumentSet(log_message, XdsCommon.xds_a, getMessageContext());
 			

@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.actorconfig.IActorDescription;
-import org.openhealthtools.openexchange.datamodel.Identifier;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
+import org.openhealthtools.openexchange.patient.data.Identifier;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 public class Validator {
 	RegistryErrorList rel;
@@ -33,7 +33,7 @@ public class Validator {
 	LogMessage log_message;
 	boolean isPnR = false;
 
-	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, LogMessage log_message, boolean isPnR, IActorDescription actorDescription)
+	public Validator(Metadata m, RegistryErrorList rel, boolean is_submit, boolean is_xdsb, LogMessage log_message, boolean isPnR, IConnectionDescription connection)
 	throws LoggerException, XdsException {
 		this.rel = rel;
 		this.m = m;
@@ -45,7 +45,7 @@ public class Validator {
 		s = new Structure(m, is_submit, rel, log_message);
 		a = new Attribute(m, is_submit, is_xdsb, rel, isPnR);
 		try {
-			cv = new CodeValidation(m, is_submit, is_xdsb, rel, actorDescription);
+			cv = new CodeValidation(m, is_submit, is_xdsb, rel, connection);
 		}
 		catch (XdsInternalException e) {
 			rel.add_error(MetadataSupport.XDSRegistryError, e.getMessage(), RegistryUtility.exception_details(e), null);

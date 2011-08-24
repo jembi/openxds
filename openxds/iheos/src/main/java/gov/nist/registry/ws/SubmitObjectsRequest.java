@@ -18,6 +18,7 @@ import gov.nist.registry.common2.registry.IdParser;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.MetadataParser;
 import gov.nist.registry.common2.registry.MetadataSupport;
+import gov.nist.registry.common2.registry.Properties;
 import gov.nist.registry.common2.registry.RegistryResponse;
 import gov.nist.registry.common2.registry.RegistryUtility;
 import gov.nist.registry.common2.registry.Response;
@@ -44,10 +45,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openhealthtools.opendsub.DsubException;
-import org.openhealthtools.opendsub.producer.DsubPublisher;
-import org.openhealthtools.openexchange.actorconfig.Configuration;
-import org.openhealthtools.openexchange.actorconfig.IheConfigurationException;
+import org.openhealthexchange.openpixpdq.data.PatientIdentifier;
+import org.openhealthtools.common.ihe.IheActor;
+import org.openhealthtools.common.utils.HL7;
+import org.openhealthtools.common.utils.OMUtil;
+import org.openhealthtools.common.ws.server.IheHTTPServer;
 import org.openhealthtools.openexchange.actorconfig.net.IConnectionDescription;
 import org.openhealthtools.openexchange.audit.ActiveParticipant;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings;
@@ -55,25 +57,16 @@ import org.openhealthtools.openexchange.audit.IheAuditTrail;
 import org.openhealthtools.openexchange.audit.ParticipantObject;
 import org.openhealthtools.openexchange.audit.AuditCodeMappings.AuditTypeCodes;
 import org.openhealthtools.openexchange.config.PropertyFacade;
-import org.openhealthtools.openexchange.datamodel.Identifier;
-import org.openhealthtools.openexchange.datamodel.PatientIdentifier;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
-import org.openhealthtools.openexchange.utils.OMUtil;
-import org.openhealthtools.openexchange.utils.hl7.HL7;
-import org.openhealthtools.openxds.common.AssigningAuthorityUtil;
-import org.openhealthtools.openxds.common.ConnectionUtil;
-import org.openhealthtools.openxds.common.XdsConstants;
-import org.openhealthtools.openxds.common.XdsFactory;
-import org.openhealthtools.openxds.dsub.Publisher;
+import org.openhealthtools.openxds.XdsFactory;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleContext;
 import org.openhealthtools.openxds.registry.api.RegistryLifeCycleException;
 import org.openhealthtools.openxds.registry.api.RegistryPatientException;
-import org.openhealthtools.openxds.registry.api.XdsRegistry;
 import org.openhealthtools.openxds.registry.api.XdsRegistryLifeCycleService;
 import org.openhealthtools.openxds.registry.api.XdsRegistryPatientService;
 
-import proto.notification.wsa.EndpointReference;
+import com.misyshealthcare.connect.net.Identifier;
 
 
 public class SubmitObjectsRequest extends XdsCommon {
@@ -81,7 +74,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	ContentValidationService validater;
 	short xds_version;
 	private final static Log logger = LogFactory.getLog(SubmitObjectsRequest.class);
-	private XdsRegistry actor = null;
+ 	private IConnectionDescription connection = null;
 	static ArrayList<String> sourceIds = null;
 	String clientIPAddress;
 	/* The IHE Audit Trail for this actor. */
@@ -104,24 +97,25 @@ public class SubmitObjectsRequest extends XdsCommon {
 	
 	public SubmitObjectsRequest(LogMessage log_message, short xds_version, MessageContext messageContext) {
 		this.log_message = log_message;
-		this.messageContext = messageContext;
 		this.xds_version = xds_version;
 		this.clientIPAddress = null;
 		transaction_type = R_transaction;
-
 		try {
-			actor = XdsFactory.getRegistryActor(); 
+			IheHTTPServer httpServer = (IheHTTPServer)messageContext.getTransportIn().getReceiver();
+			IheActor actor = httpServer.getIheActor();
 			if (actor == null) {
 				throw new XdsInternalException("Cannot find XdsRegistry actor configuration.");			
 			}
-			
-			auditLog = (IheAuditTrail)actor.getAuditTrail();	
+			connection = actor.getConnection();
+			if (connection == null) {
+				throw new XdsInternalException("Cannot find XdsRegistry connection configuration.");			
+			}
+			auditLog = actor.getAuditTrail();
 			init(new RegistryResponse( (xds_version == xds_a) ?	Response.version_2 : Response.version_3), xds_version, messageContext);
-			
 			loadSourceIds();
 		} catch (XdsInternalException e) {
-            logger.fatal(logger_exception_details(e));
-		} 
+			logger.fatal(logger_exception_details(e));
+		}
 	}
 
 	public SubmitObjectsRequest() {
@@ -130,13 +124,13 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 	void loadSourceIds() throws XdsInternalException {
 		if (sourceIds != null) return;
-		String[] sids = PropertyFacade.getStringArray(XdsConstants.DOC_SOURCE_IDS);
-		if (sids == null || sids.length == 0)
+		String sids = connection.getProperty("sourceIds");
+		if (sids == null || sids.equals(""))
 			throw new XdsInternalException("Registry: sourceIds not configured");
-		
+		String[] parts = sids.split(",");
 		sourceIds = new ArrayList<String>();
-		for (int i=0; i<sids.length; i++) {
-			sourceIds.add(sids[i]);
+		for (int i=0; i<parts.length; i++) {
+			sourceIds.add(parts[i].trim());
 		}
 	}
 
@@ -211,7 +205,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		OMElement res = null;
 		try {
-			res =  response.getResponse();			
+			res =  response.getResponse();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Response from the Registry");
 				logger.debug(res.toString());
@@ -220,25 +214,10 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		}
 		
-		// Notify document submission to subscribers
-		if (!response.has_errors()) {
-			//todo: remove hardcoded url
-//			EndpointReference endpoint = new EndpointReference("http://localhost:8885/opendsub/services/NotificationBroker");
-//			EndpointReference producerEndpoint = new EndpointReference("http://localhost:8010/openxds/services/DocumentRegistry");
-//			NotificationProducer producer = new DocumentMetadataProducer(endpoint, );
-//			LocalDsubPublisher publisher = new LocalDsubPublisher(endpoint); 
-
-			//Document Metadata Publish
-			Publisher.getInstance().publish(sor, actor);
-		}
-		
 		// return test log message id only if request from internal Repository
 		if (returnTestLogId() && "127.0.0.1".equals(clientIPAddress)) {
 			logger.info("Adding testLogId");
-			String msgID = null;
-			if (log_message != null)
-				 msgID = log_message.getMessageID();
-			res.addAttribute("testLogId", msgID, null);
+			res.addAttribute("testLogId", log_message.getMessageID(), null);
 		}
 		if (logger.isInfoEnabled()){
 			logger.info("response is " + res.toString());
@@ -276,7 +255,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		logIds(m);
 
-		Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, false, actor.getActorDescription());
+		Validator val = new Validator(m, response.registryErrorList, true, xds_version == xds_b, log_message, false, connection);
 		val.run();
 
 		RegistryValidations vals = null;
@@ -297,8 +276,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 
 		String patient_id = m.getSubmissionSetPatientId();
-		if (log_message != null)
-			log_message.addOtherParam("Patient ID", patient_id);
+		log_message.addOtherParam("Patient ID", patient_id);
 
 		validate_patient_id(patient_id);
 
@@ -361,8 +339,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 		// submit to backend registry
 		String to_backend = m.getV3SubmitObjectsRequest().toString();
-		if (log_message != null)
-			log_message.addOtherParam("From Registry Adaptor", to_backend);
+
+		log_message.addOtherParam("From Registry Adaptor", to_backend);
 
 		status = submit_to_backend_registry(to_backend);
 		if (!status) {
@@ -377,8 +355,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 		if (approvable_object_ids.size() > 0) {
 
 			OMElement approve = ra.getApproveObjectsRequest(approvable_object_ids);
-			if (log_message != null)
-				log_message.addOtherParam("Approve", approve.toString());
+
+			log_message.addOtherParam("Approve", approve.toString());
 
 			submit_to_backend_registry(approve.toString());
 		}
@@ -399,8 +377,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 
 
 			OMElement deprecate = ra.getDeprecateObjectsRequest(deprecatable_object_ids);
-			if (log_message != null)
-				log_message.addOtherParam("Deprecate", deprecate.toString());
+
+			log_message.addOtherParam("Deprecate", deprecate.toString());
 
 			submit_to_backend_registry(deprecate.toString());
 		}
@@ -430,24 +408,20 @@ public class SubmitObjectsRequest extends XdsCommon {
 	private void updateFolderTimes(Metadata m) throws MetadataException,
 	LoggerException, XdsException, XdsInternalException,
 	XMLParserException, MetadataValidationException {
-		if (log_message != null)
-			log_message.addOtherParam("start update folder","");
+		log_message.addOtherParam("start update folder","");
 		for (OMElement assoc : m.getAssociations()) {
-			if (log_message != null)
-				log_message.addOtherParam("assoc type is ", m.getSimpleAssocType(assoc));
+			log_message.addOtherParam("assoc type is ", m.getSimpleAssocType(assoc));
 			if ( !m.getSimpleAssocType(assoc).equals("HasMember")) 
 				continue;
 			String sourceId = m.getAssocSource(assoc);
-			if (log_message != null)
-				log_message.addOtherParam("sourceid  ", sourceId);
+			log_message.addOtherParam("sourceid  ", sourceId);
 			if (m.getSubmissionSetId().equals(sourceId))
 				continue;  // sourceObject is SS
 			if (m.getFolderIds().contains(sourceId))
 				continue;  // sourceObject is folder in submission - handled elsewhere
 
 			// sourceObject must be folder in registry, no other possibilities
-			if (log_message != null)
-				log_message.addOtherParam("Adding to Registry Folder ", sourceId);
+			log_message.addOtherParam("Adding to Registry Folder ", sourceId);
 			Metadata fm = fetchFolderbyId(sourceId);
 			if (fm.getFolders().size() == 0)
 				throw new XdsException("Adding to folder, sourceObject, " + sourceId + ", is not a folder in submission or in Registry");
@@ -495,15 +469,14 @@ public class SubmitObjectsRequest extends XdsCommon {
 				rplcToOrigIds.put(m.getAssocSource(assoc), m.getAssocTarget(assoc));
 			}
 		}
-		if (log_message != null)
-			log_message.addOtherParam("RPLC assocs", rplcToOrigIds.toString());
+
+		log_message.addOtherParam("RPLC assocs", rplcToOrigIds.toString());
 		for (String replacementDocumentId : rplcToOrigIds.keySet()) {
 			String originalDocumentId = rplcToOrigIds.get(replacementDocumentId);
 			// for each original document, find the collection of folders it belongs to
 			Metadata me = new SQFactory(this).findFoldersForDocumentByUuid(originalDocumentId, false /*LeafClass*/);
 			List<String> folderIds = me.getObjectIds(me.getObjectRefs());
-			if (log_message != null)
-				log_message.addOtherParam("RPLC containing folders=", folderIds.toString());
+			log_message.addOtherParam("RPLC containing folders=", folderIds.toString());
 			// for each folder, add an association placing replacement in that folder
 			for (String fid : folderIds) {
 				OMElement assoc = m.add_association(m.mkAssociation("HasMember", fid, replacementDocumentId));
@@ -513,8 +486,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 	}
 
 	private void logIds(Metadata m) throws LoggerException, MetadataException {
-		if (log_message != null)
-			log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
+		log_message.addOtherParam("SSuid", m.getSubmissionSetUniqueId());
 
 		List<String> doc_uids = new ArrayList<String>();
 		for (String id : m.getExtrinsicObjectIds()) {
@@ -522,8 +494,7 @@ public class SubmitObjectsRequest extends XdsCommon {
 			if (uid != null && !uid.equals(""))
 				doc_uids.add(uid);
 		}
-		if (log_message != null)
-			log_message.addOtherParam("DOCuids", doc_uids.toString());
+		log_message.addOtherParam("DOCuids", doc_uids.toString());
 
 		List<String> fol_uids = new ArrayList<String>();
 		for (String id : m.getFolderIds()) {
@@ -531,10 +502,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 			if (uid != null && !uid.equals(""))
 				fol_uids.add(uid);
 		}
-		if (log_message != null){
-			log_message.addOtherParam("FOLuids", fol_uids.toString());
-			log_message.addOtherParam("Structure", m.structure());
-		}	
+		log_message.addOtherParam("FOLuids", fol_uids.toString());
+		log_message.addOtherParam("Structure", m.structure());
 	}
 
 	private void validateSourceId(Metadata m) throws MetadataException,
@@ -583,7 +552,7 @@ public class SubmitObjectsRequest extends XdsCommon {
    		String patId = HL7.getIdFromCX(patientId);
    	
     	Identifier assigningAuthority = HL7.getAssigningAuthorityFromCX(patientId);
-    	Identifier aa = AssigningAuthorityUtil.reconcileIdentifier(assigningAuthority, actor.getActorDescription());
+    	Identifier aa = reconcileIdentifier(assigningAuthority, connection);
 
     	PatientIdentifier pid = new PatientIdentifier();
     	pid.setId(patId);
@@ -662,7 +631,8 @@ public class SubmitObjectsRequest extends XdsCommon {
 		ActiveParticipant source = new ActiveParticipant();
 		source.setUserId(replyto);
 		source.setAccessPointId(remoteIP);
-		String userid = actor.getServiceEndpoint(isHttps()); 
+		//TODO: Needs to be improved
+		String userid = "http://"+connection.getHostname()+":"+connection.getPort()+"/axis2/services/xdsregistryb"; 
 		ActiveParticipant dest = new ActiveParticipant();
 		dest.setUserId(userid);
 		// the Alternative User ID should be set to our Process ID, see

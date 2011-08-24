@@ -22,14 +22,9 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.OperationContext;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.logging.LogFactory;
 
@@ -149,21 +144,8 @@ public class Soap implements SoapInterface {
 	throws  XdsException, AxisFault {
 
 //		try {
-			if (serviceClient == null){
-/*				ConfigurationContext configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem( 
-(); 
-
-		        MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager(); 
-	
-		        HttpConnectionManagerParams params = new HttpConnectionManagerParams(); 
-		        params.setDefaultMaxConnectionsPerHost(20); 
-		        multiThreadedHttpConnectionManager.setParams(params); 
-		        HttpClient httpClient = new HttpClient(multiThreadedHttpConnectionManager); 
-		        configurationContext.setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient); 
-				serviceClient = new ServiceClient(configurationContext, null);*/
+			if (serviceClient == null)
 				serviceClient = new ServiceClient();
-			}
-			serviceClient.getOptions().setTimeOutInMilliSeconds(60000);
 
 			serviceClient.getOptions().setTo(new EndpointReference(endpoint));
 
@@ -203,15 +185,14 @@ public class Soap implements SoapInterface {
 
 			if ( async && !serviceClient.getOptions().isUseSeparateListener())
 				serviceClient.getOptions().setUseSeparateListener(async);
-			
+
 			if (logger.isInfoEnabled()) {
 				logger.info("Call " + endpoint);
 				logger.info("Action " + action);
 			}
-			OMElement temp = serviceClient.sendReceive(body);
-			result = Util.deep_copy(temp);
-			
-			//if (async)
+			OMElement result = serviceClient.sendReceive(body);
+
+			if (async)
 				serviceClient.cleanupTransport();
 
 			Object in = serviceClient.getServiceContext().getLastOperationContext().getMessageContexts().get("In");

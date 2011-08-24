@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright (c) 2009-2010 Misys Open Source Solutions (MOSS) and others
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied. See the License for the specific language governing
+     permissions and limitations under the License.
+
+     Contributors:
+       Misys Open Source Solutions - initial API and implementation
+
+
+-->
+<!--Note: This file is the starting point of All the Actor configuration;
+	all other config files should be linked from here. -->
+
+<!--Each configuration file has a root Configuration tag-->
+<Configuration>
+
+	<!--Defines the configuration of Audit Repository Server for Audit Client-->
+	<ConnectionFile file="AuditRepositoryConnections.xml" />
+	<!--Defines the configuration of XDS Registry-->
+	<ConnectionFile file="XdsRegistryConnections.xml" />
+	<!--Defines the configuration of XDS Repository-->
+	<ConnectionFile file="XdsRepositoryConnections.xml" />
+	<!--Defines the configuration of XCA Responding Gateway-->
+	<ConnectionFile file="XcaRespondingGatewayConnections.xml" />
+	<!--Defines the configuration of XCA Initiating Gateway-->
+	<ConnectionFile file="XcaInitiatingGatewayConnections.xml" />
+
+	<!--The XDS Registry actor configuration-->
+	<Actor name="xdsreg" type="XdsRegistry">
+		<Description>XDS Registry</Description>
+		<Connection type="Server" name="xds-registry"/>
+		<Connection type="PixServer" name="pix-registry"/>
+	</Actor>
+	<Actor name="xdsreg_secure" type="XdsRegistry">
+		<Description>Secure XDS Registry</Description>
+		<Connection type="Server" name="secure-xds-registry"/>
+		<Connection type="PixServer" name="secure-pix-registry"/>
+	</Actor>
+ 
+	<!--The XDS Repository actor configuration-->
+	<Actor name="xdsrep" type="XdsRepository">
+		<Description>XDS Repository</Description>
+		<Connection type="Server" name="xds-repository"/>
+		<Connection type="Registry" name="xds-registry-client"/>
+	</Actor>
+	<Actor name="xdsrep_secure" type="XdsRepository">
+		<Description>Secure XDS Repository</Description>
+		<Connection type="Server" name="secure-xds-repository"/>
+		<Connection type="Registry" name="secure-xds-registry-client"/>
+	</Actor>
+
+	<!--The XCA Responding Gateway actor configuration-->
+	<!-- Actor name="xcarg" type="XcaRG">
+		<Description>XCA Responding Gateway</Description>
+		<Connection type="Server" name="xca-rg"/>
+		<Connection type="Registry" name="misys-registry"/>
+		<Connection type="Repository" name="misys-repository"/>
+	</Actor>
+	<Actor name="xcasrg" type="XcaRG">
+		<Description>Secure XCA Responding Gateway</Description>
+		<Connection type="Server" name="xca-secure-rg"/>
+		<Connection type="Registry" name="misys-registry"/>
+		<Connection type="Repository" name="misys-repository"/>
+	</Actor-->
+	
+	<!--The XCA Initiating Gateway actor configuration-->
+	<!-- Actor name="xcaig" type="XcaIG">
+		<Description>XCA Initiating Gateway</Description>
+		<Connection type="Server" name="xca-ig"/>
+		<Connection type="Registry" name="local-registry"/>
+		<Connection type="Repository" name="local-repository"/>
+		<TransactionsSet type="RespondingGateway">
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-rg-query" retrieve="ibm-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-rg" retrieve="vangent-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-rg" retrieve="intel-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
+		</TransactionsSet>
+	</Actor>
+	<Actor name="xcasig" type="XcaIG">
+		<Description>Secure XCA Initiating Gateway</Description>
+		<Connection type="Server" name="xca-secure-ig"/>
+		<Connection type="Registry" name="local-secure-registry"/>
+		<Connection type="Repository" name="local-secure-repository"/>
+		<TransactionsSet type="RespondingGateway">
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2050" query="ibm-secure-rg-query" retrieve="ibm-secure-rg-retrieve"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2025" query="vangent-secure-rg" retrieve="vangent-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2010" query="spirit-rg" retrieve="spirit-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2035" query="intel-secure-rg" retrieve="intel-secure-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2040" query="hxti-rg" retrieve="hxti-rg"/>
+			<Transactions id="urn:oid:1.3.6.1.4.1.21367.2010.1.2.2042" query="ge-rg-query" retrieve="ge-rg-retrieve"/>
+		</TransactionsSet>
+	</Actor-->
+	
+	<!-- Audit Repository Actor -->
+	<Actor name="localaudit" type="SecureNode">
+		<Description>LOCAL AUDIT</Description>
+		<AuditTrail name="log4j_audittrail" />
+		<AuditTrail name="misys_arr_udp" />
+	</Actor>
+	
+
+</Configuration>

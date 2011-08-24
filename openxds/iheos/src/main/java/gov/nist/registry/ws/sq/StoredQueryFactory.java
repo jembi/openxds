@@ -14,8 +14,8 @@ import gov.nist.registry.common2.registry.storedquery.SqParams;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
 import org.apache.axiom.om.OMElement;
-import org.openhealthtools.openexchange.syslog.LogMessage;
-import org.openhealthtools.openexchange.syslog.LoggerException;
+import org.openhealthtools.openxds.log.LogMessage;
+import org.openhealthtools.openxds.log.LoggerException;
 
 /**
  * Generic Stored Query Factory class that is sub-classed to define a specific stored query implementation.
@@ -125,8 +125,7 @@ abstract public class StoredQueryFactory {
 			log_message.addOtherParam("Parameters", params.toString());
 
 		if (response == null) {
-			if (log_message != null)
-				log_message.addOtherParam("XXXX Allocating new Response!!!!", "");
+			log_message.addOtherParam("XXXX Allocating new Response!!!!", "");
 			response = new AdhocQueryResponse(Response.version_3);
 		}
 
