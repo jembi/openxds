@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><metadata>
+  <groupId>org.openhie.openempi</groupId>
+  <artifactId>openempi-openpixpdq-adapter</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <versioning>
+    <versions>
+      <version>1.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20090727153931</lastUpdated>
+  </versioning>
+</metadata>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.openhie.openempi</groupId>
+		<artifactId>openempi</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>openempi-ear</artifactId>
+	<packaging>ear</packaging>
+	<name>OpenEMPI - EAR</name>
+
+
+	<!-- Dependencies calculated by AppFuse when running full-source plugin -->
+	<dependencies>
+		<dependency>
+			<groupId>org.openhie.openempi</groupId>
+			<artifactId>openempi-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openhie.openempi</groupId>
+			<artifactId>openempi-ejb</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openhie.openempi</groupId>
+			<artifactId>openempi-webapp</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>openempi-2.0</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<version>5</version>
+					<defaultJavaBundleDir>lib</defaultJavaBundleDir>
+					<modules>
+						<jarModule>
+							<groupId>org.openhie.openempi</groupId>
+							<artifactId>openempi-core</artifactId>
+						</jarModule>
+						<ejbModule>
+							<groupId>org.openhie.openempi</groupId>
+							<artifactId>openempi-ejb</artifactId>
+							<bundleDir>/</bundleDir>
+						</ejbModule>
+						<webModule>
+							<groupId>org.openhie.openempi</groupId>
+							<artifactId>openempi-webapp</artifactId>
+							<bundleDir>/</bundleDir>
+						</webModule>
+					</modules>
+<!--					
+					<jboss>
+						<version>4</version>
+						<loader-repository>org.openhie:archive=openempi-2.0.ear<loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+						</loader-repository>
+						<data-sources>
+							<data-source>invision-ds.xml</data-source>
+						</data-sources>
+					</jboss>
+ -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jboss-maven-plugin</artifactId>
+				<configuration>
+					<jbossHome>D:\servers\jboss-4.2.3</jbossHome>
+					<hostName>localhost</hostName>
+					<port>8080</port>
+				</configuration>
+			</plugin>		
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.openhealthtools.openxds</groupId>
+    <artifactId>openxds</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.1-SNAPSHOT</version>
+    <name>OpenXDS Parent</name>
+    <url>https://openxds.projects.openhealthtools.org</url>
+
+    <prerequisites>
+        <maven>2.0.6</maven>
+    </prerequisites>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <scm>
+    	<connection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</connection>
+    	<developerConnection>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/trunk</developerConnection>
+    	<url>https://openxds.projects.openhealthtools.org/source/browse/openxds</url>
+    </scm>
+
+    <issueManagement>
+        <system />
+        <url />
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <id />
+            <name />
+            <email />
+            <timezone />
+        </developer>
+    </developers>
+    
+    <distributionManagement>
+        <repository>
+            <id>openxds</id>
+            <name>OpenXDS Maven Repository</name>
+            <url>scm:svn:https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+    </distributionManagement>
+    
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <resources>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appfuse-maven-plugin</artifactId>
+                <version>${appfuse.version}</version>
+                <configuration>
+                    <genericCore>${amp.genericCore}</genericCore>
+                    <fullSource>${amp.fullSource}</fullSource>
+                </configuration>
+                <!-- Dependency needed by appfuse:gen-model to connect to database. -->
+                <!-- See http://issues.appfuse.org/browse/APF-868 to learn more.    -->
+                <dependencies>
+                    <dependency>
+                        <groupId>${jdbc.groupId}</groupId>
+                        <artifactId>${jdbc.artifactId}</artifactId>
+                        <version>${jdbc.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <additionalProjectnatures>
+                        <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+                    </additionalProjectnatures>
+                    <additionalBuildcommands>
+                        <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+                    </additionalBuildcommands>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                    <wtpversion>1.5</wtpversion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-idea-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                    <dependenciesAsLibraries>true</dependenciesAsLibraries>
+                    <useFullNames>false</useFullNames>
+                </configuration>
+            </plugin>
+        	<plugin>
+				<inherited>false</inherited>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<header>${basedir}/src/main/resources/header.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>							
+	                <mapping> 
+	                    <jwc>XML_STYLE</jwc> 
+	                    <application>XML_STYLE</application> 
+	                    <myFileExtension>JAVADOC_STYLE</myFileExtension> 
+	                </mapping> 
+	                <useDefaultMapping>true</useDefaultMapping> 
+					<properties>
+						<year>2009-2010</year>
+						<company>Misys Open Source Solutions (MOSS) and others</company>
+						<contributor1>Misys Open Source Solutions - initial API and implementation</contributor1>
+						<contributor2>-</contributor2>
+					</properties>
+					<excludes>
+						<exclude>**/header.txt</exclude>
+						<exclude>**/README.txt</exclude>
+						<exclude>**/*.log</exclude>
+						<exclude>**/*.xml</exclude>
+						<exclude>**/*.xsd</exclude>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.bat</exclude>
+						<exclude>**/*.list</exclude>
+                        <exclude>**/*.mar</exclude>
+                        <exclude>**/*.aar</exclude>
+                        <exclude>**/.xsdconfig</exclude>
+                        <exclude>**/*.original</exclude>
+                        <exclude>**/.myhibernatedata</exclude>
+                        <exclude>**/axis2.xml</exclude>
+						<exclude>**/*.sh</exclude>
+						<exclude>**/*.jks</exclude>
+						<exclude>**/*.p12</exclude>
+						<exclude>**/build/**</exclude>
+						<exclude>**/test/resources/**</exclude>
+						<exclude>**/gov/nist/**</exclude>
+						<exclude>**/org/json/**</exclude>
+						<exclude>**/common/ws/server/**</exclude>
+						<exclude>**/Utility.java</exclude>
+						<exclude>**/ByteArrayInputStream.java</exclude>
+					</excludes>
+                </configuration>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>format</goal>
+	                    </goals>
+	                </execution>
+	            </executions>                    
+            </plugin>
+        </plugins>
+        <extensions>
+        	<extension>
+        		<groupId>org.apache.maven.wagon</groupId>
+        		<artifactId>wagon-scm</artifactId>
+			<version>1.0-beta-6</version>
+        	</extension>
+		<extension>
+        		<groupId>org.apache.maven.scm</groupId>
+        		<artifactId>maven-scm-provider-svnexe</artifactId>
+			<version>1.0-rc1</version>
+        		<!--artifactId>maven-scm-provider-svn</artifactId>
+			<version>1.0-beta-2</version-->
+      		</extension>
+        </extensions>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>appfuse</id>
+            <url>http://static.appfuse.org/repository</url>
+        </repository>
+		<repository>
+			<id>sun1</id>
+			<url>http://download.java.net/maven/1</url>
+		</repository>
+		<repository>
+			<id>sun2</id>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>ibilio</id>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>		
+        <repository>
+            <id>openxds</id>
+            <url>https://openxds.projects.openhealthtools.org/svn/openxds/repo</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>appfuse</id>
+            <url>http://static.appfuse.org/repository</url>
+        </pluginRepository>
+		<pluginRepository>
+		    <id>mc-release</id>
+		    <name>Local Maven repository of releases</name>
+		    <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+		    <snapshots>
+		        <enabled>false</enabled>
+		    </snapshots>
+		    <releases>
+		        <enabled>true</enabled>
+		    </releases>
+		</pluginRepository>
+    </pluginRepositories>
+
+    <!-- Dependencies calculated by AppFuse when running full-source plugin -->
+    <dependencies>
+        <dependency>
+            <groupId>${jdbc.groupId}</groupId>
+            <artifactId>${jdbc.artifactId}</artifactId>
+            <version>${jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <version>${jmock.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit4</artifactId>
+            <version>${jmock.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+        	<groupId>org.springframework</groupId>
+        	<artifactId>spring</artifactId>
+        	<version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <optional>true</optional>
+        </dependency> 
+          <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>       
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core-tiger</artifactId>
+            <version>${spring.security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-support</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp-wiser</artifactId>
+            <version>${wiser.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <modules>
+        <module>apache-axis2</module>
+        <module>common-utils</module>
+        <module>common-ws</module>
+        <module>openxds-config</module>
+        <!-- <module>xua-core</module>  -->
+        <module>openxds-log</module>
+        <module>iheos</module>
+        <module>openxds-api</module>
+        <module>openxds-core</module>
+        <module>openxds-registry-adapter-omar</module>
+        <module>openxds-repository</module>
+        <module>openxds-web</module>
+    	<module>openxds-registry-patient-lightweight</module>
+  </modules>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-changes-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <targetJdk>1.5</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <!-- ================= Production Settings Profile ================= -->
+        <!-- Use "-P prod" when you want to use the settings in this profile -->
+        <!-- =============================================================== -->
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <!-- Override location of data file for DbUnit to load (doesn't have negative keys) -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>dbunit-maven-plugin</artifactId>
+                        <configuration>
+                            <src>src/main/resources/default-data.xml</src>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ================= Database Profiles ================= -->
+        <profile>
+            <id>derby</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.DerbyDialect</hibernate.dialect>
+                <jdbc.groupId>org.apache.derby</jdbc.groupId>
+                <jdbc.artifactId>derbyclient</jdbc.artifactId>
+                <jdbc.version>10.1.3.1</jdbc.version>
+                <jdbc.driverClassName>org.apache.derby.jdbc.ClientDriver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:derby://localhost/openxds;create=true]]></jdbc.url>
+                <jdbc.username>any</jdbc.username>
+                <jdbc.password>value</jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>h2</id>
+            <properties>
+                <dbunit.dataTypeFactoryName>org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</dbunit.dataTypeFactoryName>
+                <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+                <jdbc.groupId>com.h2database</jdbc.groupId>
+                <jdbc.artifactId>h2</jdbc.artifactId>
+                <jdbc.version>1.0.20061217</jdbc.version>
+                <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:h2:${java.io.tmpdir}/openxds]]></jdbc.url>
+                <jdbc.username>sa</jdbc.username>
+                <jdbc.password />
+            </properties>
+        </profile>
+        <profile>
+            <id>hsqldb</id>
+            <properties>
+                <dbunit.dataTypeFactoryName>org.dbunit.ext.hsqldb.HsqldbDataTypeFactory</dbunit.dataTypeFactoryName>
+                <hibernate.dialect>org.hibernate.dialect.HSQLDialect</hibernate.dialect>
+                <jdbc.groupId>hsqldb</jdbc.groupId>
+                <jdbc.artifactId>hsqldb</jdbc.artifactId>
+                <jdbc.version>1.8.0.1</jdbc.version>
+                <jdbc.driverClassName>org.hsqldb.jdbcDriver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:hsqldb:${java.io.tmpdir}/openxds;shutdown=true]]></jdbc.url>
+                <jdbc.username>sa</jdbc.username>
+                <jdbc.password />
+            </properties>
+        </profile>
+        <profile>
+            <id>oracle</id>
+            <properties>
+                <dbunit.dataTypeFactoryName>org.dbunit.ext.oracle.OracleDataTypeFactory</dbunit.dataTypeFactoryName>
+                <dbunit.schema>SYSTEM</dbunit.schema> <!-- Make sure to capitalize the schema name -->
+                <hibernate.dialect>org.hibernate.dialect.Oracle9Dialect</hibernate.dialect>
+                <jdbc.groupId>com.oracle</jdbc.groupId>
+                <jdbc.artifactId>ojdbc14</jdbc.artifactId>
+                <jdbc.version>10.2.0.2.0</jdbc.version>
+                <jdbc.driverClassName>oracle.jdbc.OracleDriver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:oracle:thin:@localhost:1521:XE]]></jdbc.url>
+                <jdbc.username>system</jdbc.username>
+                <jdbc.password>system</jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>postgresql</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+                <jdbc.groupId>postgresql</jdbc.groupId>
+                <jdbc.artifactId>postgresql</jdbc.artifactId>
+                <jdbc.version>8.1-407.jdbc3</jdbc.version>
+                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:postgresql://localhost/openxds]]></jdbc.url>
+                <jdbc.username>postgres</jdbc.username>
+                <jdbc.password>postgres</jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <!-- You need to enable TCP/IP Connections for SQL Server 2005 after installing. -->
+            <!-- http://www.mattwoodward.com/blog/index.cfm?commentID=211 -->
+            <id>sqlserver</id>
+            <properties>
+                <dbunit.dataTypeFactoryName>org.dbunit.ext.mssql.MsSqlDataTypeFactory</dbunit.dataTypeFactoryName>
+                <dbunit.operation.type>MSSQL_CLEAN_INSERT</dbunit.operation.type>
+                <hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
+                <jdbc.groupId>net.sourceforge.jtds</jdbc.groupId>
+                <jdbc.artifactId>jtds</jdbc.artifactId>
+                <jdbc.version>1.2</jdbc.version>
+                <jdbc.driverClassName>net.sourceforge.jtds.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:jtds:sqlserver://localhost:3683/openxds]]></jdbc.url>
+                <jdbc.username>sa</jdbc.username>
+                <jdbc.password>appfuse</jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <properties>
+		        <dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
+		        <dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
+		        <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+		        <jdbc.groupId>mysql</jdbc.groupId>
+		        <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+		        <jdbc.version>5.1.9</jdbc.version>
+		        <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+		        <jdbc.url><![CDATA[jdbc:mysql://localhost/openxds]]></jdbc.url>
+        		<jdbc.username>openxds</jdbc.username>
+       			<jdbc.password>openxds</jdbc.password>
+            </properties>
+        </profile>
+
+        <!-- ================= Container Profiles ================= -->
+        <profile>
+            <id>jboss</id>
+            <properties>
+                <cargo.container>jboss4x</cargo.container>
+                <cargo.container.home>${env.JBOSS_HOME}</cargo.container.home>
+                <cargo.container.url>http://easynews.dl.sourceforge.net/sourceforge/jboss/jboss-4.0.5.GA.zip</cargo.container.url>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <!-- Application settings -->
+        <copyright.year>2008</copyright.year>
+        <dao.framework>hibernate</dao.framework>
+        <web.framework>struts</web.framework>
+        <amp.genericCore>true</amp.genericCore>
+        <amp.fullSource>true</amp.fullSource>
+        
+        <!-- Framework dependency versions -->
+        <appfuse.version>2.0.2</appfuse.version>
+        <spring.version>2.5.6</spring.version>
+
+        <!-- Testing dependency versions -->
+        <jmock.version>2.4.0</jmock.version>
+        <jsp.version>2.0</jsp.version>
+        <junit.version>4.4</junit.version>
+        <servlet.version>2.5</servlet.version>
+        <wiser.version>1.2</wiser.version>
+
+        <!-- WebTest dependency versions  -->
+        <webtest.version>R_1702</webtest.version>
+
+        <!-- Cargo settings -->
+        <cargo.container>tomcat5x</cargo.container>
+        <cargo.container.home>${env.CATALINA_HOME}</cargo.container.home>
+        <cargo.container.url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.14/bin/apache-tomcat-6.0.14.zip</cargo.container.url>
+        <cargo.host>localhost</cargo.host>
+        <cargo.port>8081</cargo.port>
+        <cargo.wait>false</cargo.wait>
+                
+        <!-- Database settings -->
+        <dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
+        <dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
+        <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+        <jdbc.groupId>postgresql</jdbc.groupId>
+        <jdbc.artifactId>postgresql</jdbc.artifactId>
+        <jdbc.version>8.3-603.jdbc4</jdbc.version>
+        <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+        <jdbc.url><![CDATA[jdbc:postgresql://localhost/openxds]]></jdbc.url>
+        <jdbc.username>openxds</jdbc.username>
+        <jdbc.password>openxds</jdbc.password>
+    
+        <!-- Properties calculated by AppFuse when running full-source plugin -->
+        <aspectj.version>1.6.0</aspectj.version>
+        <clickstream.version>1.0.2</clickstream.version>
+        <commons.beanutils.version>1.8.0</commons.beanutils.version>
+        <commons.collections.version>3.2</commons.collections.version>
+        <commons.dbcp.version>1.2.1</commons.dbcp.version>
+        <commons.fileupload.version>1.2.1</commons.fileupload.version>
+        <commons.io.version>1.3.2</commons.io.version>
+        <commons.lang.version>2.3</commons.lang.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <displaytag.version>1.1.1</displaytag.version>
+        <dwr.version>2.0.1</dwr.version>
+        <ehcache.version>1.4.1</ehcache.version>
+        <hibernate.annotations.version>3.3.0.ga</hibernate.annotations.version>
+        <hibernate.validator.version>3.0.0.ga</hibernate.validator.version>
+        <hibernate.search.version>3.0.0.GA</hibernate.search.version>        
+        <hibernate.version>3.2.6.ga</hibernate.version>
+        <javamail.version>1.4</javamail.version>
+        <jpa.version>1.0</jpa.version>
+        <jstl.version>1.1.2</jstl.version>
+        <log4j.version>1.2.13</log4j.version>
+        <oscache.version>2.3</oscache.version>
+        <sitemesh.version>2.2.1</sitemesh.version>
+        <spring.security.version>2.0.1</spring.security.version>
+        <struts.menu.version>2.4.3</struts.menu.version>
+        <struts.version>2.0.11.1</struts.version>
+        <urlrewrite.version>3.0.4</urlrewrite.version>
+        <velocity.version>1.4</velocity.version>
+        <xfire.version>1.2.6</xfire.version>
+        
+        <!-- Properties defined by OpenXDS -->
+        <openexchange.version>1.0-SNAPSHOT</openexchange.version>
+        <openpixpdq.version>1.0</openpixpdq.version>
+        <braid.version>1.2.2</braid.version>
+        <hapi.version>0.5.1</hapi.version>
+        <omar.version>3.1</omar.version>
+  		<oasis.version>1.0</oasis.version> 
+  		<axis2.version>1.5</axis2.version>
+  		<build.lib.dir>../lib</build.lib.dir>
+    </properties>
+</project>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><project xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.1 http://maven.apache.org/xsd/decoration-1.0.1.xsd" name="openxds" xmlns="http://maven.apache.org/DECORATION/1.0.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bannerLeft>
+    <name>openxds</name>
+    <src>https://appfuse.dev.java.net/images/appfuse-title.gif</src>
+    <href>http://appfuse.org</href>
+  </bannerLeft>
+  <publishDate format="dd MMM yyyy" />
+  <skin>
+    <groupId>org.apache.tapestry</groupId>
+    <artifactId>maven-skin</artifactId>
+    <version>1.1</version>
+  </skin>
+  <body>
+    <menu name="Modules" ref="modules">
+      <item name="OpenXDS - Apache Axis2" href="apache-axis2/index.html" />
+      <item name="OpenXDS Common Utilities" href="common-utils/index.html" />
+      <item name="OpenXDS - Common Web Services" href="common-ws/index.html" />
+      <item name="OpenXDS API" href="openxds-api/index.html" />
+      <item name="OpenXDS - Configuration" href="openxds-config/index.html" />
+      <item name="openxds-log" href="http://maven.apache.org/index.html" />
+      <item name="OpenXDS - Repository" href="openxds-repository/index.html" />
+      <item name="OpenXDS - Registry Omar 3.1 Adapter" href="openxds-registry-adapter-omar/index.html" />
+      <item name="OpenXDS - Registry Light Weight Patient" href="openxds-registry-patient-lightweight/index.html" />
+      <item name="OpenXDS - NIST Iheos" href="iheos/index.html" />
+      <item name="OpenXDS - Main/Core" href="openxds-core/index.html" />
+      <item name="OpenXDS - Web Application (Struts 2)" href="openxds-web/index.html" />
+    </menu>
+    <menu ref="reports" />
+  </body>
+</project>

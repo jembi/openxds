@@ -1,0 +1,7 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>simmetrics</groupId>
+  <artifactId>simmetrics</artifactId>
+  <version>1.6.2</version>
+  <name>Simmetrics String Comparision</name>
+</project>

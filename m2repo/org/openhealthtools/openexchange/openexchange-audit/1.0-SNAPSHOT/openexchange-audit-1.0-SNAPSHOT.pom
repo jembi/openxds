@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <parent>
+    <artifactId>openexchange</artifactId>
+    <groupId>org.openhealthtools.openexchange</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openhealthtools.openexchange</groupId>
+  <artifactId>openexchange-audit</artifactId>
+  <name>openexchange-audit</name>
+  <version>1.0-SNAPSHOT</version>
+  <url>http://maven.apache.org</url>
+
+  <dependencies>
+    <dependency>
+	    <groupId>org.openhealthtools.openexchange</groupId>
+	    <artifactId>openexchange-actorconfig</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

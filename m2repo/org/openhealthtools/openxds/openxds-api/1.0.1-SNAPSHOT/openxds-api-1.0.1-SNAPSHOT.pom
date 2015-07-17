@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>openxds</artifactId>
+    <groupId>org.openhealthtools.openxds</groupId>
+    <version>1.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>openxds-api</artifactId>
+  <packaging>jar</packaging>
+  <name>OpenXDS API</name>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>apache-axis2</artifactId>
+  		<version>${project.version}</version>
+  		<type>pom</type>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>servlet-api</artifactId>
+  				<groupId>javax.servlet</groupId>
+  			</exclusion>
+  		</exclusions>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthtools.openxds</groupId>
+  		<artifactId>common-utils</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthtools.openexchange</groupId>
+  		<artifactId>openexchange-actorconfig</artifactId>
+		<version>${openexchange.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.openhealthexchange.openpixpdq</groupId>
+  		<artifactId>openpixpdq</artifactId>
+  		<version>${openpixpdq.version}</version>
+  	</dependency>
+   	<dependency>
+  		<groupId>com.misys.braid</groupId>
+  		<artifactId>braid-base</artifactId>
+  		<version>${braid.version}</version>
+  	</dependency>    
+  </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                  <execution>
+                      <id>copy-dependencies</id>
+                      <phase>package</phase>
+                      <goals>
+                          <goal>copy-dependencies</goal>
+                      </goals>
+                      <configuration>
+                          <outputDirectory>${build.lib.dir}</outputDirectory>
+                          <overWriteIfNewer>true</overWriteIfNewer>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
+		</plugins>
+	</build>
+
+
+</project>

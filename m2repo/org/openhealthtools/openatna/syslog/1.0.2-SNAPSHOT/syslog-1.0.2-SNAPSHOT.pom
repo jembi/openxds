@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.openhealthtools.openatna</groupId>
+        <artifactId>openatna</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+    <packaging>pom</packaging>
+    <artifactId>syslog</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <name>Syslog</name>
+    <url>https://openatna.projects.openhealthtools.org</url>
+
+    <prerequisites>
+        <maven>2.0.6</maven>
+    </prerequisites>
+
+    <licenses>
+        <license>
+            <name />
+            <url />
+        </license>
+    </licenses>
+
+    <scm>
+      <connection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna/syslog</connection>
+    <developerConnection>scm:svn:https://openatna.projects.openhealthtools.org/svn/openatna/trunk/openatna/syslog</developerConnection>
+    <url>https://openatna.projects.openhealthtools.org/source/browse/openatna/syslog</url>
+  </scm>
+
+    <issueManagement>
+        <system />
+        <url />
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <id />
+            <name />
+            <email />
+            <timezone />
+        </developer>
+    </developers>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <resources>
+        </resources>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>appfuse</id>
+            <url>http://static.appfuse.org/repository</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>core</module>
+        <module>mina</module>
+    </modules>
+
+
+</project>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.openhealthtools.openatna</groupId>
+        <artifactId>openatna</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>openatna-archive</artifactId>
+
+    <packaging>jar</packaging>
+    <version>1.0.2-SNAPSHOT</version>
+    <name>OpenATNA Archive</name>
+    <url>https://openatna.projects.openhealthtools.org</url>
+
+    <!--<build>
+         <plugins>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-checkstyle-plugin</artifactId>
+                 <version>2.4</version>
+                 <configuration>
+                     <configLocation>${basedir}/openatna-checks.xml</configLocation>
+                     <linkXRef>false</linkXRef>
+                     <consoleOutput>true</consoleOutput>
+                     <failsOnError>true</failsOnError>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <phase>compile</phase>
+                         <goals>
+                             <goal>checkstyle</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+         </plugins>
+     </build>-->
+
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openatna</groupId>
+            <artifactId>openatna-anom</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openatna</groupId>
+            <artifactId>openatna-audit</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openhealthtools.openatna</groupId>
+            <artifactId>openatna-jaxb</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+    </dependencies>
+
+</project>

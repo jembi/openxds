@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.openhealthtools.openxds</groupId>
+  <artifactId>openxds-api</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
+  <versioning>
+    <versions>
+      <version>1.0.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20100602133321</lastUpdated>
+  </versioning>
+</metadata>

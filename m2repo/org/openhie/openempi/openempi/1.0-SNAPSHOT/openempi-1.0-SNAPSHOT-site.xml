@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="openempi">
+  <bannerLeft>
+    <name>openempi</name>
+    <src>https://appfuse.dev.java.net/images/appfuse-title.gif</src>
+    <href>http://appfuse.org</href>
+  </bannerLeft>
+  <publishDate format="dd MMM yyyy" />
+  <skin>
+    <groupId>org.apache.tapestry</groupId>
+    <artifactId>maven-skin</artifactId>
+    <version>1.1</version>
+  </skin>
+  <body>
+    <menu name="Modules" ref="modules">
+      <item name="OpenEMPI - Core" href="openempi-core/index.html" />
+      <item name="OpenEMPI - EJB Interface" href="openempi-ejb/index.html" />
+      <item name="OpenEMPI - OpenPIXPDQ Adapter" href="openempi-openpixpdq-adapter/index.html" />
+      <item name="OpenEMPI - Web (Struts 2)" href="openempi-webapp/index.html" />
+      <item name="OpenEMPI - EAR" href="openempi-ear/index.html" />
+    </menu>
+    <menu ref="reports" />
+  </body>
+</project>
