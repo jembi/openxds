@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.axiom.om.OMElement;
 
+import javax.xml.namespace.QName;
+
 public class Attribute {
 	Metadata m;
 	RegistryErrorList rel;
@@ -404,12 +406,12 @@ public class Attribute {
 
 			//                                               classificationScheme								name							required	multiple
 			this.validate_class("Document", id, classs, "urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" , 	"classCode",						true, 		false);
-			this.validate_class("Document", id, classs, "urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f" , 	"confidentialityCode",		true, 		true);
-			this.validate_class("Document", id, classs, "urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4" , 	"eventCodeList",				false, 		true);
-			this.validate_class("Document", id, classs, "urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d" , 	"formatCode",				true, 		false);
-			this.validate_class("Document", id, classs, "urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1" , 	"healthCareFacilityTypeCode",				true, 		false);
+			this.validate_class("Document", id, classs, "urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f" , 	"confidentialityCode",				true, 		true);
+			this.validate_class("Document", id, classs, "urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4" , 	"eventCodeList",					false, 		true);
+			this.validate_class("Document", id, classs, "urn:uuid:a09d5840-386c-46f2-b5ad-9c3699a4309d" , 	"formatCode",						true, 		false);
+			this.validate_class("Document", id, classs, "urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1" , 	"healthCareFacilityTypeCode",		true, 		false);
 			this.validate_class("Document", id, classs, "urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead" , 	"practiceSettingCode",				true, 		false);
-			this.validate_class("Document", id, classs, "urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" , 	"typeCode",				true, 		false);
+			this.validate_class("Document", id, classs, "urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a" , 	"typeCode",							true, 		false);
 		}
 	}
 
@@ -497,17 +499,23 @@ public class Attribute {
 			List slots = m.getSlots(id);
 			List ext_ids = m.getExternalIdentifiers(id);
 
-			//                      				name						multi	required	number
-			validate_slot("Document", id, slots, 	"creationTime", 			false, 	true, 		true);
-			validate_slot("Document", id, slots, 	"intendedRecipient",		true, 	false, 		false);
-			validate_slot("Document", id, slots, 	"languageCode",				false, 	true, 		false);
-			validate_slot("Document", id, slots, 	"legalAuthenticator",		false, 	false, 		false);
-			validate_slot("Document", id, slots, 	"serviceStartTime",			false, 	false, 		true);
-			validate_slot("Document", id, slots, 	"serviceStopTime",			false, 	false, 		true);
-			validate_slot("Document", id, slots, 	"sourcePatientInfo",		true, 	false, 		false);
+			String objType = docEle.getAttributeValue(MetadataSupport.object_type_qname);
+			boolean isODD = false;
+			if (objType.equals(MetadataSupport.XDSDocumentEntry_objectType_odd_uuid)) {
+				isODD = true;
+			}
 
-			validate_slot("Document", id, slots, 	"hash",			 			false, 	!isPnR, 		false);
-			validate_slot("Document", id, slots, 	"size",						false, 	!isPnR, 		true);
+			//                      				name						multi	required		number
+			validate_slot("Document", id, slots, "creationTime", false, !isODD, true);
+			validate_slot("Document", id, slots, 	"intendedRecipient",		true, 	false, 			false);
+			validate_slot("Document", id, slots, 	"languageCode",				false, 	true, 			false);
+			validate_slot("Document", id, slots, 	"legalAuthenticator",		false, 	false, 			false);
+			validate_slot("Document", id, slots, 	"serviceStartTime",			false, 	false, 			true);
+			validate_slot("Document", id, slots, 	"serviceStopTime",			false, 	false, 			true);
+			validate_slot("Document", id, slots, 	"sourcePatientInfo",		true, 	false, 			false);
+
+			validate_slot("Document", id, slots, 	"hash",			 			false, 	isODD || isPnR, false);
+			validate_slot("Document", id, slots, 	"size",						false, 	isODD || isPnR, true);
 
 			// These are tricky since the validation is based on the metadata format (xds.a or xds.b) instead of
 			// on the transaction. All Stored Queries are encoded in ebRIM 3.0 (xds.b format) but they could

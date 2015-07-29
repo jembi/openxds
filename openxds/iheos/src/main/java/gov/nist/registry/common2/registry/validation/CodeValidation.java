@@ -122,8 +122,11 @@ public class CodeValidation {
 			if (objectType == null) {
 				err("XDSDocumentEntry has no objectType attribute");
 			}
-			else if ( !objectType.equals(MetadataSupport.XDSDocumentEntry_objectType_uuid)) {
-				err("XDSDocumentEntry has incorrect objectType, found " + objectType + ", must be " + MetadataSupport.XDSDocumentEntry_objectType_uuid);
+			else if ( !objectType.equals(MetadataSupport.XDSDocumentEntry_objectType_stable_uuid) && !objectType.equals(MetadataSupport.XDSDocumentEntry_objectType_odd_uuid)) {
+				err("XDSDocumentEntry has incorrect objectType, found " + objectType + ", must be either "
+						+ MetadataSupport.XDSDocumentEntry_objectType_stable_uuid
+						+ " or "
+						+ MetadataSupport.XDSDocumentEntry_objectType_odd_uuid);
 			} else {
 				val("XDSDocumentEntry.objectType", null);
 			}
