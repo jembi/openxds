@@ -75,7 +75,7 @@ public class EbXML21GetSubmissionSetAndContents extends GetSubmissionSetAndConte
 		SQCodedTerm conf_codes = sqs.params.getCodedParm("$XDSDocumentEntryConfidentialityCode");
 		SQCodedTerm format_codes = sqs.params.getCodedParm("$XDSDocumentEntryFormatCode");
 
-		OMElement doc_metadata = eb.getSsDocs(ss_uuid, format_codes, conf_codes);
+		OMElement doc_metadata = eb.getSsDocs(ss_uuid, format_codes, conf_codes, object_type);
 		metadata.addMetadata(doc_metadata);
 
 		OMElement fol_metadata = eb.getSsFolders(ss_uuid);

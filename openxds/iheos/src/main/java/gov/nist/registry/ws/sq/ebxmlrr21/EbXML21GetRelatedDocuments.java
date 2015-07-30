@@ -105,7 +105,7 @@ public class EbXML21GetRelatedDocuments extends GetRelatedDocuments {
 		targetIds.add(originalDocId);
 		
 		sqs.forceLeafClassQueryType();  // fetch LeafClass for Associations
-		OMElement associations = eb.getAssociations(targetIds, assoc_types);
+		OMElement associations = eb.getAssociations(targetIds, assoc_types, object_type);
 		sqs.restoreOriginalQueryType();
 		
 		Metadata association_metadata = MetadataParser.parseNonSubmission(associations);

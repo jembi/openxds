@@ -283,7 +283,7 @@ public class EbXML21QuerySupport implements RegistryValidations {
 	}
 
 	// sql
-	public OMElement getAssociations(List<String> source_or_target_ids, List<String> assoc_types) throws XdsException,
+	public OMElement getAssociations(List<String> source_or_target_ids, List<String> assoc_types, List<String> object_types) throws XdsException,
 	LoggerException {
 
 		List<String> a_types = assoc_types;
@@ -302,12 +302,17 @@ public class EbXML21QuerySupport implements RegistryValidations {
 
 		select("a");
 
-		a("FROM Association a");  n();
+		a("FROM Association a, ExtrinsicObject doc");  n();
 		a("WHERE ");  n();
 		a("	  (a.sourceObject IN "); a(source_or_target_ids); a(" OR");  n(); 
-		a("	  a.targetObject IN "); a(source_or_target_ids); a(" )"); n(); 
+		a("	  a.targetObject IN "); a(source_or_target_ids); a(" )"); n();
 		if (assoc_types != null) {
 			a("   AND a.associationType IN "); a(a_types); n();
+		}
+
+		if (object_types != null && object_types.size() > 0) {
+			a("   AND (doc.id=a.sourceobject OR doc.id=a.targetobject) AND doc.id NOT IN "); a(source_or_target_ids); n();
+			a("   AND doc.objecttype IN "); a(object_types); n();
 		}
 
 		return query(sqs.return_leaf_class);
@@ -608,7 +613,7 @@ public class EbXML21QuerySupport implements RegistryValidations {
 	public OMElement getSsByUid(String uid) throws XdsException, LoggerException 
 	{ return getRpByUid(uid, "urn:uuid:96fdda7c-d067-4183-912e-bf5ee74998a8"); }
 
-	public OMElement getRPDocs(String rp_uuid, List<String> format_codes, List<String> conf_codes)
+	public OMElement getRPDocs(String rp_uuid, List<String> format_codes, List<String> conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
 		init();
 
@@ -643,10 +648,12 @@ public class EbXML21QuerySupport implements RegistryValidations {
 			a("  AND (adomain.name='AffinityDomain' AND adomain.parent=doc.id AND adomain.value=$affinitydomain) ");
 		}
 
+		a("  AND doc.objecttype IN "); a(object_types); n();
+
 		return query();
 	}
 
-	public OMElement getRPDocs(String rp_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes)
+	public OMElement getRPDocs(String rp_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
 		init();
 
@@ -668,27 +675,29 @@ public class EbXML21QuerySupport implements RegistryValidations {
 			a("  AND (adomain.name='AffinityDomain' AND adomain.parent=doc.id AND adomain.value=$affinitydomain) ");
 		}
 
+		a("  AND doc.objecttype IN "); a(object_types); n();
+
 		return query();
 	}
 
-	public OMElement getFolDocs(String fol_uuid, List<String> format_codes, List<String> conf_codes) 
+	public OMElement getFolDocs(String fol_uuid, List<String> format_codes, List<String> conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
-		return getRPDocs(fol_uuid, format_codes, conf_codes);
+		return getRPDocs(fol_uuid, format_codes, conf_codes, object_types);
 	}
 
-	public OMElement getFolDocs(String fol_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes) 
+	public OMElement getFolDocs(String fol_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
-		return getRPDocs(fol_uuid, format_codes, conf_codes);
+		return getRPDocs(fol_uuid, format_codes, conf_codes, object_types);
 	}
 
-	public OMElement getSsDocs(String fol_uuid, List<String> format_codes, List<String> conf_codes) 
+	public OMElement getSsDocs(String fol_uuid, List<String> format_codes, List<String> conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
-		return getRPDocs(fol_uuid, format_codes, conf_codes);
+		return getRPDocs(fol_uuid, format_codes, conf_codes, object_types);
 	}
 
-	public OMElement getSsDocs(String fol_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes) 
+	public OMElement getSsDocs(String fol_uuid, SQCodedTerm format_codes, SQCodedTerm conf_codes, List<String> object_types)
 	throws XdsException, LoggerException {
-		return getRPDocs(fol_uuid, format_codes, conf_codes);
+		return getRPDocs(fol_uuid, format_codes, conf_codes, object_types);
 	}
 
 	public OMElement getRegistryPackageAssocs(List<String> package_uuids, List<String> content_uuids) throws XdsException,

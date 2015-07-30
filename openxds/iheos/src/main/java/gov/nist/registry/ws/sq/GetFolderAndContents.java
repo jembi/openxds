@@ -1,5 +1,6 @@
 package gov.nist.registry.ws.sq;
 
+import gov.nist.registry.common2.registry.MetadataSupport;
 import org.openhealthtools.openxds.log.LoggerException;
 
 import gov.nist.registry.common2.exception.MetadataException;
@@ -9,6 +10,9 @@ import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.Metadata;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 Generic implementation of GetAssociations Stored Query. This class knows how to parse a 
@@ -44,7 +48,8 @@ abstract public class GetFolderAndContents extends StoredQuery {
 		sqs.validate_parm("$XDSFolderEntryUUID",                         true,      false,     true,         false,     false,       "$XDSFolderUniqueId");
 		sqs.validate_parm("$XDSFolderUniqueId",                          true,      false,     true,         false,     false,       "$XDSFolderEntryUUID");
 		sqs.validate_parm("$XDSDocumentEntryFormatCode",                 false,     true,      true,         true,      false,      (String[])null);
-		sqs.validate_parm("$XDSDocumentEntryConfidentialityCode",        false,     true,      true,         true,      true,      (String[])null);
+		sqs.validate_parm("$XDSDocumentEntryConfidentialityCode",        false,     true,      true,         true,      true,       (String[])null);
+		sqs.validate_parm("$XDSDocumentEntryType",                       false,     true,      true,         false,     false,      (String[])null);
 		
 		System.out.println("GFAC: validating parms response: " + sqs.response);
 
@@ -54,10 +59,18 @@ abstract public class GetFolderAndContents extends StoredQuery {
 	
 	protected String fol_uuid;
 	protected String fol_uid;
+	protected List<String> object_type;
 
 	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
 		fol_uuid = sqs.params.getStringParm("$XDSFolderEntryUUID");
 		fol_uid = sqs.params.getStringParm("$XDSFolderUniqueId");
+		object_type = sqs.params.getListParm("$XDSDocumentEntryType");
+
+		// the default value of object_type is stable documents
+		if (object_type == null) {
+			object_type = new ArrayList<String>();
+			object_type.add(MetadataSupport.XDSDocumentEntry_objectType_stable_uuid);
+		}
 	}
 
 	/**

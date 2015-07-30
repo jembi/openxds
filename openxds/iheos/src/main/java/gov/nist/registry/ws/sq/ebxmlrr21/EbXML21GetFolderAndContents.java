@@ -80,7 +80,7 @@ public class EbXML21GetFolderAndContents extends GetFolderAndContents {
 		SQCodedTerm conf_codes = sqs.params.getCodedParm("$XDSDocumentEntryConfidentialityCode");
 		SQCodedTerm format_codes = sqs.params.getCodedParm("$XDSDocumentEntryFormatCode");
 
-		OMElement doc_metadata = eb.getFolDocs(fol_uuid, format_codes, conf_codes);
+		OMElement doc_metadata = eb.getFolDocs(fol_uuid, format_codes, conf_codes, object_type);
 		metadata.addMetadata(doc_metadata);
 		List<String> docIds = eb.getIdsFromAdhocQueryResponse(doc_metadata); 
 		content_ids.addAll(docIds);

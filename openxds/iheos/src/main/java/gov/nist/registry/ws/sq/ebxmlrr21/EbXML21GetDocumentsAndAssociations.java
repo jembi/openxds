@@ -66,7 +66,7 @@ public class EbXML21GetDocumentsAndAssociations extends GetDocumentsAndAssociati
 		if (doc_ids.size() == 0)
 			return metadata;
 		
-		OMElement ele = eb.getAssociations(doc_ids, null);
+		OMElement ele = eb.getAssociations(doc_ids, null, null);
 		metadata.addMetadata(ele, true);
 
 		return metadata;

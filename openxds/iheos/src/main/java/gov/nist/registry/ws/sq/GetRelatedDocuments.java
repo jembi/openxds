@@ -6,8 +6,10 @@ import gov.nist.registry.common2.exception.XDSRegistryOutOfResourcesException;
 import gov.nist.registry.common2.exception.XdsException;
 import gov.nist.registry.common2.exception.XdsInternalException;
 import gov.nist.registry.common2.registry.Metadata;
+import gov.nist.registry.common2.registry.MetadataSupport;
 import gov.nist.registry.common2.registry.storedquery.StoredQuerySupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openhealthtools.openxds.log.LoggerException;
@@ -46,6 +48,7 @@ abstract public class GetRelatedDocuments extends StoredQuery {
 		sqs.validate_parm("$XDSDocumentEntryUniqueId",                 true,      false,     true,         null,            "$XDSDocumentEntryEntryUUID");
 		sqs.validate_parm("$XDSDocumentEntryEntryUUID",                true,      false,     true,         null,            "$XDSDocumentEntryUniqueId");
 		sqs.validate_parm("$AssociationTypes",                         true,      true,      true,         null,            (String[])null);
+		sqs.validate_parm("$XDSDocumentEntryType",                     false,     true,      true,         null,            (String[])null);
 
 		if (sqs.has_validation_errors) 
 			throw new MetadataValidationException("Metadata Validation error present");
@@ -54,11 +57,19 @@ abstract public class GetRelatedDocuments extends StoredQuery {
 	protected String uid;
 	protected String uuid;
 	protected List<String> assoc_types;
+	protected List<String> object_type;
 
 	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
 		uid 			= sqs.params.getStringParm("$XDSDocumentEntryUniqueId");
 		uuid 		    = sqs.params.getStringParm("$XDSDocumentEntryEntryUUID");
 		assoc_types 	= sqs.params.getListParm("$AssociationTypes");
+		object_type     = sqs.params.getListParm("$XDSDocumentEntryType");
+
+		// the default value of object_type is stable documents
+		if (object_type == null) {
+			object_type = new ArrayList<String>();
+			object_type.add(MetadataSupport.XDSDocumentEntry_objectType_stable_uuid);
+		}
 	}
 
 	/**

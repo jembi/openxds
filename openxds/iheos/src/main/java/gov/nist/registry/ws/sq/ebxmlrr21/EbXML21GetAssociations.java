@@ -37,7 +37,7 @@ public class EbXML21GetAssociations extends GetAssociations {
 	 * @throws XdsException
 	 */
 	public Metadata runImplementation() throws MetadataException, XdsException, LoggerException {
-		return MetadataParser.parseNonSubmission(eb.getAssociations(uuids, null));
+		return MetadataParser.parseNonSubmission(eb.getAssociations(uuids, null, null));
 	}
 
 }
