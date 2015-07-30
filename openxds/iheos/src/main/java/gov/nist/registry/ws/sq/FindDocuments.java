@@ -102,6 +102,7 @@ abstract public class FindDocuments extends StoredQuery {
 		sqs.validate_parm("$XDSDocumentEntryFormatCode",                        false,     true,      true,         true,            false,                              (String[])null												);
 		sqs.validate_parm("$XDSDocumentEntryStatus",                            true,      true,      true,         false,           false,                               (String[])null												);
 		sqs.validate_parm("$XDSDocumentEntryAuthorPerson",                      false,     true,     true,          false,           false,                               (String[])null												);
+		sqs.validate_parm("$XDSDocumentEntryType",                      		false,     true,     true,          false,           false,                               (String[])null												);
 
 		if (sqs.has_validation_errors) 
 			throw new MetadataValidationException("Metadata Validation error present");
@@ -120,6 +121,7 @@ abstract public class FindDocuments extends StoredQuery {
 	protected SQCodedTerm format_codes;
 	protected List<String> status;
 	protected List<String> author_person;
+	protected List<String> object_type;
 	
 	protected SQCodedTerm class_codes;
 	protected SQCodedTerm type_codes;
@@ -157,22 +159,29 @@ abstract public class FindDocuments extends StoredQuery {
 
 	void parseParameters() throws XdsInternalException, XdsException, LoggerException {
 
-		patient_id                        = sqs.params.getStringParm   ("$XDSDocumentEntryPatientId");
+		patient_id                        = sqs.params.getStringParm("$XDSDocumentEntryPatientId");
 		class_codes                       = sqs.params.getCodedParm("$XDSDocumentEntryClassCode");
 		type_codes                        = sqs.params.getCodedParm("$XDSDocumentEntryTypeCode");
 		practice_setting_codes            = sqs.params.getCodedParm("$XDSDocumentEntryPracticeSettingCode");
-		creation_time_from                = sqs.params.getIntParm      ("$XDSDocumentEntryCreationTimeFrom");
+		creation_time_from                = sqs.params.getIntParm("$XDSDocumentEntryCreationTimeFrom");
 		creation_time_to                  = sqs.params.getIntParm      ("$XDSDocumentEntryCreationTimeTo");
 		service_start_time_from           = sqs.params.getIntParm      ("$XDSDocumentEntryServiceStartTimeFrom");
 		service_start_time_to             = sqs.params.getIntParm      ("$XDSDocumentEntryServiceStartTimeTo");
-		service_stop_time_from            = sqs.params.getIntParm      ("$XDSDocumentEntryServiceStopTimeFrom");
-		service_stop_time_to              = sqs.params.getIntParm      ("$XDSDocumentEntryServiceStopTimeTo");
+		service_stop_time_from            = sqs.params.getIntParm("$XDSDocumentEntryServiceStopTimeFrom");
+		service_stop_time_to              = sqs.params.getIntParm("$XDSDocumentEntryServiceStopTimeTo");
 		hcft_codes                        = sqs.params.getCodedParm("$XDSDocumentEntryHealthcareFacilityTypeCode");
 		event_codes                       = sqs.params.getCodedParm("$XDSDocumentEntryEventCodeList");
 		conf_codes                        = sqs.params.getCodedParm("$XDSDocumentEntryConfidentialityCode");
 		format_codes                      = sqs.params.getCodedParm("$XDSDocumentEntryFormatCode");
 		status                            = sqs.params.getListParm("$XDSDocumentEntryStatus");
 		author_person                     = sqs.params.getListParm("$XDSDocumentEntryAuthorPerson");
+		object_type						  = sqs.params.getListParm("$XDSDocumentEntryType");
+
+		// the default value of object_type is stable documents
+		if (object_type == null) {
+			object_type = new ArrayList<String>();
+			object_type.add(MetadataSupport.XDSDocumentEntry_objectType_stable_uuid);
+		}
 
 
 		String status_ns_prefix = MetadataSupport.status_type_namespace;

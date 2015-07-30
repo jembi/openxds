@@ -506,7 +506,7 @@ public class Attribute {
 			}
 
 			//                      				name						multi	required		number
-			validate_slot("Document", id, slots, "creationTime", false, !isODD, true);
+			validate_slot("Document", id, slots, 	"creationTime", 			false, 	!isODD, 		true);
 			validate_slot("Document", id, slots, 	"intendedRecipient",		true, 	false, 			false);
 			validate_slot("Document", id, slots, 	"languageCode",				false, 	true, 			false);
 			validate_slot("Document", id, slots, 	"legalAuthenticator",		false, 	false, 			false);
