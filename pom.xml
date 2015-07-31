@@ -367,11 +367,11 @@
         <module>openxds-log</module>
         <module>iheos</module>
         <module>openxds-api</module>
-        <module>openxds-core</module>
         <module>openxds-registry-adapter-omar</module>
+        <module>openxds-registry-patient-lightweight</module>
         <module>openxds-repository</module>
+        <module>openxds-core</module>
         <module>openxds-web</module>
-    	<module>openxds-registry-patient-lightweight</module>
   </modules>
 
     <reporting>
