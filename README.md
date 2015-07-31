@@ -7,7 +7,7 @@ This is a forked version of the [original OpenXDS](https://www.projects.openheal
 Building and running
 --------------------
 
-To build this code base you need to copy the folder in the `m2repo` directory to your maven repository (`<user_home>.m2/`). Then run `mvn clean install`. This will produce a `build` folder that contains an openxds .jar file which you can run with `java -jar openxds-1.1.0-SNAPSHOT.jar`.
+To build this code base you need to copy the folders in the `m2repo` directory to your maven repository (`<user_home>.m2/`). Then run `mvn clean install`. This will produce a `build` folder that contains an openxds .jar file which you can run with `java -jar openxds-1.1.0-SNAPSHOT.jar`.
 
 What is it?
 -----------
