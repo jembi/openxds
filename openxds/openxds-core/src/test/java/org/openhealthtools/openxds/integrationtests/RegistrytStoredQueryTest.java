@@ -45,6 +45,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openhealthtools.common.utils.OMUtil;
 import org.w3c.dom.Document;
@@ -342,6 +343,7 @@ public class RegistrytStoredQueryTest extends XdsTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testGetAll() throws Exception {
 		//1. Submit a document first for a random patientId
 		String patientId = generateAPatientId();
