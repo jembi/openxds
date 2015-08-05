@@ -514,8 +514,8 @@ public class Attribute {
 			validate_slot("Document", id, slots, 	"serviceStopTime",			false, 	false, 			true);
 			validate_slot("Document", id, slots, 	"sourcePatientInfo",		true, 	false, 			false);
 
-			validate_slot("Document", id, slots, 	"hash",			 			false, 	isODD || isPnR, false);
-			validate_slot("Document", id, slots, 	"size",						false, 	isODD || isPnR, true);
+			validate_slot("Document", id, slots, 	"hash",			 			false, 	!(isODD || isPnR), false);
+			validate_slot("Document", id, slots, 	"size",						false, 	!(isODD || isPnR), true);
 
 			// These are tricky since the validation is based on the metadata format (xds.a or xds.b) instead of
 			// on the transaction. All Stored Queries are encoded in ebRIM 3.0 (xds.b format) but they could
