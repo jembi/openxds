@@ -81,8 +81,10 @@
   <Code code="26436-6" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY STUDIES" /> 
   <Code code="26437-4" codingScheme="2.16.840.1.113883.6.1" display="CHEMISTRY CHALLENGE STUDIES" /> 
   <Code code="26438-2" codingScheme="2.16.840.1.113883.6.1" display="CYTOLOGY STUDIES" /> 
-  <Code code="11502-2" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY REPORT.TOTAL" /> 
-  </CodeType>
+  <Code code="11502-2" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY REPORT.TOTAL" />
+  <!-- Added for IHE IC profile -->
+  <Code code="11369-6" codingScheme="2.16.840.1.113883.6.1" display="" />
+ </CodeType>
  <CodeType name="classCode" classScheme="urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a">
  <!--  Added for NHIN Sept. 2009 
   --> 
@@ -175,7 +177,9 @@
 
   --> 
   <Code code="MPQ-classcode-1" codingScheme="MPQ Testing" display="MPQ-classcode-1" /> 
-  <Code code="MPQ-classcode-2" codingScheme="MPQ Testing" display="MPQ-classcode-2" /> 
+  <Code code="MPQ-classcode-2" codingScheme="MPQ Testing" display="MPQ-classcode-2" />
+  <!-- Codes for IHE IC Profile -->
+  <Code code="51851-4" codingScheme="2.16.840.1.113883.6.1" display="" />
   </CodeType>
  <CodeType name="confidentialityCode" classScheme="urn:uuid:f4f85eac-e6cb-4883-b524-f2705394840f">
  <!--  Added Sept. 2009 NHIN 
@@ -285,8 +289,10 @@
   <Code code="urn:ihe:iti:xds-sd:text:2008" display="Scanned Documents Text" codingScheme="IHE PCC" /> 
   <Code code="urn:ihe:iti:bppc:2007" display="Basic Patient Privacy Consents" codingScheme="IHE PCC" /> 
   <Code code="urn:ihe:iti:bppc-sd:2007" display="Basic Patient Privacy Consents with Scanned Document" codingScheme="IHE PCC" /> 
-  <Code code="urn:ihe:lab:xd-lab:2008" display="CDA Laboratory Report" codingScheme="IHE PCC" /> 
-  </CodeType>
+  <Code code="urn:ihe:lab:xd-lab:2008" display="CDA Laboratory Report" codingScheme="IHE PCC" />
+  <!-- Added for IHE IC profile -->
+  <Code code="urn:ihe:pcc:ic:2009" display="" codingScheme="1.3.6.1.4.1.19376.1.2.3" />
+ </CodeType>
  <CodeType name="healthcareFacilityTypeCode" classScheme="urn:uuid:f33fb8ac-18af-42cc-ae0e-ed0b0bdb91e1">
  <!--  Added Sept. 2009 NHIN 
   --> 
@@ -426,6 +432,8 @@
   --> 
   <Code code="MPQ-hcftcode-1" codingScheme="MPQ Testing" display="MPQ-hcftcode-1" /> 
   <Code code="MPQ-hcftcode-2" codingScheme="MPQ Testing" display="MPQ-hcftcode-2" /> 
+  <!-- Added for OpenHIE -->
+  <Code code="SHR" display="Shared Health Record" codingScheme="OHIE healthcareFacilityTypeCodes" /> 
   </CodeType>
  <CodeType name="practiceSettingCode" classScheme="urn:uuid:cccf5598-8b07-4b77-a05e-ae952c785ead">
  <!--  Added Sept, 2009 NHIN 
@@ -478,7 +486,9 @@
   <Code code="Tumor Board" display="Tumor Board" codingScheme="Connect-a-thon practiceSettingCodes" /> 
   <Code code="Urology" display="Urology" codingScheme="Connect-a-thon practiceSettingCodes" /> 
   <Code code="Home" display="Home" codingScheme="Connect-a-thon practiceSettingCodes" /> 
-  <Code code="Veterinary Medicine" display="Veterinary Medicine" codingScheme="Connect-a-thon practiceSettingCodes" /> 
+  <Code code="Veterinary Medicine" display="Veterinary Medicine" codingScheme="Connect-a-thon practiceSettingCodes" />
+  <!-- Added for OpenHIE -->
+  <Code code="SHR" display="Shared Health Record" codingScheme="OHIE practiceSettingCodes" />
   </CodeType>
  <CodeType name="eventCodeList" classScheme="urn:uuid:2c6b8cb7-8b2a-4051-b291-b1ae6a575ef4">
  <!-- 
@@ -1171,8 +1181,10 @@
   <Code code="26436-6" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY STUDIES" /> 
   <Code code="26437-4" codingScheme="2.16.840.1.113883.6.1" display="CHEMISTRY CHALLENGE STUDIES" /> 
   <Code code="26438-2" codingScheme="2.16.840.1.113883.6.1" display="CYTOLOGY STUDIES" /> 
-  <Code code="11502-2" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY REPORT.TOTAL" /> 
-  </CodeType>
+  <Code code="11502-2" codingScheme="2.16.840.1.113883.6.1" display="LABORATORY REPORT.TOTAL" />
+  <!-- Added for IHE IC Profile -->
+  <Code code="11369-6" codingScheme="2.16.840.1.113883.6.1" display="" />
+ </CodeType>
  <!-- 
 		This section is used to validate mime type requests and to map mime
 		types into repository file types. The mapping from repository file
