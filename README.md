@@ -2,7 +2,7 @@
 OpenExchange - OpenXDS - With ODD support
 =========================================
 
-This is a forked version of the [original OpenXDS](https://www.projects.openhealthtools.org/sf/projects/openxds/) with added support for [the on-demand documents option](http://wiki.ihe.net/index.php?title=ITI_On-Demand_Documents). These additions were done to enable the use of OpenXDS as an XDS registry for the [OpenSHR project](https://github.com/jembi/openshr) which is a reference tool for [OpenHIE](http://ohie.org/).
+This is a forked version of the [original OpenXDS](https://www.projects.openhealthtools.org/sf/projects/openxds/) with added support for the registration of [on-demand documents](http://wiki.ihe.net/index.php?title=ITI_On-Demand_Documents) in its XDS.b registry. These additions were done to enable the use of OpenXDS as an XDS registry for the [OpenSHR project](https://github.com/jembi/openshr) which is a reference tool for [OpenHIE](http://ohie.org/).
 
 Building and running
 --------------------
