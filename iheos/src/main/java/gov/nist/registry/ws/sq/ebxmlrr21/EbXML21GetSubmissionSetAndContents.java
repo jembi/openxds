@@ -98,10 +98,12 @@ public class EbXML21GetSubmissionSetAndContents extends GetSubmissionSetAndConte
 		metadata.rmDuplicates();
 
 		// some document may have been filtered out, remove the unnecessary Associations
+		// first collect all the content ids that we want to keep...
 		List<String> content_ids = new ArrayList<String>();
 		content_ids.addAll(metadata.getSubmissionSetIds());
 		content_ids.addAll(metadata.getExtrinsicObjectIds());
 		content_ids.addAll(metadata.getFolderIds());
+		content_ids.addAll(metadata.getObjectRefIds());
 
 		// add in Associations that link the above parts
 		content_ids.addAll(metadata.getIds(metadata.getAssociationsInclusive(content_ids)));
@@ -109,6 +111,7 @@ public class EbXML21GetSubmissionSetAndContents extends GetSubmissionSetAndConte
 		// Assocs can link to Assocs to so repeat
 		content_ids.addAll(metadata.getIds(metadata.getAssociationsInclusive(content_ids)));
 
+		// ... Now, filter out all metadata that isn't in this id list
 		metadata.filter(content_ids);
 
 		return metadata;
