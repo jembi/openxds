@@ -102,6 +102,7 @@ public class EbXML21GetSubmissionSetAndContents extends GetSubmissionSetAndConte
 		content_ids.addAll(metadata.getSubmissionSetIds());
 		content_ids.addAll(metadata.getExtrinsicObjectIds());
 		content_ids.addAll(metadata.getFolderIds());
+		content_ids.addAll(metadata.getObjectRefIds());
 
 		// add in Associations that link the above parts
 		content_ids.addAll(metadata.getIds(metadata.getAssociationsInclusive(content_ids)));
