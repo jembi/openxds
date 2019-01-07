@@ -1,4 +1,6 @@
 
+:warning: This fork the OpenXDS codebase in no longer maintained or supported by Jembi, please feel free to fork this repo and continue the development if the changes made here are useful to you. :warning:
+
 OpenExchange - OpenXDS - With ODD support
 =========================================
 
