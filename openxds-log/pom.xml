@@ -9,7 +9,7 @@
   <artifactId>openxds-log</artifactId>
   <name>openxds-log</name>
   <packaging>jar</packaging>
-  <version>1.0.1</version>
+  <version>1.1.1</version>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
